@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x AwsRegions) Diff(y AwsRegions) map[string][]interface{} {
+	return DiffAwsRegions(x, y)
+}
+
 func DiffAwsRegions(x, y AwsRegions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -83,8 +87,4 @@ func DiffPointerAwsRegion(x, y *AwsRegion) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func (x AwsRegions) Diff(y AwsRegions) map[string][]interface{} {
-	return DiffAwsRegions(x, y)
 }

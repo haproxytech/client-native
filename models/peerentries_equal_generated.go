@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerPeerEntry(x, y *PeerEntry) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (x PeerEntries) Equal(y PeerEntries) bool {
 	return EqualPeerEntries(x, y)
 }
@@ -41,4 +34,11 @@ func EqualPeerEntries(x, y PeerEntries) bool {
 	}
 
 	return true
+}
+
+func EqualPointerPeerEntry(x, y *PeerEntry) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

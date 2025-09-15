@@ -21,6 +21,34 @@ import (
 	"fmt"
 )
 
+func (x QUICInitialRules) Diff(y QUICInitialRules) map[string][]interface{} {
+	return DiffQUICInitialRules(x, y)
+}
+
+func DiffPointerQUICInitialRule(x, y *QUICInitialRule) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*QUICInitialRule"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffQUICInitialRules(x, y QUICInitialRules) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -59,32 +87,4 @@ func DiffQUICInitialRules(x, y QUICInitialRules) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func DiffPointerQUICInitialRule(x, y *QUICInitialRule) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*QUICInitialRule"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func (x QUICInitialRules) Diff(y QUICInitialRules) map[string][]interface{} {
-	return DiffQUICInitialRules(x, y)
 }

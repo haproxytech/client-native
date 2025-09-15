@@ -21,30 +21,6 @@ import (
 	"fmt"
 )
 
-func DiffPointerPeerEntry(x, y *PeerEntry) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*PeerEntry"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
 func (x PeerEntries) Diff(y PeerEntries) map[string][]interface{} {
 	return DiffPeerEntries(x, y)
 }
@@ -84,6 +60,30 @@ func DiffPeerEntries(x, y PeerEntries) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffPointerPeerEntry(x, y *PeerEntry) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*PeerEntry"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

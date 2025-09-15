@@ -21,6 +21,13 @@ func (x Programs) Equal(y Programs) bool {
 	return EqualPrograms(x, y)
 }
 
+func EqualPointerProgram(x, y *Program) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualPrograms(x, y Programs) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualPrograms(x, y Programs) bool {
 	}
 
 	return true
-}
-
-func EqualPointerProgram(x, y *Program) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

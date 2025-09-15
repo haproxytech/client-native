@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerStickTableEntryGpt(x, y *StickTableEntryGpt) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (rec StickTableEntry) Equal(obj StickTableEntry) bool {
 	return EqualPointerInt64(rec.BytesInCnt, obj.BytesInCnt) &&
 		EqualPointerInt64(rec.BytesInRate, obj.BytesInRate) &&
@@ -65,6 +58,13 @@ func EqualPointerStickTableEntryGpc(x, y *StickTableEntryGpc) bool {
 }
 
 func EqualPointerStickTableEntryGpcRate(x, y *StickTableEntryGpcRate) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerStickTableEntryGpt(x, y *StickTableEntryGpt) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

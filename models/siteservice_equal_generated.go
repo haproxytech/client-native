@@ -17,6 +17,13 @@
 
 package models
 
+func (rec SiteService) Equal(obj SiteService) bool {
+	return rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
+		EqualSlicePointerBind(rec.Listeners, obj.Listeners) &&
+		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
+		rec.Mode == obj.Mode
+}
+
 func EqualSlicePointerBind(x, y []*Bind) bool {
 	if len(x) != len(y) {
 		return false
@@ -30,11 +37,4 @@ func EqualSlicePointerBind(x, y []*Bind) bool {
 	}
 
 	return true
-}
-
-func (rec SiteService) Equal(obj SiteService) bool {
-	return rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
-		EqualSlicePointerBind(rec.Listeners, obj.Listeners) &&
-		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
-		rec.Mode == obj.Mode
 }

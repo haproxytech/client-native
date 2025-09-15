@@ -21,6 +21,20 @@ import (
 	"fmt"
 )
 
+func (rec NativeStats) Diff(obj NativeStats) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if rec.Error != obj.Error {
+		diff["Error"] = []interface{}{rec.Error, obj.Error}
+	}
+	if rec.RuntimeAPI != obj.RuntimeAPI {
+		diff["RuntimeAPI"] = []interface{}{rec.RuntimeAPI, obj.RuntimeAPI}
+	}
+	for diffKey, diffValue := range DiffSlicePointerNativeStat(rec.Stats, obj.Stats) {
+		diff["Stats"+diffKey] = diffValue
+	}
+	return diff
+}
+
 func DiffPointerNativeStat(x, y *NativeStat) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -42,20 +56,6 @@ func DiffPointerNativeStat(x, y *NativeStat) map[string][]interface{} {
 		diff[key+"."+diffKey] = diffValue
 	}
 
-	return diff
-}
-
-func (rec NativeStats) Diff(obj NativeStats) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if rec.Error != obj.Error {
-		diff["Error"] = []interface{}{rec.Error, obj.Error}
-	}
-	if rec.RuntimeAPI != obj.RuntimeAPI {
-		diff["RuntimeAPI"] = []interface{}{rec.RuntimeAPI, obj.RuntimeAPI}
-	}
-	for diffKey, diffValue := range DiffSlicePointerNativeStat(rec.Stats, obj.Stats) {
-		diff["Stats"+diffKey] = diffValue
-	}
 	return diff
 }
 

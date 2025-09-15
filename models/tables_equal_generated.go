@@ -21,6 +21,13 @@ func (x Tables) Equal(y Tables) bool {
 	return EqualTables(x, y)
 }
 
+func EqualPointerTable(x, y *Table) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualTables(x, y Tables) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualTables(x, y Tables) bool {
 	}
 
 	return true
-}
-
-func EqualPointerTable(x, y *Table) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

@@ -21,6 +21,35 @@ import (
 	"fmt"
 )
 
+func (rec SiteFarm) Diff(obj SiteFarm) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	for diffKey, diffValue := range DiffPointerBalance(rec.Balance, obj.Balance) {
+		diff["Balance."+diffKey] = diffValue
+	}
+	if rec.Cond != obj.Cond {
+		diff["Cond"] = []interface{}{rec.Cond, obj.Cond}
+	}
+	if rec.CondTest != obj.CondTest {
+		diff["CondTest"] = []interface{}{rec.CondTest, obj.CondTest}
+	}
+	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor) {
+		diff["Forwardfor."+diffKey] = diffValue
+	}
+	if rec.Mode != obj.Mode {
+		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}
+	}
+	if rec.Name != obj.Name {
+		diff["Name"] = []interface{}{rec.Name, obj.Name}
+	}
+	for diffKey, diffValue := range DiffSlicePointerServer(rec.Servers, obj.Servers) {
+		diff["Servers"+diffKey] = diffValue
+	}
+	if rec.UseAs != obj.UseAs {
+		diff["UseAs"] = []interface{}{rec.UseAs, obj.UseAs}
+	}
+	return diff
+}
+
 func DiffSlicePointerServer(x, y []*Server) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -58,34 +87,5 @@ func DiffSlicePointerServer(x, y []*Server) map[string][]interface{} {
 		diff[key] = []interface{}{nil, y[i]}
 	}
 
-	return diff
-}
-
-func (rec SiteFarm) Diff(obj SiteFarm) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerBalance(rec.Balance, obj.Balance) {
-		diff["Balance."+diffKey] = diffValue
-	}
-	if rec.Cond != obj.Cond {
-		diff["Cond"] = []interface{}{rec.Cond, obj.Cond}
-	}
-	if rec.CondTest != obj.CondTest {
-		diff["CondTest"] = []interface{}{rec.CondTest, obj.CondTest}
-	}
-	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor) {
-		diff["Forwardfor."+diffKey] = diffValue
-	}
-	if rec.Mode != obj.Mode {
-		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}
-	}
-	if rec.Name != obj.Name {
-		diff["Name"] = []interface{}{rec.Name, obj.Name}
-	}
-	for diffKey, diffValue := range DiffSlicePointerServer(rec.Servers, obj.Servers) {
-		diff["Servers"+diffKey] = diffValue
-	}
-	if rec.UseAs != obj.UseAs {
-		diff["UseAs"] = []interface{}{rec.UseAs, obj.UseAs}
-	}
 	return diff
 }

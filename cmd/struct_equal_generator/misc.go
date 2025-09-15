@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 
-	jsoniter "github.com/json-iterator/go"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -28,7 +27,6 @@ type Field struct {
 }
 
 type generateEqualAndDiffOptions struct {
-	File              *os.File
 	FileTest          *os.File
 	CurrType          *ast.TypeSpec
 	PackageName       string
@@ -49,31 +47,8 @@ func toTitle(s string) string {
 	return caser.String(strings.TrimPrefix(s, "*"))
 }
 
-func toJSON(x any) string {
-	json := jsoniter.ConfigCompatibleWithStandardLibrary
-	b, err := json.Marshal(x)
-	if err != nil {
-		panic(err)
-	}
-	return string(b)
-}
-
 func toCamelCase(s string) string {
 	caser := cases.Title(language.Und)
-	var result string
-	words := strings.Split(s, "_")
-
-	for _, word := range words {
-		result += caser.String(word)
-	}
-
-	result = strings.ToLower(result[:1]) + result[1:]
-
-	return result
-}
-
-func toLowerCase(s string) string {
-	caser := cases.Lower(language.Und)
 	var result string
 	words := strings.Split(s, "_")
 

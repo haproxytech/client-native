@@ -21,6 +21,34 @@ import (
 	"fmt"
 )
 
+func (x RuntimeServers) Diff(y RuntimeServers) map[string][]interface{} {
+	return DiffRuntimeServers(x, y)
+}
+
+func DiffPointerRuntimeServer(x, y *RuntimeServer) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*RuntimeServer"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffRuntimeServers(x, y RuntimeServers) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -59,32 +87,4 @@ func DiffRuntimeServers(x, y RuntimeServers) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func DiffPointerRuntimeServer(x, y *RuntimeServer) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*RuntimeServer"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func (x RuntimeServers) Diff(y RuntimeServers) map[string][]interface{} {
-	return DiffRuntimeServers(x, y)
 }

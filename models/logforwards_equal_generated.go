@@ -17,6 +17,10 @@
 
 package models
 
+func (x LogForwards) Equal(y LogForwards) bool {
+	return EqualLogForwards(x, y)
+}
+
 func EqualLogForwards(x, y LogForwards) bool {
 	if len(x) != len(y) {
 		return false
@@ -37,8 +41,4 @@ func EqualPointerLogForward(x, y *LogForward) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x LogForwards) Equal(y LogForwards) bool {
-	return EqualLogForwards(x, y)
 }

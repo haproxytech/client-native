@@ -21,6 +21,13 @@ func (x ServerTemplates) Equal(y ServerTemplates) bool {
 	return EqualServerTemplates(x, y)
 }
 
+func EqualPointerServerTemplate(x, y *ServerTemplate) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualServerTemplates(x, y ServerTemplates) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualServerTemplates(x, y ServerTemplates) bool {
 	}
 
 	return true
-}
-
-func EqualPointerServerTemplate(x, y *ServerTemplate) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

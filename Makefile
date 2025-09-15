@@ -33,22 +33,13 @@ spec:
 	go run cmd/specification/*.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 
 .PHONY: models
-models: gentypes spec swagger-check
-	./bin/swagger generate model --additional-initialism=FCGI -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
-	rm -rf models/server_params_prepare_for_runtime.go
-	rm -rf models/*_compare.go
-	rm -rf models/*_compare_test.go
-	go run cmd/struct_equal_generator/*.go -l ${PROJECT_PATH}/specification/copyright.txt ${PROJECT_PATH}/models
-	go run cmd/struct_tags_checker/*.go ${PROJECT_PATH}/models
-	go run cmd/kubebuilder_marker_generator/*.go  ${PROJECT_PATH}/models
-	go run cmd/server_params_runtime/*.go ${PROJECT_PATH}/models
-
-.PHONY: models-with-go-method-gen
-models-with-go-method-gen: gentypes spec go-method-gen-check
+models:  gentypes spec swagger-check go-method-gen-check
 	./bin/swagger generate model --additional-initialism=FCGI -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
 	rm -rf models/server_params_prepare_for_runtime.go
 	rm -rf models/*_generated*.go
+	rm -rf models/*_compare_test.go
 	./bin/go-method-gen --header-file=specification/copyright.txt --scan=models --debug --overrides=models/funcs/overrides.yaml && find ./generated -name "*.go" -exec cp {} ./models \; && rm -rf generated
+	go run cmd/struct_equal_generator/*.go -l ${PROJECT_PATH}/specification/copyright.txt ${PROJECT_PATH}/models
 	go run cmd/struct_tags_checker/*.go ${PROJECT_PATH}/models
 	go run cmd/kubebuilder_marker_generator/*.go  ${PROJECT_PATH}/models
 	go run cmd/server_params_runtime/*.go ${PROJECT_PATH}/models

@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x Consuls) Diff(y Consuls) map[string][]interface{} {
+	return DiffConsuls(x, y)
+}
+
 func DiffConsuls(x, y Consuls) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -83,8 +87,4 @@ func DiffPointerConsul(x, y *Consul) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func (x Consuls) Diff(y Consuls) map[string][]interface{} {
-	return DiffConsuls(x, y)
 }

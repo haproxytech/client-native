@@ -21,30 +21,6 @@ import (
 	"fmt"
 )
 
-func DiffPointerHTTPErrorsSection(x, y *HTTPErrorsSection) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*HTTPErrorsSection"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
 func (x HTTPErrorsSections) Diff(y HTTPErrorsSections) map[string][]interface{} {
 	return DiffHTTPErrorsSections(x, y)
 }
@@ -84,6 +60,30 @@ func DiffHTTPErrorsSections(x, y HTTPErrorsSections) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffPointerHTTPErrorsSection(x, y *HTTPErrorsSection) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*HTTPErrorsSection"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

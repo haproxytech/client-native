@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerSslEngine(x, y *SslEngine) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (rec SslOptions) Equal(obj SslOptions) bool {
 	return EqualSlicePointerSslEngine(rec.SslEngines, obj.SslEngines) &&
 		rec.AcmeScheduler == obj.AcmeScheduler &&
@@ -53,6 +46,13 @@ func (rec SslOptions) Equal(obj SslOptions) bool {
 		EqualPointerInt64(rec.SecurityLevel, obj.SecurityLevel) &&
 		rec.ServerVerify == obj.ServerVerify &&
 		rec.SkipSelfIssuedCa == obj.SkipSelfIssuedCa
+}
+
+func EqualPointerSslEngine(x, y *SslEngine) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }
 
 func EqualSlicePointerSslEngine(x, y []*SslEngine) bool {

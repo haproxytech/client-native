@@ -21,6 +21,13 @@ func (x SslCaFiles) Equal(y SslCaFiles) bool {
 	return EqualSslCaFiles(x, y)
 }
 
+func EqualPointerSslCaFile(x, y *SslCaFile) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSslCaFiles(x, y SslCaFiles) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSslCaFiles(x, y SslCaFiles) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSslCaFile(x, y *SslCaFile) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

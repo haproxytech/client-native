@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x TCPResponseRules) Diff(y TCPResponseRules) map[string][]interface{} {
+	return DiffTCPResponseRules(x, y)
+}
+
 func DiffPointerTCPResponseRule(x, y *TCPResponseRule) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -43,10 +47,6 @@ func DiffPointerTCPResponseRule(x, y *TCPResponseRule) map[string][]interface{} 
 	}
 
 	return diff
-}
-
-func (x TCPResponseRules) Diff(y TCPResponseRules) map[string][]interface{} {
-	return DiffTCPResponseRules(x, y)
 }
 
 func DiffTCPResponseRules(x, y TCPResponseRules) map[string][]interface{} {

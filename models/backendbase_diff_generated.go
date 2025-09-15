@@ -293,6 +293,78 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	return diff
 }
 
+func DiffPointerBackendForcePersist(x, y *BackendForcePersist) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "ForcePersist"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerBackendIgnorePersist(x, y *BackendIgnorePersist) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "IgnorePersist"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerBalance(x, y *Balance) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "Balance"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffPointerCompression(x, y *Compression) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -300,6 +372,174 @@ func DiffPointerCompression(x, y *Compression) map[string][]interface{} {
 	}
 
 	key := "Compression"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerConfigStickTable(x, y *ConfigStickTable) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "StickTable"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerCookie(x, y *Cookie) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "Cookie"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerDefaultServer(x, y *DefaultServer) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "DefaultServer"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerEmailAlert(x, y *EmailAlert) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "EmailAlert"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerErrorfile(x, y *Errorfile) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*Errorfile"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerErrorfiles(x, y *Errorfiles) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*Errorfiles"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerErrorloc(x, y *Errorloc) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "Errorloc303"
 
 	switch {
 	case x == nil:
@@ -365,174 +605,6 @@ func DiffPointerForwardfor(x, y *Forwardfor) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerErrorfiles(x, y []*Errorfiles) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerErrorfiles(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerBalance(x, y *Balance) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "Balance"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerEmailAlert(x, y *EmailAlert) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "EmailAlert"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerErrorfile(x, y []*Errorfile) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerErrorfile(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffSlicePointerIgnorePersist(x, y []*IgnorePersist) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerIgnorePersist(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
 func DiffPointerHashType(x, y *HashType) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -540,198 +612,6 @@ func DiffPointerHashType(x, y *HashType) map[string][]interface{} {
 	}
 
 	key := "HashType"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerPgsqlCheckParams(x, y *PgsqlCheckParams) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "PgsqlCheckParams"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerCookie(x, y *Cookie) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "Cookie"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerErrorloc(x, y *Errorloc) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "Errorloc303"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerBackendForcePersist(x, y *BackendForcePersist) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "ForcePersist"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerMysqlCheckParams(x, y *MysqlCheckParams) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "MysqlCheckParams"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerSmtpchkParams(x, y *SmtpchkParams) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "SmtpchkParams"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerErrorfiles(x, y *Errorfiles) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*Errorfiles"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerDefaultServer(x, y *DefaultServer) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "DefaultServer"
 
 	switch {
 	case x == nil:
@@ -773,94 +653,6 @@ func DiffPointerHttpchkParams(x, y *HttpchkParams) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerConfigStickTable(x, y *ConfigStickTable) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "StickTable"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerErrorfile(x, y *Errorfile) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*Errorfile"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerForcePersist(x, y []*ForcePersist) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerForcePersist(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
 func DiffPointerIgnorePersist(x, y *IgnorePersist) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -885,37 +677,13 @@ func DiffPointerIgnorePersist(x, y *IgnorePersist) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerBackendIgnorePersist(x, y *BackendIgnorePersist) map[string][]interface{} {
+func DiffPointerMysqlCheckParams(x, y *MysqlCheckParams) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
 	}
 
-	key := "IgnorePersist"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerPersistRule(x, y *PersistRule) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "PersistRule"
+	key := "MysqlCheckParams"
 
 	switch {
 	case x == nil:
@@ -957,6 +725,54 @@ func DiffPointerOriginalto(x, y *Originalto) map[string][]interface{} {
 	return diff
 }
 
+func DiffPointerPersistRule(x, y *PersistRule) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "PersistRule"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerPgsqlCheckParams(x, y *PgsqlCheckParams) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "PgsqlCheckParams"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffPointerRedispatch(x, y *Redispatch) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -964,6 +780,30 @@ func DiffPointerRedispatch(x, y *Redispatch) map[string][]interface{} {
 	}
 
 	key := "Redispatch"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerSmtpchkParams(x, y *SmtpchkParams) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "SmtpchkParams"
 
 	switch {
 	case x == nil:
@@ -1024,6 +864,166 @@ func DiffPointerStatsOptions(x, y *StatsOptions) map[string][]interface{} {
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
 		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerErrorfile(x, y []*Errorfile) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerErrorfile(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerErrorfiles(x, y []*Errorfiles) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerErrorfiles(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerForcePersist(x, y []*ForcePersist) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerForcePersist(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerIgnorePersist(x, y []*IgnorePersist) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerIgnorePersist(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
 	}
 
 	return diff

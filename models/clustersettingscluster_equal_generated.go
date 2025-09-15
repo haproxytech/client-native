@@ -27,6 +27,13 @@ func (rec ClusterSettingsCluster) Equal(obj ClusterSettingsCluster) bool {
 		EqualPointerInt64(rec.Port, obj.Port)
 }
 
+func EqualPointerClusterLogTarget(x, y *ClusterLogTarget) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSlicePointerClusterLogTarget(x, y []*ClusterLogTarget) bool {
 	if len(x) != len(y) {
 		return false
@@ -40,11 +47,4 @@ func EqualSlicePointerClusterLogTarget(x, y []*ClusterLogTarget) bool {
 	}
 
 	return true
-}
-
-func EqualPointerClusterLogTarget(x, y *ClusterLogTarget) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

@@ -23,6 +23,59 @@ import (
 	"github.com/haproxytech/client-native/v6/models/funcs"
 )
 
+func (rec SslCrlEntry) Diff(obj SslCrlEntry) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if rec.Issuer != obj.Issuer {
+		diff["Issuer"] = []interface{}{rec.Issuer, obj.Issuer}
+	}
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.LastUpdate, obj.LastUpdate) {
+		diff["LastUpdate."+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate) {
+		diff["NextUpdate."+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffSlicePointerRevokedCertificates(rec.RevokedCertificates, obj.RevokedCertificates) {
+		diff["RevokedCertificates"+diffKey] = diffValue
+	}
+	if rec.SignatureAlgorithm != obj.SignatureAlgorithm {
+		diff["SignatureAlgorithm"] = []interface{}{rec.SignatureAlgorithm, obj.SignatureAlgorithm}
+	}
+	if rec.Status != obj.Status {
+		diff["Status"] = []interface{}{rec.Status, obj.Status}
+	}
+	if rec.StorageName != obj.StorageName {
+		diff["StorageName"] = []interface{}{rec.StorageName, obj.StorageName}
+	}
+	if rec.Version != obj.Version {
+		diff["Version"] = []interface{}{rec.Version, obj.Version}
+	}
+	return diff
+}
+
+func DiffPointerRevokedCertificates(x, y *RevokedCertificates) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*RevokedCertificates"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSlicePointerRevokedCertificates(x, y []*RevokedCertificates) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -60,58 +113,5 @@ func DiffSlicePointerRevokedCertificates(x, y []*RevokedCertificates) map[string
 		diff[key] = []interface{}{nil, y[i]}
 	}
 
-	return diff
-}
-
-func DiffPointerRevokedCertificates(x, y *RevokedCertificates) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*RevokedCertificates"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func (rec SslCrlEntry) Diff(obj SslCrlEntry) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if rec.Issuer != obj.Issuer {
-		diff["Issuer"] = []interface{}{rec.Issuer, obj.Issuer}
-	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.LastUpdate, obj.LastUpdate) {
-		diff["LastUpdate."+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate) {
-		diff["NextUpdate."+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range DiffSlicePointerRevokedCertificates(rec.RevokedCertificates, obj.RevokedCertificates) {
-		diff["RevokedCertificates"+diffKey] = diffValue
-	}
-	if rec.SignatureAlgorithm != obj.SignatureAlgorithm {
-		diff["SignatureAlgorithm"] = []interface{}{rec.SignatureAlgorithm, obj.SignatureAlgorithm}
-	}
-	if rec.Status != obj.Status {
-		diff["Status"] = []interface{}{rec.Status, obj.Status}
-	}
-	if rec.StorageName != obj.StorageName {
-		diff["StorageName"] = []interface{}{rec.StorageName, obj.StorageName}
-	}
-	if rec.Version != obj.Version {
-		diff["Version"] = []interface{}{rec.Version, obj.Version}
-	}
 	return diff
 }

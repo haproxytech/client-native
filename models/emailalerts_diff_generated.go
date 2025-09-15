@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x EmailAlerts) Diff(y EmailAlerts) map[string][]interface{} {
+	return DiffEmailAlerts(x, y)
+}
+
 func DiffEmailAlerts(x, y EmailAlerts) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -59,8 +63,4 @@ func DiffEmailAlerts(x, y EmailAlerts) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func (x EmailAlerts) Diff(y EmailAlerts) map[string][]interface{} {
-	return DiffEmailAlerts(x, y)
 }

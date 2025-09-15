@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x TCPChecks) Diff(y TCPChecks) map[string][]interface{} {
+	return DiffTCPChecks(x, y)
+}
+
 func DiffPointerTCPCheck(x, y *TCPCheck) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -43,10 +47,6 @@ func DiffPointerTCPCheck(x, y *TCPCheck) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func (x TCPChecks) Diff(y TCPChecks) map[string][]interface{} {
-	return DiffTCPChecks(x, y)
 }
 
 func DiffTCPChecks(x, y TCPChecks) map[string][]interface{} {

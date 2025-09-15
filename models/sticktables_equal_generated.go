@@ -17,15 +17,15 @@
 
 package models
 
+func (x StickTables) Equal(y StickTables) bool {
+	return EqualStickTables(x, y)
+}
+
 func EqualPointerStickTable(x, y *StickTable) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x StickTables) Equal(y StickTables) bool {
-	return EqualStickTables(x, y)
 }
 
 func EqualStickTables(x, y StickTables) bool {

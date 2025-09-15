@@ -17,6 +17,17 @@
 
 package models
 
+func (x SslCertificates) Equal(y SslCertificates) bool {
+	return EqualSslCertificates(x, y)
+}
+
+func EqualPointerSslCertificate(x, y *SslCertificate) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSslCertificates(x, y SslCertificates) bool {
 	if len(x) != len(y) {
 		return false
@@ -30,15 +41,4 @@ func EqualSslCertificates(x, y SslCertificates) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSslCertificate(x, y *SslCertificate) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func (x SslCertificates) Equal(y SslCertificates) bool {
-	return EqualSslCertificates(x, y)
 }

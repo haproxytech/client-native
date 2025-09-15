@@ -25,6 +25,30 @@ func (x SpoeMessages) Diff(y SpoeMessages) map[string][]interface{} {
 	return DiffSpoeMessages(x, y)
 }
 
+func DiffPointerSpoeMessage(x, y *SpoeMessage) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*SpoeMessage"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSpoeMessages(x, y SpoeMessages) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -60,30 +84,6 @@ func DiffSpoeMessages(x, y SpoeMessages) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerSpoeMessage(x, y *SpoeMessage) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*SpoeMessage"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

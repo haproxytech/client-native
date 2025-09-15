@@ -17,6 +17,26 @@
 
 package models
 
+func (rec LuaOptions) Equal(obj LuaOptions) bool {
+	return rec.LoadPerThread == obj.LoadPerThread &&
+		EqualSlicePointerLuaLoad(rec.Loads, obj.Loads) &&
+		EqualSlicePointerLuaPrependPath(rec.PrependPath, obj.PrependPath)
+}
+
+func EqualPointerLuaLoad(x, y *LuaLoad) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerLuaPrependPath(x, y *LuaPrependPath) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSlicePointerLuaLoad(x, y []*LuaLoad) bool {
 	if len(x) != len(y) {
 		return false
@@ -32,13 +52,6 @@ func EqualSlicePointerLuaLoad(x, y []*LuaLoad) bool {
 	return true
 }
 
-func EqualPointerLuaLoad(x, y *LuaLoad) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func EqualSlicePointerLuaPrependPath(x, y []*LuaPrependPath) bool {
 	if len(x) != len(y) {
 		return false
@@ -52,17 +65,4 @@ func EqualSlicePointerLuaPrependPath(x, y []*LuaPrependPath) bool {
 	}
 
 	return true
-}
-
-func EqualPointerLuaPrependPath(x, y *LuaPrependPath) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func (rec LuaOptions) Equal(obj LuaOptions) bool {
-	return rec.LoadPerThread == obj.LoadPerThread &&
-		EqualSlicePointerLuaLoad(rec.Loads, obj.Loads) &&
-		EqualSlicePointerLuaPrependPath(rec.PrependPath, obj.PrependPath)
 }

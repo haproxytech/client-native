@@ -17,184 +17,6 @@
 
 package models
 
-func EqualPointerOriginalto(x, y *Originalto) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerCookie(x, y *Cookie) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerBackendForcePersist(x, y *BackendForcePersist) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerRedispatch(x, y *Redispatch) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerStatsOptions(x, y *StatsOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerErrorfile(x, y *Errorfile) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerErrorfiles(x, y []*Errorfiles) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerErrorfiles(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerIgnorePersist(x, y *IgnorePersist) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerCompression(x, y *Compression) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerBackendIgnorePersist(x, y *BackendIgnorePersist) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerPgsqlCheckParams(x, y *PgsqlCheckParams) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerBalance(x, y *Balance) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerDefaultServer(x, y *DefaultServer) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerEmailAlert(x, y *EmailAlert) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerHashType(x, y *HashType) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerErrorfile(x, y []*Errorfile) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerErrorfile(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerErrorfiles(x, y *Errorfiles) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerIgnorePersist(x, y []*IgnorePersist) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerIgnorePersist(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerErrorloc(x, y *Errorloc) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerForwardfor(x, y *Forwardfor) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerHttpchkParams(x, y *HttpchkParams) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerForcePersist(x, y *ForcePersist) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (rec BackendBase) Equal(obj BackendBase) bool {
 	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) &&
 		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors) &&
@@ -287,7 +109,28 @@ func (rec BackendBase) Equal(obj BackendBase) bool {
 		rec.UseFCGIApp == obj.UseFCGIApp
 }
 
-func EqualPointerSmtpchkParams(x, y *SmtpchkParams) bool {
+func EqualPointerBackendForcePersist(x, y *BackendForcePersist) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerBackendIgnorePersist(x, y *BackendIgnorePersist) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerBalance(x, y *Balance) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerCompression(x, y *Compression) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
@@ -299,6 +142,169 @@ func EqualPointerConfigStickTable(x, y *ConfigStickTable) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
+}
+
+func EqualPointerCookie(x, y *Cookie) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerDefaultServer(x, y *DefaultServer) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerEmailAlert(x, y *EmailAlert) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerErrorfile(x, y *Errorfile) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerErrorfiles(x, y *Errorfiles) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerErrorloc(x, y *Errorloc) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerForcePersist(x, y *ForcePersist) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerForwardfor(x, y *Forwardfor) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerHashType(x, y *HashType) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerHttpchkParams(x, y *HttpchkParams) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerIgnorePersist(x, y *IgnorePersist) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerMysqlCheckParams(x, y *MysqlCheckParams) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerOriginalto(x, y *Originalto) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerPersistRule(x, y *PersistRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerPgsqlCheckParams(x, y *PgsqlCheckParams) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerRedispatch(x, y *Redispatch) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerSmtpchkParams(x, y *SmtpchkParams) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerSource(x, y *Source) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerStatsOptions(x, y *StatsOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualSlicePointerErrorfile(x, y []*Errorfile) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerErrorfile(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerErrorfiles(x, y []*Errorfiles) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerErrorfiles(vx, vy) {
+			return false
+		}
+	}
+
+	return true
 }
 
 func EqualSlicePointerForcePersist(x, y []*ForcePersist) bool {
@@ -316,23 +322,17 @@ func EqualSlicePointerForcePersist(x, y []*ForcePersist) bool {
 	return true
 }
 
-func EqualPointerMysqlCheckParams(x, y *MysqlCheckParams) bool {
-	if x == nil || y == nil {
-		return x == y
+func EqualSlicePointerIgnorePersist(x, y []*IgnorePersist) bool {
+	if len(x) != len(y) {
+		return false
 	}
-	return (*x).Equal(*y)
-}
 
-func EqualPointerPersistRule(x, y *PersistRule) bool {
-	if x == nil || y == nil {
-		return x == y
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerIgnorePersist(vx, vy) {
+			return false
+		}
 	}
-	return (*x).Equal(*y)
-}
 
-func EqualPointerSource(x, y *Source) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
+	return true
 }

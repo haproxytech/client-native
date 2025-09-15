@@ -33,6 +33,20 @@ func (rec Cookie) Equal(obj Cookie) bool {
 		rec.Type == obj.Type
 }
 
+func EqualPointerAttr(x, y *Attr) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerDomain(x, y *Domain) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSlicePointerAttr(x, y []*Attr) bool {
 	if len(x) != len(y) {
 		return false
@@ -48,13 +62,6 @@ func EqualSlicePointerAttr(x, y []*Attr) bool {
 	return true
 }
 
-func EqualPointerAttr(x, y *Attr) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func EqualSlicePointerDomain(x, y []*Domain) bool {
 	if len(x) != len(y) {
 		return false
@@ -68,11 +75,4 @@ func EqualSlicePointerDomain(x, y []*Domain) bool {
 	}
 
 	return true
-}
-
-func EqualPointerDomain(x, y *Domain) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

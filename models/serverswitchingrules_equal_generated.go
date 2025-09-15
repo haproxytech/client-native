@@ -21,6 +21,13 @@ func (x ServerSwitchingRules) Equal(y ServerSwitchingRules) bool {
 	return EqualServerSwitchingRules(x, y)
 }
 
+func EqualPointerServerSwitchingRule(x, y *ServerSwitchingRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualServerSwitchingRules(x, y ServerSwitchingRules) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualServerSwitchingRules(x, y ServerSwitchingRules) bool {
 	}
 
 	return true
-}
-
-func EqualPointerServerSwitchingRule(x, y *ServerSwitchingRule) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

@@ -17,14 +17,14 @@
 
 package models
 
+func (rec AwsFilters) Equal(obj AwsFilters) bool {
+	return EqualPointerString(rec.Key, obj.Key) &&
+		EqualPointerString(rec.Value, obj.Value)
+}
+
 func EqualPointerString(x, y *string) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
 	return *x == *y
-}
-
-func (rec AwsFilters) Equal(obj AwsFilters) bool {
-	return EqualPointerString(rec.Key, obj.Key) &&
-		EqualPointerString(rec.Value, obj.Value)
 }

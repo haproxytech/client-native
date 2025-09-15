@@ -21,6 +21,156 @@ import (
 	"fmt"
 )
 
+func (rec FCGIAppBase) Diff(obj FCGIAppBase) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	for diffKey, diffValue := range DiffPointerString(rec.Docroot, obj.Docroot) {
+		diff["Docroot."+diffKey] = diffValue
+	}
+	if rec.GetValues != obj.GetValues {
+		diff["GetValues"] = []interface{}{rec.GetValues, obj.GetValues}
+	}
+	if rec.Index != obj.Index {
+		diff["Index"] = []interface{}{rec.Index, obj.Index}
+	}
+	if rec.KeepConn != obj.KeepConn {
+		diff["KeepConn"] = []interface{}{rec.KeepConn, obj.KeepConn}
+	}
+	for diffKey, diffValue := range DiffSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs) {
+		diff["LogStderrs"+diffKey] = diffValue
+	}
+	if rec.MaxReqs != obj.MaxReqs {
+		diff["MaxReqs"] = []interface{}{rec.MaxReqs, obj.MaxReqs}
+	}
+	if rec.MpxsConns != obj.MpxsConns {
+		diff["MpxsConns"] = []interface{}{rec.MpxsConns, obj.MpxsConns}
+	}
+	if rec.Name != obj.Name {
+		diff["Name"] = []interface{}{rec.Name, obj.Name}
+	}
+	for diffKey, diffValue := range DiffSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders) {
+		diff["PassHeaders"+diffKey] = diffValue
+	}
+	if rec.PathInfo != obj.PathInfo {
+		diff["PathInfo"] = []interface{}{rec.PathInfo, obj.PathInfo}
+	}
+	for diffKey, diffValue := range DiffSlicePointerFCGISetParam(rec.SetParams, obj.SetParams) {
+		diff["SetParams"+diffKey] = diffValue
+	}
+	return diff
+}
+
+func DiffPointerFCGILogStderr(x, y *FCGILogStderr) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*FCGILogStderr"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerFCGIPassHeader(x, y *FCGIPassHeader) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*FCGIPassHeader"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerFCGISetParam(x, y *FCGISetParam) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*FCGISetParam"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerFCGILogStderr(x, y []*FCGILogStderr) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerFCGILogStderr(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
 func DiffSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -96,156 +246,6 @@ func DiffSlicePointerFCGISetParam(x, y []*FCGISetParam) map[string][]interface{}
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func (rec FCGIAppBase) Diff(obj FCGIAppBase) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Docroot, obj.Docroot) {
-		diff["Docroot."+diffKey] = diffValue
-	}
-	if rec.GetValues != obj.GetValues {
-		diff["GetValues"] = []interface{}{rec.GetValues, obj.GetValues}
-	}
-	if rec.Index != obj.Index {
-		diff["Index"] = []interface{}{rec.Index, obj.Index}
-	}
-	if rec.KeepConn != obj.KeepConn {
-		diff["KeepConn"] = []interface{}{rec.KeepConn, obj.KeepConn}
-	}
-	for diffKey, diffValue := range DiffSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs) {
-		diff["LogStderrs"+diffKey] = diffValue
-	}
-	if rec.MaxReqs != obj.MaxReqs {
-		diff["MaxReqs"] = []interface{}{rec.MaxReqs, obj.MaxReqs}
-	}
-	if rec.MpxsConns != obj.MpxsConns {
-		diff["MpxsConns"] = []interface{}{rec.MpxsConns, obj.MpxsConns}
-	}
-	if rec.Name != obj.Name {
-		diff["Name"] = []interface{}{rec.Name, obj.Name}
-	}
-	for diffKey, diffValue := range DiffSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders) {
-		diff["PassHeaders"+diffKey] = diffValue
-	}
-	if rec.PathInfo != obj.PathInfo {
-		diff["PathInfo"] = []interface{}{rec.PathInfo, obj.PathInfo}
-	}
-	for diffKey, diffValue := range DiffSlicePointerFCGISetParam(rec.SetParams, obj.SetParams) {
-		diff["SetParams"+diffKey] = diffValue
-	}
-	return diff
-}
-
-func DiffSlicePointerFCGILogStderr(x, y []*FCGILogStderr) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerFCGILogStderr(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerFCGIPassHeader(x, y *FCGIPassHeader) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*FCGIPassHeader"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerFCGISetParam(x, y *FCGISetParam) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*FCGISetParam"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerFCGILogStderr(x, y *FCGILogStderr) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*FCGILogStderr"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

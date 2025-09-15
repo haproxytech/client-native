@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerGroup(x, y *Group) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (x Groups) Equal(y Groups) bool {
 	return EqualGroups(x, y)
 }
@@ -41,4 +34,11 @@ func EqualGroups(x, y Groups) bool {
 	}
 
 	return true
+}
+
+func EqualPointerGroup(x, y *Group) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

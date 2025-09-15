@@ -25,6 +25,30 @@ func (x ServerTemplates) Diff(y ServerTemplates) map[string][]interface{} {
 	return DiffServerTemplates(x, y)
 }
 
+func DiffPointerServerTemplate(x, y *ServerTemplate) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*ServerTemplate"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffServerTemplates(x, y ServerTemplates) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -60,30 +84,6 @@ func DiffServerTemplates(x, y ServerTemplates) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerServerTemplate(x, y *ServerTemplate) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*ServerTemplate"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

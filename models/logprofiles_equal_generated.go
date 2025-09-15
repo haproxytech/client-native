@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerLogProfile(x, y *LogProfile) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (x LogProfiles) Equal(y LogProfiles) bool {
 	return EqualLogProfiles(x, y)
 }
@@ -41,4 +34,11 @@ func EqualLogProfiles(x, y LogProfiles) bool {
 	}
 
 	return true
+}
+
+func EqualPointerLogProfile(x, y *LogProfile) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

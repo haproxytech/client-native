@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x Transactions) Diff(y Transactions) map[string][]interface{} {
+	return DiffTransactions(x, y)
+}
+
 func DiffPointerTransaction(x, y *Transaction) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -43,10 +47,6 @@ func DiffPointerTransaction(x, y *Transaction) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func (x Transactions) Diff(y Transactions) map[string][]interface{} {
-	return DiffTransactions(x, y)
 }
 
 func DiffTransactions(x, y Transactions) map[string][]interface{} {

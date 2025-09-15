@@ -28,6 +28,13 @@ func (rec SslCrlEntry) Equal(obj SslCrlEntry) bool {
 		rec.Version == obj.Version
 }
 
+func EqualPointerRevokedCertificates(x, y *RevokedCertificates) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSlicePointerRevokedCertificates(x, y []*RevokedCertificates) bool {
 	if len(x) != len(y) {
 		return false
@@ -41,11 +48,4 @@ func EqualSlicePointerRevokedCertificates(x, y []*RevokedCertificates) bool {
 	}
 
 	return true
-}
-
-func EqualPointerRevokedCertificates(x, y *RevokedCertificates) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

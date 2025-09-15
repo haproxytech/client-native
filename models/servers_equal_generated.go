@@ -21,6 +21,13 @@ func (x Servers) Equal(y Servers) bool {
 	return EqualServers(x, y)
 }
 
+func EqualPointerServer(x, y *Server) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualServers(x, y Servers) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualServers(x, y Servers) bool {
 	}
 
 	return true
-}
-
-func EqualPointerServer(x, y *Server) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

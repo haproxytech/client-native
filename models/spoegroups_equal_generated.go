@@ -21,6 +21,13 @@ func (x SpoeGroups) Equal(y SpoeGroups) bool {
 	return EqualSpoeGroups(x, y)
 }
 
+func EqualPointerSpoeGroup(x, y *SpoeGroup) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSpoeGroups(x, y SpoeGroups) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSpoeGroups(x, y SpoeGroups) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSpoeGroup(x, y *SpoeGroup) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

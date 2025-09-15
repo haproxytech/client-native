@@ -17,6 +17,10 @@
 
 package models
 
+func (x ACLFiles) Equal(y ACLFiles) bool {
+	return EqualACLFiles(x, y)
+}
+
 func EqualACLFiles(x, y ACLFiles) bool {
 	if len(x) != len(y) {
 		return false
@@ -37,8 +41,4 @@ func EqualPointerACLFile(x, y *ACLFile) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x ACLFiles) Equal(y ACLFiles) bool {
-	return EqualACLFiles(x, y)
 }

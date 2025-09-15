@@ -21,6 +21,13 @@ func (x SslCrtListFiles) Equal(y SslCrtListFiles) bool {
 	return EqualSslCrtListFiles(x, y)
 }
 
+func EqualPointerSslCrtListFile(x, y *SslCrtListFile) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSslCrtListFiles(x, y SslCrtListFiles) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSslCrtListFiles(x, y SslCrtListFiles) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSslCrtListFile(x, y *SslCrtListFile) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

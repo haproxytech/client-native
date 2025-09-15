@@ -54,6 +54,13 @@ func (rec HTTPCheck) Equal(obj HTTPCheck) bool {
 		rec.ViaSocks4 == obj.ViaSocks4
 }
 
+func EqualPointerReturnHeader(x, y *ReturnHeader) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSlicePointerReturnHeader(x, y []*ReturnHeader) bool {
 	if len(x) != len(y) {
 		return false
@@ -67,11 +74,4 @@ func EqualSlicePointerReturnHeader(x, y []*ReturnHeader) bool {
 	}
 
 	return true
-}
-
-func EqualPointerReturnHeader(x, y *ReturnHeader) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

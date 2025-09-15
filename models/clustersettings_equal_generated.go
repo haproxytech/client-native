@@ -17,16 +17,16 @@
 
 package models
 
-func EqualPointerClusterSettingsCluster(x, y *ClusterSettingsCluster) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (rec ClusterSettings) Equal(obj ClusterSettings) bool {
 	return rec.BootstrapKey == obj.BootstrapKey &&
 		EqualPointerClusterSettingsCluster(rec.Cluster, obj.Cluster) &&
 		rec.Mode == obj.Mode &&
 		rec.Status == obj.Status
+}
+
+func EqualPointerClusterSettingsCluster(x, y *ClusterSettingsCluster) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

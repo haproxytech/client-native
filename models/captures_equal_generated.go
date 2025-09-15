@@ -17,6 +17,10 @@
 
 package models
 
+func (x Captures) Equal(y Captures) bool {
+	return EqualCaptures(x, y)
+}
+
 func EqualCaptures(x, y Captures) bool {
 	if len(x) != len(y) {
 		return false
@@ -37,8 +41,4 @@ func EqualPointerCapture(x, y *Capture) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x Captures) Equal(y Captures) bool {
-	return EqualCaptures(x, y)
 }

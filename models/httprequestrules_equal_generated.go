@@ -17,6 +17,10 @@
 
 package models
 
+func (x HTTPRequestRules) Equal(y HTTPRequestRules) bool {
+	return EqualHTTPRequestRules(x, y)
+}
+
 func EqualHTTPRequestRules(x, y HTTPRequestRules) bool {
 	if len(x) != len(y) {
 		return false
@@ -37,8 +41,4 @@ func EqualPointerHTTPRequestRule(x, y *HTTPRequestRule) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x HTTPRequestRules) Equal(y HTTPRequestRules) bool {
-	return EqualHTTPRequestRules(x, y)
 }

@@ -25,6 +25,30 @@ func (x Userlists) Diff(y Userlists) map[string][]interface{} {
 	return DiffUserlists(x, y)
 }
 
+func DiffPointerUserlist(x, y *Userlist) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*Userlist"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffUserlists(x, y Userlists) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -60,30 +84,6 @@ func DiffUserlists(x, y Userlists) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerUserlist(x, y *Userlist) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*Userlist"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

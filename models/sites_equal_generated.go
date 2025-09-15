@@ -21,6 +21,13 @@ func (x Sites) Equal(y Sites) bool {
 	return EqualSites(x, y)
 }
 
+func EqualPointerSite(x, y *Site) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSites(x, y Sites) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSites(x, y Sites) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSite(x, y *Site) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

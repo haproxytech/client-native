@@ -17,19 +17,19 @@
 
 package models
 
-func EqualPointerStickTableField(x, y *StickTableField) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (rec StickTable) Equal(obj StickTable) bool {
 	return EqualSlicePointerStickTableField(rec.Fields, obj.Fields) &&
 		rec.Name == obj.Name &&
 		EqualPointerInt64(rec.Size, obj.Size) &&
 		rec.Type == obj.Type &&
 		EqualPointerInt64(rec.Used, obj.Used)
+}
+
+func EqualPointerStickTableField(x, y *StickTableField) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }
 
 func EqualSlicePointerStickTableField(x, y []*StickTableField) bool {

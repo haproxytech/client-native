@@ -21,30 +21,6 @@ import (
 	"fmt"
 )
 
-func DiffPointerGeneralFile(x, y *GeneralFile) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*GeneralFile"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
 func (x GeneralFiles) Diff(y GeneralFiles) map[string][]interface{} {
 	return DiffGeneralFiles(x, y)
 }
@@ -84,6 +60,30 @@ func DiffGeneralFiles(x, y GeneralFiles) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffPointerGeneralFile(x, y *GeneralFile) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*GeneralFile"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

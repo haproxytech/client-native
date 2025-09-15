@@ -74,6 +74,54 @@ func (rec StatsOptions) Diff(obj StatsOptions) map[string][]interface{} {
 	return diff
 }
 
+func DiffPointerStatsAuth(x, y *StatsAuth) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*StatsAuth"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerStatsHTTPRequest(x, y *StatsHTTPRequest) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*StatsHTTPRequest"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSlicePointerStatsAuth(x, y []*StatsAuth) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -114,30 +162,6 @@ func DiffSlicePointerStatsAuth(x, y []*StatsAuth) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerStatsAuth(x, y *StatsAuth) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*StatsAuth"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
 func DiffSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -173,30 +197,6 @@ func DiffSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest) map[string][]int
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerStatsHTTPRequest(x, y *StatsHTTPRequest) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*StatsHTTPRequest"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

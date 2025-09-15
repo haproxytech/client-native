@@ -21,6 +21,13 @@ func (x QUICInitialRules) Equal(y QUICInitialRules) bool {
 	return EqualQUICInitialRules(x, y)
 }
 
+func EqualPointerQUICInitialRule(x, y *QUICInitialRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualQUICInitialRules(x, y QUICInitialRules) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualQUICInitialRules(x, y QUICInitialRules) bool {
 	}
 
 	return true
-}
-
-func EqualPointerQUICInitialRule(x, y *QUICInitialRule) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

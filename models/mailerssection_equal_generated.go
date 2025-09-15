@@ -17,6 +17,11 @@
 
 package models
 
+func (rec MailersSection) Equal(obj MailersSection) bool {
+	return rec.MailersSectionBase.Equal(obj.MailersSectionBase) &&
+		EqualMapStringMailerEntry(rec.MailerEntries, obj.MailerEntries)
+}
+
 func EqualMapStringMailerEntry(x, y map[string]MailerEntry) bool {
 	if len(x) != len(y) {
 		return false
@@ -29,9 +34,4 @@ func EqualMapStringMailerEntry(x, y map[string]MailerEntry) bool {
 	}
 
 	return true
-}
-
-func (rec MailersSection) Equal(obj MailersSection) bool {
-	return rec.MailersSectionBase.Equal(obj.MailersSectionBase) &&
-		EqualMapStringMailerEntry(rec.MailerEntries, obj.MailerEntries)
 }

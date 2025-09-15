@@ -21,6 +21,34 @@ import (
 	"fmt"
 )
 
+func (x StickRules) Diff(y StickRules) map[string][]interface{} {
+	return DiffStickRules(x, y)
+}
+
+func DiffPointerStickRule(x, y *StickRule) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*StickRule"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffStickRules(x, y StickRules) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -59,32 +87,4 @@ func DiffStickRules(x, y StickRules) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func DiffPointerStickRule(x, y *StickRule) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*StickRule"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func (x StickRules) Diff(y StickRules) map[string][]interface{} {
-	return DiffStickRules(x, y)
 }

@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerMailerEntry(x, y *MailerEntry) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (x MailerEntries) Equal(y MailerEntries) bool {
 	return EqualMailerEntries(x, y)
 }
@@ -41,4 +34,11 @@ func EqualMailerEntries(x, y MailerEntries) bool {
 	}
 
 	return true
+}
+
+func EqualPointerMailerEntry(x, y *MailerEntry) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

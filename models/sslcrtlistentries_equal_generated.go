@@ -17,15 +17,15 @@
 
 package models
 
+func (x SslCrtListEntries) Equal(y SslCrtListEntries) bool {
+	return EqualSslCrtListEntries(x, y)
+}
+
 func EqualPointerSslCrtListEntry(x, y *SslCrtListEntry) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x SslCrtListEntries) Equal(y SslCrtListEntries) bool {
-	return EqualSslCrtListEntries(x, y)
 }
 
 func EqualSslCrtListEntries(x, y SslCrtListEntries) bool {

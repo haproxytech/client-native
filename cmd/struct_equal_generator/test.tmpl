@@ -112,13 +112,14 @@ func Test{{$.Name}}{{.}}False(t *testing.T) {
 		{{- if eq $.FieldCount 0 }}
 		if len(result) == 0 {
 		{{- else  }}
+		listDiffFields := GetListOfDiffFields(result)
 			{{- if $.HasIndex }}
-				if len(result) != {{$.FieldCount}} -1 {
+		if len(result) != {{$.FieldCount}} -1 {
 			{{- else }}
-				if len(result) != {{$.FieldCount}} {
+		if len(listDiffFields) != {{$.FieldCount}} {
 			{{end -}}
 		{{end -}}
-		{{end -}}
+		{{end -}}		
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

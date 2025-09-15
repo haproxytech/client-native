@@ -17,20 +17,6 @@
 
 package models
 
-func EqualMapStringBind(x, y map[string]Bind) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
 func (rec Frontend) Equal(obj Frontend) bool {
 	return rec.FrontendBase.Equal(obj.FrontendBase) &&
 		rec.ACLList.Equal(obj.ACLList) &&
@@ -46,4 +32,18 @@ func (rec Frontend) Equal(obj Frontend) bool {
 		rec.SSLFrontUses.Equal(obj.SSLFrontUses) &&
 		rec.TCPRequestRuleList.Equal(obj.TCPRequestRuleList) &&
 		EqualMapStringBind(rec.Binds, obj.Binds)
+}
+
+func EqualMapStringBind(x, y map[string]Bind) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for kx, vx := range x {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+			return false
+		}
+	}
+
+	return true
 }

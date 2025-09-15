@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x DefaultsSections) Diff(y DefaultsSections) map[string][]interface{} {
+	return DiffDefaultsSections(x, y)
+}
+
 func DiffDefaultsSections(x, y DefaultsSections) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -83,8 +87,4 @@ func DiffPointerDefaults(x, y *Defaults) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func (x DefaultsSections) Diff(y DefaultsSections) map[string][]interface{} {
-	return DiffDefaultsSections(x, y)
 }

@@ -21,6 +21,13 @@ func (x Transactions) Equal(y Transactions) bool {
 	return EqualTransactions(x, y)
 }
 
+func EqualPointerTransaction(x, y *Transaction) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualTransactions(x, y Transactions) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualTransactions(x, y Transactions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerTransaction(x, y *Transaction) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

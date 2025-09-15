@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerBackendSwitchingRule(x, y *BackendSwitchingRule) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (x BackendSwitchingRules) Equal(y BackendSwitchingRules) bool {
 	return EqualBackendSwitchingRules(x, y)
 }
@@ -41,4 +34,11 @@ func EqualBackendSwitchingRules(x, y BackendSwitchingRules) bool {
 	}
 
 	return true
+}
+
+func EqualPointerBackendSwitchingRule(x, y *BackendSwitchingRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

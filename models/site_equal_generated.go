@@ -17,19 +17,10 @@
 
 package models
 
-func EqualSlicePointerSiteFarm(x, y []*SiteFarm) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerSiteFarm(vx, vy) {
-			return false
-		}
-	}
-
-	return true
+func (rec Site) Equal(obj Site) bool {
+	return EqualSlicePointerSiteFarm(rec.Farms, obj.Farms) &&
+		rec.Name == obj.Name &&
+		EqualPointerSiteService(rec.Service, obj.Service)
 }
 
 func EqualPointerSiteFarm(x, y *SiteFarm) bool {
@@ -46,8 +37,17 @@ func EqualPointerSiteService(x, y *SiteService) bool {
 	return (*x).Equal(*y)
 }
 
-func (rec Site) Equal(obj Site) bool {
-	return EqualSlicePointerSiteFarm(rec.Farms, obj.Farms) &&
-		rec.Name == obj.Name &&
-		EqualPointerSiteService(rec.Service, obj.Service)
+func EqualSlicePointerSiteFarm(x, y []*SiteFarm) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerSiteFarm(vx, vy) {
+			return false
+		}
+	}
+
+	return true
 }

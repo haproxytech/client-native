@@ -21,6 +21,13 @@ func (x Resolvers) Equal(y Resolvers) bool {
 	return EqualResolvers(x, y)
 }
 
+func EqualPointerResolver(x, y *Resolver) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualResolvers(x, y Resolvers) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualResolvers(x, y Resolvers) bool {
 	}
 
 	return true
-}
-
-func EqualPointerResolver(x, y *Resolver) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

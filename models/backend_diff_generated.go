@@ -74,7 +74,7 @@ func (rec Backend) Diff(obj Backend) map[string][]interface{} {
 	return diff
 }
 
-func DiffMapStringServerTemplate(x, y map[string]ServerTemplate) map[string][]interface{} {
+func DiffMapStringServer(x, y map[string]Server) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
@@ -113,7 +113,7 @@ func DiffMapStringServerTemplate(x, y map[string]ServerTemplate) map[string][]in
 	return diff
 }
 
-func DiffMapStringServer(x, y map[string]Server) map[string][]interface{} {
+func DiffMapStringServerTemplate(x, y map[string]ServerTemplate) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff

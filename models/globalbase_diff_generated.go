@@ -21,758 +21,6 @@ import (
 	"fmt"
 )
 
-func DiffPointerHTTPClientOptions(x, y *HTTPClientOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "HTTPClientOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerTuneZlibOptions(x, y *TuneZlibOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "TuneZlibOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerCPUMap(x, y []*CPUMap) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerCPUMap(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerRuntimeAPI(x, y *RuntimeAPI) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*RuntimeAPI"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerGlobalHarden(x, y *GlobalHarden) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "Harden"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "LogSendHostname"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerTuneOptions(x, y *TuneOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "TuneOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerCPUSet(x, y []*CPUSet) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerCPUSet(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerEnvironmentOptions(x, y *EnvironmentOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "EnvironmentOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerTuneSslOptions(x, y *TuneSslOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "TuneSslOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerCPUMap(x, y *CPUMap) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*CPUMap"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerRuntimeAPI(x, y []*RuntimeAPI) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerRuntimeAPI(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerSetVar(x, y *SetVar) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*SetVar"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerThreadGroup(x, y []*ThreadGroup) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerThreadGroup(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerDebugOptions(x, y *DebugOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "DebugOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerOcspUpdateOptions(x, y *OcspUpdateOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "OcspUpdateOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerPerformanceOptions(x, y *PerformanceOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "PerformanceOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerWurflOptions(x, y *WurflOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "WurflOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerH1CaseAdjust(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerLuaOptions(x, y *LuaOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "LuaOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerTuneLuaOptions(x, y *TuneLuaOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "TuneLuaOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerCPUSet(x, y *CPUSet) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*CPUSet"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "FiftyOneDegreesOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerHTTPCodes(x, y *HTTPCodes) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*HTTPCodes"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerSslOptions(x, y *SslOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "SslOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerTuneBufferOptions(x, y *TuneBufferOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "TuneBufferOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerTuneQuicOptions(x, y *TuneQuicOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "TuneQuicOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerTuneVarsOptions(x, y *TuneVarsOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "TuneVarsOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
 func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerCPUMap(rec.CPUMaps, obj.CPUMaps) {
@@ -994,13 +242,133 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerH1CaseAdjust(x, y *H1CaseAdjust) map[string][]interface{} {
+func DiffPointerCPUMap(x, y *CPUMap) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
 	}
 
-	key := "*H1CaseAdjust"
+	key := "*CPUMap"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerCPUSet(x, y *CPUSet) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*CPUSet"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerDebugOptions(x, y *DebugOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "DebugOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "DeviceAtlasOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerEnvironmentOptions(x, y *EnvironmentOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "EnvironmentOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "FiftyOneDegreesOptions"
 
 	switch {
 	case x == nil:
@@ -1042,6 +410,630 @@ func DiffPointerGlobalDefaultPath(x, y *GlobalDefaultPath) map[string][]interfac
 	return diff
 }
 
+func DiffPointerGlobalHarden(x, y *GlobalHarden) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "Harden"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "LogSendHostname"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerH1CaseAdjust(x, y *H1CaseAdjust) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*H1CaseAdjust"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerHTTPClientOptions(x, y *HTTPClientOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "HTTPClientOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerHTTPCodes(x, y *HTTPCodes) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*HTTPCodes"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerLuaOptions(x, y *LuaOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "LuaOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerOcspUpdateOptions(x, y *OcspUpdateOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "OcspUpdateOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerPerformanceOptions(x, y *PerformanceOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "PerformanceOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerRuntimeAPI(x, y *RuntimeAPI) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*RuntimeAPI"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerSetVar(x, y *SetVar) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*SetVar"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerSetVarFmt(x, y *SetVarFmt) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*SetVarFmt"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerSslOptions(x, y *SslOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "SslOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerThreadGroup(x, y *ThreadGroup) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*ThreadGroup"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerTuneBufferOptions(x, y *TuneBufferOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "TuneBufferOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerTuneLuaOptions(x, y *TuneLuaOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "TuneLuaOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerTuneOptions(x, y *TuneOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "TuneOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerTuneQuicOptions(x, y *TuneQuicOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "TuneQuicOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerTuneSslOptions(x, y *TuneSslOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "TuneSslOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerTuneVarsOptions(x, y *TuneVarsOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "TuneVarsOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerTuneZlibOptions(x, y *TuneZlibOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "TuneZlibOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerWurflOptions(x, y *WurflOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "WurflOptions"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerCPUMap(x, y []*CPUMap) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerCPUMap(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerCPUSet(x, y []*CPUSet) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerCPUSet(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerH1CaseAdjust(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
 func DiffSlicePointerHTTPCodes(x, y []*HTTPCodes) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -1064,6 +1056,86 @@ func DiffSlicePointerHTTPCodes(x, y []*HTTPCodes) map[string][]interface{} {
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerHTTPCodes(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerRuntimeAPI(x, y []*RuntimeAPI) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerRuntimeAPI(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerSetVar(x, y []*SetVar) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerSetVar(vx, vy) {
 			diff[key+"."+diffKey] = diffValue
 		}
 
@@ -1122,31 +1194,7 @@ func DiffSlicePointerSetVarFmt(x, y []*SetVarFmt) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSetVarFmt(x, y *SetVarFmt) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*SetVarFmt"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerSetVar(x, y []*SetVar) map[string][]interface{} {
+func DiffSlicePointerThreadGroup(x, y []*ThreadGroup) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -1167,7 +1215,7 @@ func DiffSlicePointerSetVar(x, y []*SetVar) map[string][]interface{} {
 		key := fmt.Sprintf("[%d]", i)
 		vx, vy := x[i], y[i]
 
-		for diffKey, diffValue := range DiffPointerSetVar(vx, vy) {
+		for diffKey, diffValue := range DiffPointerThreadGroup(vx, vy) {
 			diff[key+"."+diffKey] = diffValue
 		}
 
@@ -1181,54 +1229,6 @@ func DiffSlicePointerSetVar(x, y []*SetVar) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "DeviceAtlasOptions"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffPointerThreadGroup(x, y *ThreadGroup) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*ThreadGroup"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x BackendSwitchingRules) Diff(y BackendSwitchingRules) map[string][]interface{} {
+	return DiffBackendSwitchingRules(x, y)
+}
+
 func DiffBackendSwitchingRules(x, y BackendSwitchingRules) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -83,8 +87,4 @@ func DiffPointerBackendSwitchingRule(x, y *BackendSwitchingRule) map[string][]in
 	}
 
 	return diff
-}
-
-func (x BackendSwitchingRules) Diff(y BackendSwitchingRules) map[string][]interface{} {
-	return DiffBackendSwitchingRules(x, y)
 }

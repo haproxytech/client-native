@@ -47,6 +47,30 @@ func (rec ClusterSettingsCluster) Diff(obj ClusterSettingsCluster) map[string][]
 	return diff
 }
 
+func DiffPointerClusterLogTarget(x, y *ClusterLogTarget) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*ClusterLogTarget"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSlicePointerClusterLogTarget(x, y []*ClusterLogTarget) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -82,30 +106,6 @@ func DiffSlicePointerClusterLogTarget(x, y []*ClusterLogTarget) map[string][]int
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerClusterLogTarget(x, y *ClusterLogTarget) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*ClusterLogTarget"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

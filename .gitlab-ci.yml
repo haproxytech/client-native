@@ -78,10 +78,17 @@ generate:
   tags:
     - go
   before_script:
-    - find -maxdepth 1 -type f -name "*.go" -exec rm {} \;
+    - find models -maxdepth 1 -type f -name "*.go" -exec rm {} \;
     - make models
   script:
-    - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
+    - |
+      # Check for unstaged changes
+      if ! git diff --quiet 2>/dev/null; then
+          echo "Diff output:"
+          git diff
+          echo "Models are not generated. Please run \`make models\` and commit the result."
+          exit 1
+      fi
     - test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

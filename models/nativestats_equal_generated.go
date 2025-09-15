@@ -23,6 +23,13 @@ func (rec NativeStats) Equal(obj NativeStats) bool {
 		EqualSlicePointerNativeStat(rec.Stats, obj.Stats)
 }
 
+func EqualPointerNativeStat(x, y *NativeStat) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSlicePointerNativeStat(x, y []*NativeStat) bool {
 	if len(x) != len(y) {
 		return false
@@ -36,11 +43,4 @@ func EqualSlicePointerNativeStat(x, y []*NativeStat) bool {
 	}
 
 	return true
-}
-
-func EqualPointerNativeStat(x, y *NativeStat) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

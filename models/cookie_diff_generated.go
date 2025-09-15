@@ -21,94 +21,6 @@ import (
 	"fmt"
 )
 
-func DiffPointerAttr(x, y *Attr) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*Attr"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func DiffSlicePointerDomain(x, y []*Domain) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerDomain(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerDomain(x, y *Domain) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*Domain"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
 func (rec Cookie) Diff(obj Cookie) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerAttr(rec.Attrs, obj.Attrs) {
@@ -153,6 +65,54 @@ func (rec Cookie) Diff(obj Cookie) map[string][]interface{} {
 	return diff
 }
 
+func DiffPointerAttr(x, y *Attr) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*Attr"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerDomain(x, y *Domain) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*Domain"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSlicePointerAttr(x, y []*Attr) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -175,6 +135,46 @@ func DiffSlicePointerAttr(x, y []*Attr) map[string][]interface{} {
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerAttr(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerDomain(x, y []*Domain) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerDomain(vx, vy) {
 			diff[key+"."+diffKey] = diffValue
 		}
 

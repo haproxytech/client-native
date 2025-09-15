@@ -21,6 +21,13 @@ func (x Userlists) Equal(y Userlists) bool {
 	return EqualUserlists(x, y)
 }
 
+func EqualPointerUserlist(x, y *Userlist) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualUserlists(x, y Userlists) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualUserlists(x, y Userlists) bool {
 	}
 
 	return true
-}
-
-func EqualPointerUserlist(x, y *Userlist) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

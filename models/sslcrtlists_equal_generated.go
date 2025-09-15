@@ -21,6 +21,13 @@ func (x SslCrtLists) Equal(y SslCrtLists) bool {
 	return EqualSslCrtLists(x, y)
 }
 
+func EqualPointerSslCrtList(x, y *SslCrtList) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSslCrtLists(x, y SslCrtLists) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSslCrtLists(x, y SslCrtLists) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSslCrtList(x, y *SslCrtList) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

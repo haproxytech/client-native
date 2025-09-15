@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerBackend(x, y *Backend) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (x Backends) Equal(y Backends) bool {
 	return EqualBackends(x, y)
 }
@@ -41,4 +34,11 @@ func EqualBackends(x, y Backends) bool {
 	}
 
 	return true
+}
+
+func EqualPointerBackend(x, y *Backend) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

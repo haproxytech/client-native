@@ -36,6 +36,20 @@ func (rec StatsOptions) Equal(obj StatsOptions) bool {
 		rec.StatsURIPrefix == obj.StatsURIPrefix
 }
 
+func EqualPointerStatsAuth(x, y *StatsAuth) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerStatsHTTPRequest(x, y *StatsHTTPRequest) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSlicePointerStatsAuth(x, y []*StatsAuth) bool {
 	if len(x) != len(y) {
 		return false
@@ -51,13 +65,6 @@ func EqualSlicePointerStatsAuth(x, y []*StatsAuth) bool {
 	return true
 }
 
-func EqualPointerStatsAuth(x, y *StatsAuth) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func EqualSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest) bool {
 	if len(x) != len(y) {
 		return false
@@ -71,11 +78,4 @@ func EqualSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest) bool {
 	}
 
 	return true
-}
-
-func EqualPointerStatsHTTPRequest(x, y *StatsHTTPRequest) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

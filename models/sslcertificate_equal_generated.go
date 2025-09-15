@@ -21,13 +21,6 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-func EqualPointerStrfmtDateTime(x, y *strfmt.DateTime) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (rec SslCertificate) Equal(obj SslCertificate) bool {
 	return rec.Algorithm == obj.Algorithm &&
 		rec.AuthorityKeyID == obj.AuthorityKeyID &&
@@ -49,4 +42,11 @@ func (rec SslCertificate) Equal(obj SslCertificate) bool {
 		rec.Subject == obj.Subject &&
 		rec.SubjectAlternativeNames == obj.SubjectAlternativeNames &&
 		rec.SubjectKeyID == obj.SubjectKeyID
+}
+
+func EqualPointerStrfmtDateTime(x, y *strfmt.DateTime) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

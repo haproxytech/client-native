@@ -25,6 +25,30 @@ func (x ServerSwitchingRules) Diff(y ServerSwitchingRules) map[string][]interfac
 	return DiffServerSwitchingRules(x, y)
 }
 
+func DiffPointerServerSwitchingRule(x, y *ServerSwitchingRule) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*ServerSwitchingRule"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffServerSwitchingRules(x, y ServerSwitchingRules) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -60,30 +84,6 @@ func DiffServerSwitchingRules(x, y ServerSwitchingRules) map[string][]interface{
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerServerSwitchingRule(x, y *ServerSwitchingRule) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*ServerSwitchingRule"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

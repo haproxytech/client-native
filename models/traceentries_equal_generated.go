@@ -21,6 +21,13 @@ func (x TraceEntries) Equal(y TraceEntries) bool {
 	return EqualTraceEntries(x, y)
 }
 
+func EqualPointerTraceEntry(x, y *TraceEntry) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualTraceEntries(x, y TraceEntries) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualTraceEntries(x, y TraceEntries) bool {
 	}
 
 	return true
-}
-
-func EqualPointerTraceEntry(x, y *TraceEntry) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

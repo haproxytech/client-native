@@ -17,6 +17,23 @@
 
 package models
 
+func (rec SpoeMessage) Diff(obj SpoeMessage) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	for diffKey, diffValue := range rec.ACL.Diff(obj.ACL) {
+		diff["ACL"+diffKey] = diffValue
+	}
+	if rec.Args != obj.Args {
+		diff["Args"] = []interface{}{rec.Args, obj.Args}
+	}
+	for diffKey, diffValue := range DiffPointerSpoeMessageEvent(rec.Event, obj.Event) {
+		diff["Event."+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name) {
+		diff["Name."+diffKey] = diffValue
+	}
+	return diff
+}
+
 func DiffPointerSpoeMessageEvent(x, y *SpoeMessageEvent) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -38,22 +55,5 @@ func DiffPointerSpoeMessageEvent(x, y *SpoeMessageEvent) map[string][]interface{
 		diff[key+"."+diffKey] = diffValue
 	}
 
-	return diff
-}
-
-func (rec SpoeMessage) Diff(obj SpoeMessage) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.ACL.Diff(obj.ACL) {
-		diff["ACL"+diffKey] = diffValue
-	}
-	if rec.Args != obj.Args {
-		diff["Args"] = []interface{}{rec.Args, obj.Args}
-	}
-	for diffKey, diffValue := range DiffPointerSpoeMessageEvent(rec.Event, obj.Event) {
-		diff["Event."+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name) {
-		diff["Name."+diffKey] = diffValue
-	}
 	return diff
 }

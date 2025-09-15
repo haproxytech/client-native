@@ -17,6 +17,10 @@
 
 package models
 
+func (x FCGIApps) Equal(y FCGIApps) bool {
+	return EqualFCGIApps(x, y)
+}
+
 func EqualFCGIApps(x, y FCGIApps) bool {
 	if len(x) != len(y) {
 		return false
@@ -37,8 +41,4 @@ func EqualPointerFCGIApp(x, y *FCGIApp) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x FCGIApps) Equal(y FCGIApps) bool {
-	return EqualFCGIApps(x, y)
 }

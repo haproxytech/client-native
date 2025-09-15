@@ -21,6 +21,13 @@ func (x SslCrls) Equal(y SslCrls) bool {
 	return EqualSslCrls(x, y)
 }
 
+func EqualPointerSslCrl(x, y *SslCrl) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSslCrls(x, y SslCrls) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSslCrls(x, y SslCrls) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSslCrl(x, y *SslCrl) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

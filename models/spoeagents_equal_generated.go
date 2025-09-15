@@ -21,6 +21,13 @@ func (x SpoeAgents) Equal(y SpoeAgents) bool {
 	return EqualSpoeAgents(x, y)
 }
 
+func EqualPointerSpoeAgent(x, y *SpoeAgent) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSpoeAgents(x, y SpoeAgents) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSpoeAgents(x, y SpoeAgents) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSpoeAgent(x, y *SpoeAgent) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

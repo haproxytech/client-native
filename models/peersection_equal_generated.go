@@ -17,7 +17,16 @@
 
 package models
 
-func EqualMapStringTable(x, y map[string]Table) bool {
+func (rec PeerSection) Equal(obj PeerSection) bool {
+	return rec.PeerSectionBase.Equal(obj.PeerSectionBase) &&
+		rec.LogTargetList.Equal(obj.LogTargetList) &&
+		EqualMapStringBind(rec.Binds, obj.Binds) &&
+		EqualMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries) &&
+		EqualMapStringServer(rec.Servers, obj.Servers) &&
+		EqualMapStringTable(rec.Tables, obj.Tables)
+}
+
+func EqualMapStringPeerEntry(x, y map[string]PeerEntry) bool {
 	if len(x) != len(y) {
 		return false
 	}
@@ -31,16 +40,7 @@ func EqualMapStringTable(x, y map[string]Table) bool {
 	return true
 }
 
-func (rec PeerSection) Equal(obj PeerSection) bool {
-	return rec.PeerSectionBase.Equal(obj.PeerSectionBase) &&
-		rec.LogTargetList.Equal(obj.LogTargetList) &&
-		EqualMapStringBind(rec.Binds, obj.Binds) &&
-		EqualMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries) &&
-		EqualMapStringServer(rec.Servers, obj.Servers) &&
-		EqualMapStringTable(rec.Tables, obj.Tables)
-}
-
-func EqualMapStringPeerEntry(x, y map[string]PeerEntry) bool {
+func EqualMapStringTable(x, y map[string]Table) bool {
 	if len(x) != len(y) {
 		return false
 	}

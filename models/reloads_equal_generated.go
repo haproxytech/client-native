@@ -21,6 +21,13 @@ func (x Reloads) Equal(y Reloads) bool {
 	return EqualReloads(x, y)
 }
 
+func EqualPointerReload(x, y *Reload) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualReloads(x, y Reloads) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualReloads(x, y Reloads) bool {
 	}
 
 	return true
-}
-
-func EqualPointerReload(x, y *Reload) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

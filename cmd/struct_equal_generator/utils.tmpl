@@ -1,3 +1,13 @@
+
+
+import (
+	"fmt"
+	"reflect"
+	"strings"
+	"unicode"
+)
+
+
 var NilSameAsEmpty = true
 var SkipIndex = true
 
@@ -135,4 +145,69 @@ func equalMapStringMapSting(m1, m2 map[string]map[string]string, opt Options) bo
 		}
 	}
 	return true
+}
+
+
+func GetListOfFields(typ reflect.Type) []string {
+	if typ.Kind() != reflect.Struct {
+		return nil
+	}
+	var fields []string
+	for i := 0; i < typ.NumField(); i++ {
+		fieldName := typ.Field(i).Name
+		if fieldName == "Metadata" {
+			continue
+		}
+		fields = append(fields, typ.Field(i).Name)
+	}
+	return fields
+}
+
+func GetListOfDiffFields(diffs map[string][]interface{}) []string {
+	fields := make(map[string]struct{}, len(diffs))
+	for diff := range diffs {
+		var sb strings.Builder
+		for _, r := range diff {
+			if !(unicode.IsLetter(r) || unicode.IsNumber(r)) {
+				break
+			}
+			sb.WriteRune(r)
+		}
+		key := sb.String()
+		if key == "Metadata" {
+			continue
+		}
+		fields[key] = struct{}{}
+	}
+	result := make([]string, 0, len(fields))
+	for k := range fields {
+		result = append(result, k)
+	}
+	return result
+}
+
+func DiffFields(fields1, fields2 []string) ([]string, []string) {
+	var result1 []string
+	var result2 []string
+	for _, f1 := range fields1 {
+		if !contains(fields2, f1) {
+			result1 = append(result1, f1)
+		}
+	}
+	for _, f2 := range fields2 {
+		if !contains(fields1, f2) {
+			result2 = append(result2, f2)
+		}
+	}
+	return result1, result2
+
+}
+
+func contains(slice []string, item string) bool {
+	for _, s := range slice {
+		if s == item {
+			return true
+		}
+	}
+	return false
 }

@@ -17,13 +17,6 @@
 
 package models
 
-func EqualPointerHTTPErrorRule(x, y *HTTPErrorRule) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (x HTTPErrorRules) Equal(y HTTPErrorRules) bool {
 	return EqualHTTPErrorRules(x, y)
 }
@@ -41,4 +34,11 @@ func EqualHTTPErrorRules(x, y HTTPErrorRules) bool {
 	}
 
 	return true
+}
+
+func EqualPointerHTTPErrorRule(x, y *HTTPErrorRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
 }

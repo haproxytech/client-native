@@ -21,6 +21,13 @@ func (x TCPChecks) Equal(y TCPChecks) bool {
 	return EqualTCPChecks(x, y)
 }
 
+func EqualPointerTCPCheck(x, y *TCPCheck) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualTCPChecks(x, y TCPChecks) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualTCPChecks(x, y TCPChecks) bool {
 	}
 
 	return true
-}
-
-func EqualPointerTCPCheck(x, y *TCPCheck) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

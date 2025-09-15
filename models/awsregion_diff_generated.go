@@ -21,46 +21,6 @@ import (
 	"fmt"
 )
 
-func DiffSlicePointerAwsFilters(x, y []*AwsFilters) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		for diffKey, diffValue := range DiffPointerAwsFilters(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
 func (rec AwsRegion) Diff(obj AwsRegion) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AccessKeyID != obj.AccessKeyID {
@@ -151,6 +111,46 @@ func DiffPointerBool(x, y *bool) map[string][]interface{} {
 
 	if *x != *y {
 		diff[key] = []interface{}{x, y}
+	}
+
+	return diff
+}
+
+func DiffSlicePointerAwsFilters(x, y []*AwsFilters) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+
+	if x == nil {
+		return map[string][]interface{}{"": {nil, y}}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		for diffKey, diffValue := range DiffPointerAwsFilters(vx, vy) {
+			diff[key+"."+diffKey] = diffValue
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
 	}
 
 	return diff

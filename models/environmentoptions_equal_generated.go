@@ -17,6 +17,13 @@
 
 package models
 
+func (rec EnvironmentOptions) Equal(obj EnvironmentOptions) bool {
+	return EqualSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs) &&
+		EqualSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs) &&
+		rec.Resetenv == obj.Resetenv &&
+		rec.Unsetenv == obj.Unsetenv
+}
+
 func EqualPointerPresetEnv(x, y *PresetEnv) bool {
 	if x == nil || y == nil {
 		return x == y
@@ -24,33 +31,11 @@ func EqualPointerPresetEnv(x, y *PresetEnv) bool {
 	return (*x).Equal(*y)
 }
 
-func EqualSlicePointerSetEnv(x, y []*SetEnv) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerSetEnv(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
 func EqualPointerSetEnv(x, y *SetEnv) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (rec EnvironmentOptions) Equal(obj EnvironmentOptions) bool {
-	return EqualSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs) &&
-		EqualSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs) &&
-		rec.Resetenv == obj.Resetenv &&
-		rec.Unsetenv == obj.Unsetenv
 }
 
 func EqualSlicePointerPresetEnv(x, y []*PresetEnv) bool {
@@ -61,6 +46,21 @@ func EqualSlicePointerPresetEnv(x, y []*PresetEnv) bool {
 	for i, vx := range x {
 		vy := y[i]
 		if !EqualPointerPresetEnv(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerSetEnv(x, y []*SetEnv) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerSetEnv(vx, vy) {
 			return false
 		}
 	}

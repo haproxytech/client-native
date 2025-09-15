@@ -17,6 +17,17 @@
 
 package models
 
+func (rec SiteFarm) Equal(obj SiteFarm) bool {
+	return EqualPointerBalance(rec.Balance, obj.Balance) &&
+		rec.Cond == obj.Cond &&
+		rec.CondTest == obj.CondTest &&
+		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor) &&
+		rec.Mode == obj.Mode &&
+		rec.Name == obj.Name &&
+		EqualSlicePointerServer(rec.Servers, obj.Servers) &&
+		rec.UseAs == obj.UseAs
+}
+
 func EqualSlicePointerServer(x, y []*Server) bool {
 	if len(x) != len(y) {
 		return false
@@ -30,15 +41,4 @@ func EqualSlicePointerServer(x, y []*Server) bool {
 	}
 
 	return true
-}
-
-func (rec SiteFarm) Equal(obj SiteFarm) bool {
-	return EqualPointerBalance(rec.Balance, obj.Balance) &&
-		rec.Cond == obj.Cond &&
-		rec.CondTest == obj.CondTest &&
-		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor) &&
-		rec.Mode == obj.Mode &&
-		rec.Name == obj.Name &&
-		EqualSlicePointerServer(rec.Servers, obj.Servers) &&
-		rec.UseAs == obj.UseAs
 }

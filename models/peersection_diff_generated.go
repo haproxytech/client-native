@@ -21,6 +21,29 @@ import (
 	"fmt"
 )
 
+func (rec PeerSection) Diff(obj PeerSection) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	for diffKey, diffValue := range rec.PeerSectionBase.Diff(obj.PeerSectionBase) {
+		diff["PeerSectionBase."+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList) {
+		diff["LogTargetList"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds) {
+		diff["Binds"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries) {
+		diff["PeerEntries"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers) {
+		diff["Servers"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffMapStringTable(rec.Tables, obj.Tables) {
+		diff["Tables"+diffKey] = diffValue
+	}
+	return diff
+}
+
 func DiffMapStringPeerEntry(x, y map[string]PeerEntry) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
@@ -95,29 +118,6 @@ func DiffMapStringTable(x, y map[string]Table) map[string][]interface{} {
 			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
-	}
-	return diff
-}
-
-func (rec PeerSection) Diff(obj PeerSection) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.PeerSectionBase.Diff(obj.PeerSectionBase) {
-		diff["PeerSectionBase."+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList) {
-		diff["LogTargetList"+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds) {
-		diff["Binds"+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range DiffMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries) {
-		diff["PeerEntries"+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers) {
-		diff["Servers"+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range DiffMapStringTable(rec.Tables, obj.Tables) {
-		diff["Tables"+diffKey] = diffValue
 	}
 	return diff
 }

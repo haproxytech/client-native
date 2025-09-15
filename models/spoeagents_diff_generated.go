@@ -21,6 +21,34 @@ import (
 	"fmt"
 )
 
+func (x SpoeAgents) Diff(y SpoeAgents) map[string][]interface{} {
+	return DiffSpoeAgents(x, y)
+}
+
+func DiffPointerSpoeAgent(x, y *SpoeAgent) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*SpoeAgent"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSpoeAgents(x, y SpoeAgents) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -59,32 +87,4 @@ func DiffSpoeAgents(x, y SpoeAgents) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func DiffPointerSpoeAgent(x, y *SpoeAgent) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*SpoeAgent"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func (x SpoeAgents) Diff(y SpoeAgents) map[string][]interface{} {
-	return DiffSpoeAgents(x, y)
 }

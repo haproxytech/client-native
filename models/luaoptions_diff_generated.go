@@ -35,6 +35,54 @@ func (rec LuaOptions) Diff(obj LuaOptions) map[string][]interface{} {
 	return diff
 }
 
+func DiffPointerLuaLoad(x, y *LuaLoad) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*LuaLoad"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerLuaPrependPath(x, y *LuaPrependPath) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*LuaPrependPath"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSlicePointerLuaLoad(x, y []*LuaLoad) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -75,30 +123,6 @@ func DiffSlicePointerLuaLoad(x, y []*LuaLoad) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerLuaLoad(x, y *LuaLoad) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*LuaLoad"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
 func DiffSlicePointerLuaPrependPath(x, y []*LuaPrependPath) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -134,30 +158,6 @@ func DiffSlicePointerLuaPrependPath(x, y []*LuaPrependPath) map[string][]interfa
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerLuaPrependPath(x, y *LuaPrependPath) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*LuaPrependPath"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

@@ -17,6 +17,10 @@
 
 package models
 
+func (x Endpoints) Equal(y Endpoints) bool {
+	return EqualEndpoints(x, y)
+}
+
 func EqualEndpoints(x, y Endpoints) bool {
 	if len(x) != len(y) {
 		return false
@@ -37,8 +41,4 @@ func EqualPointerEndpoint(x, y *Endpoint) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x Endpoints) Equal(y Endpoints) bool {
-	return EqualEndpoints(x, y)
 }

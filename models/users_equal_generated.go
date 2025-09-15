@@ -17,15 +17,15 @@
 
 package models
 
+func (x Users) Equal(y Users) bool {
+	return EqualUsers(x, y)
+}
+
 func EqualPointerUser(x, y *User) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x Users) Equal(y Users) bool {
-	return EqualUsers(x, y)
 }
 
 func EqualUsers(x, y Users) bool {

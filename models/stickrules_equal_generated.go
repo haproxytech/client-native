@@ -17,6 +17,17 @@
 
 package models
 
+func (x StickRules) Equal(y StickRules) bool {
+	return EqualStickRules(x, y)
+}
+
+func EqualPointerStickRule(x, y *StickRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualStickRules(x, y StickRules) bool {
 	if len(x) != len(y) {
 		return false
@@ -30,15 +41,4 @@ func EqualStickRules(x, y StickRules) bool {
 	}
 
 	return true
-}
-
-func EqualPointerStickRule(x, y *StickRule) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func (x StickRules) Equal(y StickRules) bool {
-	return EqualStickRules(x, y)
 }

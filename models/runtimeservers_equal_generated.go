@@ -21,6 +21,13 @@ func (x RuntimeServers) Equal(y RuntimeServers) bool {
 	return EqualRuntimeServers(x, y)
 }
 
+func EqualPointerRuntimeServer(x, y *RuntimeServer) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualRuntimeServers(x, y RuntimeServers) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualRuntimeServers(x, y RuntimeServers) bool {
 	}
 
 	return true
-}
-
-func EqualPointerRuntimeServer(x, y *RuntimeServer) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

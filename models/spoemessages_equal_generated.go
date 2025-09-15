@@ -21,6 +21,13 @@ func (x SpoeMessages) Equal(y SpoeMessages) bool {
 	return EqualSpoeMessages(x, y)
 }
 
+func EqualPointerSpoeMessage(x, y *SpoeMessage) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSpoeMessages(x, y SpoeMessages) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSpoeMessages(x, y SpoeMessages) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSpoeMessage(x, y *SpoeMessage) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

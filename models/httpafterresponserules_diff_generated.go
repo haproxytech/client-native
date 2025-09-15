@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x HTTPAfterResponseRules) Diff(y HTTPAfterResponseRules) map[string][]interface{} {
+	return DiffHTTPAfterResponseRules(x, y)
+}
+
 func DiffHTTPAfterResponseRules(x, y HTTPAfterResponseRules) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -83,8 +87,4 @@ func DiffPointerHTTPAfterResponseRule(x, y *HTTPAfterResponseRule) map[string][]
 	}
 
 	return diff
-}
-
-func (x HTTPAfterResponseRules) Diff(y HTTPAfterResponseRules) map[string][]interface{} {
-	return DiffHTTPAfterResponseRules(x, y)
 }

@@ -21,6 +21,34 @@ import (
 	"fmt"
 )
 
+func (x SpoeGroups) Diff(y SpoeGroups) map[string][]interface{} {
+	return DiffSpoeGroups(x, y)
+}
+
+func DiffPointerSpoeGroup(x, y *SpoeGroup) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*SpoeGroup"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffSpoeGroups(x, y SpoeGroups) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	lenX := len(x)
@@ -59,32 +87,4 @@ func DiffSpoeGroups(x, y SpoeGroups) map[string][]interface{} {
 	}
 
 	return diff
-}
-
-func DiffPointerSpoeGroup(x, y *SpoeGroup) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*SpoeGroup"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
-	}
-
-	return diff
-}
-
-func (x SpoeGroups) Diff(y SpoeGroups) map[string][]interface{} {
-	return DiffSpoeGroups(x, y)
 }

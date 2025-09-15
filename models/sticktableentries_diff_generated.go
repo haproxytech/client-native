@@ -21,6 +21,10 @@ import (
 	"fmt"
 )
 
+func (x StickTableEntries) Diff(y StickTableEntries) map[string][]interface{} {
+	return DiffStickTableEntries(x, y)
+}
+
 func DiffPointerStickTableEntry(x, y *StickTableEntry) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -43,10 +47,6 @@ func DiffPointerStickTableEntry(x, y *StickTableEntry) map[string][]interface{} 
 	}
 
 	return diff
-}
-
-func (x StickTableEntries) Diff(y StickTableEntries) map[string][]interface{} {
-	return DiffStickTableEntries(x, y)
 }
 
 func DiffStickTableEntries(x, y StickTableEntries) map[string][]interface{} {

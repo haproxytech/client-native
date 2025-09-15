@@ -17,6 +17,10 @@
 
 package models
 
+func (x HTTPChecks) Equal(y HTTPChecks) bool {
+	return EqualHTTPChecks(x, y)
+}
+
 func EqualHTTPChecks(x, y HTTPChecks) bool {
 	if len(x) != len(y) {
 		return false
@@ -37,8 +41,4 @@ func EqualPointerHTTPCheck(x, y *HTTPCheck) bool {
 		return x == y
 	}
 	return (*x).Equal(*y)
-}
-
-func (x HTTPChecks) Equal(y HTTPChecks) bool {
-	return EqualHTTPChecks(x, y)
 }

@@ -21,6 +21,13 @@ func (x SpoeTransactions) Equal(y SpoeTransactions) bool {
 	return EqualSpoeTransactions(x, y)
 }
 
+func EqualPointerSpoeTransaction(x, y *SpoeTransaction) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSpoeTransactions(x, y SpoeTransactions) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSpoeTransactions(x, y SpoeTransactions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSpoeTransaction(x, y *SpoeTransaction) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

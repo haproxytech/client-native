@@ -21,6 +21,47 @@ import (
 	"fmt"
 )
 
+func (rec EnvironmentOptions) Diff(obj EnvironmentOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	for diffKey, diffValue := range DiffSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs) {
+		diff["PresetEnvs"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs) {
+		diff["SetEnvs"+diffKey] = diffValue
+	}
+	if rec.Resetenv != obj.Resetenv {
+		diff["Resetenv"] = []interface{}{rec.Resetenv, obj.Resetenv}
+	}
+	if rec.Unsetenv != obj.Unsetenv {
+		diff["Unsetenv"] = []interface{}{rec.Unsetenv, obj.Unsetenv}
+	}
+	return diff
+}
+
+func DiffPointerPresetEnv(x, y *PresetEnv) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*PresetEnv"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
 func DiffPointerSetEnv(x, y *SetEnv) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
@@ -42,23 +83,6 @@ func DiffPointerSetEnv(x, y *SetEnv) map[string][]interface{} {
 		diff[key+"."+diffKey] = diffValue
 	}
 
-	return diff
-}
-
-func (rec EnvironmentOptions) Diff(obj EnvironmentOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs) {
-		diff["PresetEnvs"+diffKey] = diffValue
-	}
-	for diffKey, diffValue := range DiffSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs) {
-		diff["SetEnvs"+diffKey] = diffValue
-	}
-	if rec.Resetenv != obj.Resetenv {
-		diff["Resetenv"] = []interface{}{rec.Resetenv, obj.Resetenv}
-	}
-	if rec.Unsetenv != obj.Unsetenv {
-		diff["Unsetenv"] = []interface{}{rec.Unsetenv, obj.Unsetenv}
-	}
 	return diff
 }
 
@@ -97,30 +121,6 @@ func DiffSlicePointerPresetEnv(x, y []*PresetEnv) map[string][]interface{} {
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerPresetEnv(x, y *PresetEnv) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*PresetEnv"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

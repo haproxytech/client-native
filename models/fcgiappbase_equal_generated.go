@@ -38,21 +38,6 @@ func EqualPointerFCGILogStderr(x, y *FCGILogStderr) bool {
 	return (*x).Equal(*y)
 }
 
-func EqualSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerFCGIPassHeader(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
 func EqualPointerFCGIPassHeader(x, y *FCGIPassHeader) bool {
 	if x == nil || y == nil {
 		return x == y
@@ -60,19 +45,11 @@ func EqualPointerFCGIPassHeader(x, y *FCGIPassHeader) bool {
 	return (*x).Equal(*y)
 }
 
-func EqualSlicePointerFCGISetParam(x, y []*FCGISetParam) bool {
-	if len(x) != len(y) {
-		return false
+func EqualPointerFCGISetParam(x, y *FCGISetParam) bool {
+	if x == nil || y == nil {
+		return x == y
 	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerFCGISetParam(vx, vy) {
-			return false
-		}
-	}
-
-	return true
+	return (*x).Equal(*y)
 }
 
 func EqualSlicePointerFCGILogStderr(x, y []*FCGILogStderr) bool {
@@ -90,9 +67,32 @@ func EqualSlicePointerFCGILogStderr(x, y []*FCGILogStderr) bool {
 	return true
 }
 
-func EqualPointerFCGISetParam(x, y *FCGISetParam) bool {
-	if x == nil || y == nil {
-		return x == y
+func EqualSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) bool {
+	if len(x) != len(y) {
+		return false
 	}
-	return (*x).Equal(*y)
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerFCGIPassHeader(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerFCGISetParam(x, y []*FCGISetParam) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerFCGISetParam(vx, vy) {
+			return false
+		}
+	}
+
+	return true
 }

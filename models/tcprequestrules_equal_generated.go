@@ -17,6 +17,17 @@
 
 package models
 
+func (x TCPRequestRules) Equal(y TCPRequestRules) bool {
+	return EqualTCPRequestRules(x, y)
+}
+
+func EqualPointerTCPRequestRule(x, y *TCPRequestRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualTCPRequestRules(x, y TCPRequestRules) bool {
 	if len(x) != len(y) {
 		return false
@@ -30,15 +41,4 @@ func EqualTCPRequestRules(x, y TCPRequestRules) bool {
 	}
 
 	return true
-}
-
-func EqualPointerTCPRequestRule(x, y *TCPRequestRule) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func (x TCPRequestRules) Equal(y TCPRequestRules) bool {
-	return EqualTCPRequestRules(x, y)
 }

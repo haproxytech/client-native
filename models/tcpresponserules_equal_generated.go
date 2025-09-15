@@ -17,6 +17,17 @@
 
 package models
 
+func (x TCPResponseRules) Equal(y TCPResponseRules) bool {
+	return EqualTCPResponseRules(x, y)
+}
+
+func EqualPointerTCPResponseRule(x, y *TCPResponseRule) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualTCPResponseRules(x, y TCPResponseRules) bool {
 	if len(x) != len(y) {
 		return false
@@ -30,15 +41,4 @@ func EqualTCPResponseRules(x, y TCPResponseRules) bool {
 	}
 
 	return true
-}
-
-func EqualPointerTCPResponseRule(x, y *TCPResponseRule) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func (x TCPResponseRules) Equal(y TCPResponseRules) bool {
-	return EqualTCPResponseRules(x, y)
 }

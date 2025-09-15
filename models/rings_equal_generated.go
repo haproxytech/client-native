@@ -21,6 +21,13 @@ func (x Rings) Equal(y Rings) bool {
 	return EqualRings(x, y)
 }
 
+func EqualPointerRing(x, y *Ring) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualRings(x, y Rings) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualRings(x, y Rings) bool {
 	}
 
 	return true
-}
-
-func EqualPointerRing(x, y *Ring) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

@@ -36,7 +36,7 @@ func (rec Backend) Equal(obj Backend) bool {
 		EqualMapStringServer(rec.Servers, obj.Servers)
 }
 
-func EqualMapStringServerTemplate(x, y map[string]ServerTemplate) bool {
+func EqualMapStringServer(x, y map[string]Server) bool {
 	if len(x) != len(y) {
 		return false
 	}
@@ -50,7 +50,7 @@ func EqualMapStringServerTemplate(x, y map[string]ServerTemplate) bool {
 	return true
 }
 
-func EqualMapStringServer(x, y map[string]Server) bool {
+func EqualMapStringServerTemplate(x, y map[string]ServerTemplate) bool {
 	if len(x) != len(y) {
 		return false
 	}

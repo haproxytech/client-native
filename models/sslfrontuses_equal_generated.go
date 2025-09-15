@@ -21,6 +21,13 @@ func (x SSLFrontUses) Equal(y SSLFrontUses) bool {
 	return EqualSSLFrontUses(x, y)
 }
 
+func EqualPointerSSLFrontUse(x, y *SSLFrontUse) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
 func EqualSSLFrontUses(x, y SSLFrontUses) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,11 +41,4 @@ func EqualSSLFrontUses(x, y SSLFrontUses) bool {
 	}
 
 	return true
-}
-
-func EqualPointerSSLFrontUse(x, y *SSLFrontUse) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }

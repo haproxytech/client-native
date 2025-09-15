@@ -17,278 +17,6 @@
 
 package models
 
-func EqualPointerEnvironmentOptions(x, y *EnvironmentOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerThreadGroup(x, y *ThreadGroup) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerGlobalHarden(x, y *GlobalHarden) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerHTTPCodes(x, y []*HTTPCodes) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerHTTPCodes(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerHTTPCodes(x, y *HTTPCodes) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerOcspUpdateOptions(x, y *OcspUpdateOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerH1CaseAdjust(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerLuaOptions(x, y *LuaOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerH1CaseAdjust(x, y *H1CaseAdjust) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerRuntimeAPI(x, y []*RuntimeAPI) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerRuntimeAPI(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerTuneBufferOptions(x, y *TuneBufferOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerTuneLuaOptions(x, y *TuneLuaOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerCPUMap(x, y []*CPUMap) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerCPUMap(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualSlicePointerSetVarFmt(x, y []*SetVarFmt) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerSetVarFmt(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerDebugOptions(x, y *DebugOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerSslOptions(x, y *SslOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerTuneVarsOptions(x, y *TuneVarsOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerSetVarFmt(x, y *SetVarFmt) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerSetVar(x, y *SetVar) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerHTTPClientOptions(x, y *HTTPClientOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerTuneQuicOptions(x, y *TuneQuicOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerTuneZlibOptions(x, y *TuneZlibOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualSlicePointerCPUSet(x, y []*CPUSet) bool {
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerCPUSet(vx, vy) {
-			return false
-		}
-	}
-
-	return true
-}
-
-func EqualPointerCPUSet(x, y *CPUSet) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerRuntimeAPI(x, y *RuntimeAPI) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerGlobalDefaultPath(x, y *GlobalDefaultPath) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerPerformanceOptions(x, y *PerformanceOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerTuneSslOptions(x, y *TuneSslOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerTuneOptions(x, y *TuneOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
-func EqualPointerWurflOptions(x, y *WurflOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
-}
-
 func (rec GlobalBase) Equal(obj GlobalBase) bool {
 	return EqualSlicePointerCPUMap(rec.CPUMaps, obj.CPUMaps) &&
 		EqualSlicePointerCPUSet(rec.CPUSets, obj.CPUSets) &&
@@ -371,6 +99,270 @@ func EqualPointerCPUMap(x, y *CPUMap) bool {
 	return (*x).Equal(*y)
 }
 
+func EqualPointerCPUSet(x, y *CPUSet) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerDebugOptions(x, y *DebugOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerEnvironmentOptions(x, y *EnvironmentOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerGlobalDefaultPath(x, y *GlobalDefaultPath) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerGlobalHarden(x, y *GlobalHarden) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerH1CaseAdjust(x, y *H1CaseAdjust) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerHTTPClientOptions(x, y *HTTPClientOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerHTTPCodes(x, y *HTTPCodes) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerLuaOptions(x, y *LuaOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerOcspUpdateOptions(x, y *OcspUpdateOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerPerformanceOptions(x, y *PerformanceOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerRuntimeAPI(x, y *RuntimeAPI) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerSetVar(x, y *SetVar) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerSetVarFmt(x, y *SetVarFmt) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerSslOptions(x, y *SslOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerThreadGroup(x, y *ThreadGroup) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerTuneBufferOptions(x, y *TuneBufferOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerTuneLuaOptions(x, y *TuneLuaOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerTuneOptions(x, y *TuneOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerTuneQuicOptions(x, y *TuneQuicOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerTuneSslOptions(x, y *TuneSslOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerTuneVarsOptions(x, y *TuneVarsOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerTuneZlibOptions(x, y *TuneZlibOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualPointerWurflOptions(x, y *WurflOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y)
+}
+
+func EqualSlicePointerCPUMap(x, y []*CPUMap) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerCPUMap(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerCPUSet(x, y []*CPUSet) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerCPUSet(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerH1CaseAdjust(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerHTTPCodes(x, y []*HTTPCodes) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerHTTPCodes(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerRuntimeAPI(x, y []*RuntimeAPI) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerRuntimeAPI(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
 func EqualSlicePointerSetVar(x, y []*SetVar) bool {
 	if len(x) != len(y) {
 		return false
@@ -379,6 +371,21 @@ func EqualSlicePointerSetVar(x, y []*SetVar) bool {
 	for i, vx := range x {
 		vy := y[i]
 		if !EqualPointerSetVar(vx, vy) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualSlicePointerSetVarFmt(x, y []*SetVarFmt) bool {
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if !EqualPointerSetVarFmt(vx, vy) {
 			return false
 		}
 	}
@@ -399,11 +406,4 @@ func EqualSlicePointerThreadGroup(x, y []*ThreadGroup) bool {
 	}
 
 	return true
-}
-
-func EqualPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y)
 }
