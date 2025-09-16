@@ -52,28 +52,28 @@ type BackendBase struct {
 	IgnorePersistList []*IgnorePersist `json:"ignore_persist_list,omitempty"`
 
 	// abortonclose
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Abortonclose string `json:"abortonclose,omitempty"`
 
 	// accept invalid http response
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
 
 	// accept unsafe violations in http response
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	AcceptUnsafeViolationsInHTTPResponse string `json:"accept_unsafe_violations_in_http_response,omitempty"`
 
 	// adv check
-	// Enum: ["httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check"]
-	// +kubebuilder:validation:Enum=httpchk;ldap-check;mysql-check;pgsql-check;redis-check;smtpchk;ssl-hello-chk;tcp-check;
+	// Enum: [httpchk ldap-check mysql-check pgsql-check redis-check smtpchk ssl-hello-chk tcp-check]
+	// +kubebuilder:validation:Enum=httpchk ldap-check mysql-check pgsql-check redis-check smtpchk ssl-hello-chk tcp-check;
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// allbackups
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Allbackups string `json:"allbackups,omitempty"`
 
 	// balance
@@ -83,8 +83,8 @@ type BackendBase struct {
 	CheckTimeout *int64 `json:"check_timeout,omitempty"`
 
 	// checkcache
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Checkcache string `json:"checkcache,omitempty"`
 
 	// compression
@@ -125,8 +125,8 @@ type BackendBase struct {
 	Errorloc303 *Errorloc `json:"errorloc303,omitempty"`
 
 	// external check
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	ExternalCheck string `json:"external_check,omitempty"`
 
 	// external check command
@@ -159,46 +159,46 @@ type BackendBase struct {
 	GUID string `json:"guid,omitempty"`
 
 	// h1 case adjust bogus server
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
 
 	// hash balance factor
 	HashBalanceFactor *int64 `json:"hash_balance_factor,omitempty"`
 
 	// hash preserve affinity
-	// Enum: ["always","maxconn","maxqueue"]
-	// +kubebuilder:validation:Enum=always;maxconn;maxqueue;
+	// Enum: [always maxconn maxqueue]
+	// +kubebuilder:validation:Enum=always maxconn maxqueue;
 	HashPreserveAffinity string `json:"hash_preserve_affinity,omitempty"`
 
 	// hash type
 	HashType *HashType `json:"hash_type,omitempty"`
 
 	// http buffer request
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
 
 	// http drop request trailers
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	HTTPDropRequestTrailers string `json:"http-drop-request-trailers,omitempty"`
 
 	// http no delay
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	HTTPNoDelay string `json:"http-no-delay,omitempty"`
 
 	// http use htx
 	// Pattern: ^[^\s]+$
-	// Enum: ["enabled","disabled"]
+	// Enum: [enabled disabled]
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum=enabled disabled;
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
-	// Enum: ["httpclose","http-server-close","http-keep-alive"]
-	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
+	// Enum: [httpclose http-server-close http-keep-alive]
+	// +kubebuilder:validation:Enum=httpclose http-server-close http-keep-alive;
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keep alive timeout
@@ -207,13 +207,13 @@ type BackendBase struct {
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
 	// http pretend keepalive
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
 	// http proxy
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	HTTPProxy string `json:"http_proxy,omitempty"`
 
 	// http request timeout
@@ -222,13 +222,13 @@ type BackendBase struct {
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
 	// http restrict req hdr names
-	// Enum: ["preserve","delete","reject"]
-	// +kubebuilder:validation:Enum=preserve;delete;reject;
+	// Enum: [preserve delete reject]
+	// +kubebuilder:validation:Enum=preserve delete reject;
 	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
 
 	// http reuse
-	// Enum: ["aggressive","always","never","safe"]
-	// +kubebuilder:validation:Enum=aggressive;always;never;safe;
+	// Enum: [aggressive always never safe]
+	// +kubebuilder:validation:Enum=aggressive always never safe;
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
 	// http send name header
@@ -244,18 +244,18 @@ type BackendBase struct {
 	IgnorePersist *BackendIgnorePersist `json:"ignore_persist,omitempty"`
 
 	// independent streams
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	IndependentStreams string `json:"independent_streams,omitempty"`
 
 	// load server state from file
-	// Enum: ["global","local","none"]
-	// +kubebuilder:validation:Enum=global;local;none;
+	// Enum: [global local none]
+	// +kubebuilder:validation:Enum=global local none;
 	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
 
 	// log health checks
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	LogHealthChecks string `json:"log_health_checks,omitempty"`
 
 	// log tag
@@ -271,8 +271,8 @@ type BackendBase struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// mode
-	// Enum: ["http","tcp","log"]
-	// +kubebuilder:validation:Enum=http;tcp;log;
+	// Enum: [http tcp log]
+	// +kubebuilder:validation:Enum=http tcp log;
 	Mode string `json:"mode,omitempty"`
 
 	// mysql check params
@@ -285,16 +285,16 @@ type BackendBase struct {
 	Name string `json:"name"`
 
 	// nolinger
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Nolinger string `json:"nolinger,omitempty"`
 
 	// originalto
 	Originalto *Originalto `json:"originalto,omitempty"`
 
 	// persist
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Persist string `json:"persist,omitempty"`
 
 	// persist rule
@@ -304,8 +304,8 @@ type BackendBase struct {
 	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
 
 	// prefer last server
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	PreferLastServer string `json:"prefer_last_server,omitempty"`
 
 	// queue timeout
@@ -342,28 +342,28 @@ type BackendBase struct {
 	Source *Source `json:"source,omitempty"`
 
 	// splice auto
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	SpliceAuto string `json:"splice_auto,omitempty"`
 
 	// splice request
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	SpliceRequest string `json:"splice_request,omitempty"`
 
 	// splice response
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	SpliceResponse string `json:"splice_response,omitempty"`
 
 	// spop check
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	SpopCheck string `json:"spop_check,omitempty"`
 
 	// srvtcpka
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Srvtcpka string `json:"srvtcpka,omitempty"`
 
 	// srvtcpka cnt
@@ -387,18 +387,18 @@ type BackendBase struct {
 	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart connect
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	TCPSmartConnect string `json:"tcp_smart_connect,omitempty"`
 
 	// tcpka
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Tcpka string `json:"tcpka,omitempty"`
 
 	// transparent
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Transparent string `json:"transparent,omitempty"`
 
 	// tunnel timeout
@@ -2940,11 +2940,6 @@ func (m *BackendBase) contextValidateErrorFiles(ctx context.Context, formats str
 	for i := 0; i < len(m.ErrorFiles); i++ {
 
 		if m.ErrorFiles[i] != nil {
-
-			if swag.IsZero(m.ErrorFiles[i]) { // not required
-				return nil
-			}
-
 			if err := m.ErrorFiles[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
@@ -2965,11 +2960,6 @@ func (m *BackendBase) contextValidateErrorFilesFromHTTPErrors(ctx context.Contex
 	for i := 0; i < len(m.ErrorFilesFromHTTPErrors); i++ {
 
 		if m.ErrorFilesFromHTTPErrors[i] != nil {
-
-			if swag.IsZero(m.ErrorFilesFromHTTPErrors[i]) { // not required
-				return nil
-			}
-
 			if err := m.ErrorFilesFromHTTPErrors[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
@@ -2990,11 +2980,6 @@ func (m *BackendBase) contextValidateForcePersistList(ctx context.Context, forma
 	for i := 0; i < len(m.ForcePersistList); i++ {
 
 		if m.ForcePersistList[i] != nil {
-
-			if swag.IsZero(m.ForcePersistList[i]) { // not required
-				return nil
-			}
-
 			if err := m.ForcePersistList[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
@@ -3015,11 +3000,6 @@ func (m *BackendBase) contextValidateIgnorePersistList(ctx context.Context, form
 	for i := 0; i < len(m.IgnorePersistList); i++ {
 
 		if m.IgnorePersistList[i] != nil {
-
-			if swag.IsZero(m.IgnorePersistList[i]) { // not required
-				return nil
-			}
-
 			if err := m.IgnorePersistList[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("ignore_persist_list" + "." + strconv.Itoa(i))
@@ -3038,11 +3018,6 @@ func (m *BackendBase) contextValidateIgnorePersistList(ctx context.Context, form
 func (m *BackendBase) contextValidateBalance(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Balance != nil {
-
-		if swag.IsZero(m.Balance) { // not required
-			return nil
-		}
-
 		if err := m.Balance.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("balance")
@@ -3059,11 +3034,6 @@ func (m *BackendBase) contextValidateBalance(ctx context.Context, formats strfmt
 func (m *BackendBase) contextValidateCompression(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Compression != nil {
-
-		if swag.IsZero(m.Compression) { // not required
-			return nil
-		}
-
 		if err := m.Compression.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("compression")
@@ -3080,11 +3050,6 @@ func (m *BackendBase) contextValidateCompression(ctx context.Context, formats st
 func (m *BackendBase) contextValidateCookie(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Cookie != nil {
-
-		if swag.IsZero(m.Cookie) { // not required
-			return nil
-		}
-
 		if err := m.Cookie.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("cookie")
@@ -3101,11 +3066,6 @@ func (m *BackendBase) contextValidateCookie(ctx context.Context, formats strfmt.
 func (m *BackendBase) contextValidateDefaultServer(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DefaultServer != nil {
-
-		if swag.IsZero(m.DefaultServer) { // not required
-			return nil
-		}
-
 		if err := m.DefaultServer.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("default_server")
@@ -3122,11 +3082,6 @@ func (m *BackendBase) contextValidateDefaultServer(ctx context.Context, formats 
 func (m *BackendBase) contextValidateEmailAlert(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.EmailAlert != nil {
-
-		if swag.IsZero(m.EmailAlert) { // not required
-			return nil
-		}
-
 		if err := m.EmailAlert.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("email_alert")
@@ -3143,11 +3098,6 @@ func (m *BackendBase) contextValidateEmailAlert(ctx context.Context, formats str
 func (m *BackendBase) contextValidateErrorloc302(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Errorloc302 != nil {
-
-		if swag.IsZero(m.Errorloc302) { // not required
-			return nil
-		}
-
 		if err := m.Errorloc302.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("errorloc302")
@@ -3164,11 +3114,6 @@ func (m *BackendBase) contextValidateErrorloc302(ctx context.Context, formats st
 func (m *BackendBase) contextValidateErrorloc303(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Errorloc303 != nil {
-
-		if swag.IsZero(m.Errorloc303) { // not required
-			return nil
-		}
-
 		if err := m.Errorloc303.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("errorloc303")
@@ -3185,11 +3130,6 @@ func (m *BackendBase) contextValidateErrorloc303(ctx context.Context, formats st
 func (m *BackendBase) contextValidateForcePersist(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.ForcePersist != nil {
-
-		if swag.IsZero(m.ForcePersist) { // not required
-			return nil
-		}
-
 		if err := m.ForcePersist.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("force_persist")
@@ -3206,11 +3146,6 @@ func (m *BackendBase) contextValidateForcePersist(ctx context.Context, formats s
 func (m *BackendBase) contextValidateForwardfor(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Forwardfor != nil {
-
-		if swag.IsZero(m.Forwardfor) { // not required
-			return nil
-		}
-
 		if err := m.Forwardfor.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("forwardfor")
@@ -3227,11 +3162,6 @@ func (m *BackendBase) contextValidateForwardfor(ctx context.Context, formats str
 func (m *BackendBase) contextValidateHashType(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.HashType != nil {
-
-		if swag.IsZero(m.HashType) { // not required
-			return nil
-		}
-
 		if err := m.HashType.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("hash_type")
@@ -3248,11 +3178,6 @@ func (m *BackendBase) contextValidateHashType(ctx context.Context, formats strfm
 func (m *BackendBase) contextValidateHttpchkParams(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.HttpchkParams != nil {
-
-		if swag.IsZero(m.HttpchkParams) { // not required
-			return nil
-		}
-
 		if err := m.HttpchkParams.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("httpchk_params")
@@ -3269,11 +3194,6 @@ func (m *BackendBase) contextValidateHttpchkParams(ctx context.Context, formats 
 func (m *BackendBase) contextValidateIgnorePersist(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.IgnorePersist != nil {
-
-		if swag.IsZero(m.IgnorePersist) { // not required
-			return nil
-		}
-
 		if err := m.IgnorePersist.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("ignore_persist")
@@ -3290,11 +3210,6 @@ func (m *BackendBase) contextValidateIgnorePersist(ctx context.Context, formats 
 func (m *BackendBase) contextValidateMysqlCheckParams(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.MysqlCheckParams != nil {
-
-		if swag.IsZero(m.MysqlCheckParams) { // not required
-			return nil
-		}
-
 		if err := m.MysqlCheckParams.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("mysql_check_params")
@@ -3311,11 +3226,6 @@ func (m *BackendBase) contextValidateMysqlCheckParams(ctx context.Context, forma
 func (m *BackendBase) contextValidateOriginalto(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Originalto != nil {
-
-		if swag.IsZero(m.Originalto) { // not required
-			return nil
-		}
-
 		if err := m.Originalto.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("originalto")
@@ -3332,11 +3242,6 @@ func (m *BackendBase) contextValidateOriginalto(ctx context.Context, formats str
 func (m *BackendBase) contextValidatePersistRule(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.PersistRule != nil {
-
-		if swag.IsZero(m.PersistRule) { // not required
-			return nil
-		}
-
 		if err := m.PersistRule.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("persist_rule")
@@ -3353,11 +3258,6 @@ func (m *BackendBase) contextValidatePersistRule(ctx context.Context, formats st
 func (m *BackendBase) contextValidatePgsqlCheckParams(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.PgsqlCheckParams != nil {
-
-		if swag.IsZero(m.PgsqlCheckParams) { // not required
-			return nil
-		}
-
 		if err := m.PgsqlCheckParams.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("pgsql_check_params")
@@ -3374,11 +3274,6 @@ func (m *BackendBase) contextValidatePgsqlCheckParams(ctx context.Context, forma
 func (m *BackendBase) contextValidateRedispatch(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Redispatch != nil {
-
-		if swag.IsZero(m.Redispatch) { // not required
-			return nil
-		}
-
 		if err := m.Redispatch.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("redispatch")
@@ -3395,11 +3290,6 @@ func (m *BackendBase) contextValidateRedispatch(ctx context.Context, formats str
 func (m *BackendBase) contextValidateSmtpchkParams(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.SmtpchkParams != nil {
-
-		if swag.IsZero(m.SmtpchkParams) { // not required
-			return nil
-		}
-
 		if err := m.SmtpchkParams.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("smtpchk_params")
@@ -3416,11 +3306,6 @@ func (m *BackendBase) contextValidateSmtpchkParams(ctx context.Context, formats 
 func (m *BackendBase) contextValidateSource(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Source != nil {
-
-		if swag.IsZero(m.Source) { // not required
-			return nil
-		}
-
 		if err := m.Source.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("source")
@@ -3437,11 +3322,6 @@ func (m *BackendBase) contextValidateSource(ctx context.Context, formats strfmt.
 func (m *BackendBase) contextValidateStatsOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.StatsOptions != nil {
-
-		if swag.IsZero(m.StatsOptions) { // not required
-			return nil
-		}
-
 		if err := m.StatsOptions.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("stats_options")
@@ -3458,11 +3338,6 @@ func (m *BackendBase) contextValidateStatsOptions(ctx context.Context, formats s
 func (m *BackendBase) contextValidateStickTable(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.StickTable != nil {
-
-		if swag.IsZero(m.StickTable) { // not required
-			return nil
-		}
-
 		if err := m.StickTable.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("stick_table")
@@ -3500,8 +3375,8 @@ func (m *BackendBase) UnmarshalBinary(b []byte) error {
 type BackendForcePersist struct {
 	// cond
 	// Required: true
-	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if unless;
 	Cond *string `json:"cond"`
 
 	// cond test
@@ -3608,8 +3483,8 @@ func (m *BackendForcePersist) UnmarshalBinary(b []byte) error {
 type ForcePersist struct {
 	// cond
 	// Required: true
-	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if unless;
 	Cond *string `json:"cond"`
 
 	// cond test
@@ -3716,8 +3591,8 @@ func (m *ForcePersist) UnmarshalBinary(b []byte) error {
 type BackendIgnorePersist struct {
 	// cond
 	// Required: true
-	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if unless;
 	Cond *string `json:"cond"`
 
 	// cond test
@@ -3824,8 +3699,8 @@ func (m *BackendIgnorePersist) UnmarshalBinary(b []byte) error {
 type IgnorePersist struct {
 	// cond
 	// Required: true
-	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if unless;
 	Cond *string `json:"cond"`
 
 	// cond test

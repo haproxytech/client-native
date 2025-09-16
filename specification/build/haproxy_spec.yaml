@@ -9723,12 +9723,31 @@ definitions:
   runtime_server:
     description: Runtime transient server properties
     example:
-      address: 127.0.0.5
+      address: 142.250.191.142
       admin_state: ready
+      agent_addr: 127.0.0.1
+      agent_port: 80
+      agent_state: 0
+      backend_forced_id: 0
+      backend_id: 2
+      backend_name: myservers
+      check_addr: 142.250.191.143
+      check_health: 0
+      check_port: 80
+      check_result: 2
+      check_state: 6
+      check_status: 17
+      forced_id: 0
+      fqdn: server.com
+      id: 1
+      iweight: 1
+      last_time_change: 123
+      name: server1
       operational_state: up
       port: 80
-      server_id: 1
-      server_name: web_server
+      srvrecord: _myservice._tcp.example.local
+      use_ssl: false
+      uweight: 1
     properties:
       address:
         pattern: ^[^\s]+$
@@ -9741,9 +9760,73 @@ definitions:
           - maint
           - drain
         type: string
+      agent_addr:
+        readOnly: true
+        type: string
+      agent_port:
+        maximum: 65535
+        minimum: 1
+        readOnly: true
+        type: integer
+        x-nullable: true
+      agent_state:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      backend_forced_id:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      backend_id:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      backend_name:
+        readOnly: true
+        type: string
+      check_addr:
+        readOnly: true
+        type: string
+      check_health:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      check_port:
+        maximum: 65535
+        minimum: 1
+        readOnly: true
+        type: integer
+        x-nullable: true
+      check_result:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      check_state:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      check_status:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      foreced_id:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      fqdn:
+        readOnly: true
+        type: string
       id:
         readOnly: true
         type: string
+      iweight:
+        readOnly: true
+        type: integer
+        x-nullable: true
+      last_time_change:
+        readOnly: true
+        type: integer
+        x-nullable: true
       name:
         readOnly: true
         type: string
@@ -9756,6 +9839,16 @@ definitions:
       port:
         maximum: 65535
         minimum: 1
+        readOnly: true
+        type: integer
+        x-nullable: true
+      srvrecord:
+        readOnly: true
+        type: string
+      use_ssl:
+        readOnly: true
+        type: boolean
+      uweight:
         readOnly: true
         type: integer
         x-nullable: true
