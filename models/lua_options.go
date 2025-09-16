@@ -139,11 +139,6 @@ func (m *LuaOptions) contextValidateLoads(ctx context.Context, formats strfmt.Re
 	for i := 0; i < len(m.Loads); i++ {
 
 		if m.Loads[i] != nil {
-
-			if swag.IsZero(m.Loads[i]) { // not required
-				return nil
-			}
-
 			if err := m.Loads[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("loads" + "." + strconv.Itoa(i))
@@ -164,11 +159,6 @@ func (m *LuaOptions) contextValidatePrependPath(ctx context.Context, formats str
 	for i := 0; i < len(m.PrependPath); i++ {
 
 		if m.PrependPath[i] != nil {
-
-			if swag.IsZero(m.PrependPath[i]) { // not required
-				return nil
-			}
-
 			if err := m.PrependPath[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("prepend_path" + "." + strconv.Itoa(i))
@@ -274,8 +264,8 @@ type LuaPrependPath struct {
 	Path *string `json:"path"`
 
 	// type
-	// Enum: ["path","cpath"]
-	// +kubebuilder:validation:Enum=path;cpath;
+	// Enum: [path cpath]
+	// +kubebuilder:validation:Enum=path cpath;
 	Type string `json:"type,omitempty"`
 }
 

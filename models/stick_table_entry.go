@@ -230,11 +230,6 @@ func (m *StickTableEntry) ContextValidate(ctx context.Context, formats strfmt.Re
 func (m *StickTableEntry) contextValidateGpc(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Gpc != nil {
-
-		if swag.IsZero(m.Gpc) { // not required
-			return nil
-		}
-
 		if err := m.Gpc.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("gpc")
@@ -251,11 +246,6 @@ func (m *StickTableEntry) contextValidateGpc(ctx context.Context, formats strfmt
 func (m *StickTableEntry) contextValidateGpcRate(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.GpcRate != nil {
-
-		if swag.IsZero(m.GpcRate) { // not required
-			return nil
-		}
-
 		if err := m.GpcRate.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("gpc_rate")
@@ -272,11 +262,6 @@ func (m *StickTableEntry) contextValidateGpcRate(ctx context.Context, formats st
 func (m *StickTableEntry) contextValidateGpt(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Gpt != nil {
-
-		if swag.IsZero(m.Gpt) { // not required
-			return nil
-		}
-
 		if err := m.Gpt.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("gpt")

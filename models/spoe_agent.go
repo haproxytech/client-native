@@ -37,25 +37,25 @@ import (
 // swagger:model spoe_agent
 type SpoeAgent struct {
 	// async
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Async string `json:"async,omitempty"`
 
 	// continue on error
-	// Enum: ["enabled"]
+	// Enum: [enabled]
 	// +kubebuilder:validation:Enum=enabled;
 	ContinueOnError string `json:"continue-on-error,omitempty"`
 
 	// dontlog normal
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	DontlogNormal string `json:"dontlog-normal,omitempty"`
 
 	// engine name
 	EngineName string `json:"engine-name,omitempty"`
 
 	// force set var
-	// Enum: ["enabled"]
+	// Enum: [enabled]
 	// +kubebuilder:validation:Enum=enabled;
 	ForceSetVar string `json:"force-set-var,omitempty"`
 
@@ -111,8 +111,8 @@ type SpoeAgent struct {
 	OptionVarPrefix string `json:"option_var-prefix,omitempty"`
 
 	// pipelining
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Pipelining string `json:"pipelining,omitempty"`
 
 	// processing timeout
@@ -122,8 +122,8 @@ type SpoeAgent struct {
 	RegisterVarNames string `json:"register-var-names,omitempty"`
 
 	// send frag payload
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	SendFragPayload string `json:"send-frag-payload,omitempty"`
 
 	// use backend

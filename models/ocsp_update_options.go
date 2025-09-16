@@ -48,8 +48,8 @@ type OcspUpdateOptions struct {
 	Mindelay *int64 `json:"mindelay,omitempty"`
 
 	// mode
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Mode string `json:"mode,omitempty"`
 }
 
@@ -149,11 +149,6 @@ func (m *OcspUpdateOptions) ContextValidate(ctx context.Context, formats strfmt.
 func (m *OcspUpdateOptions) contextValidateHttpproxy(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Httpproxy != nil {
-
-		if swag.IsZero(m.Httpproxy) { // not required
-			return nil
-		}
-
 		if err := m.Httpproxy.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("httpproxy")

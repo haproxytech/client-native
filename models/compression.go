@@ -36,8 +36,8 @@ import (
 // swagger:model compression
 type Compression struct {
 	// algo req
-	// Enum: ["identity","gzip","deflate","raw-deflate"]
-	// +kubebuilder:validation:Enum=identity;gzip;deflate;raw-deflate;
+	// Enum: [identity gzip deflate raw-deflate]
+	// +kubebuilder:validation:Enum=identity gzip deflate raw-deflate;
 	AlgoReq string `json:"algo-req,omitempty"`
 
 	// algorithms
@@ -47,8 +47,8 @@ type Compression struct {
 	AlgosRes []string `json:"algos-res,omitempty"`
 
 	// direction
-	// Enum: ["request","response","both"]
-	// +kubebuilder:validation:Enum=request;response;both;
+	// Enum: [request response both]
+	// +kubebuilder:validation:Enum=request response both;
 	Direction string `json:"direction,omitempty"`
 
 	// minsize req

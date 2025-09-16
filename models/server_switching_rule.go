@@ -38,8 +38,8 @@ import (
 // swagger:model server_switching_rule
 type ServerSwitchingRule struct {
 	// cond
-	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test

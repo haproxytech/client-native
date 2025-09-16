@@ -37,8 +37,8 @@ import (
 // swagger:model log_profile_step
 type LogProfileStep struct {
 	// If enabled, no log shall be emitted for the given step.
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled disabled;
 	Drop string `json:"drop,omitempty"`
 
 	// Override "log-format" or "error-log-format" strings depending on the step.
@@ -53,8 +53,8 @@ type LogProfileStep struct {
 
 	// Logging step name.
 	// Required: true
-	// Enum: ["accept","any","close","connect","error","request","response","http-req","http-res","http-after-res","quic-init","tcp-req-conn","tcp-req-cont","tcp-req-sess"]
-	// +kubebuilder:validation:Enum=accept;any;close;connect;error;request;response;http-req;http-res;http-after-res;quic-init;tcp-req-conn;tcp-req-cont;tcp-req-sess;
+	// Enum: [accept any close connect error request response http-req http-res http-after-res quic-init tcp-req-conn tcp-req-cont tcp-req-sess]
+	// +kubebuilder:validation:Enum=accept any close connect error request response http-req http-res http-after-res quic-init tcp-req-conn tcp-req-cont tcp-req-sess;
 	Step string `json:"step"`
 }
 

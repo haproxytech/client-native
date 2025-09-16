@@ -63,8 +63,8 @@ type AwsRegion struct {
 
 	// Select which IPv4 address the Service Discovery has to use for the backend server entry
 	// Required: true
-	// Enum: ["private","public"]
-	// +kubebuilder:validation:Enum=private;public;
+	// Enum: [private public]
+	// +kubebuilder:validation:Enum=private public;
 	IPV4Address *string `json:"ipv4_address"`
 
 	// name
@@ -91,8 +91,8 @@ type AwsRegion struct {
 	ServerSlotsGrowthIncrement int64 `json:"server_slots_growth_increment,omitempty"`
 
 	// server slots growth type
-	// Enum: ["linear","exponential"]
-	// +kubebuilder:validation:Enum=linear;exponential;
+	// Enum: [linear exponential]
+	// +kubebuilder:validation:Enum=linear exponential;
 	ServerSlotsGrowthType *string `json:"server_slots_growth_type,omitempty"`
 }
 
@@ -358,11 +358,6 @@ func (m *AwsRegion) contextValidateAllowlist(ctx context.Context, formats strfmt
 	for i := 0; i < len(m.Allowlist); i++ {
 
 		if m.Allowlist[i] != nil {
-
-			if swag.IsZero(m.Allowlist[i]) { // not required
-				return nil
-			}
-
 			if err := m.Allowlist[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("allowlist" + "." + strconv.Itoa(i))
@@ -383,11 +378,6 @@ func (m *AwsRegion) contextValidateDenylist(ctx context.Context, formats strfmt.
 	for i := 0; i < len(m.Denylist); i++ {
 
 		if m.Denylist[i] != nil {
-
-			if swag.IsZero(m.Denylist[i]) { // not required
-				return nil
-			}
-
 			if err := m.Denylist[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("denylist" + "." + strconv.Itoa(i))

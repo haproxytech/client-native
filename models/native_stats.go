@@ -105,11 +105,6 @@ func (m *NativeStats) contextValidateStats(ctx context.Context, formats strfmt.R
 	for i := 0; i < len(m.Stats); i++ {
 
 		if m.Stats[i] != nil {
-
-			if swag.IsZero(m.Stats[i]) { // not required
-				return nil
-			}
-
 			if err := m.Stats[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("stats" + "." + strconv.Itoa(i))

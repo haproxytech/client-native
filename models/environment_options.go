@@ -141,11 +141,6 @@ func (m *EnvironmentOptions) contextValidatePresetEnvs(ctx context.Context, form
 	for i := 0; i < len(m.PresetEnvs); i++ {
 
 		if m.PresetEnvs[i] != nil {
-
-			if swag.IsZero(m.PresetEnvs[i]) { // not required
-				return nil
-			}
-
 			if err := m.PresetEnvs[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("presetenv" + "." + strconv.Itoa(i))
@@ -166,11 +161,6 @@ func (m *EnvironmentOptions) contextValidateSetEnvs(ctx context.Context, formats
 	for i := 0; i < len(m.SetEnvs); i++ {
 
 		if m.SetEnvs[i] != nil {
-
-			if swag.IsZero(m.SetEnvs[i]) { // not required
-				return nil
-			}
-
 			if err := m.SetEnvs[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("setenv" + "." + strconv.Itoa(i))
