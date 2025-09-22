@@ -126,8 +126,8 @@ type BindParams struct {
 
 	// level
 	// Example: user
-	// Enum: [user operator admin]
-	// +kubebuilder:validation:Enum=user;operator;admin;
+	// Enum: ["user","operator","admin"]
+	// +kubebuilder:validation:Enum="user","operator","admin";
 	Level string `json:"level,omitempty"`
 
 	// maxconn
@@ -195,22 +195,22 @@ type BindParams struct {
 	Proto string `json:"proto,omitempty"`
 
 	// quic cc algo
-	// Enum: [cubic newreno]
-	// +kubebuilder:validation:Enum=cubic;newreno;
+	// Enum: ["cubic","newreno"]
+	// +kubebuilder:validation:Enum="cubic","newreno";
 	QuicCcAlgo string `json:"quic-cc-algo,omitempty"`
 
 	// quic force retry
 	QuicForceRetry bool `json:"quic-force-retry,omitempty"`
 
 	// quic socket
-	// Enum: [connection listener]
-	// +kubebuilder:validation:Enum=connection;listener;
+	// Enum: ["connection","listener"]
+	// +kubebuilder:validation:Enum="connection","listener";
 	QuicSocket string `json:"quic-socket,omitempty"`
 
 	// severity output
 	// Example: none
-	// Enum: [none number string]
-	// +kubebuilder:validation:Enum=none;number;string;
+	// Enum: ["none","number","string"]
+	// +kubebuilder:validation:Enum="none","number","string";
 	SeverityOutput string `json:"severity_output,omitempty"`
 
 	// sigalgs
@@ -230,13 +230,13 @@ type BindParams struct {
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
 	// ssl max ver
-	// Enum: [SSLv3 TLSv1.0 TLSv1.1 TLSv1.2 TLSv1.3]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
+	// +kubebuilder:validation:Enum="SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3";
 	SslMaxVer string `json:"ssl_max_ver,omitempty"`
 
 	// ssl min ver
-	// Enum: [SSLv3 TLSv1.0 TLSv1.1 TLSv1.2 TLSv1.3]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
+	// +kubebuilder:validation:Enum="SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3";
 	SslMinVer string `json:"ssl_min_ver,omitempty"`
 
 	// strict sni
@@ -271,8 +271,8 @@ type BindParams struct {
 
 	// verify
 	// Example: none
-	// Enum: [none optional required]
-	// +kubebuilder:validation:Enum=none;optional;required;
+	// Enum: ["none","optional","required"]
+	// +kubebuilder:validation:Enum="none","optional","required";
 	Verify string `json:"verify,omitempty"`
 }
 

@@ -38,8 +38,8 @@ import (
 // swagger:model stick_rule
 type StickRule struct {
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum="if","unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -63,8 +63,8 @@ type StickRule struct {
 
 	// type
 	// Required: true
-	// Enum: [match on store-request store-response]
-	// +kubebuilder:validation:Enum=match;on;store-request;store-response;
+	// Enum: ["match","on","store-request","store-response"]
+	// +kubebuilder:validation:Enum="match","on","store-request","store-response";
 	Type string `json:"type"`
 }
 

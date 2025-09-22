@@ -38,8 +38,8 @@ import (
 // swagger:model tcp_request_rule
 type TCPRequestRule struct {
 	// action
-	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt sc-set-gpt0 send-spoe-group set-bandwidth-limit set-dst-port set-dst set-log-level set-mark set-nice set-priority-class set-priority-offset set-src set-src-port set-tos set-var set-var-fmt silent-drop switch-mode track-sc0 track-sc1 track-sc2 track-sc unset-var use-service]
-	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-dst-port;set-dst;set-log-level;set-mark;set-nice;set-priority-class;set-priority-offset;set-src;set-src-port;set-tos;set-var;set-var-fmt;silent-drop;switch-mode;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;
+	// Enum: ["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-dst-port","set-dst","set-log-level","set-mark","set-nice","set-priority-class","set-priority-offset","set-src","set-src-port","set-tos","set-var","set-var-fmt","silent-drop","switch-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service"]
+	// +kubebuilder:validation:Enum="accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-dst-port","set-dst","set-log-level","set-mark","set-nice","set-priority-class","set-priority-offset","set-src","set-src-port","set-tos","set-var","set-var-fmt","silent-drop","switch-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service";
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -60,8 +60,8 @@ type TCPRequestRule struct {
 	CaptureSample string `json:"capture_sample,omitempty"`
 
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum="if","unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -79,8 +79,8 @@ type TCPRequestRule struct {
 	Index *int64 `json:"index"`
 
 	// log level
-	// Enum: [emerg alert crit err warning notice info debug silent]
-	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
+	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
+	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug","silent";
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -104,8 +104,8 @@ type TCPRequestRule struct {
 	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// resolve protocol
-	// Enum: [ipv4 ipv6]
-	// +kubebuilder:validation:Enum=ipv4;ipv6;
+	// Enum: ["ipv4","ipv6"]
+	// +kubebuilder:validation:Enum="ipv4","ipv6";
 	ResolveProtocol string `json:"resolve_protocol,omitempty"`
 
 	// resolve resolvers
@@ -160,8 +160,8 @@ type TCPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [connection content inspect-delay session]
-	// +kubebuilder:validation:Enum=connection;content;inspect-delay;session;
+	// Enum: ["connection","content","inspect-delay","session"]
+	// +kubebuilder:validation:Enum="connection","content","inspect-delay","session";
 	Type string `json:"type"`
 
 	// var format

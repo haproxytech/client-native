@@ -93,8 +93,8 @@ type Global struct {
 	CrtBase string `json:"crt_base,omitempty"`
 
 	// daemon
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Daemon string `json:"daemon,omitempty"`
 
 	// default path
@@ -142,16 +142,16 @@ type Global struct {
 	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
 
 	// httpclient resolvers disabled
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	HttpclientResolversDisabled string `json:"httpclient_resolvers_disabled,omitempty"`
 
 	// httpclient resolvers id
 	HttpclientResolversID string `json:"httpclient_resolvers_id,omitempty"`
 
 	// httpclient resolvers prefer
-	// Enum: [ipv4 ipv6]
-	// +kubebuilder:validation:Enum=ipv4;ipv6;
+	// Enum: ["ipv4","ipv6"]
+	// +kubebuilder:validation:Enum="ipv4","ipv6";
 	HttpclientResolversPrefer string `json:"httpclient_resolvers_prefer,omitempty"`
 
 	// httpclient retries
@@ -161,8 +161,8 @@ type Global struct {
 	HttpclientSslCaFile string `json:"httpclient_ssl_ca_file,omitempty"`
 
 	// httpclient ssl verify
-	// Enum: [ none required]
-	// +kubebuilder:validation:Enum="";none;required;
+	// Enum: ["","none","required"]
+	// +kubebuilder:validation:Enum="","none","required";
 	HttpclientSslVerify *string `json:"httpclient_ssl_verify,omitempty"`
 
 	// httpclient timeout connect
@@ -181,8 +181,8 @@ type Global struct {
 	LimitedQuic bool `json:"limited_quic,omitempty"`
 
 	// load server state from file
-	// Enum: [global local none]
-	// +kubebuilder:validation:Enum=global;local;none;
+	// Enum: ["global","local","none"]
+	// +kubebuilder:validation:Enum="global","local","none";
 	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
 
 	// localpeer
@@ -274,8 +274,8 @@ type Global struct {
 	Nosplice bool `json:"nosplice,omitempty"`
 
 	// numa cpu mapping
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	NumaCPUMapping string `json:"numa_cpu_mapping,omitempty"`
 
 	// pidfile
@@ -288,8 +288,8 @@ type Global struct {
 	PreallocFd bool `json:"prealloc-fd,omitempty"`
 
 	// profiling tasks
-	// Enum: [auto on off]
-	// +kubebuilder:validation:Enum=auto;on;off;
+	// Enum: ["auto","on","off"]
+	// +kubebuilder:validation:Enum="auto","on","off";
 	ProfilingTasks string `json:"profiling_tasks,omitempty"`
 
 	// quiet
@@ -362,8 +362,8 @@ type Global struct {
 	SslLoadExtraFiles string `json:"ssl_load_extra_files,omitempty"`
 
 	// ssl mode async
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SslModeAsync string `json:"ssl_mode_async,omitempty"`
 
 	// ssl propquery
@@ -376,8 +376,8 @@ type Global struct {
 	SslProviderPath string `json:"ssl_provider_path,omitempty"`
 
 	// ssl server verify
-	// Enum: [none required]
-	// +kubebuilder:validation:Enum=none;required;
+	// Enum: ["none","required"]
+	// +kubebuilder:validation:Enum="none","required";
 	SslServerVerify string `json:"ssl_server_verify,omitempty"`
 
 	// ssl skip self issued ca
@@ -1554,6 +1554,11 @@ func (m *Global) contextValidateCPUMaps(ctx context.Context, formats strfmt.Regi
 	for i := 0; i < len(m.CPUMaps); i++ {
 
 		if m.CPUMaps[i] != nil {
+
+			if swag.IsZero(m.CPUMaps[i]) { // not required
+				return nil
+			}
+
 			if err := m.CPUMaps[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
@@ -1574,6 +1579,11 @@ func (m *Global) contextValidateH1CaseAdjusts(ctx context.Context, formats strfm
 	for i := 0; i < len(m.H1CaseAdjusts); i++ {
 
 		if m.H1CaseAdjusts[i] != nil {
+
+			if swag.IsZero(m.H1CaseAdjusts[i]) { // not required
+				return nil
+			}
+
 			if err := m.H1CaseAdjusts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("h1_case_adjust" + "." + strconv.Itoa(i))
@@ -1594,6 +1604,11 @@ func (m *Global) contextValidatePresetEnvs(ctx context.Context, formats strfmt.R
 	for i := 0; i < len(m.PresetEnvs); i++ {
 
 		if m.PresetEnvs[i] != nil {
+
+			if swag.IsZero(m.PresetEnvs[i]) { // not required
+				return nil
+			}
+
 			if err := m.PresetEnvs[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("presetenv" + "." + strconv.Itoa(i))
@@ -1614,6 +1629,11 @@ func (m *Global) contextValidateRuntimeAPIs(ctx context.Context, formats strfmt.
 	for i := 0; i < len(m.RuntimeAPIs); i++ {
 
 		if m.RuntimeAPIs[i] != nil {
+
+			if swag.IsZero(m.RuntimeAPIs[i]) { // not required
+				return nil
+			}
+
 			if err := m.RuntimeAPIs[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
@@ -1634,6 +1654,11 @@ func (m *Global) contextValidateSetEnvs(ctx context.Context, formats strfmt.Regi
 	for i := 0; i < len(m.SetEnvs); i++ {
 
 		if m.SetEnvs[i] != nil {
+
+			if swag.IsZero(m.SetEnvs[i]) { // not required
+				return nil
+			}
+
 			if err := m.SetEnvs[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("setenv" + "." + strconv.Itoa(i))
@@ -1654,6 +1679,11 @@ func (m *Global) contextValidateSetVarFmts(ctx context.Context, formats strfmt.R
 	for i := 0; i < len(m.SetVarFmts); i++ {
 
 		if m.SetVarFmts[i] != nil {
+
+			if swag.IsZero(m.SetVarFmts[i]) { // not required
+				return nil
+			}
+
 			if err := m.SetVarFmts[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("set_var_fmt" + "." + strconv.Itoa(i))
@@ -1674,6 +1704,11 @@ func (m *Global) contextValidateSetVars(ctx context.Context, formats strfmt.Regi
 	for i := 0; i < len(m.SetVars); i++ {
 
 		if m.SetVars[i] != nil {
+
+			if swag.IsZero(m.SetVars[i]) { // not required
+				return nil
+			}
+
 			if err := m.SetVars[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("set_var" + "." + strconv.Itoa(i))
@@ -1694,6 +1729,11 @@ func (m *Global) contextValidateSslEngines(ctx context.Context, formats strfmt.R
 	for i := 0; i < len(m.SslEngines); i++ {
 
 		if m.SslEngines[i] != nil {
+
+			if swag.IsZero(m.SslEngines[i]) { // not required
+				return nil
+			}
+
 			if err := m.SslEngines[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
@@ -1714,6 +1754,11 @@ func (m *Global) contextValidateThreadGroupLines(ctx context.Context, formats st
 	for i := 0; i < len(m.ThreadGroupLines); i++ {
 
 		if m.ThreadGroupLines[i] != nil {
+
+			if swag.IsZero(m.ThreadGroupLines[i]) { // not required
+				return nil
+			}
+
 			if err := m.ThreadGroupLines[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("thread_group_lines" + "." + strconv.Itoa(i))
@@ -1732,6 +1777,11 @@ func (m *Global) contextValidateThreadGroupLines(ctx context.Context, formats st
 func (m *Global) contextValidateDefaultPath(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DefaultPath != nil {
+
+		if swag.IsZero(m.DefaultPath) { // not required
+			return nil
+		}
+
 		if err := m.DefaultPath.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("default_path")
@@ -1748,6 +1798,11 @@ func (m *Global) contextValidateDefaultPath(ctx context.Context, formats strfmt.
 func (m *Global) contextValidateDeviceAtlasOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DeviceAtlasOptions != nil {
+
+		if swag.IsZero(m.DeviceAtlasOptions) { // not required
+			return nil
+		}
+
 		if err := m.DeviceAtlasOptions.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("device_atlas_options")
@@ -1764,6 +1819,11 @@ func (m *Global) contextValidateDeviceAtlasOptions(ctx context.Context, formats 
 func (m *Global) contextValidateFiftyOneDegreesOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.FiftyOneDegreesOptions != nil {
+
+		if swag.IsZero(m.FiftyOneDegreesOptions) { // not required
+			return nil
+		}
+
 		if err := m.FiftyOneDegreesOptions.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("fifty_one_degrees_options")
@@ -1780,6 +1840,11 @@ func (m *Global) contextValidateFiftyOneDegreesOptions(ctx context.Context, form
 func (m *Global) contextValidateLogSendHostname(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.LogSendHostname != nil {
+
+		if swag.IsZero(m.LogSendHostname) { // not required
+			return nil
+		}
+
 		if err := m.LogSendHostname.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("log_send_hostname")
@@ -1798,6 +1863,11 @@ func (m *Global) contextValidateLuaLoads(ctx context.Context, formats strfmt.Reg
 	for i := 0; i < len(m.LuaLoads); i++ {
 
 		if m.LuaLoads[i] != nil {
+
+			if swag.IsZero(m.LuaLoads[i]) { // not required
+				return nil
+			}
+
 			if err := m.LuaLoads[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("lua_loads" + "." + strconv.Itoa(i))
@@ -1818,6 +1888,11 @@ func (m *Global) contextValidateLuaPrependPath(ctx context.Context, formats strf
 	for i := 0; i < len(m.LuaPrependPath); i++ {
 
 		if m.LuaPrependPath[i] != nil {
+
+			if swag.IsZero(m.LuaPrependPath[i]) { // not required
+				return nil
+			}
+
 			if err := m.LuaPrependPath[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
@@ -1836,6 +1911,11 @@ func (m *Global) contextValidateLuaPrependPath(ctx context.Context, formats strf
 func (m *Global) contextValidateTuneOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.TuneOptions != nil {
+
+		if swag.IsZero(m.TuneOptions) { // not required
+			return nil
+		}
+
 		if err := m.TuneOptions.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("tune_options")
@@ -1852,6 +1932,11 @@ func (m *Global) contextValidateTuneOptions(ctx context.Context, formats strfmt.
 func (m *Global) contextValidateWurflOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.WurflOptions != nil {
+
+		if swag.IsZero(m.WurflOptions) { // not required
+			return nil
+		}
+
 		if err := m.WurflOptions.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("wurfl_options")
@@ -1967,8 +2052,8 @@ type GlobalDefaultPath struct {
 
 	// type
 	// Required: true
-	// Enum: [current config parent origin]
-	// +kubebuilder:validation:Enum=current;config;parent;origin;
+	// Enum: ["current","config","parent","origin"]
+	// +kubebuilder:validation:Enum="current","config","parent","origin";
 	Type string `json:"type"`
 }
 
@@ -2245,8 +2330,8 @@ func (m *H1CaseAdjust) UnmarshalBinary(b []byte) error {
 type GlobalLogSendHostname struct {
 	// enabled
 	// Required: true
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Enabled *string `json:"enabled"`
 
 	// param
@@ -2423,8 +2508,8 @@ type LuaPrependPath struct {
 	Path *string `json:"path"`
 
 	// type
-	// Enum: [path cpath]
-	// +kubebuilder:validation:Enum=path;cpath;
+	// Enum: ["path","cpath"]
+	// +kubebuilder:validation:Enum="path","cpath";
 	Type string `json:"type,omitempty"`
 }
 
@@ -3104,18 +3189,18 @@ type GlobalTuneOptions struct {
 	FailAlloc bool `json:"fail_alloc,omitempty"`
 
 	// fd edge triggered
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
 
 	// h1 zero copy fwd recv
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	H1ZeroCopyFwdRecv string `json:"h1_zero_copy_fwd_recv,omitempty"`
 
 	// h1 zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
 
 	// h2 be initial window size
@@ -3145,8 +3230,8 @@ type GlobalTuneOptions struct {
 	H2MaxFrameSize int64 `json:"h2_max_frame_size,omitempty"`
 
 	// h2 zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	H2ZeroCopyFwdSend string `json:"h2_zero_copy_fwd_send,omitempty"`
 
 	// http cookielen
@@ -3163,8 +3248,8 @@ type GlobalTuneOptions struct {
 	HTTPMaxhdr int64 `json:"http_maxhdr,omitempty"`
 
 	// idle pool shared
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	IdlePoolShared string `json:"idle_pool_shared,omitempty"`
 
 	// idletimer
@@ -3175,13 +3260,13 @@ type GlobalTuneOptions struct {
 	Idletimer *int64 `json:"idletimer,omitempty"`
 
 	// listener default shards
-	// Enum: [by-process by-thread by-group]
-	// +kubebuilder:validation:Enum=by-process;by-thread;by-group;
+	// Enum: ["by-process","by-thread","by-group"]
+	// +kubebuilder:validation:Enum="by-process","by-thread","by-group";
 	ListenerDefaultShards string `json:"listener_default_shards,omitempty"`
 
 	// listener multi queue
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
 
 	// lua burst timeout
@@ -3191,13 +3276,13 @@ type GlobalTuneOptions struct {
 	LuaForcedYield int64 `json:"lua_forced_yield,omitempty"`
 
 	// lua log loggers
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	LuaLogLoggers string `json:"lua_log_loggers,omitempty"`
 
 	// lua log stderr
-	// Enum: [auto enabled disabled]
-	// +kubebuilder:validation:Enum=auto;enabled;disabled;
+	// Enum: ["auto","enabled","disabled"]
+	// +kubebuilder:validation:Enum="auto","enabled","disabled";
 	LuaLogStderr string `json:"lua_log_stderr,omitempty"`
 
 	// lua maxmem
@@ -3243,8 +3328,8 @@ type GlobalTuneOptions struct {
 	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
 
 	// pt zero copy forwarding
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
 
 	// quic frontend conn tx buffers limit
@@ -3263,8 +3348,8 @@ type GlobalTuneOptions struct {
 	QuicRetryThreshold *int64 `json:"quic_retry_threshold,omitempty"`
 
 	// quic socket owner
-	// Enum: [listener connection]
-	// +kubebuilder:validation:Enum=listener;connection;
+	// Enum: ["listener","connection"]
+	// +kubebuilder:validation:Enum="listener","connection";
 	QuicSocketOwner string `json:"quic_socket_owner,omitempty"`
 
 	// rcvbuf backend
@@ -3286,8 +3371,8 @@ type GlobalTuneOptions struct {
 	RunqueueDepth int64 `json:"runqueue_depth,omitempty"`
 
 	// sched low latency
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SchedLowLatency string `json:"sched_low_latency,omitempty"`
 
 	// sndbuf backend
@@ -3318,8 +3403,8 @@ type GlobalTuneOptions struct {
 	SslForcePrivateCache bool `json:"ssl_force_private_cache,omitempty"`
 
 	// ssl keylog
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SslKeylog string `json:"ssl_keylog,omitempty"`
 
 	// ssl lifetime

@@ -75,8 +75,8 @@ type HTTPResponseRule struct {
 	CaptureSample string `json:"capture_sample,omitempty"`
 
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum="if","unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -107,8 +107,8 @@ type HTTPResponseRule struct {
 	Index *int64 `json:"index"`
 
 	// log level
-	// Enum: [emerg alert crit err warning notice info debug silent]
-	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
+	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
+	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug","silent";
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -147,16 +147,16 @@ type HTTPResponseRule struct {
 	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// redir code
-	// Enum: [301 302 303 307 308]
-	// +kubebuilder:validation:Enum=301;302;303;307;308;
+	// Enum: [301,302,303,307,308]
+	// +kubebuilder:validation:Enum=301,302,303,307,308;
 	RedirCode *int64 `json:"redir_code,omitempty"`
 
 	// redir option
 	RedirOption string `json:"redir_option,omitempty"`
 
 	// redir type
-	// Enum: [location prefix scheme]
-	// +kubebuilder:validation:Enum=location;prefix;scheme;
+	// Enum: ["location","prefix","scheme"]
+	// +kubebuilder:validation:Enum="location","prefix","scheme";
 	RedirType string `json:"redir_type,omitempty"`
 
 	// redir value
@@ -168,8 +168,8 @@ type HTTPResponseRule struct {
 	ReturnContent string `json:"return_content,omitempty"`
 
 	// return content format
-	// Enum: [default-errorfiles errorfile errorfiles file lf-file string lf-string]
-	// +kubebuilder:validation:Enum=default-errorfiles;errorfile;errorfiles;file;lf-file;string;lf-string;
+	// Enum: ["default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string"]
+	// +kubebuilder:validation:Enum="default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string";
 	ReturnContentFormat string `json:"return_content_format,omitempty"`
 
 	// return content type
@@ -218,16 +218,16 @@ type HTTPResponseRule struct {
 	StatusReason string `json:"status_reason,omitempty"`
 
 	// strict mode
-	// Enum: [on off]
-	// +kubebuilder:validation:Enum=on;off;
+	// Enum: ["on","off"]
+	// +kubebuilder:validation:Enum="on","off";
 	StrictMode string `json:"strict_mode,omitempty"`
 
 	// timeout
 	Timeout string `json:"timeout,omitempty"`
 
 	// timeout type
-	// Enum: [server tunnel client]
-	// +kubebuilder:validation:Enum=server;tunnel;client;
+	// Enum: ["server","tunnel","client"]
+	// +kubebuilder:validation:Enum="server","tunnel","client";
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -280,8 +280,8 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [add-acl add-header allow cache-store capture del-acl del-header del-map deny lua redirect replace-header replace-value return sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt sc-set-gpt0 send-spoe-group set-header set-log-level set-map set-mark set-nice set-status set-timeout set-tos set-var set-var-fmt silent-drop strict-mode track-sc0 track-sc1 track-sc2 track-sc unset-var wait-for-body set-bandwidth-limit]
-	// +kubebuilder:validation:Enum=add-acl;add-header;allow;cache-store;capture;del-acl;del-header;del-map;deny;lua;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-header;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc0;track-sc1;track-sc2;track-sc;unset-var;wait-for-body;set-bandwidth-limit;
+	// Enum: ["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","wait-for-body","set-bandwidth-limit"]
+	// +kubebuilder:validation:Enum="add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","wait-for-body","set-bandwidth-limit";
 	Type string `json:"type"`
 
 	// var expr
@@ -1343,6 +1343,11 @@ func (m *HTTPResponseRule) contextValidateReturnHeaders(ctx context.Context, for
 	for i := 0; i < len(m.ReturnHeaders); i++ {
 
 		if m.ReturnHeaders[i] != nil {
+
+			if swag.IsZero(m.ReturnHeaders[i]) { // not required
+				return nil
+			}
+
 			if err := m.ReturnHeaders[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("return_hdrs" + "." + strconv.Itoa(i))
