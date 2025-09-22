@@ -25,7 +25,7 @@ allowed:
   - chmigrate
   - cli
   - clickhouse
-  - cnt  
+  - cnt
   - composable
   - conf
   - config
@@ -72,8 +72,9 @@ allowed:
   - gorm
   - goroutines
   - govulncheck
+  - gotoolchain
   - gpc
-  - gpt  
+  - gpt
   - hapee
   - haproxy
   - healthcheck
