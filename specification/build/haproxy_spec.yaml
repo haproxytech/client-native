@@ -11885,11 +11885,19 @@ definitions:
     x-omitempty: true
     x-go-name: SSLFrontUses
   acme_provider:
+    additionalProperties: false
     description: Define an ACME provider to generate certificates automatically
     properties:
       account_key:
         description: Path where the the ACME account key is stored
         type: string
+      acme_provider:
+        description: DNS provider for the dns-01 challenge
+        type: string
+      acme_vars:
+        additionalProperties:
+          type: string
+        description: List of variables passed to the dns-01 provider (typically API keys)
       bits:
         description: Number of bits to generate an RSA certificate
         minimum: 1024

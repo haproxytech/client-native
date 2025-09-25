@@ -3172,6 +3172,11 @@
     "acme_providers": {
         "test": {
             "contact": "me@example.com",
+            "acme_provider": "gandy",
+            "acme_vars": {
+                "ApiKey": "ple744587",
+                "Zone": "example.com"
+            },
             "bits": 4096,
             "challenge": "http-01",
             "directory": "https://acme.example.com/directory",

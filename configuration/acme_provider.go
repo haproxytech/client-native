@@ -18,6 +18,7 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
@@ -159,14 +160,18 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		}
 	}
 
+	var varsStr string
+
 	stringAttr := map[string]*string{
-		"account-key": &acme.AccountKey,
-		"challenge":   &acme.Challenge,
-		"contact":     &acme.Contact,
-		"curves":      &acme.Curves,
-		"directory":   &acme.Directory,
-		"keytype":     &acme.Keytype,
-		"map":         &acme.Map,
+		"account-key":   &acme.AccountKey,
+		"acme-provider": &acme.AcmeProvider,
+		"acme-vars":     &varsStr,
+		"challenge":     &acme.Challenge,
+		"contact":       &acme.Contact,
+		"curves":        &acme.Curves,
+		"directory":     &acme.Directory,
+		"keytype":       &acme.Keytype,
+		"map":           &acme.Map,
 	}
 
 	for kw, dest := range stringAttr {
@@ -198,6 +203,9 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		acme.Bits = misc.Ptr(ic.Value)
 	}
 
+	// acme-vars
+	acme.AcmeVars = parseAcmeVars(varsStr)
+
 	return acme, nil
 }
 
@@ -216,14 +224,21 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 		}
 	}
 
+	acmeVars, err := serializeAcmeVars(acme.AcmeVars)
+	if err != nil {
+		return fmt.Errorf("acme %s: %w", acme.Name, err)
+	}
+
 	stringAttr := map[string]string{
-		"account-key": acme.AccountKey,
-		"challenge":   acme.Challenge,
-		"contact":     acme.Contact,
-		"curves":      acme.Curves,
-		"directory":   acme.Directory,
-		"keytype":     acme.Keytype,
-		"map":         acme.Map,
+		"account-key":   acme.AccountKey,
+		"acme-provider": acme.AcmeProvider,
+		"acme-vars":     acmeVars,
+		"challenge":     acme.Challenge,
+		"contact":       acme.Contact,
+		"curves":        acme.Curves,
+		"directory":     acme.Directory,
+		"keytype":       acme.Keytype,
+		"map":           acme.Map,
 	}
 
 	for kw, val := range stringAttr {
@@ -245,4 +260,100 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 	}
 
 	return nil
+}
+
+// acme-vars "key=value,foo=\"bar baz\""
+func serializeAcmeVars(vars map[string]string) (string, error) {
+	if len(vars) == 0 {
+		return "", nil
+	}
+
+	var sb strings.Builder
+	first := true
+
+	sb.WriteByte('"')
+	for k, v := range vars {
+		if len(k) == 0 {
+			continue
+		}
+		if !acmeValidKey(k) {
+			return "", fmt.Errorf("acme-vars: invalid character found in key '%s'", k)
+		}
+		if first {
+			first = false
+		} else {
+			sb.WriteByte(',')
+		}
+		sb.WriteString(k)
+		sb.WriteByte('=')
+		sb.WriteString(acmeVarEscape(v))
+	}
+	sb.WriteByte('"')
+
+	return sb.String(), nil
+}
+
+func parseAcmeVars(vars string) map[string]string {
+	n := len(vars)
+	if n == 0 {
+		return nil
+	}
+
+	if vars[0] == '"' && vars[n-1] == '"' {
+		vars = vars[1 : n-1]
+	}
+
+	vars = strings.TrimSpace(vars)
+	if len(vars) == 0 {
+		return nil
+	}
+
+	vlist := acmeVarSplit(vars)
+	vmap := make(map[string]string, len(vlist))
+	for _, keyval := range vlist {
+		if k, v, found := strings.Cut(strings.TrimSpace(keyval), "="); found {
+			if len(k) > 0 {
+				vmap[k] = acmeVarUnescape(v)
+			}
+		}
+	}
+
+	if len(vmap) == 0 {
+		return nil
+	}
+	return vmap
+}
+
+// Split string by ',' but not escaped commas "\,".
+func acmeVarSplit(s string) []string {
+	s = strings.ReplaceAll(s, `\,`, "\x00")
+	tokens := strings.Split(s, ",")
+	for i, token := range tokens {
+		tokens[i] = strings.ReplaceAll(token, "\x00", `\,`)
+	}
+	return tokens
+}
+
+func acmeVarEscape(s string) string {
+	s = strings.ReplaceAll(s, `"`, `\"`)
+	s = strings.ReplaceAll(s, `,`, `\,`)
+	return s
+}
+
+func acmeVarUnescape(s string) string {
+	s = strings.ReplaceAll(s, `\"`, `"`)
+	s = strings.ReplaceAll(s, `\,`, `,`)
+	return s
+}
+
+// Variable keys must also be valid Go variable names.
+func acmeValidKey(key string) bool {
+	for _, c := range key {
+		match := ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') ||
+			('0' <= c && c <= '9') || c == '_'
+		if !match {
+			return false
+		}
+	}
+	return true
 }

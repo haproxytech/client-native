@@ -39,6 +39,14 @@ func (s AcmeProvider) Equal(t AcmeProvider, opts ...Options) bool {
 		return false
 	}
 
+	if s.AcmeProvider != t.AcmeProvider {
+		return false
+	}
+
+	if !equalComparableMap(s.AcmeVars, t.AcmeVars, opt) {
+		return false
+	}
+
 	if !equalPointers(s.Bits, t.Bits) {
 		return false
 	}
@@ -103,6 +111,14 @@ func (s AcmeProvider) Diff(t AcmeProvider, opts ...Options) map[string][]interfa
 	diff := make(map[string][]interface{})
 	if s.AccountKey != t.AccountKey {
 		diff["AccountKey"] = []interface{}{s.AccountKey, t.AccountKey}
+	}
+
+	if s.AcmeProvider != t.AcmeProvider {
+		diff["AcmeProvider"] = []interface{}{s.AcmeProvider, t.AcmeProvider}
+	}
+
+	if !equalComparableMap(s.AcmeVars, t.AcmeVars, opt) {
+		diff["AcmeVars"] = []interface{}{s.AcmeVars, t.AcmeVars}
 	}
 
 	if !equalPointers(s.Bits, t.Bits) {
