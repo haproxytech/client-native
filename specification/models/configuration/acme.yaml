@@ -14,6 +14,13 @@ acme:
     account_key:
       type: string
       description: Path where the the ACME account key is stored
+    acme_provider:
+      type: string
+      description: DNS provider for the dns-01 challenge
+    acme_vars:
+      description: List of variables passed to the dns-01 provider (typically API keys)
+      additionalProperties:
+        type: string
     bits:
       type: integer
       description: Number of bits to generate an RSA certificate
@@ -47,3 +54,4 @@ acme:
     metadata:
       additionalProperties:
         type: object
+  additionalProperties: false

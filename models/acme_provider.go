@@ -40,6 +40,12 @@ type AcmeProvider struct {
 	// Path where the the ACME account key is stored
 	AccountKey string `json:"account_key,omitempty"`
 
+	// DNS provider for the dns-01 challenge
+	AcmeProvider string `json:"acme_provider,omitempty"`
+
+	// List of variables passed to the dns-01 provider (typically API keys)
+	AcmeVars map[string]string `json:"acme_vars,omitempty"`
+
 	// Number of bits to generate an RSA certificate
 	// Minimum: 1024
 	// +kubebuilder:validation:Minimum=1024

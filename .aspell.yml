@@ -66,6 +66,7 @@ allowed:
   - fullpage
   - github
   - gitlab
+  - godaddy
   - gokc
   - golang
   - golangci
@@ -188,3 +189,4 @@ allowed:
   - yaml
   - async
   - rehaul
+  - XXXX
