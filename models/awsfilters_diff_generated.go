@@ -17,18 +17,22 @@
 
 package models
 
-func (rec AwsFilters) Diff(obj AwsFilters) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec AwsFilters) Diff(obj AwsFilters, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Key, obj.Key) {
+	for diffKey, diffValue := range DiffPointerString(rec.Key, obj.Key, opts...) {
 		diff["Key."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value) {
+	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value, opts...) {
 		diff["Value."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerString(x, y *string) map[string][]interface{} {
+func DiffPointerString(x, y *string, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

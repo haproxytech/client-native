@@ -17,25 +17,43 @@
 
 package models
 
-func (x SslCrtListEntries) Equal(y SslCrtListEntries) bool {
-	return EqualSslCrtListEntries(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x SslCrtListEntries) Equal(y SslCrtListEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSslCrtListEntries(x, y, opts...)
 }
 
-func EqualPointerSslCrtListEntry(x, y *SslCrtListEntry) bool {
+func EqualPointerSslCrtListEntry(x, y *SslCrtListEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSslCrtListEntries(x, y SslCrtListEntries) bool {
+func EqualSslCrtListEntries(x, y SslCrtListEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSslCrtListEntry(vx, vy) {
+		if !EqualPointerSslCrtListEntry(vx, vy, opts...) {
 			return false
 		}
 	}

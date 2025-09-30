@@ -17,18 +17,22 @@
 
 package models
 
-func (rec Info) Diff(obj Info) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Info) Diff(obj Info, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInfoAPI(rec.API, obj.API) {
+	for diffKey, diffValue := range DiffPointerInfoAPI(rec.API, obj.API, opts...) {
 		diff["API."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInfoSystem(rec.System, obj.System) {
+	for diffKey, diffValue := range DiffPointerInfoSystem(rec.System, obj.System, opts...) {
 		diff["System."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerInfoAPI(x, y *InfoAPI) map[string][]interface{} {
+func DiffPointerInfoAPI(x, y *InfoAPI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -52,7 +56,7 @@ func DiffPointerInfoAPI(x, y *InfoAPI) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerInfoSystem(x, y *InfoSystem) map[string][]interface{} {
+func DiffPointerInfoSystem(x, y *InfoSystem, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

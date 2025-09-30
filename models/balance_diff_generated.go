@@ -17,9 +17,13 @@
 
 package models
 
-func (rec Balance) Diff(obj Balance) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Balance) Diff(obj Balance, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Algorithm, obj.Algorithm) {
+	for diffKey, diffValue := range DiffPointerString(rec.Algorithm, obj.Algorithm, opts...) {
 		diff["Algorithm."+diffKey] = diffValue
 	}
 	if rec.HashExpression != obj.HashExpression {

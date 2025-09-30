@@ -17,12 +17,17 @@
 
 package models
 
-func (rec DgramBind) Equal(obj DgramBind) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DgramBind) Equal(obj DgramBind, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
 		rec.Interface == obj.Interface &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Namespace == obj.Namespace &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
-		EqualPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd) &&
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
+		EqualPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd, opts...) &&
 		rec.Transparent == obj.Transparent
 }

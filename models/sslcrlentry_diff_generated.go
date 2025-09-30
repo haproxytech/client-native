@@ -21,20 +21,21 @@ import (
 	"fmt"
 
 	"github.com/haproxytech/client-native/v6/models/funcs"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec SslCrlEntry) Diff(obj SslCrlEntry) map[string][]interface{} {
+func (rec SslCrlEntry) Diff(obj SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Issuer != obj.Issuer {
 		diff["Issuer"] = []interface{}{rec.Issuer, obj.Issuer}
 	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.LastUpdate, obj.LastUpdate) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.LastUpdate, obj.LastUpdate, opts...) {
 		diff["LastUpdate."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate, opts...) {
 		diff["NextUpdate."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerRevokedCertificates(rec.RevokedCertificates, obj.RevokedCertificates) {
+	for diffKey, diffValue := range DiffSlicePointerRevokedCertificates(rec.RevokedCertificates, obj.RevokedCertificates, opts...) {
 		diff["RevokedCertificates"+diffKey] = diffValue
 	}
 	if rec.SignatureAlgorithm != obj.SignatureAlgorithm {
@@ -52,7 +53,7 @@ func (rec SslCrlEntry) Diff(obj SslCrlEntry) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerRevokedCertificates(x, y *RevokedCertificates) map[string][]interface{} {
+func DiffPointerRevokedCertificates(x, y *RevokedCertificates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -76,7 +77,12 @@ func DiffPointerRevokedCertificates(x, y *RevokedCertificates) map[string][]inte
 	return diff
 }
 
-func DiffSlicePointerRevokedCertificates(x, y []*RevokedCertificates) map[string][]interface{} {
+func DiffSlicePointerRevokedCertificates(x, y []*RevokedCertificates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -84,9 +90,10 @@ func DiffSlicePointerRevokedCertificates(x, y []*RevokedCertificates) map[string
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

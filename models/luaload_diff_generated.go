@@ -17,9 +17,13 @@
 
 package models
 
-func (rec LuaLoad) Diff(obj LuaLoad) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LuaLoad) Diff(obj LuaLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.File, obj.File) {
+	for diffKey, diffValue := range DiffPointerString(rec.File, obj.File, opts...) {
 		diff["File."+diffKey] = diffValue
 	}
 	return diff

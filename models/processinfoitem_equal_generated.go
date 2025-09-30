@@ -17,65 +17,69 @@
 
 package models
 
-func (rec ProcessInfoItem) Equal(obj ProcessInfoItem) bool {
-	return EqualPointerInt64(rec.ActivePeers, obj.ActivePeers) &&
-		EqualPointerInt64(rec.BusyPolling, obj.BusyPolling) &&
-		EqualPointerInt64(rec.BytesOutRate, obj.BytesOutRate) &&
-		EqualPointerInt64(rec.CompressBpsIn, obj.CompressBpsIn) &&
-		EqualPointerInt64(rec.CompressBpsOut, obj.CompressBpsOut) &&
-		EqualPointerInt64(rec.CompressBpsRateLim, obj.CompressBpsRateLim) &&
-		EqualPointerInt64(rec.ConnRate, obj.ConnRate) &&
-		EqualPointerInt64(rec.ConnRateLimit, obj.ConnRateLimit) &&
-		EqualPointerInt64(rec.ConnectedPeers, obj.ConnectedPeers) &&
-		EqualPointerInt64(rec.CumConns, obj.CumConns) &&
-		EqualPointerInt64(rec.CumReq, obj.CumReq) &&
-		EqualPointerInt64(rec.CumSslConns, obj.CumSslConns) &&
-		EqualPointerInt64(rec.CurrConns, obj.CurrConns) &&
-		EqualPointerInt64(rec.CurrSslConns, obj.CurrSslConns) &&
-		EqualPointerInt64(rec.DroppedLogs, obj.DroppedLogs) &&
-		EqualPointerInt64(rec.FailedResolutions, obj.FailedResolutions) &&
-		EqualPointerInt64(rec.HardMaxConn, obj.HardMaxConn) &&
-		EqualPointerInt64(rec.IdlePct, obj.IdlePct) &&
-		EqualPointerInt64(rec.Jobs, obj.Jobs) &&
-		EqualPointerInt64(rec.Listeners, obj.Listeners) &&
-		EqualPointerInt64(rec.MaxConn, obj.MaxConn) &&
-		EqualPointerInt64(rec.MaxConnRate, obj.MaxConnRate) &&
-		EqualPointerInt64(rec.MaxPipes, obj.MaxPipes) &&
-		EqualPointerInt64(rec.MaxSessRate, obj.MaxSessRate) &&
-		EqualPointerInt64(rec.MaxSock, obj.MaxSock) &&
-		EqualPointerInt64(rec.MaxSslConns, obj.MaxSslConns) &&
-		EqualPointerInt64(rec.MaxSslRate, obj.MaxSslRate) &&
-		EqualPointerInt64(rec.MaxZlibMemUsage, obj.MaxZlibMemUsage) &&
-		EqualPointerInt64(rec.MemMaxMb, obj.MemMaxMb) &&
-		EqualPointerInt64(rec.Nbthread, obj.Nbthread) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ProcessInfoItem) Equal(obj ProcessInfoItem, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.ActivePeers, obj.ActivePeers, opts...) &&
+		EqualPointerInt64(rec.BusyPolling, obj.BusyPolling, opts...) &&
+		EqualPointerInt64(rec.BytesOutRate, obj.BytesOutRate, opts...) &&
+		EqualPointerInt64(rec.CompressBpsIn, obj.CompressBpsIn, opts...) &&
+		EqualPointerInt64(rec.CompressBpsOut, obj.CompressBpsOut, opts...) &&
+		EqualPointerInt64(rec.CompressBpsRateLim, obj.CompressBpsRateLim, opts...) &&
+		EqualPointerInt64(rec.ConnRate, obj.ConnRate, opts...) &&
+		EqualPointerInt64(rec.ConnRateLimit, obj.ConnRateLimit, opts...) &&
+		EqualPointerInt64(rec.ConnectedPeers, obj.ConnectedPeers, opts...) &&
+		EqualPointerInt64(rec.CumConns, obj.CumConns, opts...) &&
+		EqualPointerInt64(rec.CumReq, obj.CumReq, opts...) &&
+		EqualPointerInt64(rec.CumSslConns, obj.CumSslConns, opts...) &&
+		EqualPointerInt64(rec.CurrConns, obj.CurrConns, opts...) &&
+		EqualPointerInt64(rec.CurrSslConns, obj.CurrSslConns, opts...) &&
+		EqualPointerInt64(rec.DroppedLogs, obj.DroppedLogs, opts...) &&
+		EqualPointerInt64(rec.FailedResolutions, obj.FailedResolutions, opts...) &&
+		EqualPointerInt64(rec.HardMaxConn, obj.HardMaxConn, opts...) &&
+		EqualPointerInt64(rec.IdlePct, obj.IdlePct, opts...) &&
+		EqualPointerInt64(rec.Jobs, obj.Jobs, opts...) &&
+		EqualPointerInt64(rec.Listeners, obj.Listeners, opts...) &&
+		EqualPointerInt64(rec.MaxConn, obj.MaxConn, opts...) &&
+		EqualPointerInt64(rec.MaxConnRate, obj.MaxConnRate, opts...) &&
+		EqualPointerInt64(rec.MaxPipes, obj.MaxPipes, opts...) &&
+		EqualPointerInt64(rec.MaxSessRate, obj.MaxSessRate, opts...) &&
+		EqualPointerInt64(rec.MaxSock, obj.MaxSock, opts...) &&
+		EqualPointerInt64(rec.MaxSslConns, obj.MaxSslConns, opts...) &&
+		EqualPointerInt64(rec.MaxSslRate, obj.MaxSslRate, opts...) &&
+		EqualPointerInt64(rec.MaxZlibMemUsage, obj.MaxZlibMemUsage, opts...) &&
+		EqualPointerInt64(rec.MemMaxMb, obj.MemMaxMb, opts...) &&
+		EqualPointerInt64(rec.Nbthread, obj.Nbthread, opts...) &&
 		rec.Node == obj.Node &&
-		EqualPointerInt64(rec.Pid, obj.Pid) &&
-		EqualPointerInt64(rec.PipesFree, obj.PipesFree) &&
-		EqualPointerInt64(rec.PipesUsed, obj.PipesUsed) &&
-		EqualPointerInt64(rec.PoolAllocMb, obj.PoolAllocMb) &&
-		EqualPointerInt64(rec.PoolFailed, obj.PoolFailed) &&
-		EqualPointerInt64(rec.PoolUsedMb, obj.PoolUsedMb) &&
-		EqualPointerInt64(rec.ProcessNum, obj.ProcessNum) &&
-		EqualPointerInt64(rec.Processes, obj.Processes) &&
+		EqualPointerInt64(rec.Pid, obj.Pid, opts...) &&
+		EqualPointerInt64(rec.PipesFree, obj.PipesFree, opts...) &&
+		EqualPointerInt64(rec.PipesUsed, obj.PipesUsed, opts...) &&
+		EqualPointerInt64(rec.PoolAllocMb, obj.PoolAllocMb, opts...) &&
+		EqualPointerInt64(rec.PoolFailed, obj.PoolFailed, opts...) &&
+		EqualPointerInt64(rec.PoolUsedMb, obj.PoolUsedMb, opts...) &&
+		EqualPointerInt64(rec.ProcessNum, obj.ProcessNum, opts...) &&
+		EqualPointerInt64(rec.Processes, obj.Processes, opts...) &&
 		rec.ReleaseDate.Equal(obj.ReleaseDate) &&
-		EqualPointerInt64(rec.RunQueue, obj.RunQueue) &&
-		EqualPointerInt64(rec.SessRate, obj.SessRate) &&
-		EqualPointerInt64(rec.SessRateLimit, obj.SessRateLimit) &&
-		EqualPointerInt64(rec.SslBackendKeyRate, obj.SslBackendKeyRate) &&
-		EqualPointerInt64(rec.SslBackendMaxKeyRate, obj.SslBackendMaxKeyRate) &&
-		EqualPointerInt64(rec.SslCacheLookups, obj.SslCacheLookups) &&
-		EqualPointerInt64(rec.SslCacheMisses, obj.SslCacheMisses) &&
-		EqualPointerInt64(rec.SslFrontendKeyRate, obj.SslFrontendKeyRate) &&
-		EqualPointerInt64(rec.SslFrontendMaxKeyRate, obj.SslFrontendMaxKeyRate) &&
-		EqualPointerInt64(rec.SslFrontendSessionReuse, obj.SslFrontendSessionReuse) &&
-		EqualPointerInt64(rec.SslRate, obj.SslRate) &&
-		EqualPointerInt64(rec.SslRateLimit, obj.SslRateLimit) &&
-		EqualPointerInt64(rec.Stopping, obj.Stopping) &&
-		EqualPointerInt64(rec.Tasks, obj.Tasks) &&
-		EqualPointerInt64(rec.TotalBytesOut, obj.TotalBytesOut) &&
-		EqualPointerInt64(rec.Ulimitn, obj.Ulimitn) &&
-		EqualPointerInt64(rec.Unstoppable, obj.Unstoppable) &&
-		EqualPointerInt64(rec.Uptime, obj.Uptime) &&
+		EqualPointerInt64(rec.RunQueue, obj.RunQueue, opts...) &&
+		EqualPointerInt64(rec.SessRate, obj.SessRate, opts...) &&
+		EqualPointerInt64(rec.SessRateLimit, obj.SessRateLimit, opts...) &&
+		EqualPointerInt64(rec.SslBackendKeyRate, obj.SslBackendKeyRate, opts...) &&
+		EqualPointerInt64(rec.SslBackendMaxKeyRate, obj.SslBackendMaxKeyRate, opts...) &&
+		EqualPointerInt64(rec.SslCacheLookups, obj.SslCacheLookups, opts...) &&
+		EqualPointerInt64(rec.SslCacheMisses, obj.SslCacheMisses, opts...) &&
+		EqualPointerInt64(rec.SslFrontendKeyRate, obj.SslFrontendKeyRate, opts...) &&
+		EqualPointerInt64(rec.SslFrontendMaxKeyRate, obj.SslFrontendMaxKeyRate, opts...) &&
+		EqualPointerInt64(rec.SslFrontendSessionReuse, obj.SslFrontendSessionReuse, opts...) &&
+		EqualPointerInt64(rec.SslRate, obj.SslRate, opts...) &&
+		EqualPointerInt64(rec.SslRateLimit, obj.SslRateLimit, opts...) &&
+		EqualPointerInt64(rec.Stopping, obj.Stopping, opts...) &&
+		EqualPointerInt64(rec.Tasks, obj.Tasks, opts...) &&
+		EqualPointerInt64(rec.TotalBytesOut, obj.TotalBytesOut, opts...) &&
+		EqualPointerInt64(rec.Ulimitn, obj.Ulimitn, opts...) &&
+		EqualPointerInt64(rec.Unstoppable, obj.Unstoppable, opts...) &&
+		EqualPointerInt64(rec.Uptime, obj.Uptime, opts...) &&
 		rec.Version == obj.Version &&
-		EqualPointerInt64(rec.ZlibMemUsage, obj.ZlibMemUsage)
+		EqualPointerInt64(rec.ZlibMemUsage, obj.ZlibMemUsage, opts...)
 }

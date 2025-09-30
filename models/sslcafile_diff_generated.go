@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SslCaFile) Diff(obj SslCaFile) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCaFile) Diff(obj SslCaFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Count != obj.Count {
 		diff["Count"] = []interface{}{rec.Count, obj.Count}

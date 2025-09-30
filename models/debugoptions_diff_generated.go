@@ -17,15 +17,19 @@
 
 package models
 
-func (rec DebugOptions) Diff(obj DebugOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DebugOptions) Diff(obj DebugOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.Anonkey, obj.Anonkey) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Anonkey, obj.Anonkey, opts...) {
 		diff["Anonkey."+diffKey] = diffValue
 	}
 	if rec.Quiet != obj.Quiet {
 		diff["Quiet"] = []interface{}{rec.Quiet, obj.Quiet}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.StressLevel, obj.StressLevel) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.StressLevel, obj.StressLevel, opts...) {
 		diff["StressLevel."+diffKey] = diffValue
 	}
 	if rec.ZeroWarning != obj.ZeroWarning {

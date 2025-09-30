@@ -19,17 +19,19 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec SiteService) Diff(obj SiteService) map[string][]interface{} {
+func (rec SiteService) Diff(obj SiteService, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.HTTPConnectionMode != obj.HTTPConnectionMode {
 		diff["HTTPConnectionMode"] = []interface{}{rec.HTTPConnectionMode, obj.HTTPConnectionMode}
 	}
-	for diffKey, diffValue := range DiffSlicePointerBind(rec.Listeners, obj.Listeners) {
+	for diffKey, diffValue := range DiffSlicePointerBind(rec.Listeners, obj.Listeners, opts...) {
 		diff["Listeners"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
 		diff["Maxconn."+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
@@ -38,7 +40,12 @@ func (rec SiteService) Diff(obj SiteService) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerBind(x, y []*Bind) map[string][]interface{} {
+func DiffSlicePointerBind(x, y []*Bind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -46,9 +53,10 @@ func DiffSlicePointerBind(x, y []*Bind) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec ACL) Diff(obj ACL) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ACL) Diff(obj ACL, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.ACLName != obj.ACLName {
 		diff["ACLName"] = []interface{}{rec.ACLName, obj.ACLName}

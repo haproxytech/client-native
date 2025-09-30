@@ -19,23 +19,36 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec MailersSection) Diff(obj MailersSection) map[string][]interface{} {
+func (rec MailersSection) Diff(obj MailersSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.MailersSectionBase.Diff(obj.MailersSectionBase) {
+	for diffKey, diffValue := range rec.MailersSectionBase.Diff(obj.MailersSectionBase, opts...) {
 		diff["MailersSectionBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringMailerEntry(rec.MailerEntries, obj.MailerEntries) {
+	for diffKey, diffValue := range DiffMapStringMailerEntry(rec.MailerEntries, obj.MailerEntries, opts...) {
 		diff["MailerEntries"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringMailerEntry(x, y map[string]MailerEntry) map[string][]interface{} {
+func DiffMapStringMailerEntry(x, y map[string]MailerEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

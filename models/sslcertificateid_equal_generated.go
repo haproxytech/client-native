@@ -17,15 +17,19 @@
 
 package models
 
-func (rec SslCertificateID) Equal(obj SslCertificateID) bool {
-	return EqualPointerCertificateID(rec.CertificateID, obj.CertificateID) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCertificateID) Equal(obj SslCertificateID, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerCertificateID(rec.CertificateID, obj.CertificateID, opts...) &&
 		rec.CertificateIDKey == obj.CertificateIDKey &&
 		rec.CertificatePath == obj.CertificatePath
 }
 
-func EqualPointerCertificateID(x, y *CertificateID) bool {
+func EqualPointerCertificateID(x, y *CertificateID, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

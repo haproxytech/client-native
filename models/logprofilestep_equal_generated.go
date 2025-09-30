@@ -17,9 +17,14 @@
 
 package models
 
-func (rec LogProfileStep) Equal(obj LogProfileStep) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LogProfileStep) Equal(obj LogProfileStep, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Drop == obj.Drop &&
 		rec.Format == obj.Format &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Sd == obj.Sd &&
 		rec.Step == obj.Step
 }

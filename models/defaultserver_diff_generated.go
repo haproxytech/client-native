@@ -17,9 +17,13 @@
 
 package models
 
-func (rec DefaultServer) Diff(obj DefaultServer) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DefaultServer) Diff(obj DefaultServer, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.ServerParams.Diff(obj.ServerParams) {
+	for diffKey, diffValue := range rec.ServerParams.Diff(obj.ServerParams, opts...) {
 		diff["ServerParams."+diffKey] = diffValue
 	}
 	return diff

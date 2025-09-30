@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x HTTPRequestRules) Diff(y HTTPRequestRules) map[string][]interface{} {
-	return DiffHTTPRequestRules(x, y)
+func (x HTTPRequestRules) Diff(y HTTPRequestRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffHTTPRequestRules(x, y, opts...)
 }
 
-func DiffHTTPRequestRules(x, y HTTPRequestRules) map[string][]interface{} {
+func DiffHTTPRequestRules(x, y HTTPRequestRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffHTTPRequestRules(x, y HTTPRequestRules) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffHTTPRequestRules(x, y HTTPRequestRules) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerHTTPRequestRule(x, y *HTTPRequestRule) map[string][]interface{} {
+func DiffPointerHTTPRequestRule(x, y *HTTPRequestRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

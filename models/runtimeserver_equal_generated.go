@@ -17,11 +17,15 @@
 
 package models
 
-func (rec RuntimeServer) Equal(obj RuntimeServer) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec RuntimeServer) Equal(obj RuntimeServer, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
 		rec.AdminState == obj.AdminState &&
 		rec.ID == obj.ID &&
 		rec.Name == obj.Name &&
 		rec.OperationalState == obj.OperationalState &&
-		EqualPointerInt64(rec.Port, obj.Port)
+		EqualPointerInt64(rec.Port, obj.Port, opts...)
 }

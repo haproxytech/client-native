@@ -17,7 +17,11 @@
 
 package models
 
-func (rec InfoAPI) Equal(obj InfoAPI) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec InfoAPI) Equal(obj InfoAPI, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BuildDate.Equal(obj.BuildDate) &&
 		rec.Version == obj.Version
 }

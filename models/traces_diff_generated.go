@@ -17,9 +17,13 @@
 
 package models
 
-func (rec Traces) Diff(obj Traces) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Traces) Diff(obj Traces, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.Entries.Diff(obj.Entries) {
+	for diffKey, diffValue := range rec.Entries.Diff(obj.Entries, opts...) {
 		diff["Entries"+diffKey] = diffValue
 	}
 	return diff

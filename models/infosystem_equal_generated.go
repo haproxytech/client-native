@@ -17,25 +17,29 @@
 
 package models
 
-func (rec InfoSystem) Equal(obj InfoSystem) bool {
-	return EqualPointerInfoSystemCPUInfo(rec.CPUInfo, obj.CPUInfo) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec InfoSystem) Equal(obj InfoSystem, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInfoSystemCPUInfo(rec.CPUInfo, obj.CPUInfo, opts...) &&
 		rec.Hostname == obj.Hostname &&
-		EqualPointerInfoSystemMemInfo(rec.MemInfo, obj.MemInfo) &&
+		EqualPointerInfoSystemMemInfo(rec.MemInfo, obj.MemInfo, opts...) &&
 		rec.OsString == obj.OsString &&
 		rec.Time == obj.Time &&
-		EqualPointerInt64(rec.Uptime, obj.Uptime)
+		EqualPointerInt64(rec.Uptime, obj.Uptime, opts...)
 }
 
-func EqualPointerInfoSystemCPUInfo(x, y *InfoSystemCPUInfo) bool {
+func EqualPointerInfoSystemCPUInfo(x, y *InfoSystemCPUInfo, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerInfoSystemMemInfo(x, y *InfoSystemMemInfo) bool {
+func EqualPointerInfoSystemMemInfo(x, y *InfoSystemMemInfo, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

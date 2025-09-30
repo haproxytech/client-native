@@ -17,7 +17,11 @@
 
 package models
 
-func (rec CertificateID) Equal(obj CertificateID) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CertificateID) Equal(obj CertificateID, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.HashAlgorithm == obj.HashAlgorithm &&
 		rec.IssuerKeyHash == obj.IssuerKeyHash &&
 		rec.IssuerNameHash == obj.IssuerNameHash &&

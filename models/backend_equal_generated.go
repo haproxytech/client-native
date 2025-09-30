@@ -17,32 +17,50 @@
 
 package models
 
-func (rec Backend) Equal(obj Backend) bool {
-	return rec.BackendBase.Equal(obj.BackendBase) &&
-		rec.ACLList.Equal(obj.ACLList) &&
-		rec.FilterList.Equal(obj.FilterList) &&
-		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList) &&
-		rec.HTTPCheckList.Equal(obj.HTTPCheckList) &&
-		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList) &&
-		rec.HTTPRequestRuleList.Equal(obj.HTTPRequestRuleList) &&
-		rec.HTTPResponseRuleList.Equal(obj.HTTPResponseRuleList) &&
-		rec.LogTargetList.Equal(obj.LogTargetList) &&
-		rec.ServerSwitchingRuleList.Equal(obj.ServerSwitchingRuleList) &&
-		rec.StickRuleList.Equal(obj.StickRuleList) &&
-		rec.TCPCheckRuleList.Equal(obj.TCPCheckRuleList) &&
-		rec.TCPRequestRuleList.Equal(obj.TCPRequestRuleList) &&
-		rec.TCPResponseRuleList.Equal(obj.TCPResponseRuleList) &&
-		EqualMapStringServerTemplate(rec.ServerTemplates, obj.ServerTemplates) &&
-		EqualMapStringServer(rec.Servers, obj.Servers)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Backend) Equal(obj Backend, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.BackendBase.Equal(obj.BackendBase, opts...) &&
+		rec.ACLList.Equal(obj.ACLList, opts...) &&
+		rec.FilterList.Equal(obj.FilterList, opts...) &&
+		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList, opts...) &&
+		rec.HTTPCheckList.Equal(obj.HTTPCheckList, opts...) &&
+		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList, opts...) &&
+		rec.HTTPRequestRuleList.Equal(obj.HTTPRequestRuleList, opts...) &&
+		rec.HTTPResponseRuleList.Equal(obj.HTTPResponseRuleList, opts...) &&
+		rec.LogTargetList.Equal(obj.LogTargetList, opts...) &&
+		rec.ServerSwitchingRuleList.Equal(obj.ServerSwitchingRuleList, opts...) &&
+		rec.StickRuleList.Equal(obj.StickRuleList, opts...) &&
+		rec.TCPCheckRuleList.Equal(obj.TCPCheckRuleList, opts...) &&
+		rec.TCPRequestRuleList.Equal(obj.TCPRequestRuleList, opts...) &&
+		rec.TCPResponseRuleList.Equal(obj.TCPResponseRuleList, opts...) &&
+		EqualMapStringServerTemplate(rec.ServerTemplates, obj.ServerTemplates, opts...) &&
+		EqualMapStringServer(rec.Servers, obj.Servers, opts...)
 }
 
-func EqualMapStringServer(x, y map[string]Server) bool {
+func EqualMapStringServer(x, y map[string]Server, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}
@@ -50,13 +68,27 @@ func EqualMapStringServer(x, y map[string]Server) bool {
 	return true
 }
 
-func EqualMapStringServerTemplate(x, y map[string]ServerTemplate) bool {
+func EqualMapStringServerTemplate(x, y map[string]ServerTemplate, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}

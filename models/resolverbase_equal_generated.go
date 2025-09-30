@@ -17,14 +17,19 @@
 
 package models
 
-func (rec ResolverBase) Equal(obj ResolverBase) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ResolverBase) Equal(obj ResolverBase, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AcceptedPayloadSize == obj.AcceptedPayloadSize &&
-		EqualPointerInt64(rec.HoldNx, obj.HoldNx) &&
-		EqualPointerInt64(rec.HoldObsolete, obj.HoldObsolete) &&
-		EqualPointerInt64(rec.HoldOther, obj.HoldOther) &&
-		EqualPointerInt64(rec.HoldRefused, obj.HoldRefused) &&
-		EqualPointerInt64(rec.HoldTimeout, obj.HoldTimeout) &&
-		EqualPointerInt64(rec.HoldValid, obj.HoldValid) &&
+		EqualPointerInt64(rec.HoldNx, obj.HoldNx, opts...) &&
+		EqualPointerInt64(rec.HoldObsolete, obj.HoldObsolete, opts...) &&
+		EqualPointerInt64(rec.HoldOther, obj.HoldOther, opts...) &&
+		EqualPointerInt64(rec.HoldRefused, obj.HoldRefused, opts...) &&
+		EqualPointerInt64(rec.HoldTimeout, obj.HoldTimeout, opts...) &&
+		EqualPointerInt64(rec.HoldValid, obj.HoldValid, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.ParseResolvConf == obj.ParseResolvConf &&
 		rec.ResolveRetries == obj.ResolveRetries &&

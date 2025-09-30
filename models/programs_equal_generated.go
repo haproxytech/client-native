@@ -17,25 +17,43 @@
 
 package models
 
-func (x Programs) Equal(y Programs) bool {
-	return EqualPrograms(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Programs) Equal(y Programs, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPrograms(x, y, opts...)
 }
 
-func EqualPointerProgram(x, y *Program) bool {
+func EqualPointerProgram(x, y *Program, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPrograms(x, y Programs) bool {
+func EqualPrograms(x, y Programs, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerProgram(vx, vy) {
+		if !EqualPointerProgram(vx, vy, opts...) {
 			return false
 		}
 	}

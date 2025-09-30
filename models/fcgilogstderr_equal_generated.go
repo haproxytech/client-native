@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FCGILogStderr) Equal(obj FCGILogStderr) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGILogStderr) Equal(obj FCGILogStderr, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
 		rec.Facility == obj.Facility &&
 		rec.Format == obj.Format &&
@@ -25,12 +29,12 @@ func (rec FCGILogStderr) Equal(obj FCGILogStderr) bool {
 		rec.Len == obj.Len &&
 		rec.Level == obj.Level &&
 		rec.Minlevel == obj.Minlevel &&
-		EqualPointerFCGILogStderrSample(rec.Sample, obj.Sample)
+		EqualPointerFCGILogStderrSample(rec.Sample, obj.Sample, opts...)
 }
 
-func EqualPointerFCGILogStderrSample(x, y *FCGILogStderrSample) bool {
+func EqualPointerFCGILogStderrSample(x, y *FCGILogStderrSample, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

@@ -17,8 +17,12 @@
 
 package models
 
-func (rec Forwardfor) Equal(obj Forwardfor) bool {
-	return EqualPointerString(rec.Enabled, obj.Enabled) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Forwardfor) Equal(obj Forwardfor, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Enabled, obj.Enabled, opts...) &&
 		rec.Except == obj.Except &&
 		rec.Header == obj.Header &&
 		rec.Ifnone == obj.Ifnone

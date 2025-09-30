@@ -17,12 +17,16 @@
 
 package models
 
-func (rec HTTPClientOptions) Equal(obj HTTPClientOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPClientOptions) Equal(obj HTTPClientOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ResolversDisabled == obj.ResolversDisabled &&
 		rec.ResolversID == obj.ResolversID &&
 		rec.ResolversPrefer == obj.ResolversPrefer &&
 		rec.Retries == obj.Retries &&
 		rec.SslCaFile == obj.SslCaFile &&
-		EqualPointerString(rec.SslVerify, obj.SslVerify) &&
-		EqualPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect)
+		EqualPointerString(rec.SslVerify, obj.SslVerify, opts...) &&
+		EqualPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect, opts...)
 }

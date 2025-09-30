@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SSLFrontUse) Equal(obj SSLFrontUse) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SSLFrontUse) Equal(obj SSLFrontUse, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Allow0rtt == obj.Allow0rtt &&
 		rec.Alpn == obj.Alpn &&
 		rec.CaFile == obj.CaFile &&
@@ -30,6 +34,7 @@ func (rec SSLFrontUse) Equal(obj SSLFrontUse) bool {
 		rec.Ecdhe == obj.Ecdhe &&
 		rec.Issuer == obj.Issuer &&
 		rec.Key == obj.Key &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NoAlpn == obj.NoAlpn &&
 		rec.NoCaNames == obj.NoCaNames &&
 		rec.Npn == obj.Npn &&

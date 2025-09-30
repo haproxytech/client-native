@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x HTTPChecks) Diff(y HTTPChecks) map[string][]interface{} {
-	return DiffHTTPChecks(x, y)
+func (x HTTPChecks) Diff(y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffHTTPChecks(x, y, opts...)
 }
 
-func DiffHTTPChecks(x, y HTTPChecks) map[string][]interface{} {
+func DiffHTTPChecks(x, y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffHTTPChecks(x, y HTTPChecks) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffHTTPChecks(x, y HTTPChecks) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerHTTPCheck(x, y *HTTPCheck) map[string][]interface{} {
+func DiffPointerHTTPCheck(x, y *HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

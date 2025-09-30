@@ -17,30 +17,34 @@
 
 package models
 
-func (rec NativeStatStats) Diff(obj NativeStatStats) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec NativeStatStats) Diff(obj NativeStatStats, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.Act, obj.Act) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Act, obj.Act, opts...) {
 		diff["Act."+diffKey] = diffValue
 	}
 	if rec.Addr != obj.Addr {
 		diff["Addr"] = []interface{}{rec.Addr, obj.Addr}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.AgentCode, obj.AgentCode) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.AgentCode, obj.AgentCode, opts...) {
 		diff["AgentCode."+diffKey] = diffValue
 	}
 	if rec.AgentDesc != obj.AgentDesc {
 		diff["AgentDesc"] = []interface{}{rec.AgentDesc, obj.AgentDesc}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.AgentDuration, obj.AgentDuration) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.AgentDuration, obj.AgentDuration, opts...) {
 		diff["AgentDuration."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.AgentFall, obj.AgentFall) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.AgentFall, obj.AgentFall, opts...) {
 		diff["AgentFall."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.AgentHealth, obj.AgentHealth) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.AgentHealth, obj.AgentHealth, opts...) {
 		diff["AgentHealth."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.AgentRise, obj.AgentRise) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.AgentRise, obj.AgentRise, opts...) {
 		diff["AgentRise."+diffKey] = diffValue
 	}
 	if rec.AgentStatus != obj.AgentStatus {
@@ -49,214 +53,214 @@ func (rec NativeStatStats) Diff(obj NativeStatStats) map[string][]interface{} {
 	if rec.Algo != obj.Algo {
 		diff["Algo"] = []interface{}{rec.Algo, obj.Algo}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Bck, obj.Bck) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Bck, obj.Bck, opts...) {
 		diff["Bck."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Bin, obj.Bin) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Bin, obj.Bin, opts...) {
 		diff["Bin."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Bout, obj.Bout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Bout, obj.Bout, opts...) {
 		diff["Bout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CheckCode, obj.CheckCode) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CheckCode, obj.CheckCode, opts...) {
 		diff["CheckCode."+diffKey] = diffValue
 	}
 	if rec.CheckDesc != obj.CheckDesc {
 		diff["CheckDesc"] = []interface{}{rec.CheckDesc, obj.CheckDesc}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CheckDuration, obj.CheckDuration) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CheckDuration, obj.CheckDuration, opts...) {
 		diff["CheckDuration."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CheckFall, obj.CheckFall) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CheckFall, obj.CheckFall, opts...) {
 		diff["CheckFall."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CheckHealth, obj.CheckHealth) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CheckHealth, obj.CheckHealth, opts...) {
 		diff["CheckHealth."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CheckRise, obj.CheckRise) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CheckRise, obj.CheckRise, opts...) {
 		diff["CheckRise."+diffKey] = diffValue
 	}
 	if rec.CheckStatus != obj.CheckStatus {
 		diff["CheckStatus"] = []interface{}{rec.CheckStatus, obj.CheckStatus}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Chkdown, obj.Chkdown) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Chkdown, obj.Chkdown, opts...) {
 		diff["Chkdown."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Chkfail, obj.Chkfail) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Chkfail, obj.Chkfail, opts...) {
 		diff["Chkfail."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CliAbrt, obj.CliAbrt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CliAbrt, obj.CliAbrt, opts...) {
 		diff["CliAbrt."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CompByp, obj.CompByp) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CompByp, obj.CompByp, opts...) {
 		diff["CompByp."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CompIn, obj.CompIn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CompIn, obj.CompIn, opts...) {
 		diff["CompIn."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CompOut, obj.CompOut) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CompOut, obj.CompOut, opts...) {
 		diff["CompOut."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CompRsp, obj.CompRsp) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CompRsp, obj.CompRsp, opts...) {
 		diff["CompRsp."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ConnRate, obj.ConnRate) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ConnRate, obj.ConnRate, opts...) {
 		diff["ConnRate."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ConnRateMax, obj.ConnRateMax) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ConnRateMax, obj.ConnRateMax, opts...) {
 		diff["ConnRateMax."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ConnTot, obj.ConnTot) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ConnTot, obj.ConnTot, opts...) {
 		diff["ConnTot."+diffKey] = diffValue
 	}
 	if rec.Cookie != obj.Cookie {
 		diff["Cookie"] = []interface{}{rec.Cookie, obj.Cookie}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Ctime, obj.Ctime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Ctime, obj.Ctime, opts...) {
 		diff["Ctime."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Dcon, obj.Dcon) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Dcon, obj.Dcon, opts...) {
 		diff["Dcon."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Downtime, obj.Downtime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Downtime, obj.Downtime, opts...) {
 		diff["Downtime."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Dreq, obj.Dreq) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Dreq, obj.Dreq, opts...) {
 		diff["Dreq."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Dresp, obj.Dresp) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Dresp, obj.Dresp, opts...) {
 		diff["Dresp."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Dses, obj.Dses) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Dses, obj.Dses, opts...) {
 		diff["Dses."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Econ, obj.Econ) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Econ, obj.Econ, opts...) {
 		diff["Econ."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Ereq, obj.Ereq) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Ereq, obj.Ereq, opts...) {
 		diff["Ereq."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Eresp, obj.Eresp) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Eresp, obj.Eresp, opts...) {
 		diff["Eresp."+diffKey] = diffValue
 	}
 	if rec.Hanafail != obj.Hanafail {
 		diff["Hanafail"] = []interface{}{rec.Hanafail, obj.Hanafail}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp1xx, obj.Hrsp1xx) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp1xx, obj.Hrsp1xx, opts...) {
 		diff["Hrsp1xx."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp2xx, obj.Hrsp2xx) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp2xx, obj.Hrsp2xx, opts...) {
 		diff["Hrsp2xx."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp3xx, obj.Hrsp3xx) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp3xx, obj.Hrsp3xx, opts...) {
 		diff["Hrsp3xx."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp4xx, obj.Hrsp4xx) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp4xx, obj.Hrsp4xx, opts...) {
 		diff["Hrsp4xx."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp5xx, obj.Hrsp5xx) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Hrsp5xx, obj.Hrsp5xx, opts...) {
 		diff["Hrsp5xx."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HrspOther, obj.HrspOther) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HrspOther, obj.HrspOther, opts...) {
 		diff["HrspOther."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Iid, obj.Iid) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Iid, obj.Iid, opts...) {
 		diff["Iid."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Intercepted, obj.Intercepted) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Intercepted, obj.Intercepted, opts...) {
 		diff["Intercepted."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.LastAgt, obj.LastAgt) {
+	for diffKey, diffValue := range DiffPointerString(rec.LastAgt, obj.LastAgt, opts...) {
 		diff["LastAgt."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.LastChk, obj.LastChk) {
+	for diffKey, diffValue := range DiffPointerString(rec.LastChk, obj.LastChk, opts...) {
 		diff["LastChk."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Lastchg, obj.Lastchg) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Lastchg, obj.Lastchg, opts...) {
 		diff["Lastchg."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Lastsess, obj.Lastsess) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Lastsess, obj.Lastsess, opts...) {
 		diff["Lastsess."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Lbtot, obj.Lbtot) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Lbtot, obj.Lbtot, opts...) {
 		diff["Lbtot."+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
 		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Pid, obj.Pid) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Pid, obj.Pid, opts...) {
 		diff["Pid."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Qcur, obj.Qcur) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Qcur, obj.Qcur, opts...) {
 		diff["Qcur."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Qlimit, obj.Qlimit) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Qlimit, obj.Qlimit, opts...) {
 		diff["Qlimit."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Qmax, obj.Qmax) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Qmax, obj.Qmax, opts...) {
 		diff["Qmax."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Qtime, obj.Qtime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Qtime, obj.Qtime, opts...) {
 		diff["Qtime."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Rate, obj.Rate) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Rate, obj.Rate, opts...) {
 		diff["Rate."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RateLim, obj.RateLim) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RateLim, obj.RateLim, opts...) {
 		diff["RateLim."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RateMax, obj.RateMax) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RateMax, obj.RateMax, opts...) {
 		diff["RateMax."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ReqRate, obj.ReqRate) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ReqRate, obj.ReqRate, opts...) {
 		diff["ReqRate."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ReqRateMax, obj.ReqRateMax) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ReqRateMax, obj.ReqRateMax, opts...) {
 		diff["ReqRateMax."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ReqTot, obj.ReqTot) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ReqTot, obj.ReqTot, opts...) {
 		diff["ReqTot."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Rtime, obj.Rtime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Rtime, obj.Rtime, opts...) {
 		diff["Rtime."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Scur, obj.Scur) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Scur, obj.Scur, opts...) {
 		diff["Scur."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Sid, obj.Sid) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Sid, obj.Sid, opts...) {
 		diff["Sid."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Slim, obj.Slim) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Slim, obj.Slim, opts...) {
 		diff["Slim."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Smax, obj.Smax) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Smax, obj.Smax, opts...) {
 		diff["Smax."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SrvAbrt, obj.SrvAbrt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SrvAbrt, obj.SrvAbrt, opts...) {
 		diff["SrvAbrt."+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {
 		diff["Status"] = []interface{}{rec.Status, obj.Status}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Stot, obj.Stot) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Stot, obj.Stot, opts...) {
 		diff["Stot."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Throttle, obj.Throttle) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Throttle, obj.Throttle, opts...) {
 		diff["Throttle."+diffKey] = diffValue
 	}
 	if rec.Tracked != obj.Tracked {
 		diff["Tracked"] = []interface{}{rec.Tracked, obj.Tracked}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Ttime, obj.Ttime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Ttime, obj.Ttime, opts...) {
 		diff["Ttime."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Weight, obj.Weight) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Weight, obj.Weight, opts...) {
 		diff["Weight."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Wredis, obj.Wredis) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Wredis, obj.Wredis, opts...) {
 		diff["Wredis."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Wretr, obj.Wretr) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Wretr, obj.Wretr, opts...) {
 		diff["Wretr."+diffKey] = diffValue
 	}
 	return diff

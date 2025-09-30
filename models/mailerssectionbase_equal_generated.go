@@ -17,7 +17,12 @@
 
 package models
 
-func (rec MailersSectionBase) Equal(obj MailersSectionBase) bool {
-	return rec.Name == obj.Name &&
-		EqualPointerInt64(rec.Timeout, obj.Timeout)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec MailersSectionBase) Equal(obj MailersSectionBase, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		rec.Name == obj.Name &&
+		EqualPointerInt64(rec.Timeout, obj.Timeout, opts...)
 }

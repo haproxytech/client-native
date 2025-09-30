@@ -17,7 +17,11 @@
 
 package models
 
-func (rec GlobalLogSendHostname) Equal(obj GlobalLogSendHostname) bool {
-	return EqualPointerString(rec.Enabled, obj.Enabled) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalLogSendHostname) Equal(obj GlobalLogSendHostname, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Enabled, obj.Enabled, opts...) &&
 		rec.Param == obj.Param
 }

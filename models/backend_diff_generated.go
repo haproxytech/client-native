@@ -19,65 +19,78 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Backend) Diff(obj Backend) map[string][]interface{} {
+func (rec Backend) Diff(obj Backend, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.BackendBase.Diff(obj.BackendBase) {
+	for diffKey, diffValue := range rec.BackendBase.Diff(obj.BackendBase, opts...) {
 		diff["BackendBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList) {
+	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList, opts...) {
 		diff["ACLList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.FilterList.Diff(obj.FilterList) {
+	for diffKey, diffValue := range rec.FilterList.Diff(obj.FilterList, opts...) {
 		diff["FilterList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList) {
+	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList, opts...) {
 		diff["HTTPAfterResponseRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPCheckList.Diff(obj.HTTPCheckList) {
+	for diffKey, diffValue := range rec.HTTPCheckList.Diff(obj.HTTPCheckList, opts...) {
 		diff["HTTPCheckList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPErrorRuleList.Diff(obj.HTTPErrorRuleList) {
+	for diffKey, diffValue := range rec.HTTPErrorRuleList.Diff(obj.HTTPErrorRuleList, opts...) {
 		diff["HTTPErrorRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPRequestRuleList.Diff(obj.HTTPRequestRuleList) {
+	for diffKey, diffValue := range rec.HTTPRequestRuleList.Diff(obj.HTTPRequestRuleList, opts...) {
 		diff["HTTPRequestRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPResponseRuleList.Diff(obj.HTTPResponseRuleList) {
+	for diffKey, diffValue := range rec.HTTPResponseRuleList.Diff(obj.HTTPResponseRuleList, opts...) {
 		diff["HTTPResponseRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList) {
+	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList, opts...) {
 		diff["LogTargetList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.ServerSwitchingRuleList.Diff(obj.ServerSwitchingRuleList) {
+	for diffKey, diffValue := range rec.ServerSwitchingRuleList.Diff(obj.ServerSwitchingRuleList, opts...) {
 		diff["ServerSwitchingRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.StickRuleList.Diff(obj.StickRuleList) {
+	for diffKey, diffValue := range rec.StickRuleList.Diff(obj.StickRuleList, opts...) {
 		diff["StickRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.TCPCheckRuleList.Diff(obj.TCPCheckRuleList) {
+	for diffKey, diffValue := range rec.TCPCheckRuleList.Diff(obj.TCPCheckRuleList, opts...) {
 		diff["TCPCheckRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.TCPRequestRuleList.Diff(obj.TCPRequestRuleList) {
+	for diffKey, diffValue := range rec.TCPRequestRuleList.Diff(obj.TCPRequestRuleList, opts...) {
 		diff["TCPRequestRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.TCPResponseRuleList.Diff(obj.TCPResponseRuleList) {
+	for diffKey, diffValue := range rec.TCPResponseRuleList.Diff(obj.TCPResponseRuleList, opts...) {
 		diff["TCPResponseRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringServerTemplate(rec.ServerTemplates, obj.ServerTemplates) {
+	for diffKey, diffValue := range DiffMapStringServerTemplate(rec.ServerTemplates, obj.ServerTemplates, opts...) {
 		diff["ServerTemplates"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers) {
+	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers, opts...) {
 		diff["Servers"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringServer(x, y map[string]Server) map[string][]interface{} {
+func DiffMapStringServer(x, y map[string]Server, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {
@@ -113,10 +126,21 @@ func DiffMapStringServer(x, y map[string]Server) map[string][]interface{} {
 	return diff
 }
 
-func DiffMapStringServerTemplate(x, y map[string]ServerTemplate) map[string][]interface{} {
+func DiffMapStringServerTemplate(x, y map[string]ServerTemplate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

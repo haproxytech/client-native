@@ -17,6 +17,11 @@
 
 package models
 
-func (rec DefaultBind) Equal(obj DefaultBind) bool {
-	return rec.BindParams.Equal(obj.BindParams)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DefaultBind) Equal(obj DefaultBind, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.BindParams.Equal(obj.BindParams, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...)
 }

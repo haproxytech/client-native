@@ -17,7 +17,11 @@
 
 package models
 
-func (rec MysqlCheckParams) Diff(obj MysqlCheckParams) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec MysqlCheckParams) Diff(obj MysqlCheckParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.ClientVersion != obj.ClientVersion {
 		diff["ClientVersion"] = []interface{}{rec.ClientVersion, obj.ClientVersion}

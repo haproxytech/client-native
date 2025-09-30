@@ -17,42 +17,46 @@
 
 package models
 
-func (rec Defaults) Diff(obj Defaults) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Defaults) Diff(obj Defaults, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.DefaultsBase.Diff(obj.DefaultsBase) {
+	for diffKey, diffValue := range rec.DefaultsBase.Diff(obj.DefaultsBase, opts...) {
 		diff["DefaultsBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList) {
+	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList, opts...) {
 		diff["ACLList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList) {
+	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList, opts...) {
 		diff["HTTPAfterResponseRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPCheckList.Diff(obj.HTTPCheckList) {
+	for diffKey, diffValue := range rec.HTTPCheckList.Diff(obj.HTTPCheckList, opts...) {
 		diff["HTTPCheckList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPErrorRuleList.Diff(obj.HTTPErrorRuleList) {
+	for diffKey, diffValue := range rec.HTTPErrorRuleList.Diff(obj.HTTPErrorRuleList, opts...) {
 		diff["HTTPErrorRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPRequestRuleList.Diff(obj.HTTPRequestRuleList) {
+	for diffKey, diffValue := range rec.HTTPRequestRuleList.Diff(obj.HTTPRequestRuleList, opts...) {
 		diff["HTTPRequestRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPResponseRuleList.Diff(obj.HTTPResponseRuleList) {
+	for diffKey, diffValue := range rec.HTTPResponseRuleList.Diff(obj.HTTPResponseRuleList, opts...) {
 		diff["HTTPResponseRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList) {
+	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList, opts...) {
 		diff["LogTargetList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.QUICInitialRuleList.Diff(obj.QUICInitialRuleList) {
+	for diffKey, diffValue := range rec.QUICInitialRuleList.Diff(obj.QUICInitialRuleList, opts...) {
 		diff["QUICInitialRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.TCPCheckRuleList.Diff(obj.TCPCheckRuleList) {
+	for diffKey, diffValue := range rec.TCPCheckRuleList.Diff(obj.TCPCheckRuleList, opts...) {
 		diff["TCPCheckRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.TCPRequestRuleList.Diff(obj.TCPRequestRuleList) {
+	for diffKey, diffValue := range rec.TCPRequestRuleList.Diff(obj.TCPRequestRuleList, opts...) {
 		diff["TCPRequestRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.TCPResponseRuleList.Diff(obj.TCPResponseRuleList) {
+	for diffKey, diffValue := range rec.TCPResponseRuleList.Diff(obj.TCPResponseRuleList, opts...) {
 		diff["TCPResponseRuleList"+diffKey] = diffValue
 	}
 	return diff

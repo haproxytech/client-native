@@ -17,18 +17,36 @@
 
 package models
 
-func (x Captures) Equal(y Captures) bool {
-	return EqualCaptures(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Captures) Equal(y Captures, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualCaptures(x, y, opts...)
 }
 
-func EqualCaptures(x, y Captures) bool {
+func EqualCaptures(x, y Captures, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerCapture(vx, vy) {
+		if !EqualPointerCapture(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualCaptures(x, y Captures) bool {
 	return true
 }
 
-func EqualPointerCapture(x, y *Capture) bool {
+func EqualPointerCapture(x, y *Capture, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

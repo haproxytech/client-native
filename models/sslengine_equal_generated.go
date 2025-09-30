@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SslEngine) Equal(obj SslEngine) bool {
-	return EqualPointerString(rec.Algorithms, obj.Algorithms) &&
-		EqualPointerString(rec.Name, obj.Name)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslEngine) Equal(obj SslEngine, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Algorithms, obj.Algorithms, opts...) &&
+		EqualPointerString(rec.Name, obj.Name, opts...)
 }

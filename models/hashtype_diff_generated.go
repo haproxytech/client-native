@@ -17,7 +17,11 @@
 
 package models
 
-func (rec HashType) Diff(obj HashType) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HashType) Diff(obj HashType, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Function != obj.Function {
 		diff["Function"] = []interface{}{rec.Function, obj.Function}

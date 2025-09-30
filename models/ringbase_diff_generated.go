@@ -17,7 +17,11 @@
 
 package models
 
-func (rec RingBase) Diff(obj RingBase) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec RingBase) Diff(obj RingBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Description != obj.Description {
 		diff["Description"] = []interface{}{rec.Description, obj.Description}
@@ -25,19 +29,19 @@ func (rec RingBase) Diff(obj RingBase) map[string][]interface{} {
 	if rec.Format != obj.Format {
 		diff["Format"] = []interface{}{rec.Format, obj.Format}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxlen, obj.Maxlen) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxlen, obj.Maxlen, opts...) {
 		diff["Maxlen."+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
 		diff["Size."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect, opts...) {
 		diff["TimeoutConnect."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutServer, obj.TimeoutServer) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutServer, obj.TimeoutServer, opts...) {
 		diff["TimeoutServer."+diffKey] = diffValue
 	}
 	return diff

@@ -17,10 +17,14 @@
 
 package models
 
-func (rec DefaultsBase) Equal(obj DefaultsBase) bool {
-	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) &&
-		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors) &&
-		EqualSliceString(rec.LogSteps, obj.LogSteps) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
+		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) &&
+		EqualSliceString(rec.LogSteps, obj.LogSteps, opts...) &&
 		rec.Abortonclose == obj.Abortonclose &&
 		rec.AcceptInvalidHTTPRequest == obj.AcceptInvalidHTTPRequest &&
 		rec.AcceptInvalidHTTPResponse == obj.AcceptInvalidHTTPResponse &&
@@ -28,59 +32,59 @@ func (rec DefaultsBase) Equal(obj DefaultsBase) bool {
 		rec.AcceptUnsafeViolationsInHTTPResponse == obj.AcceptUnsafeViolationsInHTTPResponse &&
 		rec.AdvCheck == obj.AdvCheck &&
 		rec.Allbackups == obj.Allbackups &&
-		EqualPointerInt64(rec.Backlog, obj.Backlog) &&
-		EqualPointerBalance(rec.Balance, obj.Balance) &&
-		EqualPointerInt64(rec.CheckTimeout, obj.CheckTimeout) &&
+		EqualPointerInt64(rec.Backlog, obj.Backlog, opts...) &&
+		EqualPointerBalance(rec.Balance, obj.Balance, opts...) &&
+		EqualPointerInt64(rec.CheckTimeout, obj.CheckTimeout, opts...) &&
 		rec.Checkcache == obj.Checkcache &&
 		rec.Clflog == obj.Clflog &&
-		EqualPointerInt64(rec.ClientFinTimeout, obj.ClientFinTimeout) &&
-		EqualPointerInt64(rec.ClientTimeout, obj.ClientTimeout) &&
+		EqualPointerInt64(rec.ClientFinTimeout, obj.ClientFinTimeout, opts...) &&
+		EqualPointerInt64(rec.ClientTimeout, obj.ClientTimeout, opts...) &&
 		rec.Clitcpka == obj.Clitcpka &&
-		EqualPointerInt64(rec.ClitcpkaCnt, obj.ClitcpkaCnt) &&
-		EqualPointerInt64(rec.ClitcpkaIdle, obj.ClitcpkaIdle) &&
-		EqualPointerInt64(rec.ClitcpkaIntvl, obj.ClitcpkaIntvl) &&
-		EqualPointerCompression(rec.Compression, obj.Compression) &&
-		EqualPointerInt64(rec.ConnectTimeout, obj.ConnectTimeout) &&
+		EqualPointerInt64(rec.ClitcpkaCnt, obj.ClitcpkaCnt, opts...) &&
+		EqualPointerInt64(rec.ClitcpkaIdle, obj.ClitcpkaIdle, opts...) &&
+		EqualPointerInt64(rec.ClitcpkaIntvl, obj.ClitcpkaIntvl, opts...) &&
+		EqualPointerCompression(rec.Compression, obj.Compression, opts...) &&
+		EqualPointerInt64(rec.ConnectTimeout, obj.ConnectTimeout, opts...) &&
 		rec.Contstats == obj.Contstats &&
-		EqualPointerCookie(rec.Cookie, obj.Cookie) &&
+		EqualPointerCookie(rec.Cookie, obj.Cookie, opts...) &&
 		rec.DefaultBackend == obj.DefaultBackend &&
-		EqualPointerDefaultServer(rec.DefaultServer, obj.DefaultServer) &&
+		EqualPointerDefaultServer(rec.DefaultServer, obj.DefaultServer, opts...) &&
 		rec.DisableH2Upgrade == obj.DisableH2Upgrade &&
 		rec.Disabled == obj.Disabled &&
 		rec.DontlogNormal == obj.DontlogNormal &&
 		rec.Dontlognull == obj.Dontlognull &&
 		rec.DynamicCookieKey == obj.DynamicCookieKey &&
-		EqualPointerEmailAlert(rec.EmailAlert, obj.EmailAlert) &&
+		EqualPointerEmailAlert(rec.EmailAlert, obj.EmailAlert, opts...) &&
 		rec.Enabled == obj.Enabled &&
 		rec.ErrorLogFormat == obj.ErrorLogFormat &&
-		EqualPointerErrorloc(rec.Errorloc302, obj.Errorloc302) &&
-		EqualPointerErrorloc(rec.Errorloc303, obj.Errorloc303) &&
+		EqualPointerErrorloc(rec.Errorloc302, obj.Errorloc302, opts...) &&
+		EqualPointerErrorloc(rec.Errorloc303, obj.Errorloc303, opts...) &&
 		rec.ExternalCheck == obj.ExternalCheck &&
 		rec.ExternalCheckCommand == obj.ExternalCheckCommand &&
 		rec.ExternalCheckPath == obj.ExternalCheckPath &&
-		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor) &&
+		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) &&
 		rec.From == obj.From &&
-		EqualPointerInt64(rec.Fullconn, obj.Fullconn) &&
+		EqualPointerInt64(rec.Fullconn, obj.Fullconn, opts...) &&
 		rec.H1CaseAdjustBogusClient == obj.H1CaseAdjustBogusClient &&
 		rec.H1CaseAdjustBogusServer == obj.H1CaseAdjustBogusServer &&
-		EqualPointerInt64(rec.HashBalanceFactor, obj.HashBalanceFactor) &&
+		EqualPointerInt64(rec.HashBalanceFactor, obj.HashBalanceFactor, opts...) &&
 		rec.HashPreserveAffinity == obj.HashPreserveAffinity &&
-		EqualPointerHashType(rec.HashType, obj.HashType) &&
+		EqualPointerHashType(rec.HashType, obj.HashType, opts...) &&
 		rec.HTTPBufferRequest == obj.HTTPBufferRequest &&
 		rec.HTTPDropRequestTrailers == obj.HTTPDropRequestTrailers &&
 		rec.HTTPDropResponseTrailers == obj.HTTPDropResponseTrailers &&
 		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
 		rec.HTTPIgnoreProbes == obj.HTTPIgnoreProbes &&
-		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout) &&
+		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&
 		rec.HTTPNoDelay == obj.HTTPNoDelay &&
 		rec.HTTPPretendKeepalive == obj.HTTPPretendKeepalive &&
-		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout) &&
+		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) &&
 		rec.HTTPRestrictReqHdrNames == obj.HTTPRestrictReqHdrNames &&
 		rec.HTTPReuse == obj.HTTPReuse &&
-		EqualPointerString(rec.HTTPSendNameHeader, obj.HTTPSendNameHeader) &&
+		EqualPointerString(rec.HTTPSendNameHeader, obj.HTTPSendNameHeader, opts...) &&
 		rec.HTTPUseProxyHeader == obj.HTTPUseProxyHeader &&
-		EqualPointerHttpchkParams(rec.HttpchkParams, obj.HttpchkParams) &&
+		EqualPointerHttpchkParams(rec.HttpchkParams, obj.HttpchkParams, opts...) &&
 		rec.Httplog == obj.Httplog &&
 		rec.Httpslog == obj.Httpslog &&
 		rec.IdleCloseOnResponse == obj.IdleCloseOnResponse &&
@@ -92,42 +96,43 @@ func (rec DefaultsBase) Equal(obj DefaultsBase) bool {
 		rec.LogSeparateErrors == obj.LogSeparateErrors &&
 		rec.LogTag == obj.LogTag &&
 		rec.Logasap == obj.Logasap &&
-		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue) &&
-		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
+		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) &&
+		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
-		rec.MonitorURI.Equal(obj.MonitorURI) &&
-		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams) &&
+		rec.MonitorURI.Equal(obj.MonitorURI, opts...) &&
+		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Nolinger == obj.Nolinger &&
-		EqualPointerOriginalto(rec.Originalto, obj.Originalto) &&
+		EqualPointerOriginalto(rec.Originalto, obj.Originalto, opts...) &&
 		rec.Persist == obj.Persist &&
-		EqualPointerPersistRule(rec.PersistRule, obj.PersistRule) &&
-		EqualPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams) &&
+		EqualPointerPersistRule(rec.PersistRule, obj.PersistRule, opts...) &&
+		EqualPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams, opts...) &&
 		rec.PreferLastServer == obj.PreferLastServer &&
-		EqualPointerInt64(rec.QueueTimeout, obj.QueueTimeout) &&
-		EqualPointerRedispatch(rec.Redispatch, obj.Redispatch) &&
-		EqualPointerInt64(rec.Retries, obj.Retries) &&
+		EqualPointerInt64(rec.QueueTimeout, obj.QueueTimeout, opts...) &&
+		EqualPointerRedispatch(rec.Redispatch, obj.Redispatch, opts...) &&
+		EqualPointerInt64(rec.Retries, obj.Retries, opts...) &&
 		rec.RetryOn == obj.RetryOn &&
-		EqualPointerInt64(rec.ServerFinTimeout, obj.ServerFinTimeout) &&
-		EqualPointerInt64(rec.ServerTimeout, obj.ServerTimeout) &&
-		EqualPointerSmtpchkParams(rec.SmtpchkParams, obj.SmtpchkParams) &&
+		EqualPointerInt64(rec.ServerFinTimeout, obj.ServerFinTimeout, opts...) &&
+		EqualPointerInt64(rec.ServerTimeout, obj.ServerTimeout, opts...) &&
+		EqualPointerSmtpchkParams(rec.SmtpchkParams, obj.SmtpchkParams, opts...) &&
 		rec.SocketStats == obj.SocketStats &&
-		EqualPointerSource(rec.Source, obj.Source) &&
+		EqualPointerSource(rec.Source, obj.Source, opts...) &&
 		rec.SpliceAuto == obj.SpliceAuto &&
 		rec.SpliceRequest == obj.SpliceRequest &&
 		rec.SpliceResponse == obj.SpliceResponse &&
 		rec.Srvtcpka == obj.Srvtcpka &&
-		EqualPointerInt64(rec.SrvtcpkaCnt, obj.SrvtcpkaCnt) &&
-		EqualPointerInt64(rec.SrvtcpkaIdle, obj.SrvtcpkaIdle) &&
-		EqualPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl) &&
-		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions) &&
-		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout) &&
+		EqualPointerInt64(rec.SrvtcpkaCnt, obj.SrvtcpkaCnt, opts...) &&
+		EqualPointerInt64(rec.SrvtcpkaIdle, obj.SrvtcpkaIdle, opts...) &&
+		EqualPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl, opts...) &&
+		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) &&
+		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) &&
 		rec.TCPSmartAccept == obj.TCPSmartAccept &&
 		rec.TCPSmartConnect == obj.TCPSmartConnect &&
 		rec.Tcpka == obj.Tcpka &&
 		rec.Tcplog == obj.Tcplog &&
 		rec.Transparent == obj.Transparent &&
-		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout) &&
+		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout, opts...) &&
 		rec.UniqueIDFormat == obj.UniqueIDFormat &&
 		rec.UniqueIDHeader == obj.UniqueIDHeader
 }

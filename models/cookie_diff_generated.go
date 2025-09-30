@@ -19,14 +19,16 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Cookie) Diff(obj Cookie) map[string][]interface{} {
+func (rec Cookie) Diff(obj Cookie, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerAttr(rec.Attrs, obj.Attrs) {
+	for diffKey, diffValue := range DiffSlicePointerAttr(rec.Attrs, obj.Attrs, opts...) {
 		diff["Attrs"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerDomain(rec.Domains, obj.Domains) {
+	for diffKey, diffValue := range DiffSlicePointerDomain(rec.Domains, obj.Domains, opts...) {
 		diff["Domains"+diffKey] = diffValue
 	}
 	if rec.Dynamic != obj.Dynamic {
@@ -44,7 +46,7 @@ func (rec Cookie) Diff(obj Cookie) map[string][]interface{} {
 	if rec.Maxlife != obj.Maxlife {
 		diff["Maxlife"] = []interface{}{rec.Maxlife, obj.Maxlife}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name) {
+	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
 		diff["Name."+diffKey] = diffValue
 	}
 	if rec.Nocache != obj.Nocache {
@@ -65,7 +67,7 @@ func (rec Cookie) Diff(obj Cookie) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerAttr(x, y *Attr) map[string][]interface{} {
+func DiffPointerAttr(x, y *Attr, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -89,7 +91,7 @@ func DiffPointerAttr(x, y *Attr) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerDomain(x, y *Domain) map[string][]interface{} {
+func DiffPointerDomain(x, y *Domain, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -113,7 +115,12 @@ func DiffPointerDomain(x, y *Domain) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerAttr(x, y []*Attr) map[string][]interface{} {
+func DiffSlicePointerAttr(x, y []*Attr, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -121,9 +128,10 @@ func DiffSlicePointerAttr(x, y []*Attr) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -153,7 +161,12 @@ func DiffSlicePointerAttr(x, y []*Attr) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerDomain(x, y []*Domain) map[string][]interface{} {
+func DiffSlicePointerDomain(x, y []*Domain, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -161,9 +174,10 @@ func DiffSlicePointerDomain(x, y []*Domain) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

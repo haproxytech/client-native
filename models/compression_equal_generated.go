@@ -17,20 +17,38 @@
 
 package models
 
-func (rec Compression) Equal(obj Compression) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Compression) Equal(obj Compression, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AlgoReq == obj.AlgoReq &&
-		EqualSliceString(rec.Algorithms, obj.Algorithms) &&
-		EqualSliceString(rec.AlgosRes, obj.AlgosRes) &&
+		EqualSliceString(rec.Algorithms, obj.Algorithms, opts...) &&
+		EqualSliceString(rec.AlgosRes, obj.AlgosRes, opts...) &&
 		rec.Direction == obj.Direction &&
 		rec.MinsizeReq == obj.MinsizeReq &&
 		rec.MinsizeRes == obj.MinsizeRes &&
 		rec.Offload == obj.Offload &&
-		EqualSliceString(rec.Types, obj.Types) &&
-		EqualSliceString(rec.TypesReq, obj.TypesReq) &&
-		EqualSliceString(rec.TypesRes, obj.TypesRes)
+		EqualSliceString(rec.Types, obj.Types, opts...) &&
+		EqualSliceString(rec.TypesReq, obj.TypesReq, opts...) &&
+		EqualSliceString(rec.TypesRes, obj.TypesRes, opts...)
 }
 
-func EqualSliceString(x, y []string) bool {
+func EqualSliceString(x, y []string, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}

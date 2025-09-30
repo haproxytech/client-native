@@ -17,9 +17,13 @@
 
 package models
 
-func (rec HTTPCodes) Diff(obj HTTPCodes) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPCodes) Diff(obj HTTPCodes, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value) {
+	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value, opts...) {
 		diff["Value."+diffKey] = diffValue
 	}
 	return diff

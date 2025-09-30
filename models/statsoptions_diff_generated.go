@@ -19,9 +19,11 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec StatsOptions) Diff(obj StatsOptions) map[string][]interface{} {
+func (rec StatsOptions) Diff(obj StatsOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.StatsAdmin != obj.StatsAdmin {
 		diff["StatsAdmin"] = []interface{}{rec.StatsAdmin, obj.StatsAdmin}
@@ -32,7 +34,7 @@ func (rec StatsOptions) Diff(obj StatsOptions) map[string][]interface{} {
 	if rec.StatsAdminCondTest != obj.StatsAdminCondTest {
 		diff["StatsAdminCondTest"] = []interface{}{rec.StatsAdminCondTest, obj.StatsAdminCondTest}
 	}
-	for diffKey, diffValue := range DiffSlicePointerStatsAuth(rec.StatsAuths, obj.StatsAuths) {
+	for diffKey, diffValue := range DiffSlicePointerStatsAuth(rec.StatsAuths, obj.StatsAuths, opts...) {
 		diff["StatsAuths"+diffKey] = diffValue
 	}
 	if rec.StatsEnable != obj.StatsEnable {
@@ -41,7 +43,7 @@ func (rec StatsOptions) Diff(obj StatsOptions) map[string][]interface{} {
 	if rec.StatsHideVersion != obj.StatsHideVersion {
 		diff["StatsHideVersion"] = []interface{}{rec.StatsHideVersion, obj.StatsHideVersion}
 	}
-	for diffKey, diffValue := range DiffSlicePointerStatsHTTPRequest(rec.StatsHTTPRequests, obj.StatsHTTPRequests) {
+	for diffKey, diffValue := range DiffSlicePointerStatsHTTPRequest(rec.StatsHTTPRequests, obj.StatsHTTPRequests, opts...) {
 		diff["StatsHTTPRequests"+diffKey] = diffValue
 	}
 	if rec.StatsMaxconn != obj.StatsMaxconn {
@@ -50,13 +52,13 @@ func (rec StatsOptions) Diff(obj StatsOptions) map[string][]interface{} {
 	if rec.StatsRealm != obj.StatsRealm {
 		diff["StatsRealm"] = []interface{}{rec.StatsRealm, obj.StatsRealm}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.StatsRealmRealm, obj.StatsRealmRealm) {
+	for diffKey, diffValue := range DiffPointerString(rec.StatsRealmRealm, obj.StatsRealmRealm, opts...) {
 		diff["StatsRealmRealm."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.StatsRefreshDelay, obj.StatsRefreshDelay) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.StatsRefreshDelay, obj.StatsRefreshDelay, opts...) {
 		diff["StatsRefreshDelay."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.StatsShowDesc, obj.StatsShowDesc) {
+	for diffKey, diffValue := range DiffPointerString(rec.StatsShowDesc, obj.StatsShowDesc, opts...) {
 		diff["StatsShowDesc."+diffKey] = diffValue
 	}
 	if rec.StatsShowLegends != obj.StatsShowLegends {
@@ -65,7 +67,7 @@ func (rec StatsOptions) Diff(obj StatsOptions) map[string][]interface{} {
 	if rec.StatsShowModules != obj.StatsShowModules {
 		diff["StatsShowModules"] = []interface{}{rec.StatsShowModules, obj.StatsShowModules}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.StatsShowNodeName, obj.StatsShowNodeName) {
+	for diffKey, diffValue := range DiffPointerString(rec.StatsShowNodeName, obj.StatsShowNodeName, opts...) {
 		diff["StatsShowNodeName."+diffKey] = diffValue
 	}
 	if rec.StatsURIPrefix != obj.StatsURIPrefix {
@@ -74,7 +76,7 @@ func (rec StatsOptions) Diff(obj StatsOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerStatsAuth(x, y *StatsAuth) map[string][]interface{} {
+func DiffPointerStatsAuth(x, y *StatsAuth, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -98,7 +100,7 @@ func DiffPointerStatsAuth(x, y *StatsAuth) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerStatsHTTPRequest(x, y *StatsHTTPRequest) map[string][]interface{} {
+func DiffPointerStatsHTTPRequest(x, y *StatsHTTPRequest, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -122,7 +124,12 @@ func DiffPointerStatsHTTPRequest(x, y *StatsHTTPRequest) map[string][]interface{
 	return diff
 }
 
-func DiffSlicePointerStatsAuth(x, y []*StatsAuth) map[string][]interface{} {
+func DiffSlicePointerStatsAuth(x, y []*StatsAuth, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -130,9 +137,10 @@ func DiffSlicePointerStatsAuth(x, y []*StatsAuth) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -162,7 +170,12 @@ func DiffSlicePointerStatsAuth(x, y []*StatsAuth) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest) map[string][]interface{} {
+func DiffSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -170,9 +183,10 @@ func DiffSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest) map[string][]int
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

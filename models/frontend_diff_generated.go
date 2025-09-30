@@ -19,59 +19,72 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Frontend) Diff(obj Frontend) map[string][]interface{} {
+func (rec Frontend) Diff(obj Frontend, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.FrontendBase.Diff(obj.FrontendBase) {
+	for diffKey, diffValue := range rec.FrontendBase.Diff(obj.FrontendBase, opts...) {
 		diff["FrontendBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList) {
+	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList, opts...) {
 		diff["ACLList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.BackendSwitchingRuleList.Diff(obj.BackendSwitchingRuleList) {
+	for diffKey, diffValue := range rec.BackendSwitchingRuleList.Diff(obj.BackendSwitchingRuleList, opts...) {
 		diff["BackendSwitchingRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.CaptureList.Diff(obj.CaptureList) {
+	for diffKey, diffValue := range rec.CaptureList.Diff(obj.CaptureList, opts...) {
 		diff["CaptureList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.FilterList.Diff(obj.FilterList) {
+	for diffKey, diffValue := range rec.FilterList.Diff(obj.FilterList, opts...) {
 		diff["FilterList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList) {
+	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList, opts...) {
 		diff["HTTPAfterResponseRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPErrorRuleList.Diff(obj.HTTPErrorRuleList) {
+	for diffKey, diffValue := range rec.HTTPErrorRuleList.Diff(obj.HTTPErrorRuleList, opts...) {
 		diff["HTTPErrorRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPRequestRuleList.Diff(obj.HTTPRequestRuleList) {
+	for diffKey, diffValue := range rec.HTTPRequestRuleList.Diff(obj.HTTPRequestRuleList, opts...) {
 		diff["HTTPRequestRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPResponseRuleList.Diff(obj.HTTPResponseRuleList) {
+	for diffKey, diffValue := range rec.HTTPResponseRuleList.Diff(obj.HTTPResponseRuleList, opts...) {
 		diff["HTTPResponseRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList) {
+	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList, opts...) {
 		diff["LogTargetList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.QUICInitialRuleList.Diff(obj.QUICInitialRuleList) {
+	for diffKey, diffValue := range rec.QUICInitialRuleList.Diff(obj.QUICInitialRuleList, opts...) {
 		diff["QUICInitialRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.SSLFrontUses.Diff(obj.SSLFrontUses) {
+	for diffKey, diffValue := range rec.SSLFrontUses.Diff(obj.SSLFrontUses, opts...) {
 		diff["SSLFrontUses"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.TCPRequestRuleList.Diff(obj.TCPRequestRuleList) {
+	for diffKey, diffValue := range rec.TCPRequestRuleList.Diff(obj.TCPRequestRuleList, opts...) {
 		diff["TCPRequestRuleList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds) {
+	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds, opts...) {
 		diff["Binds"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringBind(x, y map[string]Bind) map[string][]interface{} {
+func DiffMapStringBind(x, y map[string]Bind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

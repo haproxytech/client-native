@@ -17,21 +17,25 @@
 
 package models
 
-func (rec EmailAlert) Diff(obj EmailAlert) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec EmailAlert) Diff(obj EmailAlert, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.From, obj.From) {
+	for diffKey, diffValue := range DiffPointerString(rec.From, obj.From, opts...) {
 		diff["From."+diffKey] = diffValue
 	}
 	if rec.Level != obj.Level {
 		diff["Level"] = []interface{}{rec.Level, obj.Level}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Mailers, obj.Mailers) {
+	for diffKey, diffValue := range DiffPointerString(rec.Mailers, obj.Mailers, opts...) {
 		diff["Mailers."+diffKey] = diffValue
 	}
 	if rec.Myhostname != obj.Myhostname {
 		diff["Myhostname"] = []interface{}{rec.Myhostname, obj.Myhostname}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.To, obj.To) {
+	for diffKey, diffValue := range DiffPointerString(rec.To, obj.To, opts...) {
 		diff["To."+diffKey] = diffValue
 	}
 	return diff

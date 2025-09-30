@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Health) Diff(obj Health) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Health) Diff(obj Health, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Haproxy != obj.Haproxy {
 		diff["Haproxy"] = []interface{}{rec.Haproxy, obj.Haproxy}

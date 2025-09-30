@@ -17,10 +17,14 @@
 
 package models
 
-func (x MonitorURI) Equal(y MonitorURI) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x MonitorURI) Equal(y MonitorURI, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualMonitorURI(x, y)
 }
 
-func EqualMonitorURI(x, y MonitorURI) bool {
+func EqualMonitorURI(x, y MonitorURI, opts ...eqdiff.GoMethodGenOptions) bool {
 	return x == y
 }

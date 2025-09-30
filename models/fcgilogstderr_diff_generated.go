@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FCGILogStderr) Diff(obj FCGILogStderr) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGILogStderr) Diff(obj FCGILogStderr, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Address != obj.Address {
 		diff["Address"] = []interface{}{rec.Address, obj.Address}
@@ -40,13 +44,13 @@ func (rec FCGILogStderr) Diff(obj FCGILogStderr) map[string][]interface{} {
 	if rec.Minlevel != obj.Minlevel {
 		diff["Minlevel"] = []interface{}{rec.Minlevel, obj.Minlevel}
 	}
-	for diffKey, diffValue := range DiffPointerFCGILogStderrSample(rec.Sample, obj.Sample) {
+	for diffKey, diffValue := range DiffPointerFCGILogStderrSample(rec.Sample, obj.Sample, opts...) {
 		diff["Sample."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerFCGILogStderrSample(x, y *FCGILogStderrSample) map[string][]interface{} {
+func DiffPointerFCGILogStderrSample(x, y *FCGILogStderrSample, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

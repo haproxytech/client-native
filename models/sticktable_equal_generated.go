@@ -17,29 +17,47 @@
 
 package models
 
-func (rec StickTable) Equal(obj StickTable) bool {
-	return EqualSlicePointerStickTableField(rec.Fields, obj.Fields) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StickTable) Equal(obj StickTable, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerStickTableField(rec.Fields, obj.Fields, opts...) &&
 		rec.Name == obj.Name &&
-		EqualPointerInt64(rec.Size, obj.Size) &&
+		EqualPointerInt64(rec.Size, obj.Size, opts...) &&
 		rec.Type == obj.Type &&
-		EqualPointerInt64(rec.Used, obj.Used)
+		EqualPointerInt64(rec.Used, obj.Used, opts...)
 }
 
-func EqualPointerStickTableField(x, y *StickTableField) bool {
+func EqualPointerStickTableField(x, y *StickTableField, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerStickTableField(x, y []*StickTableField) bool {
+func EqualSlicePointerStickTableField(x, y []*StickTableField, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerStickTableField(vx, vy) {
+		if !EqualPointerStickTableField(vx, vy, opts...) {
 			return false
 		}
 	}

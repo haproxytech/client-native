@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SpoeAgent) Diff(obj SpoeAgent) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SpoeAgent) Diff(obj SpoeAgent, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Async != obj.Async {
 		diff["Async"] = []interface{}{rec.Async, obj.Async}
@@ -43,7 +47,7 @@ func (rec SpoeAgent) Diff(obj SpoeAgent) map[string][]interface{} {
 	if rec.IdleTimeout != obj.IdleTimeout {
 		diff["IdleTimeout"] = []interface{}{rec.IdleTimeout, obj.IdleTimeout}
 	}
-	for diffKey, diffValue := range rec.Log.Diff(obj.Log) {
+	for diffKey, diffValue := range rec.Log.Diff(obj.Log, opts...) {
 		diff["Log"+diffKey] = diffValue
 	}
 	if rec.MaxFrameSize != obj.MaxFrameSize {
@@ -61,7 +65,7 @@ func (rec SpoeAgent) Diff(obj SpoeAgent) map[string][]interface{} {
 	if rec.Messages != obj.Messages {
 		diff["Messages"] = []interface{}{rec.Messages, obj.Messages}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name) {
+	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
 		diff["Name."+diffKey] = diffValue
 	}
 	if rec.OptionSetOnError != obj.OptionSetOnError {

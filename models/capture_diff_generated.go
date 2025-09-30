@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Capture) Diff(obj Capture) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Capture) Diff(obj Capture, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Length != obj.Length {
 		diff["Length"] = []interface{}{rec.Length, obj.Length}

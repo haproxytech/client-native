@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SSLFrontUse) Diff(obj SSLFrontUse) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SSLFrontUse) Diff(obj SSLFrontUse, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Allow0rtt != obj.Allow0rtt {
 		diff["Allow0rtt"] = []interface{}{rec.Allow0rtt, obj.Allow0rtt}

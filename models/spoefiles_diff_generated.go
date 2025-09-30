@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x SpoeFiles) Diff(y SpoeFiles) map[string][]interface{} {
-	return DiffSpoeFiles(x, y)
+func (x SpoeFiles) Diff(y SpoeFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffSpoeFiles(x, y, opts...)
 }
 
-func DiffSpoeFiles(x, y SpoeFiles) map[string][]interface{} {
+func DiffSpoeFiles(x, y SpoeFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffSpoeFiles(x, y SpoeFiles) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

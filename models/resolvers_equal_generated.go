@@ -17,25 +17,43 @@
 
 package models
 
-func (x Resolvers) Equal(y Resolvers) bool {
-	return EqualResolvers(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Resolvers) Equal(y Resolvers, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualResolvers(x, y, opts...)
 }
 
-func EqualPointerResolver(x, y *Resolver) bool {
+func EqualPointerResolver(x, y *Resolver, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualResolvers(x, y Resolvers) bool {
+func EqualResolvers(x, y Resolvers, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerResolver(vx, vy) {
+		if !EqualPointerResolver(vx, vy, opts...) {
 			return false
 		}
 	}

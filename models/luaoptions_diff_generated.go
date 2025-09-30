@@ -19,23 +19,25 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec LuaOptions) Diff(obj LuaOptions) map[string][]interface{} {
+func (rec LuaOptions) Diff(obj LuaOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.LoadPerThread != obj.LoadPerThread {
 		diff["LoadPerThread"] = []interface{}{rec.LoadPerThread, obj.LoadPerThread}
 	}
-	for diffKey, diffValue := range DiffSlicePointerLuaLoad(rec.Loads, obj.Loads) {
+	for diffKey, diffValue := range DiffSlicePointerLuaLoad(rec.Loads, obj.Loads, opts...) {
 		diff["Loads"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerLuaPrependPath(rec.PrependPath, obj.PrependPath) {
+	for diffKey, diffValue := range DiffSlicePointerLuaPrependPath(rec.PrependPath, obj.PrependPath, opts...) {
 		diff["PrependPath"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerLuaLoad(x, y *LuaLoad) map[string][]interface{} {
+func DiffPointerLuaLoad(x, y *LuaLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -59,7 +61,7 @@ func DiffPointerLuaLoad(x, y *LuaLoad) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerLuaPrependPath(x, y *LuaPrependPath) map[string][]interface{} {
+func DiffPointerLuaPrependPath(x, y *LuaPrependPath, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -83,7 +85,12 @@ func DiffPointerLuaPrependPath(x, y *LuaPrependPath) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerLuaLoad(x, y []*LuaLoad) map[string][]interface{} {
+func DiffSlicePointerLuaLoad(x, y []*LuaLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -91,9 +98,10 @@ func DiffSlicePointerLuaLoad(x, y []*LuaLoad) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -123,7 +131,12 @@ func DiffSlicePointerLuaLoad(x, y []*LuaLoad) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerLuaPrependPath(x, y []*LuaPrependPath) map[string][]interface{} {
+func DiffSlicePointerLuaPrependPath(x, y []*LuaPrependPath, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -131,9 +144,10 @@ func DiffSlicePointerLuaPrependPath(x, y []*LuaPrependPath) map[string][]interfa
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

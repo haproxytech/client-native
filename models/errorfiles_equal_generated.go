@@ -17,12 +17,31 @@
 
 package models
 
-func (rec Errorfiles) Equal(obj Errorfiles) bool {
-	return EqualSliceInt64(rec.Codes, obj.Codes) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Errorfiles) Equal(obj Errorfiles, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSliceInt64(rec.Codes, obj.Codes, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name
 }
 
-func EqualSliceInt64(x, y []int64) bool {
+func EqualSliceInt64(x, y []int64, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}

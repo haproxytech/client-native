@@ -17,285 +17,304 @@
 
 package models
 
-func (rec GlobalBase) Equal(obj GlobalBase) bool {
-	return EqualSlicePointerCPUMap(rec.CPUMaps, obj.CPUMaps) &&
-		EqualSlicePointerCPUSet(rec.CPUSets, obj.CPUSets) &&
-		EqualSlicePointerH1CaseAdjust(rec.H1CaseAdjusts, obj.H1CaseAdjusts) &&
-		EqualSlicePointerRuntimeAPI(rec.RuntimeAPIs, obj.RuntimeAPIs) &&
-		EqualSlicePointerSetVarFmt(rec.SetVarFmts, obj.SetVarFmts) &&
-		EqualSlicePointerSetVar(rec.SetVars, obj.SetVars) &&
-		EqualSlicePointerThreadGroup(rec.ThreadGroupLines, obj.ThreadGroupLines) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerCPUMap(rec.CPUMaps, obj.CPUMaps, opts...) &&
+		EqualSlicePointerCPUSet(rec.CPUSets, obj.CPUSets, opts...) &&
+		EqualSlicePointerH1CaseAdjust(rec.H1CaseAdjusts, obj.H1CaseAdjusts, opts...) &&
+		EqualSlicePointerRuntimeAPI(rec.RuntimeAPIs, obj.RuntimeAPIs, opts...) &&
+		EqualSlicePointerSetVarFmt(rec.SetVarFmts, obj.SetVarFmts, opts...) &&
+		EqualSlicePointerSetVar(rec.SetVars, obj.SetVars, opts...) &&
+		EqualSlicePointerThreadGroup(rec.ThreadGroupLines, obj.ThreadGroupLines, opts...) &&
 		rec.Chroot == obj.Chroot &&
-		EqualPointerInt64(rec.CloseSpreadTime, obj.CloseSpreadTime) &&
+		EqualPointerInt64(rec.CloseSpreadTime, obj.CloseSpreadTime, opts...) &&
 		rec.ClusterSecret == obj.ClusterSecret &&
 		rec.CPUPolicy == obj.CPUPolicy &&
 		rec.Daemon == obj.Daemon &&
-		EqualPointerDebugOptions(rec.DebugOptions, obj.DebugOptions) &&
-		EqualPointerGlobalDefaultPath(rec.DefaultPath, obj.DefaultPath) &&
+		EqualPointerDebugOptions(rec.DebugOptions, obj.DebugOptions, opts...) &&
+		EqualPointerGlobalDefaultPath(rec.DefaultPath, obj.DefaultPath, opts...) &&
 		rec.Description == obj.Description &&
-		EqualPointerDeviceAtlasOptions(rec.DeviceAtlasOptions, obj.DeviceAtlasOptions) &&
+		EqualPointerDeviceAtlasOptions(rec.DeviceAtlasOptions, obj.DeviceAtlasOptions, opts...) &&
 		rec.DNSAcceptFamily == obj.DNSAcceptFamily &&
-		EqualPointerEnvironmentOptions(rec.EnvironmentOptions, obj.EnvironmentOptions) &&
+		EqualPointerEnvironmentOptions(rec.EnvironmentOptions, obj.EnvironmentOptions, opts...) &&
 		rec.ExposeDeprecatedDirectives == obj.ExposeDeprecatedDirectives &&
 		rec.ExposeExperimentalDirectives == obj.ExposeExperimentalDirectives &&
 		rec.ExternalCheck == obj.ExternalCheck &&
-		EqualPointerFiftyOneDegreesOptions(rec.FiftyOneDegreesOptions, obj.FiftyOneDegreesOptions) &&
-		EqualPointerInt64(rec.ForceCfgParserPause, obj.ForceCfgParserPause) &&
+		EqualPointerFiftyOneDegreesOptions(rec.FiftyOneDegreesOptions, obj.FiftyOneDegreesOptions, opts...) &&
+		EqualPointerInt64(rec.ForceCfgParserPause, obj.ForceCfgParserPause, opts...) &&
 		rec.Gid == obj.Gid &&
-		EqualPointerInt64(rec.Grace, obj.Grace) &&
+		EqualPointerInt64(rec.Grace, obj.Grace, opts...) &&
 		rec.Group == obj.Group &&
 		rec.H1AcceptPayloadWithAnyMethod == obj.H1AcceptPayloadWithAnyMethod &&
 		rec.H1CaseAdjustFile == obj.H1CaseAdjustFile &&
 		rec.H1DoNotCloseOnInsecureTransferEncoding == obj.H1DoNotCloseOnInsecureTransferEncoding &&
 		rec.H2WorkaroundBogusWebsocketClients == obj.H2WorkaroundBogusWebsocketClients &&
-		EqualPointerInt64(rec.HardStopAfter, obj.HardStopAfter) &&
-		EqualPointerGlobalHarden(rec.Harden, obj.Harden) &&
-		EqualPointerHTTPClientOptions(rec.HTTPClientOptions, obj.HTTPClientOptions) &&
-		EqualSlicePointerHTTPCodes(rec.HTTPErrCodes, obj.HTTPErrCodes) &&
-		EqualSlicePointerHTTPCodes(rec.HTTPFailCodes, obj.HTTPFailCodes) &&
+		EqualPointerInt64(rec.HardStopAfter, obj.HardStopAfter, opts...) &&
+		EqualPointerGlobalHarden(rec.Harden, obj.Harden, opts...) &&
+		EqualPointerHTTPClientOptions(rec.HTTPClientOptions, obj.HTTPClientOptions, opts...) &&
+		EqualSlicePointerHTTPCodes(rec.HTTPErrCodes, obj.HTTPErrCodes, opts...) &&
+		EqualSlicePointerHTTPCodes(rec.HTTPFailCodes, obj.HTTPFailCodes, opts...) &&
 		rec.InsecureForkWanted == obj.InsecureForkWanted &&
 		rec.InsecureSetuidWanted == obj.InsecureSetuidWanted &&
 		rec.LimitedQuic == obj.LimitedQuic &&
 		rec.Localpeer == obj.Localpeer &&
-		EqualPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname) &&
-		EqualPointerLuaOptions(rec.LuaOptions, obj.LuaOptions) &&
+		EqualPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname, opts...) &&
+		EqualPointerLuaOptions(rec.LuaOptions, obj.LuaOptions, opts...) &&
 		rec.MasterWorker == obj.MasterWorker &&
-		EqualPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		EqualPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads, opts...) &&
 		rec.Nbthread == obj.Nbthread &&
 		rec.NoQuic == obj.NoQuic &&
 		rec.Node == obj.Node &&
 		rec.NumaCPUMapping == obj.NumaCPUMapping &&
-		EqualPointerOcspUpdateOptions(rec.OcspUpdateOptions, obj.OcspUpdateOptions) &&
-		EqualPointerPerformanceOptions(rec.PerformanceOptions, obj.PerformanceOptions) &&
+		EqualPointerOcspUpdateOptions(rec.OcspUpdateOptions, obj.OcspUpdateOptions, opts...) &&
+		EqualPointerPerformanceOptions(rec.PerformanceOptions, obj.PerformanceOptions, opts...) &&
 		rec.Pidfile == obj.Pidfile &&
 		rec.Pp2NeverSendLocal == obj.Pp2NeverSendLocal &&
 		rec.PreallocFd == obj.PreallocFd &&
 		rec.SetDumpable == obj.SetDumpable &&
 		rec.Setcap == obj.Setcap &&
-		EqualPointerSslOptions(rec.SslOptions, obj.SslOptions) &&
+		EqualPointerSslOptions(rec.SslOptions, obj.SslOptions, opts...) &&
 		rec.StatsFile == obj.StatsFile &&
-		EqualPointerInt64(rec.StatsMaxconn, obj.StatsMaxconn) &&
-		EqualPointerInt64(rec.StatsTimeout, obj.StatsTimeout) &&
+		EqualPointerInt64(rec.StatsMaxconn, obj.StatsMaxconn, opts...) &&
+		EqualPointerInt64(rec.StatsTimeout, obj.StatsTimeout, opts...) &&
 		rec.StrictLimits == obj.StrictLimits &&
 		rec.ThreadGroups == obj.ThreadGroups &&
-		EqualPointerTuneBufferOptions(rec.TuneBufferOptions, obj.TuneBufferOptions) &&
-		EqualPointerTuneLuaOptions(rec.TuneLuaOptions, obj.TuneLuaOptions) &&
-		EqualPointerTuneOptions(rec.TuneOptions, obj.TuneOptions) &&
-		EqualPointerTuneQuicOptions(rec.TuneQuicOptions, obj.TuneQuicOptions) &&
-		EqualPointerTuneSslOptions(rec.TuneSslOptions, obj.TuneSslOptions) &&
-		EqualPointerTuneVarsOptions(rec.TuneVarsOptions, obj.TuneVarsOptions) &&
-		EqualPointerTuneZlibOptions(rec.TuneZlibOptions, obj.TuneZlibOptions) &&
+		EqualPointerTuneBufferOptions(rec.TuneBufferOptions, obj.TuneBufferOptions, opts...) &&
+		EqualPointerTuneLuaOptions(rec.TuneLuaOptions, obj.TuneLuaOptions, opts...) &&
+		EqualPointerTuneOptions(rec.TuneOptions, obj.TuneOptions, opts...) &&
+		EqualPointerTuneQuicOptions(rec.TuneQuicOptions, obj.TuneQuicOptions, opts...) &&
+		EqualPointerTuneSslOptions(rec.TuneSslOptions, obj.TuneSslOptions, opts...) &&
+		EqualPointerTuneVarsOptions(rec.TuneVarsOptions, obj.TuneVarsOptions, opts...) &&
+		EqualPointerTuneZlibOptions(rec.TuneZlibOptions, obj.TuneZlibOptions, opts...) &&
 		rec.UID == obj.UID &&
 		rec.Ulimitn == obj.Ulimitn &&
 		rec.User == obj.User &&
-		EqualPointerInt64(rec.WarnBlockedTrafficAfter, obj.WarnBlockedTrafficAfter) &&
-		EqualPointerWurflOptions(rec.WurflOptions, obj.WurflOptions)
+		EqualPointerInt64(rec.WarnBlockedTrafficAfter, obj.WarnBlockedTrafficAfter, opts...) &&
+		EqualPointerWurflOptions(rec.WurflOptions, obj.WurflOptions, opts...)
 }
 
-func EqualPointerCPUMap(x, y *CPUMap) bool {
+func EqualPointerCPUMap(x, y *CPUMap, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerCPUSet(x, y *CPUSet) bool {
+func EqualPointerCPUSet(x, y *CPUSet, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerDebugOptions(x, y *DebugOptions) bool {
+func EqualPointerDebugOptions(x, y *DebugOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions) bool {
+func EqualPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerEnvironmentOptions(x, y *EnvironmentOptions) bool {
+func EqualPointerEnvironmentOptions(x, y *EnvironmentOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions) bool {
+func EqualPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerGlobalDefaultPath(x, y *GlobalDefaultPath) bool {
+func EqualPointerGlobalDefaultPath(x, y *GlobalDefaultPath, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerGlobalHarden(x, y *GlobalHarden) bool {
+func EqualPointerGlobalHarden(x, y *GlobalHarden, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname) bool {
+func EqualPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerH1CaseAdjust(x, y *H1CaseAdjust) bool {
+func EqualPointerH1CaseAdjust(x, y *H1CaseAdjust, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerHTTPClientOptions(x, y *HTTPClientOptions) bool {
+func EqualPointerHTTPClientOptions(x, y *HTTPClientOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerHTTPCodes(x, y *HTTPCodes) bool {
+func EqualPointerHTTPCodes(x, y *HTTPCodes, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerLuaOptions(x, y *LuaOptions) bool {
+func EqualPointerLuaOptions(x, y *LuaOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerOcspUpdateOptions(x, y *OcspUpdateOptions) bool {
+func EqualPointerOcspUpdateOptions(x, y *OcspUpdateOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerPerformanceOptions(x, y *PerformanceOptions) bool {
+func EqualPointerPerformanceOptions(x, y *PerformanceOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerRuntimeAPI(x, y *RuntimeAPI) bool {
+func EqualPointerRuntimeAPI(x, y *RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerSetVar(x, y *SetVar) bool {
+func EqualPointerSetVar(x, y *SetVar, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerSetVarFmt(x, y *SetVarFmt) bool {
+func EqualPointerSetVarFmt(x, y *SetVarFmt, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerSslOptions(x, y *SslOptions) bool {
+func EqualPointerSslOptions(x, y *SslOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerThreadGroup(x, y *ThreadGroup) bool {
+func EqualPointerThreadGroup(x, y *ThreadGroup, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerTuneBufferOptions(x, y *TuneBufferOptions) bool {
+func EqualPointerTuneBufferOptions(x, y *TuneBufferOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerTuneLuaOptions(x, y *TuneLuaOptions) bool {
+func EqualPointerTuneLuaOptions(x, y *TuneLuaOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerTuneOptions(x, y *TuneOptions) bool {
+func EqualPointerTuneOptions(x, y *TuneOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerTuneQuicOptions(x, y *TuneQuicOptions) bool {
+func EqualPointerTuneQuicOptions(x, y *TuneQuicOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerTuneSslOptions(x, y *TuneSslOptions) bool {
+func EqualPointerTuneSslOptions(x, y *TuneSslOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerTuneVarsOptions(x, y *TuneVarsOptions) bool {
+func EqualPointerTuneVarsOptions(x, y *TuneVarsOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerTuneZlibOptions(x, y *TuneZlibOptions) bool {
+func EqualPointerTuneZlibOptions(x, y *TuneZlibOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerWurflOptions(x, y *WurflOptions) bool {
+func EqualPointerWurflOptions(x, y *WurflOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerCPUMap(x, y []*CPUMap) bool {
+func EqualSlicePointerCPUMap(x, y []*CPUMap, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerCPUMap(vx, vy) {
+		if !EqualPointerCPUMap(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -303,14 +322,28 @@ func EqualSlicePointerCPUMap(x, y []*CPUMap) bool {
 	return true
 }
 
-func EqualSlicePointerCPUSet(x, y []*CPUSet) bool {
+func EqualSlicePointerCPUSet(x, y []*CPUSet, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerCPUSet(vx, vy) {
+		if !EqualPointerCPUSet(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -318,14 +351,28 @@ func EqualSlicePointerCPUSet(x, y []*CPUSet) bool {
 	return true
 }
 
-func EqualSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) bool {
+func EqualSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerH1CaseAdjust(vx, vy) {
+		if !EqualPointerH1CaseAdjust(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -333,14 +380,28 @@ func EqualSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) bool {
 	return true
 }
 
-func EqualSlicePointerHTTPCodes(x, y []*HTTPCodes) bool {
+func EqualSlicePointerHTTPCodes(x, y []*HTTPCodes, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerHTTPCodes(vx, vy) {
+		if !EqualPointerHTTPCodes(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -348,14 +409,28 @@ func EqualSlicePointerHTTPCodes(x, y []*HTTPCodes) bool {
 	return true
 }
 
-func EqualSlicePointerRuntimeAPI(x, y []*RuntimeAPI) bool {
+func EqualSlicePointerRuntimeAPI(x, y []*RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerRuntimeAPI(vx, vy) {
+		if !EqualPointerRuntimeAPI(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -363,14 +438,28 @@ func EqualSlicePointerRuntimeAPI(x, y []*RuntimeAPI) bool {
 	return true
 }
 
-func EqualSlicePointerSetVar(x, y []*SetVar) bool {
+func EqualSlicePointerSetVar(x, y []*SetVar, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSetVar(vx, vy) {
+		if !EqualPointerSetVar(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -378,14 +467,28 @@ func EqualSlicePointerSetVar(x, y []*SetVar) bool {
 	return true
 }
 
-func EqualSlicePointerSetVarFmt(x, y []*SetVarFmt) bool {
+func EqualSlicePointerSetVarFmt(x, y []*SetVarFmt, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSetVarFmt(vx, vy) {
+		if !EqualPointerSetVarFmt(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -393,14 +496,28 @@ func EqualSlicePointerSetVarFmt(x, y []*SetVarFmt) bool {
 	return true
 }
 
-func EqualSlicePointerThreadGroup(x, y []*ThreadGroup) bool {
+func EqualSlicePointerThreadGroup(x, y []*ThreadGroup, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerThreadGroup(vx, vy) {
+		if !EqualPointerThreadGroup(vx, vy, opts...) {
 			return false
 		}
 	}

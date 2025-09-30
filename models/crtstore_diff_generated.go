@@ -17,7 +17,11 @@
 
 package models
 
-func (rec CrtStore) Diff(obj CrtStore) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CrtStore) Diff(obj CrtStore, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.CrtBase != obj.CrtBase {
 		diff["CrtBase"] = []interface{}{rec.CrtBase, obj.CrtBase}
@@ -25,7 +29,7 @@ func (rec CrtStore) Diff(obj CrtStore) map[string][]interface{} {
 	if rec.KeyBase != obj.KeyBase {
 		diff["KeyBase"] = []interface{}{rec.KeyBase, obj.KeyBase}
 	}
-	for diffKey, diffValue := range rec.Loads.Diff(obj.Loads) {
+	for diffKey, diffValue := range rec.Loads.Diff(obj.Loads, opts...) {
 		diff["Loads"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {

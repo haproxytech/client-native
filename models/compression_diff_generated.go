@@ -19,17 +19,19 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Compression) Diff(obj Compression) map[string][]interface{} {
+func (rec Compression) Diff(obj Compression, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AlgoReq != obj.AlgoReq {
 		diff["AlgoReq"] = []interface{}{rec.AlgoReq, obj.AlgoReq}
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.Algorithms, obj.Algorithms) {
+	for diffKey, diffValue := range DiffSliceString(rec.Algorithms, obj.Algorithms, opts...) {
 		diff["Algorithms"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.AlgosRes, obj.AlgosRes) {
+	for diffKey, diffValue := range DiffSliceString(rec.AlgosRes, obj.AlgosRes, opts...) {
 		diff["AlgosRes"+diffKey] = diffValue
 	}
 	if rec.Direction != obj.Direction {
@@ -44,19 +46,24 @@ func (rec Compression) Diff(obj Compression) map[string][]interface{} {
 	if rec.Offload != obj.Offload {
 		diff["Offload"] = []interface{}{rec.Offload, obj.Offload}
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.Types, obj.Types) {
+	for diffKey, diffValue := range DiffSliceString(rec.Types, obj.Types, opts...) {
 		diff["Types"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.TypesReq, obj.TypesReq) {
+	for diffKey, diffValue := range DiffSliceString(rec.TypesReq, obj.TypesReq, opts...) {
 		diff["TypesReq"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.TypesRes, obj.TypesRes) {
+	for diffKey, diffValue := range DiffSliceString(rec.TypesRes, obj.TypesRes, opts...) {
 		diff["TypesRes"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffSliceString(x, y []string) map[string][]interface{} {
+func DiffSliceString(x, y []string, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -64,9 +71,10 @@ func DiffSliceString(x, y []string) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

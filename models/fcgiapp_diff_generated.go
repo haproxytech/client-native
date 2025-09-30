@@ -17,12 +17,16 @@
 
 package models
 
-func (rec FCGIApp) Diff(obj FCGIApp) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGIApp) Diff(obj FCGIApp, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.FCGIAppBase.Diff(obj.FCGIAppBase) {
+	for diffKey, diffValue := range rec.FCGIAppBase.Diff(obj.FCGIAppBase, opts...) {
 		diff["FCGIAppBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList) {
+	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList, opts...) {
 		diff["ACLList"+diffKey] = diffValue
 	}
 	return diff

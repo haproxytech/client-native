@@ -17,7 +17,11 @@
 
 package models
 
-func (rec StickTableField) Equal(obj StickTableField) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StickTableField) Equal(obj StickTableField, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Field == obj.Field &&
 		rec.Idx == obj.Idx &&
 		rec.Period == obj.Period &&

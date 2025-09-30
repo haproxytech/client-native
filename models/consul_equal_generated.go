@@ -17,24 +17,28 @@
 
 package models
 
-func (rec Consul) Equal(obj Consul) bool {
-	return EqualPointerString(rec.Address, obj.Address) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Consul) Equal(obj Consul, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Address, obj.Address, opts...) &&
 		rec.Defaults == obj.Defaults &&
 		rec.Description == obj.Description &&
-		EqualPointerBool(rec.Enabled, obj.Enabled) &&
-		EqualPointerString(rec.HealthCheckPolicy, obj.HealthCheckPolicy) &&
+		EqualPointerBool(rec.Enabled, obj.Enabled, opts...) &&
+		EqualPointerString(rec.HealthCheckPolicy, obj.HealthCheckPolicy, opts...) &&
 		rec.HealthCheckPolicyMin == obj.HealthCheckPolicyMin &&
-		EqualPointerString(rec.ID, obj.ID) &&
-		EqualPointerString(rec.Mode, obj.Mode) &&
+		EqualPointerString(rec.ID, obj.ID, opts...) &&
+		EqualPointerString(rec.Mode, obj.Mode, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Namespace == obj.Namespace &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
-		EqualPointerInt64(rec.RetryTimeout, obj.RetryTimeout) &&
-		EqualPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase) &&
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
+		EqualPointerInt64(rec.RetryTimeout, obj.RetryTimeout, opts...) &&
+		EqualPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase, opts...) &&
 		rec.ServerSlotsGrowthIncrement == obj.ServerSlotsGrowthIncrement &&
-		EqualPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType) &&
-		EqualSliceString(rec.ServiceAllowlist, obj.ServiceAllowlist) &&
-		EqualSliceString(rec.ServiceDenylist, obj.ServiceDenylist) &&
+		EqualPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType, opts...) &&
+		EqualSliceString(rec.ServiceAllowlist, obj.ServiceAllowlist, opts...) &&
+		EqualSliceString(rec.ServiceDenylist, obj.ServiceDenylist, opts...) &&
 		rec.ServiceNameRegexp == obj.ServiceNameRegexp &&
 		rec.Token == obj.Token
 }

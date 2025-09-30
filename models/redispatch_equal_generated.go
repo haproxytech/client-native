@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Redispatch) Equal(obj Redispatch) bool {
-	return EqualPointerString(rec.Enabled, obj.Enabled) &&
-		EqualPointerInt64(rec.Interval, obj.Interval)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Redispatch) Equal(obj Redispatch, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Enabled, obj.Enabled, opts...) &&
+		EqualPointerInt64(rec.Interval, obj.Interval, opts...)
 }

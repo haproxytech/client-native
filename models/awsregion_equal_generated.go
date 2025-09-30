@@ -17,45 +17,63 @@
 
 package models
 
-func (rec AwsRegion) Equal(obj AwsRegion) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec AwsRegion) Equal(obj AwsRegion, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AccessKeyID == obj.AccessKeyID &&
-		EqualSlicePointerAwsFilters(rec.Allowlist, obj.Allowlist) &&
-		EqualSlicePointerAwsFilters(rec.Denylist, obj.Denylist) &&
+		EqualSlicePointerAwsFilters(rec.Allowlist, obj.Allowlist, opts...) &&
+		EqualSlicePointerAwsFilters(rec.Denylist, obj.Denylist, opts...) &&
 		rec.Description == obj.Description &&
-		EqualPointerBool(rec.Enabled, obj.Enabled) &&
-		EqualPointerString(rec.ID, obj.ID) &&
-		EqualPointerString(rec.IPV4Address, obj.IPV4Address) &&
-		EqualPointerString(rec.Name, obj.Name) &&
-		EqualPointerString(rec.Region, obj.Region) &&
-		EqualPointerInt64(rec.RetryTimeout, obj.RetryTimeout) &&
+		EqualPointerBool(rec.Enabled, obj.Enabled, opts...) &&
+		EqualPointerString(rec.ID, obj.ID, opts...) &&
+		EqualPointerString(rec.IPV4Address, obj.IPV4Address, opts...) &&
+		EqualPointerString(rec.Name, obj.Name, opts...) &&
+		EqualPointerString(rec.Region, obj.Region, opts...) &&
+		EqualPointerInt64(rec.RetryTimeout, obj.RetryTimeout, opts...) &&
 		rec.SecretAccessKey == obj.SecretAccessKey &&
-		EqualPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase) &&
+		EqualPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase, opts...) &&
 		rec.ServerSlotsGrowthIncrement == obj.ServerSlotsGrowthIncrement &&
-		EqualPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType)
+		EqualPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType, opts...)
 }
 
-func EqualPointerAwsFilters(x, y *AwsFilters) bool {
+func EqualPointerAwsFilters(x, y *AwsFilters, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerBool(x, y *bool) bool {
+func EqualPointerBool(x, y *bool, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
 	return *x == *y
 }
 
-func EqualSlicePointerAwsFilters(x, y []*AwsFilters) bool {
+func EqualSlicePointerAwsFilters(x, y []*AwsFilters, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerAwsFilters(vx, vy) {
+		if !EqualPointerAwsFilters(vx, vy, opts...) {
 			return false
 		}
 	}

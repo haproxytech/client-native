@@ -17,13 +17,17 @@
 
 package models
 
-func (rec GlobalHarden) Equal(obj GlobalHarden) bool {
-	return EqualPointerGlobalHardenRejectPrivilegedPorts(rec.RejectPrivilegedPorts, obj.RejectPrivilegedPorts)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalHarden) Equal(obj GlobalHarden, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerGlobalHardenRejectPrivilegedPorts(rec.RejectPrivilegedPorts, obj.RejectPrivilegedPorts, opts...)
 }
 
-func EqualPointerGlobalHardenRejectPrivilegedPorts(x, y *GlobalHardenRejectPrivilegedPorts) bool {
+func EqualPointerGlobalHardenRejectPrivilegedPorts(x, y *GlobalHardenRejectPrivilegedPorts, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

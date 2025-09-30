@@ -17,8 +17,12 @@
 
 package models
 
-func (rec HTTPCheck) Equal(obj HTTPCheck) bool {
-	return EqualSlicePointerReturnHeader(rec.CheckHeaders, obj.CheckHeaders) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPCheck) Equal(obj HTTPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerReturnHeader(rec.CheckHeaders, obj.CheckHeaders, opts...) &&
 		rec.Addr == obj.Addr &&
 		rec.Alpn == obj.Alpn &&
 		rec.Body == obj.Body &&
@@ -29,13 +33,14 @@ func (rec HTTPCheck) Equal(obj HTTPCheck) bool {
 		rec.ExclamationMark == obj.ExclamationMark &&
 		rec.Linger == obj.Linger &&
 		rec.Match == obj.Match &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Method == obj.Method &&
-		EqualPointerInt64(rec.MinRecv, obj.MinRecv) &&
+		EqualPointerInt64(rec.MinRecv, obj.MinRecv, opts...) &&
 		rec.OkStatus == obj.OkStatus &&
 		rec.OnError == obj.OnError &&
 		rec.OnSuccess == obj.OnSuccess &&
 		rec.Pattern == obj.Pattern &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
 		rec.PortString == obj.PortString &&
 		rec.Proto == obj.Proto &&
 		rec.SendProxy == obj.SendProxy &&
@@ -54,21 +59,35 @@ func (rec HTTPCheck) Equal(obj HTTPCheck) bool {
 		rec.ViaSocks4 == obj.ViaSocks4
 }
 
-func EqualPointerReturnHeader(x, y *ReturnHeader) bool {
+func EqualPointerReturnHeader(x, y *ReturnHeader, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerReturnHeader(x, y []*ReturnHeader) bool {
+func EqualSlicePointerReturnHeader(x, y []*ReturnHeader, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerReturnHeader(vx, vy) {
+		if !EqualPointerReturnHeader(vx, vy, opts...) {
 			return false
 		}
 	}

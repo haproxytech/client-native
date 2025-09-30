@@ -17,8 +17,13 @@
 
 package models
 
-func (rec ACL) Equal(obj ACL) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ACL) Equal(obj ACL, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ACLName == obj.ACLName &&
 		rec.Criterion == obj.Criterion &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Value == obj.Value
 }

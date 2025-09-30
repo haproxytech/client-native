@@ -17,18 +17,36 @@
 
 package models
 
-func (rec MailersSection) Equal(obj MailersSection) bool {
-	return rec.MailersSectionBase.Equal(obj.MailersSectionBase) &&
-		EqualMapStringMailerEntry(rec.MailerEntries, obj.MailerEntries)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec MailersSection) Equal(obj MailersSection, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.MailersSectionBase.Equal(obj.MailersSectionBase, opts...) &&
+		EqualMapStringMailerEntry(rec.MailerEntries, obj.MailerEntries, opts...)
 }
 
-func EqualMapStringMailerEntry(x, y map[string]MailerEntry) bool {
+func EqualMapStringMailerEntry(x, y map[string]MailerEntry, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}

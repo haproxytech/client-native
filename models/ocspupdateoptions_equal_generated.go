@@ -17,17 +17,21 @@
 
 package models
 
-func (rec OcspUpdateOptions) Equal(obj OcspUpdateOptions) bool {
-	return EqualPointerBool(rec.Disable, obj.Disable) &&
-		EqualPointerOcspUpdateOptionsHttpproxy(rec.Httpproxy, obj.Httpproxy) &&
-		EqualPointerInt64(rec.Maxdelay, obj.Maxdelay) &&
-		EqualPointerInt64(rec.Mindelay, obj.Mindelay) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec OcspUpdateOptions) Equal(obj OcspUpdateOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerBool(rec.Disable, obj.Disable, opts...) &&
+		EqualPointerOcspUpdateOptionsHttpproxy(rec.Httpproxy, obj.Httpproxy, opts...) &&
+		EqualPointerInt64(rec.Maxdelay, obj.Maxdelay, opts...) &&
+		EqualPointerInt64(rec.Mindelay, obj.Mindelay, opts...) &&
 		rec.Mode == obj.Mode
 }
 
-func EqualPointerOcspUpdateOptionsHttpproxy(x, y *OcspUpdateOptionsHttpproxy) bool {
+func EqualPointerOcspUpdateOptionsHttpproxy(x, y *OcspUpdateOptionsHttpproxy, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

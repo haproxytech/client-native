@@ -17,25 +17,43 @@
 
 package models
 
-func (x SslCrtListFiles) Equal(y SslCrtListFiles) bool {
-	return EqualSslCrtListFiles(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x SslCrtListFiles) Equal(y SslCrtListFiles, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSslCrtListFiles(x, y, opts...)
 }
 
-func EqualPointerSslCrtListFile(x, y *SslCrtListFile) bool {
+func EqualPointerSslCrtListFile(x, y *SslCrtListFile, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSslCrtListFiles(x, y SslCrtListFiles) bool {
+func EqualSslCrtListFiles(x, y SslCrtListFiles, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSslCrtListFile(vx, vy) {
+		if !EqualPointerSslCrtListFile(vx, vy, opts...) {
 			return false
 		}
 	}

@@ -17,6 +17,10 @@
 
 package models
 
-func (rec Health) Equal(obj Health) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Health) Equal(obj Health, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Haproxy == obj.Haproxy
 }

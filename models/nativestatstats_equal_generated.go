@@ -17,85 +17,89 @@
 
 package models
 
-func (rec NativeStatStats) Equal(obj NativeStatStats) bool {
-	return EqualPointerInt64(rec.Act, obj.Act) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec NativeStatStats) Equal(obj NativeStatStats, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.Act, obj.Act, opts...) &&
 		rec.Addr == obj.Addr &&
-		EqualPointerInt64(rec.AgentCode, obj.AgentCode) &&
+		EqualPointerInt64(rec.AgentCode, obj.AgentCode, opts...) &&
 		rec.AgentDesc == obj.AgentDesc &&
-		EqualPointerInt64(rec.AgentDuration, obj.AgentDuration) &&
-		EqualPointerInt64(rec.AgentFall, obj.AgentFall) &&
-		EqualPointerInt64(rec.AgentHealth, obj.AgentHealth) &&
-		EqualPointerInt64(rec.AgentRise, obj.AgentRise) &&
+		EqualPointerInt64(rec.AgentDuration, obj.AgentDuration, opts...) &&
+		EqualPointerInt64(rec.AgentFall, obj.AgentFall, opts...) &&
+		EqualPointerInt64(rec.AgentHealth, obj.AgentHealth, opts...) &&
+		EqualPointerInt64(rec.AgentRise, obj.AgentRise, opts...) &&
 		rec.AgentStatus == obj.AgentStatus &&
 		rec.Algo == obj.Algo &&
-		EqualPointerInt64(rec.Bck, obj.Bck) &&
-		EqualPointerInt64(rec.Bin, obj.Bin) &&
-		EqualPointerInt64(rec.Bout, obj.Bout) &&
-		EqualPointerInt64(rec.CheckCode, obj.CheckCode) &&
+		EqualPointerInt64(rec.Bck, obj.Bck, opts...) &&
+		EqualPointerInt64(rec.Bin, obj.Bin, opts...) &&
+		EqualPointerInt64(rec.Bout, obj.Bout, opts...) &&
+		EqualPointerInt64(rec.CheckCode, obj.CheckCode, opts...) &&
 		rec.CheckDesc == obj.CheckDesc &&
-		EqualPointerInt64(rec.CheckDuration, obj.CheckDuration) &&
-		EqualPointerInt64(rec.CheckFall, obj.CheckFall) &&
-		EqualPointerInt64(rec.CheckHealth, obj.CheckHealth) &&
-		EqualPointerInt64(rec.CheckRise, obj.CheckRise) &&
+		EqualPointerInt64(rec.CheckDuration, obj.CheckDuration, opts...) &&
+		EqualPointerInt64(rec.CheckFall, obj.CheckFall, opts...) &&
+		EqualPointerInt64(rec.CheckHealth, obj.CheckHealth, opts...) &&
+		EqualPointerInt64(rec.CheckRise, obj.CheckRise, opts...) &&
 		rec.CheckStatus == obj.CheckStatus &&
-		EqualPointerInt64(rec.Chkdown, obj.Chkdown) &&
-		EqualPointerInt64(rec.Chkfail, obj.Chkfail) &&
-		EqualPointerInt64(rec.CliAbrt, obj.CliAbrt) &&
-		EqualPointerInt64(rec.CompByp, obj.CompByp) &&
-		EqualPointerInt64(rec.CompIn, obj.CompIn) &&
-		EqualPointerInt64(rec.CompOut, obj.CompOut) &&
-		EqualPointerInt64(rec.CompRsp, obj.CompRsp) &&
-		EqualPointerInt64(rec.ConnRate, obj.ConnRate) &&
-		EqualPointerInt64(rec.ConnRateMax, obj.ConnRateMax) &&
-		EqualPointerInt64(rec.ConnTot, obj.ConnTot) &&
+		EqualPointerInt64(rec.Chkdown, obj.Chkdown, opts...) &&
+		EqualPointerInt64(rec.Chkfail, obj.Chkfail, opts...) &&
+		EqualPointerInt64(rec.CliAbrt, obj.CliAbrt, opts...) &&
+		EqualPointerInt64(rec.CompByp, obj.CompByp, opts...) &&
+		EqualPointerInt64(rec.CompIn, obj.CompIn, opts...) &&
+		EqualPointerInt64(rec.CompOut, obj.CompOut, opts...) &&
+		EqualPointerInt64(rec.CompRsp, obj.CompRsp, opts...) &&
+		EqualPointerInt64(rec.ConnRate, obj.ConnRate, opts...) &&
+		EqualPointerInt64(rec.ConnRateMax, obj.ConnRateMax, opts...) &&
+		EqualPointerInt64(rec.ConnTot, obj.ConnTot, opts...) &&
 		rec.Cookie == obj.Cookie &&
-		EqualPointerInt64(rec.Ctime, obj.Ctime) &&
-		EqualPointerInt64(rec.Dcon, obj.Dcon) &&
-		EqualPointerInt64(rec.Downtime, obj.Downtime) &&
-		EqualPointerInt64(rec.Dreq, obj.Dreq) &&
-		EqualPointerInt64(rec.Dresp, obj.Dresp) &&
-		EqualPointerInt64(rec.Dses, obj.Dses) &&
-		EqualPointerInt64(rec.Econ, obj.Econ) &&
-		EqualPointerInt64(rec.Ereq, obj.Ereq) &&
-		EqualPointerInt64(rec.Eresp, obj.Eresp) &&
+		EqualPointerInt64(rec.Ctime, obj.Ctime, opts...) &&
+		EqualPointerInt64(rec.Dcon, obj.Dcon, opts...) &&
+		EqualPointerInt64(rec.Downtime, obj.Downtime, opts...) &&
+		EqualPointerInt64(rec.Dreq, obj.Dreq, opts...) &&
+		EqualPointerInt64(rec.Dresp, obj.Dresp, opts...) &&
+		EqualPointerInt64(rec.Dses, obj.Dses, opts...) &&
+		EqualPointerInt64(rec.Econ, obj.Econ, opts...) &&
+		EqualPointerInt64(rec.Ereq, obj.Ereq, opts...) &&
+		EqualPointerInt64(rec.Eresp, obj.Eresp, opts...) &&
 		rec.Hanafail == obj.Hanafail &&
-		EqualPointerInt64(rec.Hrsp1xx, obj.Hrsp1xx) &&
-		EqualPointerInt64(rec.Hrsp2xx, obj.Hrsp2xx) &&
-		EqualPointerInt64(rec.Hrsp3xx, obj.Hrsp3xx) &&
-		EqualPointerInt64(rec.Hrsp4xx, obj.Hrsp4xx) &&
-		EqualPointerInt64(rec.Hrsp5xx, obj.Hrsp5xx) &&
-		EqualPointerInt64(rec.HrspOther, obj.HrspOther) &&
-		EqualPointerInt64(rec.Iid, obj.Iid) &&
-		EqualPointerInt64(rec.Intercepted, obj.Intercepted) &&
-		EqualPointerString(rec.LastAgt, obj.LastAgt) &&
-		EqualPointerString(rec.LastChk, obj.LastChk) &&
-		EqualPointerInt64(rec.Lastchg, obj.Lastchg) &&
-		EqualPointerInt64(rec.Lastsess, obj.Lastsess) &&
-		EqualPointerInt64(rec.Lbtot, obj.Lbtot) &&
+		EqualPointerInt64(rec.Hrsp1xx, obj.Hrsp1xx, opts...) &&
+		EqualPointerInt64(rec.Hrsp2xx, obj.Hrsp2xx, opts...) &&
+		EqualPointerInt64(rec.Hrsp3xx, obj.Hrsp3xx, opts...) &&
+		EqualPointerInt64(rec.Hrsp4xx, obj.Hrsp4xx, opts...) &&
+		EqualPointerInt64(rec.Hrsp5xx, obj.Hrsp5xx, opts...) &&
+		EqualPointerInt64(rec.HrspOther, obj.HrspOther, opts...) &&
+		EqualPointerInt64(rec.Iid, obj.Iid, opts...) &&
+		EqualPointerInt64(rec.Intercepted, obj.Intercepted, opts...) &&
+		EqualPointerString(rec.LastAgt, obj.LastAgt, opts...) &&
+		EqualPointerString(rec.LastChk, obj.LastChk, opts...) &&
+		EqualPointerInt64(rec.Lastchg, obj.Lastchg, opts...) &&
+		EqualPointerInt64(rec.Lastsess, obj.Lastsess, opts...) &&
+		EqualPointerInt64(rec.Lbtot, obj.Lbtot, opts...) &&
 		rec.Mode == obj.Mode &&
-		EqualPointerInt64(rec.Pid, obj.Pid) &&
-		EqualPointerInt64(rec.Qcur, obj.Qcur) &&
-		EqualPointerInt64(rec.Qlimit, obj.Qlimit) &&
-		EqualPointerInt64(rec.Qmax, obj.Qmax) &&
-		EqualPointerInt64(rec.Qtime, obj.Qtime) &&
-		EqualPointerInt64(rec.Rate, obj.Rate) &&
-		EqualPointerInt64(rec.RateLim, obj.RateLim) &&
-		EqualPointerInt64(rec.RateMax, obj.RateMax) &&
-		EqualPointerInt64(rec.ReqRate, obj.ReqRate) &&
-		EqualPointerInt64(rec.ReqRateMax, obj.ReqRateMax) &&
-		EqualPointerInt64(rec.ReqTot, obj.ReqTot) &&
-		EqualPointerInt64(rec.Rtime, obj.Rtime) &&
-		EqualPointerInt64(rec.Scur, obj.Scur) &&
-		EqualPointerInt64(rec.Sid, obj.Sid) &&
-		EqualPointerInt64(rec.Slim, obj.Slim) &&
-		EqualPointerInt64(rec.Smax, obj.Smax) &&
-		EqualPointerInt64(rec.SrvAbrt, obj.SrvAbrt) &&
+		EqualPointerInt64(rec.Pid, obj.Pid, opts...) &&
+		EqualPointerInt64(rec.Qcur, obj.Qcur, opts...) &&
+		EqualPointerInt64(rec.Qlimit, obj.Qlimit, opts...) &&
+		EqualPointerInt64(rec.Qmax, obj.Qmax, opts...) &&
+		EqualPointerInt64(rec.Qtime, obj.Qtime, opts...) &&
+		EqualPointerInt64(rec.Rate, obj.Rate, opts...) &&
+		EqualPointerInt64(rec.RateLim, obj.RateLim, opts...) &&
+		EqualPointerInt64(rec.RateMax, obj.RateMax, opts...) &&
+		EqualPointerInt64(rec.ReqRate, obj.ReqRate, opts...) &&
+		EqualPointerInt64(rec.ReqRateMax, obj.ReqRateMax, opts...) &&
+		EqualPointerInt64(rec.ReqTot, obj.ReqTot, opts...) &&
+		EqualPointerInt64(rec.Rtime, obj.Rtime, opts...) &&
+		EqualPointerInt64(rec.Scur, obj.Scur, opts...) &&
+		EqualPointerInt64(rec.Sid, obj.Sid, opts...) &&
+		EqualPointerInt64(rec.Slim, obj.Slim, opts...) &&
+		EqualPointerInt64(rec.Smax, obj.Smax, opts...) &&
+		EqualPointerInt64(rec.SrvAbrt, obj.SrvAbrt, opts...) &&
 		rec.Status == obj.Status &&
-		EqualPointerInt64(rec.Stot, obj.Stot) &&
-		EqualPointerInt64(rec.Throttle, obj.Throttle) &&
+		EqualPointerInt64(rec.Stot, obj.Stot, opts...) &&
+		EqualPointerInt64(rec.Throttle, obj.Throttle, opts...) &&
 		rec.Tracked == obj.Tracked &&
-		EqualPointerInt64(rec.Ttime, obj.Ttime) &&
-		EqualPointerInt64(rec.Weight, obj.Weight) &&
-		EqualPointerInt64(rec.Wredis, obj.Wredis) &&
-		EqualPointerInt64(rec.Wretr, obj.Wretr)
+		EqualPointerInt64(rec.Ttime, obj.Ttime, opts...) &&
+		EqualPointerInt64(rec.Weight, obj.Weight, opts...) &&
+		EqualPointerInt64(rec.Wredis, obj.Wredis, opts...) &&
+		EqualPointerInt64(rec.Wretr, obj.Wretr, opts...)
 }

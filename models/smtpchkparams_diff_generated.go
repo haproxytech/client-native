@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SmtpchkParams) Diff(obj SmtpchkParams) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SmtpchkParams) Diff(obj SmtpchkParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Domain != obj.Domain {
 		diff["Domain"] = []interface{}{rec.Domain, obj.Domain}

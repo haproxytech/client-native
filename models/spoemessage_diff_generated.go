@@ -17,24 +17,28 @@
 
 package models
 
-func (rec SpoeMessage) Diff(obj SpoeMessage) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SpoeMessage) Diff(obj SpoeMessage, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.ACL.Diff(obj.ACL) {
+	for diffKey, diffValue := range rec.ACL.Diff(obj.ACL, opts...) {
 		diff["ACL"+diffKey] = diffValue
 	}
 	if rec.Args != obj.Args {
 		diff["Args"] = []interface{}{rec.Args, obj.Args}
 	}
-	for diffKey, diffValue := range DiffPointerSpoeMessageEvent(rec.Event, obj.Event) {
+	for diffKey, diffValue := range DiffPointerSpoeMessageEvent(rec.Event, obj.Event, opts...) {
 		diff["Event."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name) {
+	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
 		diff["Name."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerSpoeMessageEvent(x, y *SpoeMessageEvent) map[string][]interface{} {
+func DiffPointerSpoeMessageEvent(x, y *SpoeMessageEvent, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

@@ -17,10 +17,15 @@
 
 package models
 
-func (rec EmailAlert) Equal(obj EmailAlert) bool {
-	return EqualPointerString(rec.From, obj.From) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec EmailAlert) Equal(obj EmailAlert, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.From, obj.From, opts...) &&
 		rec.Level == obj.Level &&
-		EqualPointerString(rec.Mailers, obj.Mailers) &&
+		EqualPointerString(rec.Mailers, obj.Mailers, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Myhostname == obj.Myhostname &&
-		EqualPointerString(rec.To, obj.To)
+		EqualPointerString(rec.To, obj.To, opts...)
 }

@@ -19,26 +19,39 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Userlist) Diff(obj Userlist) map[string][]interface{} {
+func (rec Userlist) Diff(obj Userlist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.UserlistBase.Diff(obj.UserlistBase) {
+	for diffKey, diffValue := range rec.UserlistBase.Diff(obj.UserlistBase, opts...) {
 		diff["UserlistBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringGroup(rec.Groups, obj.Groups) {
+	for diffKey, diffValue := range DiffMapStringGroup(rec.Groups, obj.Groups, opts...) {
 		diff["Groups"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringUser(rec.Users, obj.Users) {
+	for diffKey, diffValue := range DiffMapStringUser(rec.Users, obj.Users, opts...) {
 		diff["Users"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringGroup(x, y map[string]Group) map[string][]interface{} {
+func DiffMapStringGroup(x, y map[string]Group, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {
@@ -74,10 +87,21 @@ func DiffMapStringGroup(x, y map[string]Group) map[string][]interface{} {
 	return diff
 }
 
-func DiffMapStringUser(x, y map[string]User) map[string][]interface{} {
+func DiffMapStringUser(x, y map[string]User, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

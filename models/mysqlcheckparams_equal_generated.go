@@ -17,7 +17,11 @@
 
 package models
 
-func (rec MysqlCheckParams) Equal(obj MysqlCheckParams) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec MysqlCheckParams) Equal(obj MysqlCheckParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ClientVersion == obj.ClientVersion &&
 		rec.Username == obj.Username
 }

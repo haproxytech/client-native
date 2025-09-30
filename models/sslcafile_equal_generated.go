@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SslCaFile) Equal(obj SslCaFile) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCaFile) Equal(obj SslCaFile, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Count == obj.Count &&
 		rec.File == obj.File &&
 		rec.StorageName == obj.StorageName

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Errorfile) Diff(obj Errorfile) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Errorfile) Diff(obj Errorfile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Code != obj.Code {
 		diff["Code"] = []interface{}{rec.Code, obj.Code}

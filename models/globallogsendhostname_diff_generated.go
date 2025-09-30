@@ -17,9 +17,13 @@
 
 package models
 
-func (rec GlobalLogSendHostname) Diff(obj GlobalLogSendHostname) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalLogSendHostname) Diff(obj GlobalLogSendHostname, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Enabled, obj.Enabled) {
+	for diffKey, diffValue := range DiffPointerString(rec.Enabled, obj.Enabled, opts...) {
 		diff["Enabled."+diffKey] = diffValue
 	}
 	if rec.Param != obj.Param {

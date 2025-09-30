@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x BackendSwitchingRules) Diff(y BackendSwitchingRules) map[string][]interface{} {
-	return DiffBackendSwitchingRules(x, y)
+func (x BackendSwitchingRules) Diff(y BackendSwitchingRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffBackendSwitchingRules(x, y, opts...)
 }
 
-func DiffBackendSwitchingRules(x, y BackendSwitchingRules) map[string][]interface{} {
+func DiffBackendSwitchingRules(x, y BackendSwitchingRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffBackendSwitchingRules(x, y BackendSwitchingRules) map[string][]interfac
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffBackendSwitchingRules(x, y BackendSwitchingRules) map[string][]interfac
 	return diff
 }
 
-func DiffPointerBackendSwitchingRule(x, y *BackendSwitchingRule) map[string][]interface{} {
+func DiffPointerBackendSwitchingRule(x, y *BackendSwitchingRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

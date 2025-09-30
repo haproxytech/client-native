@@ -17,7 +17,11 @@
 
 package models
 
-func (rec GlobalHardenRejectPrivilegedPorts) Diff(obj GlobalHardenRejectPrivilegedPorts) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalHardenRejectPrivilegedPorts) Diff(obj GlobalHardenRejectPrivilegedPorts, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Quic != obj.Quic {
 		diff["Quic"] = []interface{}{rec.Quic, obj.Quic}

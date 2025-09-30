@@ -17,7 +17,11 @@
 
 package models
 
-func (rec StickTableField) Diff(obj StickTableField) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StickTableField) Diff(obj StickTableField, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Field != obj.Field {
 		diff["Field"] = []interface{}{rec.Field, obj.Field}

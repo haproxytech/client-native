@@ -17,18 +17,23 @@
 
 package models
 
-func (rec PeerSectionBase) Equal(obj PeerSectionBase) bool {
-	return EqualPointerDefaultBind(rec.DefaultBind, obj.DefaultBind) &&
-		EqualPointerDefaultServer(rec.DefaultServer, obj.DefaultServer) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PeerSectionBase) Equal(obj PeerSectionBase, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerDefaultBind(rec.DefaultBind, obj.DefaultBind, opts...) &&
+		EqualPointerDefaultServer(rec.DefaultServer, obj.DefaultServer, opts...) &&
 		rec.Disabled == obj.Disabled &&
 		rec.Enabled == obj.Enabled &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Shards == obj.Shards
 }
 
-func EqualPointerDefaultBind(x, y *DefaultBind) bool {
+func EqualPointerDefaultBind(x, y *DefaultBind, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

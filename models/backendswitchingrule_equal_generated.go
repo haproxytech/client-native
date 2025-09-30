@@ -17,8 +17,13 @@
 
 package models
 
-func (rec BackendSwitchingRule) Equal(obj BackendSwitchingRule) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec BackendSwitchingRule) Equal(obj BackendSwitchingRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name
 }

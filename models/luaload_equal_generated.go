@@ -17,6 +17,10 @@
 
 package models
 
-func (rec LuaLoad) Equal(obj LuaLoad) bool {
-	return EqualPointerString(rec.File, obj.File)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LuaLoad) Equal(obj LuaLoad, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.File, obj.File, opts...)
 }

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec HashType) Equal(obj HashType) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HashType) Equal(obj HashType, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Function == obj.Function &&
 		rec.Method == obj.Method &&
 		rec.Modifier == obj.Modifier

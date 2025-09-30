@@ -17,7 +17,11 @@
 
 package models
 
-func (rec RevokedCertificates) Equal(obj RevokedCertificates) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec RevokedCertificates) Equal(obj RevokedCertificates, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.RevocationDate.Equal(obj.RevocationDate) &&
 		rec.SerialNumber == obj.SerialNumber
 }

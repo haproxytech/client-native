@@ -17,19 +17,23 @@
 
 package models
 
-func (rec TuneBufferOptions) Equal(obj TuneBufferOptions) bool {
-	return EqualPointerInt64(rec.BuffersLimit, obj.BuffersLimit) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneBufferOptions) Equal(obj TuneBufferOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.BuffersLimit, obj.BuffersLimit, opts...) &&
 		rec.BuffersReserve == obj.BuffersReserve &&
 		rec.Bufsize == obj.Bufsize &&
-		EqualPointerInt64(rec.BufsizeSmall, obj.BufsizeSmall) &&
+		EqualPointerInt64(rec.BufsizeSmall, obj.BufsizeSmall, opts...) &&
 		rec.Pipesize == obj.Pipesize &&
-		EqualPointerInt64(rec.RcvbufBackend, obj.RcvbufBackend) &&
-		EqualPointerInt64(rec.RcvbufClient, obj.RcvbufClient) &&
-		EqualPointerInt64(rec.RcvbufFrontend, obj.RcvbufFrontend) &&
-		EqualPointerInt64(rec.RcvbufServer, obj.RcvbufServer) &&
+		EqualPointerInt64(rec.RcvbufBackend, obj.RcvbufBackend, opts...) &&
+		EqualPointerInt64(rec.RcvbufClient, obj.RcvbufClient, opts...) &&
+		EqualPointerInt64(rec.RcvbufFrontend, obj.RcvbufFrontend, opts...) &&
+		EqualPointerInt64(rec.RcvbufServer, obj.RcvbufServer, opts...) &&
 		rec.RecvEnough == obj.RecvEnough &&
-		EqualPointerInt64(rec.SndbufBackend, obj.SndbufBackend) &&
-		EqualPointerInt64(rec.SndbufClient, obj.SndbufClient) &&
-		EqualPointerInt64(rec.SndbufFrontend, obj.SndbufFrontend) &&
-		EqualPointerInt64(rec.SndbufServer, obj.SndbufServer)
+		EqualPointerInt64(rec.SndbufBackend, obj.SndbufBackend, opts...) &&
+		EqualPointerInt64(rec.SndbufClient, obj.SndbufClient, opts...) &&
+		EqualPointerInt64(rec.SndbufFrontend, obj.SndbufFrontend, opts...) &&
+		EqualPointerInt64(rec.SndbufServer, obj.SndbufServer, opts...)
 }

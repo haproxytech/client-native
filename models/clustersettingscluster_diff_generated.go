@@ -19,11 +19,13 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec ClusterSettingsCluster) Diff(obj ClusterSettingsCluster) map[string][]interface{} {
+func (rec ClusterSettingsCluster) Diff(obj ClusterSettingsCluster, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerClusterLogTarget(rec.ClusterLogTargets, obj.ClusterLogTargets) {
+	for diffKey, diffValue := range DiffSlicePointerClusterLogTarget(rec.ClusterLogTargets, obj.ClusterLogTargets, opts...) {
 		diff["ClusterLogTargets"+diffKey] = diffValue
 	}
 	if rec.Address != obj.Address {
@@ -41,13 +43,13 @@ func (rec ClusterSettingsCluster) Diff(obj ClusterSettingsCluster) map[string][]
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerClusterLogTarget(x, y *ClusterLogTarget) map[string][]interface{} {
+func DiffPointerClusterLogTarget(x, y *ClusterLogTarget, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -71,7 +73,12 @@ func DiffPointerClusterLogTarget(x, y *ClusterLogTarget) map[string][]interface{
 	return diff
 }
 
-func DiffSlicePointerClusterLogTarget(x, y []*ClusterLogTarget) map[string][]interface{} {
+func DiffSlicePointerClusterLogTarget(x, y []*ClusterLogTarget, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -79,9 +86,10 @@ func DiffSlicePointerClusterLogTarget(x, y []*ClusterLogTarget) map[string][]int
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

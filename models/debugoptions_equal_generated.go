@@ -17,9 +17,13 @@
 
 package models
 
-func (rec DebugOptions) Equal(obj DebugOptions) bool {
-	return EqualPointerInt64(rec.Anonkey, obj.Anonkey) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DebugOptions) Equal(obj DebugOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.Anonkey, obj.Anonkey, opts...) &&
 		rec.Quiet == obj.Quiet &&
-		EqualPointerInt64(rec.StressLevel, obj.StressLevel) &&
+		EqualPointerInt64(rec.StressLevel, obj.StressLevel, opts...) &&
 		rec.ZeroWarning == obj.ZeroWarning
 }

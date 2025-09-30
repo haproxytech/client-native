@@ -17,6 +17,10 @@
 
 package models
 
-func (rec HTTPCodes) Equal(obj HTTPCodes) bool {
-	return EqualPointerString(rec.Value, obj.Value)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPCodes) Equal(obj HTTPCodes, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Value, obj.Value, opts...)
 }

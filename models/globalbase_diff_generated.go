@@ -19,35 +19,37 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
+func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerCPUMap(rec.CPUMaps, obj.CPUMaps) {
+	for diffKey, diffValue := range DiffSlicePointerCPUMap(rec.CPUMaps, obj.CPUMaps, opts...) {
 		diff["CPUMaps"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerCPUSet(rec.CPUSets, obj.CPUSets) {
+	for diffKey, diffValue := range DiffSlicePointerCPUSet(rec.CPUSets, obj.CPUSets, opts...) {
 		diff["CPUSets"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerH1CaseAdjust(rec.H1CaseAdjusts, obj.H1CaseAdjusts) {
+	for diffKey, diffValue := range DiffSlicePointerH1CaseAdjust(rec.H1CaseAdjusts, obj.H1CaseAdjusts, opts...) {
 		diff["H1CaseAdjusts"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerRuntimeAPI(rec.RuntimeAPIs, obj.RuntimeAPIs) {
+	for diffKey, diffValue := range DiffSlicePointerRuntimeAPI(rec.RuntimeAPIs, obj.RuntimeAPIs, opts...) {
 		diff["RuntimeAPIs"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerSetVarFmt(rec.SetVarFmts, obj.SetVarFmts) {
+	for diffKey, diffValue := range DiffSlicePointerSetVarFmt(rec.SetVarFmts, obj.SetVarFmts, opts...) {
 		diff["SetVarFmts"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerSetVar(rec.SetVars, obj.SetVars) {
+	for diffKey, diffValue := range DiffSlicePointerSetVar(rec.SetVars, obj.SetVars, opts...) {
 		diff["SetVars"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerThreadGroup(rec.ThreadGroupLines, obj.ThreadGroupLines) {
+	for diffKey, diffValue := range DiffSlicePointerThreadGroup(rec.ThreadGroupLines, obj.ThreadGroupLines, opts...) {
 		diff["ThreadGroupLines"+diffKey] = diffValue
 	}
 	if rec.Chroot != obj.Chroot {
 		diff["Chroot"] = []interface{}{rec.Chroot, obj.Chroot}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CloseSpreadTime, obj.CloseSpreadTime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CloseSpreadTime, obj.CloseSpreadTime, opts...) {
 		diff["CloseSpreadTime."+diffKey] = diffValue
 	}
 	if rec.ClusterSecret != obj.ClusterSecret {
@@ -59,22 +61,22 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.Daemon != obj.Daemon {
 		diff["Daemon"] = []interface{}{rec.Daemon, obj.Daemon}
 	}
-	for diffKey, diffValue := range DiffPointerDebugOptions(rec.DebugOptions, obj.DebugOptions) {
+	for diffKey, diffValue := range DiffPointerDebugOptions(rec.DebugOptions, obj.DebugOptions, opts...) {
 		diff["DebugOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerGlobalDefaultPath(rec.DefaultPath, obj.DefaultPath) {
+	for diffKey, diffValue := range DiffPointerGlobalDefaultPath(rec.DefaultPath, obj.DefaultPath, opts...) {
 		diff["DefaultPath."+diffKey] = diffValue
 	}
 	if rec.Description != obj.Description {
 		diff["Description"] = []interface{}{rec.Description, obj.Description}
 	}
-	for diffKey, diffValue := range DiffPointerDeviceAtlasOptions(rec.DeviceAtlasOptions, obj.DeviceAtlasOptions) {
+	for diffKey, diffValue := range DiffPointerDeviceAtlasOptions(rec.DeviceAtlasOptions, obj.DeviceAtlasOptions, opts...) {
 		diff["DeviceAtlasOptions."+diffKey] = diffValue
 	}
 	if rec.DNSAcceptFamily != obj.DNSAcceptFamily {
 		diff["DNSAcceptFamily"] = []interface{}{rec.DNSAcceptFamily, obj.DNSAcceptFamily}
 	}
-	for diffKey, diffValue := range DiffPointerEnvironmentOptions(rec.EnvironmentOptions, obj.EnvironmentOptions) {
+	for diffKey, diffValue := range DiffPointerEnvironmentOptions(rec.EnvironmentOptions, obj.EnvironmentOptions, opts...) {
 		diff["EnvironmentOptions."+diffKey] = diffValue
 	}
 	if rec.ExposeDeprecatedDirectives != obj.ExposeDeprecatedDirectives {
@@ -86,16 +88,16 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.ExternalCheck != obj.ExternalCheck {
 		diff["ExternalCheck"] = []interface{}{rec.ExternalCheck, obj.ExternalCheck}
 	}
-	for diffKey, diffValue := range DiffPointerFiftyOneDegreesOptions(rec.FiftyOneDegreesOptions, obj.FiftyOneDegreesOptions) {
+	for diffKey, diffValue := range DiffPointerFiftyOneDegreesOptions(rec.FiftyOneDegreesOptions, obj.FiftyOneDegreesOptions, opts...) {
 		diff["FiftyOneDegreesOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ForceCfgParserPause, obj.ForceCfgParserPause) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ForceCfgParserPause, obj.ForceCfgParserPause, opts...) {
 		diff["ForceCfgParserPause."+diffKey] = diffValue
 	}
 	if rec.Gid != obj.Gid {
 		diff["Gid"] = []interface{}{rec.Gid, obj.Gid}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Grace, obj.Grace) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Grace, obj.Grace, opts...) {
 		diff["Grace."+diffKey] = diffValue
 	}
 	if rec.Group != obj.Group {
@@ -113,19 +115,19 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.H2WorkaroundBogusWebsocketClients != obj.H2WorkaroundBogusWebsocketClients {
 		diff["H2WorkaroundBogusWebsocketClients"] = []interface{}{rec.H2WorkaroundBogusWebsocketClients, obj.H2WorkaroundBogusWebsocketClients}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HardStopAfter, obj.HardStopAfter) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HardStopAfter, obj.HardStopAfter, opts...) {
 		diff["HardStopAfter."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerGlobalHarden(rec.Harden, obj.Harden) {
+	for diffKey, diffValue := range DiffPointerGlobalHarden(rec.Harden, obj.Harden, opts...) {
 		diff["Harden."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerHTTPClientOptions(rec.HTTPClientOptions, obj.HTTPClientOptions) {
+	for diffKey, diffValue := range DiffPointerHTTPClientOptions(rec.HTTPClientOptions, obj.HTTPClientOptions, opts...) {
 		diff["HTTPClientOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerHTTPCodes(rec.HTTPErrCodes, obj.HTTPErrCodes) {
+	for diffKey, diffValue := range DiffSlicePointerHTTPCodes(rec.HTTPErrCodes, obj.HTTPErrCodes, opts...) {
 		diff["HTTPErrCodes"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerHTTPCodes(rec.HTTPFailCodes, obj.HTTPFailCodes) {
+	for diffKey, diffValue := range DiffSlicePointerHTTPCodes(rec.HTTPFailCodes, obj.HTTPFailCodes, opts...) {
 		diff["HTTPFailCodes"+diffKey] = diffValue
 	}
 	if rec.InsecureForkWanted != obj.InsecureForkWanted {
@@ -140,16 +142,16 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.Localpeer != obj.Localpeer {
 		diff["Localpeer"] = []interface{}{rec.Localpeer, obj.Localpeer}
 	}
-	for diffKey, diffValue := range DiffPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname) {
+	for diffKey, diffValue := range DiffPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname, opts...) {
 		diff["LogSendHostname."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerLuaOptions(rec.LuaOptions, obj.LuaOptions) {
+	for diffKey, diffValue := range DiffPointerLuaOptions(rec.LuaOptions, obj.LuaOptions, opts...) {
 		diff["LuaOptions."+diffKey] = diffValue
 	}
 	if rec.MasterWorker != obj.MasterWorker {
 		diff["MasterWorker"] = []interface{}{rec.MasterWorker, obj.MasterWorker}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads, opts...) {
 		diff["MworkerMaxReloads."+diffKey] = diffValue
 	}
 	if rec.Nbthread != obj.Nbthread {
@@ -164,10 +166,10 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.NumaCPUMapping != obj.NumaCPUMapping {
 		diff["NumaCPUMapping"] = []interface{}{rec.NumaCPUMapping, obj.NumaCPUMapping}
 	}
-	for diffKey, diffValue := range DiffPointerOcspUpdateOptions(rec.OcspUpdateOptions, obj.OcspUpdateOptions) {
+	for diffKey, diffValue := range DiffPointerOcspUpdateOptions(rec.OcspUpdateOptions, obj.OcspUpdateOptions, opts...) {
 		diff["OcspUpdateOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerPerformanceOptions(rec.PerformanceOptions, obj.PerformanceOptions) {
+	for diffKey, diffValue := range DiffPointerPerformanceOptions(rec.PerformanceOptions, obj.PerformanceOptions, opts...) {
 		diff["PerformanceOptions."+diffKey] = diffValue
 	}
 	if rec.Pidfile != obj.Pidfile {
@@ -185,16 +187,16 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.Setcap != obj.Setcap {
 		diff["Setcap"] = []interface{}{rec.Setcap, obj.Setcap}
 	}
-	for diffKey, diffValue := range DiffPointerSslOptions(rec.SslOptions, obj.SslOptions) {
+	for diffKey, diffValue := range DiffPointerSslOptions(rec.SslOptions, obj.SslOptions, opts...) {
 		diff["SslOptions."+diffKey] = diffValue
 	}
 	if rec.StatsFile != obj.StatsFile {
 		diff["StatsFile"] = []interface{}{rec.StatsFile, obj.StatsFile}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.StatsMaxconn, obj.StatsMaxconn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.StatsMaxconn, obj.StatsMaxconn, opts...) {
 		diff["StatsMaxconn."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.StatsTimeout, obj.StatsTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.StatsTimeout, obj.StatsTimeout, opts...) {
 		diff["StatsTimeout."+diffKey] = diffValue
 	}
 	if rec.StrictLimits != obj.StrictLimits {
@@ -203,25 +205,25 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.ThreadGroups != obj.ThreadGroups {
 		diff["ThreadGroups"] = []interface{}{rec.ThreadGroups, obj.ThreadGroups}
 	}
-	for diffKey, diffValue := range DiffPointerTuneBufferOptions(rec.TuneBufferOptions, obj.TuneBufferOptions) {
+	for diffKey, diffValue := range DiffPointerTuneBufferOptions(rec.TuneBufferOptions, obj.TuneBufferOptions, opts...) {
 		diff["TuneBufferOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerTuneLuaOptions(rec.TuneLuaOptions, obj.TuneLuaOptions) {
+	for diffKey, diffValue := range DiffPointerTuneLuaOptions(rec.TuneLuaOptions, obj.TuneLuaOptions, opts...) {
 		diff["TuneLuaOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerTuneOptions(rec.TuneOptions, obj.TuneOptions) {
+	for diffKey, diffValue := range DiffPointerTuneOptions(rec.TuneOptions, obj.TuneOptions, opts...) {
 		diff["TuneOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerTuneQuicOptions(rec.TuneQuicOptions, obj.TuneQuicOptions) {
+	for diffKey, diffValue := range DiffPointerTuneQuicOptions(rec.TuneQuicOptions, obj.TuneQuicOptions, opts...) {
 		diff["TuneQuicOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerTuneSslOptions(rec.TuneSslOptions, obj.TuneSslOptions) {
+	for diffKey, diffValue := range DiffPointerTuneSslOptions(rec.TuneSslOptions, obj.TuneSslOptions, opts...) {
 		diff["TuneSslOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerTuneVarsOptions(rec.TuneVarsOptions, obj.TuneVarsOptions) {
+	for diffKey, diffValue := range DiffPointerTuneVarsOptions(rec.TuneVarsOptions, obj.TuneVarsOptions, opts...) {
 		diff["TuneVarsOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerTuneZlibOptions(rec.TuneZlibOptions, obj.TuneZlibOptions) {
+	for diffKey, diffValue := range DiffPointerTuneZlibOptions(rec.TuneZlibOptions, obj.TuneZlibOptions, opts...) {
 		diff["TuneZlibOptions."+diffKey] = diffValue
 	}
 	if rec.UID != obj.UID {
@@ -233,16 +235,16 @@ func (rec GlobalBase) Diff(obj GlobalBase) map[string][]interface{} {
 	if rec.User != obj.User {
 		diff["User"] = []interface{}{rec.User, obj.User}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.WarnBlockedTrafficAfter, obj.WarnBlockedTrafficAfter) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.WarnBlockedTrafficAfter, obj.WarnBlockedTrafficAfter, opts...) {
 		diff["WarnBlockedTrafficAfter."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerWurflOptions(rec.WurflOptions, obj.WurflOptions) {
+	for diffKey, diffValue := range DiffPointerWurflOptions(rec.WurflOptions, obj.WurflOptions, opts...) {
 		diff["WurflOptions."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerCPUMap(x, y *CPUMap) map[string][]interface{} {
+func DiffPointerCPUMap(x, y *CPUMap, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -266,7 +268,7 @@ func DiffPointerCPUMap(x, y *CPUMap) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerCPUSet(x, y *CPUSet) map[string][]interface{} {
+func DiffPointerCPUSet(x, y *CPUSet, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -290,7 +292,7 @@ func DiffPointerCPUSet(x, y *CPUSet) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerDebugOptions(x, y *DebugOptions) map[string][]interface{} {
+func DiffPointerDebugOptions(x, y *DebugOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -314,7 +316,7 @@ func DiffPointerDebugOptions(x, y *DebugOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions) map[string][]interface{} {
+func DiffPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -338,7 +340,7 @@ func DiffPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions) map[string][]interf
 	return diff
 }
 
-func DiffPointerEnvironmentOptions(x, y *EnvironmentOptions) map[string][]interface{} {
+func DiffPointerEnvironmentOptions(x, y *EnvironmentOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -362,7 +364,7 @@ func DiffPointerEnvironmentOptions(x, y *EnvironmentOptions) map[string][]interf
 	return diff
 }
 
-func DiffPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions) map[string][]interface{} {
+func DiffPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -386,7 +388,7 @@ func DiffPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions) map[string]
 	return diff
 }
 
-func DiffPointerGlobalDefaultPath(x, y *GlobalDefaultPath) map[string][]interface{} {
+func DiffPointerGlobalDefaultPath(x, y *GlobalDefaultPath, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -410,7 +412,7 @@ func DiffPointerGlobalDefaultPath(x, y *GlobalDefaultPath) map[string][]interfac
 	return diff
 }
 
-func DiffPointerGlobalHarden(x, y *GlobalHarden) map[string][]interface{} {
+func DiffPointerGlobalHarden(x, y *GlobalHarden, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -434,7 +436,7 @@ func DiffPointerGlobalHarden(x, y *GlobalHarden) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname) map[string][]interface{} {
+func DiffPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -458,7 +460,7 @@ func DiffPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname) map[string][]
 	return diff
 }
 
-func DiffPointerH1CaseAdjust(x, y *H1CaseAdjust) map[string][]interface{} {
+func DiffPointerH1CaseAdjust(x, y *H1CaseAdjust, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -482,7 +484,7 @@ func DiffPointerH1CaseAdjust(x, y *H1CaseAdjust) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerHTTPClientOptions(x, y *HTTPClientOptions) map[string][]interface{} {
+func DiffPointerHTTPClientOptions(x, y *HTTPClientOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -506,7 +508,7 @@ func DiffPointerHTTPClientOptions(x, y *HTTPClientOptions) map[string][]interfac
 	return diff
 }
 
-func DiffPointerHTTPCodes(x, y *HTTPCodes) map[string][]interface{} {
+func DiffPointerHTTPCodes(x, y *HTTPCodes, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -530,7 +532,7 @@ func DiffPointerHTTPCodes(x, y *HTTPCodes) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerLuaOptions(x, y *LuaOptions) map[string][]interface{} {
+func DiffPointerLuaOptions(x, y *LuaOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -554,7 +556,7 @@ func DiffPointerLuaOptions(x, y *LuaOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerOcspUpdateOptions(x, y *OcspUpdateOptions) map[string][]interface{} {
+func DiffPointerOcspUpdateOptions(x, y *OcspUpdateOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -578,7 +580,7 @@ func DiffPointerOcspUpdateOptions(x, y *OcspUpdateOptions) map[string][]interfac
 	return diff
 }
 
-func DiffPointerPerformanceOptions(x, y *PerformanceOptions) map[string][]interface{} {
+func DiffPointerPerformanceOptions(x, y *PerformanceOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -602,7 +604,7 @@ func DiffPointerPerformanceOptions(x, y *PerformanceOptions) map[string][]interf
 	return diff
 }
 
-func DiffPointerRuntimeAPI(x, y *RuntimeAPI) map[string][]interface{} {
+func DiffPointerRuntimeAPI(x, y *RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -626,7 +628,7 @@ func DiffPointerRuntimeAPI(x, y *RuntimeAPI) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSetVar(x, y *SetVar) map[string][]interface{} {
+func DiffPointerSetVar(x, y *SetVar, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -650,7 +652,7 @@ func DiffPointerSetVar(x, y *SetVar) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSetVarFmt(x, y *SetVarFmt) map[string][]interface{} {
+func DiffPointerSetVarFmt(x, y *SetVarFmt, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -674,7 +676,7 @@ func DiffPointerSetVarFmt(x, y *SetVarFmt) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSslOptions(x, y *SslOptions) map[string][]interface{} {
+func DiffPointerSslOptions(x, y *SslOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -698,7 +700,7 @@ func DiffPointerSslOptions(x, y *SslOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerThreadGroup(x, y *ThreadGroup) map[string][]interface{} {
+func DiffPointerThreadGroup(x, y *ThreadGroup, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -722,7 +724,7 @@ func DiffPointerThreadGroup(x, y *ThreadGroup) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerTuneBufferOptions(x, y *TuneBufferOptions) map[string][]interface{} {
+func DiffPointerTuneBufferOptions(x, y *TuneBufferOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -746,7 +748,7 @@ func DiffPointerTuneBufferOptions(x, y *TuneBufferOptions) map[string][]interfac
 	return diff
 }
 
-func DiffPointerTuneLuaOptions(x, y *TuneLuaOptions) map[string][]interface{} {
+func DiffPointerTuneLuaOptions(x, y *TuneLuaOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -770,7 +772,7 @@ func DiffPointerTuneLuaOptions(x, y *TuneLuaOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerTuneOptions(x, y *TuneOptions) map[string][]interface{} {
+func DiffPointerTuneOptions(x, y *TuneOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -794,7 +796,7 @@ func DiffPointerTuneOptions(x, y *TuneOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerTuneQuicOptions(x, y *TuneQuicOptions) map[string][]interface{} {
+func DiffPointerTuneQuicOptions(x, y *TuneQuicOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -818,7 +820,7 @@ func DiffPointerTuneQuicOptions(x, y *TuneQuicOptions) map[string][]interface{} 
 	return diff
 }
 
-func DiffPointerTuneSslOptions(x, y *TuneSslOptions) map[string][]interface{} {
+func DiffPointerTuneSslOptions(x, y *TuneSslOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -842,7 +844,7 @@ func DiffPointerTuneSslOptions(x, y *TuneSslOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerTuneVarsOptions(x, y *TuneVarsOptions) map[string][]interface{} {
+func DiffPointerTuneVarsOptions(x, y *TuneVarsOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -866,7 +868,7 @@ func DiffPointerTuneVarsOptions(x, y *TuneVarsOptions) map[string][]interface{} 
 	return diff
 }
 
-func DiffPointerTuneZlibOptions(x, y *TuneZlibOptions) map[string][]interface{} {
+func DiffPointerTuneZlibOptions(x, y *TuneZlibOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -890,7 +892,7 @@ func DiffPointerTuneZlibOptions(x, y *TuneZlibOptions) map[string][]interface{} 
 	return diff
 }
 
-func DiffPointerWurflOptions(x, y *WurflOptions) map[string][]interface{} {
+func DiffPointerWurflOptions(x, y *WurflOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -914,7 +916,12 @@ func DiffPointerWurflOptions(x, y *WurflOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerCPUMap(x, y []*CPUMap) map[string][]interface{} {
+func DiffSlicePointerCPUMap(x, y []*CPUMap, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -922,9 +929,10 @@ func DiffSlicePointerCPUMap(x, y []*CPUMap) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -954,7 +962,12 @@ func DiffSlicePointerCPUMap(x, y []*CPUMap) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerCPUSet(x, y []*CPUSet) map[string][]interface{} {
+func DiffSlicePointerCPUSet(x, y []*CPUSet, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -962,9 +975,10 @@ func DiffSlicePointerCPUSet(x, y []*CPUSet) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -994,7 +1008,12 @@ func DiffSlicePointerCPUSet(x, y []*CPUSet) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) map[string][]interface{} {
+func DiffSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -1002,9 +1021,10 @@ func DiffSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) map[string][]interface{}
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -1034,7 +1054,12 @@ func DiffSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust) map[string][]interface{}
 	return diff
 }
 
-func DiffSlicePointerHTTPCodes(x, y []*HTTPCodes) map[string][]interface{} {
+func DiffSlicePointerHTTPCodes(x, y []*HTTPCodes, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -1042,9 +1067,10 @@ func DiffSlicePointerHTTPCodes(x, y []*HTTPCodes) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -1074,7 +1100,12 @@ func DiffSlicePointerHTTPCodes(x, y []*HTTPCodes) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerRuntimeAPI(x, y []*RuntimeAPI) map[string][]interface{} {
+func DiffSlicePointerRuntimeAPI(x, y []*RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -1082,9 +1113,10 @@ func DiffSlicePointerRuntimeAPI(x, y []*RuntimeAPI) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -1114,7 +1146,12 @@ func DiffSlicePointerRuntimeAPI(x, y []*RuntimeAPI) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerSetVar(x, y []*SetVar) map[string][]interface{} {
+func DiffSlicePointerSetVar(x, y []*SetVar, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -1122,9 +1159,10 @@ func DiffSlicePointerSetVar(x, y []*SetVar) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -1154,7 +1192,12 @@ func DiffSlicePointerSetVar(x, y []*SetVar) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerSetVarFmt(x, y []*SetVarFmt) map[string][]interface{} {
+func DiffSlicePointerSetVarFmt(x, y []*SetVarFmt, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -1162,9 +1205,10 @@ func DiffSlicePointerSetVarFmt(x, y []*SetVarFmt) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -1194,7 +1238,12 @@ func DiffSlicePointerSetVarFmt(x, y []*SetVarFmt) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerThreadGroup(x, y []*ThreadGroup) map[string][]interface{} {
+func DiffSlicePointerThreadGroup(x, y []*ThreadGroup, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -1202,9 +1251,10 @@ func DiffSlicePointerThreadGroup(x, y []*ThreadGroup) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

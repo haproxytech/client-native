@@ -19,26 +19,39 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Error) Diff(obj Error) map[string][]interface{} {
+func (rec Error) Diff(obj Error, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.Code, obj.Code) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Code, obj.Code, opts...) {
 		diff["Code."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Message, obj.Message) {
+	for diffKey, diffValue := range DiffPointerString(rec.Message, obj.Message, opts...) {
 		diff["Message."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringString(rec.Error, obj.Error) {
+	for diffKey, diffValue := range DiffMapStringString(rec.Error, obj.Error, opts...) {
 		diff["Error"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringString(x, y map[string]string) map[string][]interface{} {
+func DiffMapStringString(x, y map[string]string, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

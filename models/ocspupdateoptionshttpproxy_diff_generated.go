@@ -17,12 +17,16 @@
 
 package models
 
-func (rec OcspUpdateOptionsHttpproxy) Diff(obj OcspUpdateOptionsHttpproxy) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec OcspUpdateOptionsHttpproxy) Diff(obj OcspUpdateOptionsHttpproxy, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Address != obj.Address {
 		diff["Address"] = []interface{}{rec.Address, obj.Address}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
 	return diff

@@ -19,23 +19,24 @@ package models
 
 import (
 	"github.com/haproxytech/client-native/v6/models/funcs"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec OCSPResponses) Diff(obj OCSPResponses) map[string][]interface{} {
+func (rec OCSPResponses) Diff(obj OCSPResponses, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.CertStatus != obj.CertStatus {
 		diff["CertStatus"] = []interface{}{rec.CertStatus, obj.CertStatus}
 	}
-	for diffKey, diffValue := range DiffPointerCertificateID(rec.CertificateID, obj.CertificateID) {
+	for diffKey, diffValue := range DiffPointerCertificateID(rec.CertificateID, obj.CertificateID, opts...) {
 		diff["CertificateID."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate, opts...) {
 		diff["NextUpdate."+diffKey] = diffValue
 	}
 	if rec.RevocationReason != obj.RevocationReason {
 		diff["RevocationReason"] = []interface{}{rec.RevocationReason, obj.RevocationReason}
 	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.ThisUpdate, obj.ThisUpdate) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.ThisUpdate, obj.ThisUpdate, opts...) {
 		diff["ThisUpdate."+diffKey] = diffValue
 	}
 	return diff

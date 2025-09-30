@@ -17,21 +17,25 @@
 
 package models
 
-func (rec TuneVarsOptions) Diff(obj TuneVarsOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneVarsOptions) Diff(obj TuneVarsOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.GlobalMaxSize, obj.GlobalMaxSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.GlobalMaxSize, obj.GlobalMaxSize, opts...) {
 		diff["GlobalMaxSize."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ProcMaxSize, obj.ProcMaxSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ProcMaxSize, obj.ProcMaxSize, opts...) {
 		diff["ProcMaxSize."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ReqresMaxSize, obj.ReqresMaxSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ReqresMaxSize, obj.ReqresMaxSize, opts...) {
 		diff["ReqresMaxSize."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SessMaxSize, obj.SessMaxSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SessMaxSize, obj.SessMaxSize, opts...) {
 		diff["SessMaxSize."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TxnMaxSize, obj.TxnMaxSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TxnMaxSize, obj.TxnMaxSize, opts...) {
 		diff["TxnMaxSize."+diffKey] = diffValue
 	}
 	return diff

@@ -17,47 +17,65 @@
 
 package models
 
-func (rec StatsOptions) Equal(obj StatsOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StatsOptions) Equal(obj StatsOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.StatsAdmin == obj.StatsAdmin &&
 		rec.StatsAdminCond == obj.StatsAdminCond &&
 		rec.StatsAdminCondTest == obj.StatsAdminCondTest &&
-		EqualSlicePointerStatsAuth(rec.StatsAuths, obj.StatsAuths) &&
+		EqualSlicePointerStatsAuth(rec.StatsAuths, obj.StatsAuths, opts...) &&
 		rec.StatsEnable == obj.StatsEnable &&
 		rec.StatsHideVersion == obj.StatsHideVersion &&
-		EqualSlicePointerStatsHTTPRequest(rec.StatsHTTPRequests, obj.StatsHTTPRequests) &&
+		EqualSlicePointerStatsHTTPRequest(rec.StatsHTTPRequests, obj.StatsHTTPRequests, opts...) &&
 		rec.StatsMaxconn == obj.StatsMaxconn &&
 		rec.StatsRealm == obj.StatsRealm &&
-		EqualPointerString(rec.StatsRealmRealm, obj.StatsRealmRealm) &&
-		EqualPointerInt64(rec.StatsRefreshDelay, obj.StatsRefreshDelay) &&
-		EqualPointerString(rec.StatsShowDesc, obj.StatsShowDesc) &&
+		EqualPointerString(rec.StatsRealmRealm, obj.StatsRealmRealm, opts...) &&
+		EqualPointerInt64(rec.StatsRefreshDelay, obj.StatsRefreshDelay, opts...) &&
+		EqualPointerString(rec.StatsShowDesc, obj.StatsShowDesc, opts...) &&
 		rec.StatsShowLegends == obj.StatsShowLegends &&
 		rec.StatsShowModules == obj.StatsShowModules &&
-		EqualPointerString(rec.StatsShowNodeName, obj.StatsShowNodeName) &&
+		EqualPointerString(rec.StatsShowNodeName, obj.StatsShowNodeName, opts...) &&
 		rec.StatsURIPrefix == obj.StatsURIPrefix
 }
 
-func EqualPointerStatsAuth(x, y *StatsAuth) bool {
+func EqualPointerStatsAuth(x, y *StatsAuth, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerStatsHTTPRequest(x, y *StatsHTTPRequest) bool {
+func EqualPointerStatsHTTPRequest(x, y *StatsHTTPRequest, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerStatsAuth(x, y []*StatsAuth) bool {
+func EqualSlicePointerStatsAuth(x, y []*StatsAuth, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerStatsAuth(vx, vy) {
+		if !EqualPointerStatsAuth(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -65,14 +83,28 @@ func EqualSlicePointerStatsAuth(x, y []*StatsAuth) bool {
 	return true
 }
 
-func EqualSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest) bool {
+func EqualSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerStatsHTTPRequest(vx, vy) {
+		if !EqualPointerStatsHTTPRequest(vx, vy, opts...) {
 			return false
 		}
 	}

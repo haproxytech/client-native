@@ -17,12 +17,16 @@
 
 package models
 
-func (rec FCGILogStderrSample) Diff(obj FCGILogStderrSample) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGILogStderrSample) Diff(obj FCGILogStderrSample, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Ranges, obj.Ranges) {
+	for diffKey, diffValue := range DiffPointerString(rec.Ranges, obj.Ranges, opts...) {
 		diff["Ranges."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
 		diff["Size."+diffKey] = diffValue
 	}
 	return diff

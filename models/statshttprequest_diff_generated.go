@@ -17,7 +17,11 @@
 
 package models
 
-func (rec StatsHTTPRequest) Diff(obj StatsHTTPRequest) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StatsHTTPRequest) Diff(obj StatsHTTPRequest, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Cond != obj.Cond {
 		diff["Cond"] = []interface{}{rec.Cond, obj.Cond}
@@ -28,7 +32,7 @@ func (rec StatsHTTPRequest) Diff(obj StatsHTTPRequest) map[string][]interface{} 
 	if rec.Realm != obj.Realm {
 		diff["Realm"] = []interface{}{rec.Realm, obj.Realm}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Type, obj.Type) {
+	for diffKey, diffValue := range DiffPointerString(rec.Type, obj.Type, opts...) {
 		diff["Type."+diffKey] = diffValue
 	}
 	return diff

@@ -17,21 +17,25 @@
 
 package models
 
-func (rec Info) Equal(obj Info) bool {
-	return EqualPointerInfoAPI(rec.API, obj.API) &&
-		EqualPointerInfoSystem(rec.System, obj.System)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Info) Equal(obj Info, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInfoAPI(rec.API, obj.API, opts...) &&
+		EqualPointerInfoSystem(rec.System, obj.System, opts...)
 }
 
-func EqualPointerInfoAPI(x, y *InfoAPI) bool {
+func EqualPointerInfoAPI(x, y *InfoAPI, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerInfoSystem(x, y *InfoSystem) bool {
+func EqualPointerInfoSystem(x, y *InfoSystem, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

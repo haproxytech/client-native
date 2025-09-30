@@ -17,32 +17,50 @@
 
 package models
 
-func (rec SslCrlEntry) Equal(obj SslCrlEntry) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCrlEntry) Equal(obj SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Issuer == obj.Issuer &&
 		rec.LastUpdate.Equal(obj.LastUpdate) &&
 		rec.NextUpdate.Equal(obj.NextUpdate) &&
-		EqualSlicePointerRevokedCertificates(rec.RevokedCertificates, obj.RevokedCertificates) &&
+		EqualSlicePointerRevokedCertificates(rec.RevokedCertificates, obj.RevokedCertificates, opts...) &&
 		rec.SignatureAlgorithm == obj.SignatureAlgorithm &&
 		rec.Status == obj.Status &&
 		rec.StorageName == obj.StorageName &&
 		rec.Version == obj.Version
 }
 
-func EqualPointerRevokedCertificates(x, y *RevokedCertificates) bool {
+func EqualPointerRevokedCertificates(x, y *RevokedCertificates, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerRevokedCertificates(x, y []*RevokedCertificates) bool {
+func EqualSlicePointerRevokedCertificates(x, y []*RevokedCertificates, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerRevokedCertificates(vx, vy) {
+		if !EqualPointerRevokedCertificates(vx, vy, opts...) {
 			return false
 		}
 	}

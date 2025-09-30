@@ -17,18 +17,36 @@
 
 package models
 
-func (x Backends) Equal(y Backends) bool {
-	return EqualBackends(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Backends) Equal(y Backends, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualBackends(x, y, opts...)
 }
 
-func EqualBackends(x, y Backends) bool {
+func EqualBackends(x, y Backends, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerBackend(vx, vy) {
+		if !EqualPointerBackend(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualBackends(x, y Backends) bool {
 	return true
 }
 
-func EqualPointerBackend(x, y *Backend) bool {
+func EqualPointerBackend(x, y *Backend, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

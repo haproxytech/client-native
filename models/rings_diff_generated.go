@@ -19,13 +19,15 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x Rings) Diff(y Rings) map[string][]interface{} {
-	return DiffRings(x, y)
+func (x Rings) Diff(y Rings, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffRings(x, y, opts...)
 }
 
-func DiffPointerRing(x, y *Ring) map[string][]interface{} {
+func DiffPointerRing(x, y *Ring, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -49,7 +51,12 @@ func DiffPointerRing(x, y *Ring) map[string][]interface{} {
 	return diff
 }
 
-func DiffRings(x, y Rings) map[string][]interface{} {
+func DiffRings(x, y Rings, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -57,9 +64,10 @@ func DiffRings(x, y Rings) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FiftyOneDegreesOptions) Equal(obj FiftyOneDegreesOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FiftyOneDegreesOptions) Equal(obj FiftyOneDegreesOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.CacheSize == obj.CacheSize &&
 		rec.DataFile == obj.DataFile &&
 		rec.PropertyNameList == obj.PropertyNameList &&

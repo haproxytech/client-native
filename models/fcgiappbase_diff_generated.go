@@ -19,11 +19,13 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec FCGIAppBase) Diff(obj FCGIAppBase) map[string][]interface{} {
+func (rec FCGIAppBase) Diff(obj FCGIAppBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Docroot, obj.Docroot) {
+	for diffKey, diffValue := range DiffPointerString(rec.Docroot, obj.Docroot, opts...) {
 		diff["Docroot."+diffKey] = diffValue
 	}
 	if rec.GetValues != obj.GetValues {
@@ -35,7 +37,7 @@ func (rec FCGIAppBase) Diff(obj FCGIAppBase) map[string][]interface{} {
 	if rec.KeepConn != obj.KeepConn {
 		diff["KeepConn"] = []interface{}{rec.KeepConn, obj.KeepConn}
 	}
-	for diffKey, diffValue := range DiffSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs) {
+	for diffKey, diffValue := range DiffSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs, opts...) {
 		diff["LogStderrs"+diffKey] = diffValue
 	}
 	if rec.MaxReqs != obj.MaxReqs {
@@ -47,19 +49,19 @@ func (rec FCGIAppBase) Diff(obj FCGIAppBase) map[string][]interface{} {
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range DiffSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders) {
+	for diffKey, diffValue := range DiffSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders, opts...) {
 		diff["PassHeaders"+diffKey] = diffValue
 	}
 	if rec.PathInfo != obj.PathInfo {
 		diff["PathInfo"] = []interface{}{rec.PathInfo, obj.PathInfo}
 	}
-	for diffKey, diffValue := range DiffSlicePointerFCGISetParam(rec.SetParams, obj.SetParams) {
+	for diffKey, diffValue := range DiffSlicePointerFCGISetParam(rec.SetParams, obj.SetParams, opts...) {
 		diff["SetParams"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerFCGILogStderr(x, y *FCGILogStderr) map[string][]interface{} {
+func DiffPointerFCGILogStderr(x, y *FCGILogStderr, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -83,7 +85,7 @@ func DiffPointerFCGILogStderr(x, y *FCGILogStderr) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerFCGIPassHeader(x, y *FCGIPassHeader) map[string][]interface{} {
+func DiffPointerFCGIPassHeader(x, y *FCGIPassHeader, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -107,7 +109,7 @@ func DiffPointerFCGIPassHeader(x, y *FCGIPassHeader) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerFCGISetParam(x, y *FCGISetParam) map[string][]interface{} {
+func DiffPointerFCGISetParam(x, y *FCGISetParam, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -131,7 +133,12 @@ func DiffPointerFCGISetParam(x, y *FCGISetParam) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerFCGILogStderr(x, y []*FCGILogStderr) map[string][]interface{} {
+func DiffSlicePointerFCGILogStderr(x, y []*FCGILogStderr, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -139,9 +146,10 @@ func DiffSlicePointerFCGILogStderr(x, y []*FCGILogStderr) map[string][]interface
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -171,7 +179,12 @@ func DiffSlicePointerFCGILogStderr(x, y []*FCGILogStderr) map[string][]interface
 	return diff
 }
 
-func DiffSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) map[string][]interface{} {
+func DiffSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -179,9 +192,10 @@ func DiffSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) map[string][]interfa
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -211,7 +225,12 @@ func DiffSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) map[string][]interfa
 	return diff
 }
 
-func DiffSlicePointerFCGISetParam(x, y []*FCGISetParam) map[string][]interface{} {
+func DiffSlicePointerFCGISetParam(x, y []*FCGISetParam, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -219,9 +238,10 @@ func DiffSlicePointerFCGISetParam(x, y []*FCGISetParam) map[string][]interface{}
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

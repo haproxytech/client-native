@@ -17,7 +17,11 @@
 
 package models
 
-func (rec GlobalDefaultPath) Diff(obj GlobalDefaultPath) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalDefaultPath) Diff(obj GlobalDefaultPath, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Path != obj.Path {
 		diff["Path"] = []interface{}{rec.Path, obj.Path}

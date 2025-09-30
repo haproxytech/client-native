@@ -17,15 +17,19 @@
 
 package models
 
-func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) {
+	for diffKey, diffValue := range DiffSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) {
 		diff["ErrorFiles"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors) {
+	for diffKey, diffValue := range DiffSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) {
 		diff["ErrorFilesFromHTTPErrors"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.LogSteps, obj.LogSteps) {
+	for diffKey, diffValue := range DiffSliceString(rec.LogSteps, obj.LogSteps, opts...) {
 		diff["LogSteps"+diffKey] = diffValue
 	}
 	if rec.AcceptInvalidHTTPRequest != obj.AcceptInvalidHTTPRequest {
@@ -34,31 +38,31 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.AcceptUnsafeViolationsInHTTPRequest != obj.AcceptUnsafeViolationsInHTTPRequest {
 		diff["AcceptUnsafeViolationsInHTTPRequest"] = []interface{}{rec.AcceptUnsafeViolationsInHTTPRequest, obj.AcceptUnsafeViolationsInHTTPRequest}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Backlog, obj.Backlog) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Backlog, obj.Backlog, opts...) {
 		diff["Backlog."+diffKey] = diffValue
 	}
 	if rec.Clflog != obj.Clflog {
 		diff["Clflog"] = []interface{}{rec.Clflog, obj.Clflog}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ClientFinTimeout, obj.ClientFinTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ClientFinTimeout, obj.ClientFinTimeout, opts...) {
 		diff["ClientFinTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ClientTimeout, obj.ClientTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ClientTimeout, obj.ClientTimeout, opts...) {
 		diff["ClientTimeout."+diffKey] = diffValue
 	}
 	if rec.Clitcpka != obj.Clitcpka {
 		diff["Clitcpka"] = []interface{}{rec.Clitcpka, obj.Clitcpka}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ClitcpkaCnt, obj.ClitcpkaCnt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ClitcpkaCnt, obj.ClitcpkaCnt, opts...) {
 		diff["ClitcpkaCnt."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ClitcpkaIdle, obj.ClitcpkaIdle) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ClitcpkaIdle, obj.ClitcpkaIdle, opts...) {
 		diff["ClitcpkaIdle."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ClitcpkaIntvl, obj.ClitcpkaIntvl) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ClitcpkaIntvl, obj.ClitcpkaIntvl, opts...) {
 		diff["ClitcpkaIntvl."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerCompression(rec.Compression, obj.Compression) {
+	for diffKey, diffValue := range DiffPointerCompression(rec.Compression, obj.Compression, opts...) {
 		diff["Compression."+diffKey] = diffValue
 	}
 	if rec.Contstats != obj.Contstats {
@@ -82,7 +86,7 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.Dontlognull != obj.Dontlognull {
 		diff["Dontlognull"] = []interface{}{rec.Dontlognull, obj.Dontlognull}
 	}
-	for diffKey, diffValue := range DiffPointerEmailAlert(rec.EmailAlert, obj.EmailAlert) {
+	for diffKey, diffValue := range DiffPointerEmailAlert(rec.EmailAlert, obj.EmailAlert, opts...) {
 		diff["EmailAlert."+diffKey] = diffValue
 	}
 	if rec.Enabled != obj.Enabled {
@@ -91,13 +95,13 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.ErrorLogFormat != obj.ErrorLogFormat {
 		diff["ErrorLogFormat"] = []interface{}{rec.ErrorLogFormat, obj.ErrorLogFormat}
 	}
-	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc302, obj.Errorloc302) {
+	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc302, obj.Errorloc302, opts...) {
 		diff["Errorloc302."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc303, obj.Errorloc303) {
+	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc303, obj.Errorloc303, opts...) {
 		diff["Errorloc303."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor) {
+	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) {
 		diff["Forwardfor."+diffKey] = diffValue
 	}
 	if rec.From != obj.From {
@@ -124,13 +128,13 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.HTTPIgnoreProbes != obj.HTTPIgnoreProbes {
 		diff["HTTPIgnoreProbes"] = []interface{}{rec.HTTPIgnoreProbes, obj.HTTPIgnoreProbes}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) {
 		diff["HTTPKeepAliveTimeout."+diffKey] = diffValue
 	}
 	if rec.HTTPNoDelay != obj.HTTPNoDelay {
 		diff["HTTPNoDelay"] = []interface{}{rec.HTTPNoDelay, obj.HTTPNoDelay}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) {
 		diff["HTTPRequestTimeout."+diffKey] = diffValue
 	}
 	if rec.HTTPRestrictReqHdrNames != obj.HTTPRestrictReqHdrNames {
@@ -145,7 +149,7 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.Httpslog != obj.Httpslog {
 		diff["Httpslog"] = []interface{}{rec.Httpslog, obj.Httpslog}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ID, obj.ID) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ID, obj.ID, opts...) {
 		diff["ID."+diffKey] = diffValue
 	}
 	if rec.IdleCloseOnResponse != obj.IdleCloseOnResponse {
@@ -169,16 +173,16 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.Logasap != obj.Logasap {
 		diff["Logasap"] = []interface{}{rec.Logasap, obj.Logasap}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
 		diff["Maxconn."+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
 		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}
 	}
-	for diffKey, diffValue := range DiffPointerMonitorFail(rec.MonitorFail, obj.MonitorFail) {
+	for diffKey, diffValue := range DiffPointerMonitorFail(rec.MonitorFail, obj.MonitorFail, opts...) {
 		diff["MonitorFail."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.MonitorURI.Diff(obj.MonitorURI) {
+	for diffKey, diffValue := range rec.MonitorURI.Diff(obj.MonitorURI, opts...) {
 		diff["MonitorURI."+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
@@ -187,7 +191,7 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.Nolinger != obj.Nolinger {
 		diff["Nolinger"] = []interface{}{rec.Nolinger, obj.Nolinger}
 	}
-	for diffKey, diffValue := range DiffPointerOriginalto(rec.Originalto, obj.Originalto) {
+	for diffKey, diffValue := range DiffPointerOriginalto(rec.Originalto, obj.Originalto, opts...) {
 		diff["Originalto."+diffKey] = diffValue
 	}
 	if rec.SocketStats != obj.SocketStats {
@@ -202,13 +206,13 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	if rec.SpliceResponse != obj.SpliceResponse {
 		diff["SpliceResponse"] = []interface{}{rec.SpliceResponse, obj.SpliceResponse}
 	}
-	for diffKey, diffValue := range DiffPointerStatsOptions(rec.StatsOptions, obj.StatsOptions) {
+	for diffKey, diffValue := range DiffPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) {
 		diff["StatsOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerConfigStickTable(rec.StickTable, obj.StickTable) {
+	for diffKey, diffValue := range DiffPointerConfigStickTable(rec.StickTable, obj.StickTable, opts...) {
 		diff["StickTable."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) {
 		diff["TarpitTimeout."+diffKey] = diffValue
 	}
 	if rec.TCPSmartAccept != obj.TCPSmartAccept {
@@ -229,7 +233,7 @@ func (rec FrontendBase) Diff(obj FrontendBase) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerMonitorFail(x, y *MonitorFail) map[string][]interface{} {
+func DiffPointerMonitorFail(x, y *MonitorFail, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

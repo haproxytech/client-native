@@ -17,11 +17,15 @@
 
 package models
 
-func (x MonitorURI) Diff(y MonitorURI) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x MonitorURI) Diff(y MonitorURI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	return DiffMonitorURI(x, y)
 }
 
-func DiffMonitorURI(x, y MonitorURI) map[string][]interface{} {
+func DiffMonitorURI(x, y MonitorURI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x != y {
 		diff["MonitorURI"] = []interface{}{x, y}

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec HttpchkParams) Diff(obj HttpchkParams) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HttpchkParams) Diff(obj HttpchkParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Host != obj.Host {
 		diff["Host"] = []interface{}{rec.Host, obj.Host}

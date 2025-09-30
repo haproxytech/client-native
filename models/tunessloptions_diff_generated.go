@@ -17,12 +17,16 @@
 
 package models
 
-func (rec TuneSslOptions) Diff(obj TuneSslOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneSslOptions) Diff(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.Cachesize, obj.Cachesize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Cachesize, obj.Cachesize, opts...) {
 		diff["Cachesize."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureBufferSize, obj.CaptureBufferSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureBufferSize, obj.CaptureBufferSize, opts...) {
 		diff["CaptureBufferSize."+diffKey] = diffValue
 	}
 	if rec.CtxCacheSize != obj.CtxCacheSize {
@@ -37,16 +41,16 @@ func (rec TuneSslOptions) Diff(obj TuneSslOptions) map[string][]interface{} {
 	if rec.Keylog != obj.Keylog {
 		diff["Keylog"] = []interface{}{rec.Keylog, obj.Keylog}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Lifetime, obj.Lifetime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Lifetime, obj.Lifetime, opts...) {
 		diff["Lifetime."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxrecord, obj.Maxrecord) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxrecord, obj.Maxrecord, opts...) {
 		diff["Maxrecord."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.OcspUpdateMaxDelay, obj.OcspUpdateMaxDelay) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.OcspUpdateMaxDelay, obj.OcspUpdateMaxDelay, opts...) {
 		diff["OcspUpdateMaxDelay."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.OcspUpdateMinDelay, obj.OcspUpdateMinDelay) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.OcspUpdateMinDelay, obj.OcspUpdateMinDelay, opts...) {
 		diff["OcspUpdateMinDelay."+diffKey] = diffValue
 	}
 	return diff

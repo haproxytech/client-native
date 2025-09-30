@@ -17,7 +17,12 @@
 
 package models
 
-func (rec Group) Equal(obj Group) bool {
-	return rec.Name == obj.Name &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Group) Equal(obj Group, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		rec.Name == obj.Name &&
 		rec.Users == obj.Users
 }

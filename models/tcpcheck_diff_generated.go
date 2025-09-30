@@ -17,7 +17,11 @@
 
 package models
 
-func (rec TCPCheck) Diff(obj TCPCheck) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TCPCheck) Diff(obj TCPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Action != obj.Action {
 		diff["Action"] = []interface{}{rec.Action, obj.Action}
@@ -73,7 +77,7 @@ func (rec TCPCheck) Diff(obj TCPCheck) map[string][]interface{} {
 	if rec.Pattern != obj.Pattern {
 		diff["Pattern"] = []interface{}{rec.Pattern, obj.Pattern}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
 	if rec.PortString != obj.PortString {

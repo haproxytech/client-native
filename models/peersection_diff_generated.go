@@ -19,35 +19,48 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec PeerSection) Diff(obj PeerSection) map[string][]interface{} {
+func (rec PeerSection) Diff(obj PeerSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.PeerSectionBase.Diff(obj.PeerSectionBase) {
+	for diffKey, diffValue := range rec.PeerSectionBase.Diff(obj.PeerSectionBase, opts...) {
 		diff["PeerSectionBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList) {
+	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList, opts...) {
 		diff["LogTargetList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds) {
+	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds, opts...) {
 		diff["Binds"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries) {
+	for diffKey, diffValue := range DiffMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries, opts...) {
 		diff["PeerEntries"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers) {
+	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers, opts...) {
 		diff["Servers"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringTable(rec.Tables, obj.Tables) {
+	for diffKey, diffValue := range DiffMapStringTable(rec.Tables, obj.Tables, opts...) {
 		diff["Tables"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringPeerEntry(x, y map[string]PeerEntry) map[string][]interface{} {
+func DiffMapStringPeerEntry(x, y map[string]PeerEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {
@@ -83,10 +96,21 @@ func DiffMapStringPeerEntry(x, y map[string]PeerEntry) map[string][]interface{} 
 	return diff
 }
 
-func DiffMapStringTable(x, y map[string]Table) map[string][]interface{} {
+func DiffMapStringTable(x, y map[string]Table, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

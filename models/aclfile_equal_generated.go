@@ -17,7 +17,11 @@
 
 package models
 
-func (rec ACLFile) Equal(obj ACLFile) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ACLFile) Equal(obj ACLFile, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Description == obj.Description &&
 		rec.ID == obj.ID &&
 		rec.StorageName == obj.StorageName

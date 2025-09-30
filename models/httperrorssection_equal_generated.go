@@ -17,7 +17,12 @@
 
 package models
 
-func (rec HTTPErrorsSection) Equal(obj HTTPErrorsSection) bool {
-	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPErrorsSection) Equal(obj HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name
 }

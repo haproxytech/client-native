@@ -17,7 +17,11 @@
 
 package models
 
-func (rec GlobalDefaultPath) Equal(obj GlobalDefaultPath) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalDefaultPath) Equal(obj GlobalDefaultPath, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Path == obj.Path &&
 		rec.Type == obj.Type
 }

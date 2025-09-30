@@ -17,15 +17,19 @@
 
 package models
 
-func (rec InfoSystem) Diff(obj InfoSystem) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec InfoSystem) Diff(obj InfoSystem, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInfoSystemCPUInfo(rec.CPUInfo, obj.CPUInfo) {
+	for diffKey, diffValue := range DiffPointerInfoSystemCPUInfo(rec.CPUInfo, obj.CPUInfo, opts...) {
 		diff["CPUInfo."+diffKey] = diffValue
 	}
 	if rec.Hostname != obj.Hostname {
 		diff["Hostname"] = []interface{}{rec.Hostname, obj.Hostname}
 	}
-	for diffKey, diffValue := range DiffPointerInfoSystemMemInfo(rec.MemInfo, obj.MemInfo) {
+	for diffKey, diffValue := range DiffPointerInfoSystemMemInfo(rec.MemInfo, obj.MemInfo, opts...) {
 		diff["MemInfo."+diffKey] = diffValue
 	}
 	if rec.OsString != obj.OsString {
@@ -34,13 +38,13 @@ func (rec InfoSystem) Diff(obj InfoSystem) map[string][]interface{} {
 	if rec.Time != obj.Time {
 		diff["Time"] = []interface{}{rec.Time, obj.Time}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Uptime, obj.Uptime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Uptime, obj.Uptime, opts...) {
 		diff["Uptime."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerInfoSystemCPUInfo(x, y *InfoSystemCPUInfo) map[string][]interface{} {
+func DiffPointerInfoSystemCPUInfo(x, y *InfoSystemCPUInfo, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -64,7 +68,7 @@ func DiffPointerInfoSystemCPUInfo(x, y *InfoSystemCPUInfo) map[string][]interfac
 	return diff
 }
 
-func DiffPointerInfoSystemMemInfo(x, y *InfoSystemMemInfo) map[string][]interface{} {
+func DiffPointerInfoSystemMemInfo(x, y *InfoSystemMemInfo, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

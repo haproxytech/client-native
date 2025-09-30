@@ -17,10 +17,14 @@
 
 package models
 
-func (rec GeneralFile) Equal(obj GeneralFile) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GeneralFile) Equal(obj GeneralFile, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Description == obj.Description &&
 		rec.File == obj.File &&
 		rec.ID == obj.ID &&
-		EqualPointerInt64(rec.Size, obj.Size) &&
+		EqualPointerInt64(rec.Size, obj.Size, opts...) &&
 		rec.StorageName == obj.StorageName
 }

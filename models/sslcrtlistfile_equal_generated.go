@@ -17,9 +17,13 @@
 
 package models
 
-func (rec SslCrtListFile) Equal(obj SslCrtListFile) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCrtListFile) Equal(obj SslCrtListFile, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Description == obj.Description &&
 		rec.File == obj.File &&
-		EqualPointerInt64(rec.Size, obj.Size) &&
+		EqualPointerInt64(rec.Size, obj.Size, opts...) &&
 		rec.StorageName == obj.StorageName
 }

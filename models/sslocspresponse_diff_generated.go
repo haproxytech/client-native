@@ -19,9 +19,10 @@ package models
 
 import (
 	"github.com/haproxytech/client-native/v6/models/funcs"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec SslOcspResponse) Diff(obj SslOcspResponse) map[string][]interface{} {
+func (rec SslOcspResponse) Diff(obj SslOcspResponse, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Base64Response != obj.Base64Response {
 		diff["Base64Response"] = []interface{}{rec.Base64Response, obj.Base64Response}
@@ -29,16 +30,16 @@ func (rec SslOcspResponse) Diff(obj SslOcspResponse) map[string][]interface{} {
 	if rec.OcspResponseStatus != obj.OcspResponseStatus {
 		diff["OcspResponseStatus"] = []interface{}{rec.OcspResponseStatus, obj.OcspResponseStatus}
 	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.ProducedAt, obj.ProducedAt) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.ProducedAt, obj.ProducedAt, opts...) {
 		diff["ProducedAt."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.ResponderID, obj.ResponderID) {
+	for diffKey, diffValue := range DiffSliceString(rec.ResponderID, obj.ResponderID, opts...) {
 		diff["ResponderID"+diffKey] = diffValue
 	}
 	if rec.ResponseType != obj.ResponseType {
 		diff["ResponseType"] = []interface{}{rec.ResponseType, obj.ResponseType}
 	}
-	for diffKey, diffValue := range DiffPointerOCSPResponses(rec.Responses, obj.Responses) {
+	for diffKey, diffValue := range DiffPointerOCSPResponses(rec.Responses, obj.Responses, opts...) {
 		diff["Responses."+diffKey] = diffValue
 	}
 	if rec.Version != obj.Version {
@@ -47,7 +48,7 @@ func (rec SslOcspResponse) Diff(obj SslOcspResponse) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerOCSPResponses(x, y *OCSPResponses) map[string][]interface{} {
+func DiffPointerOCSPResponses(x, y *OCSPResponses, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

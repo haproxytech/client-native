@@ -17,9 +17,13 @@
 
 package models
 
-func (rec DefaultBind) Diff(obj DefaultBind) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DefaultBind) Diff(obj DefaultBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.BindParams.Diff(obj.BindParams) {
+	for diffKey, diffValue := range rec.BindParams.Diff(obj.BindParams, opts...) {
 		diff["BindParams."+diffKey] = diffValue
 	}
 	return diff

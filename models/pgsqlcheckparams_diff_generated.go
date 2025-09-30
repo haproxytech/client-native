@@ -17,7 +17,11 @@
 
 package models
 
-func (rec PgsqlCheckParams) Diff(obj PgsqlCheckParams) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PgsqlCheckParams) Diff(obj PgsqlCheckParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Username != obj.Username {
 		diff["Username"] = []interface{}{rec.Username, obj.Username}

@@ -17,27 +17,31 @@
 
 package models
 
-func (rec ResolverBase) Diff(obj ResolverBase) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ResolverBase) Diff(obj ResolverBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AcceptedPayloadSize != obj.AcceptedPayloadSize {
 		diff["AcceptedPayloadSize"] = []interface{}{rec.AcceptedPayloadSize, obj.AcceptedPayloadSize}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HoldNx, obj.HoldNx) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HoldNx, obj.HoldNx, opts...) {
 		diff["HoldNx."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HoldObsolete, obj.HoldObsolete) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HoldObsolete, obj.HoldObsolete, opts...) {
 		diff["HoldObsolete."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HoldOther, obj.HoldOther) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HoldOther, obj.HoldOther, opts...) {
 		diff["HoldOther."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HoldRefused, obj.HoldRefused) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HoldRefused, obj.HoldRefused, opts...) {
 		diff["HoldRefused."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HoldTimeout, obj.HoldTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HoldTimeout, obj.HoldTimeout, opts...) {
 		diff["HoldTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HoldValid, obj.HoldValid) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HoldValid, obj.HoldValid, opts...) {
 		diff["HoldValid."+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {

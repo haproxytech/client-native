@@ -17,10 +17,14 @@
 
 package models
 
-func (rec HTTPAfterResponseRule) Equal(obj HTTPAfterResponseRule) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPAfterResponseRule) Equal(obj HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ACLFile == obj.ACLFile &&
 		rec.ACLKeyfmt == obj.ACLKeyfmt &&
-		EqualPointerInt64(rec.CaptureID, obj.CaptureID) &&
+		EqualPointerInt64(rec.CaptureID, obj.CaptureID, opts...) &&
 		rec.CaptureLen == obj.CaptureLen &&
 		rec.CaptureSample == obj.CaptureSample &&
 		rec.Cond == obj.Cond &&
@@ -33,10 +37,11 @@ func (rec HTTPAfterResponseRule) Equal(obj HTTPAfterResponseRule) bool {
 		rec.MapFile == obj.MapFile &&
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.ScExpr == obj.ScExpr &&
 		rec.ScID == obj.ScID &&
 		rec.ScIdx == obj.ScIdx &&
-		EqualPointerInt64(rec.ScInt, obj.ScInt) &&
+		EqualPointerInt64(rec.ScInt, obj.ScInt, opts...) &&
 		rec.Status == obj.Status &&
 		rec.StatusReason == obj.StatusReason &&
 		rec.StrictMode == obj.StrictMode &&

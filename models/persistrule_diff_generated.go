@@ -17,12 +17,16 @@
 
 package models
 
-func (rec PersistRule) Diff(obj PersistRule) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PersistRule) Diff(obj PersistRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.RdpCookieName != obj.RdpCookieName {
 		diff["RdpCookieName"] = []interface{}{rec.RdpCookieName, obj.RdpCookieName}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Type, obj.Type) {
+	for diffKey, diffValue := range DiffPointerString(rec.Type, obj.Type, opts...) {
 		diff["Type."+diffKey] = diffValue
 	}
 	return diff

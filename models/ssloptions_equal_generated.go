@@ -17,8 +17,12 @@
 
 package models
 
-func (rec SslOptions) Equal(obj SslOptions) bool {
-	return EqualSlicePointerSslEngine(rec.SslEngines, obj.SslEngines) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslOptions) Equal(obj SslOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerSslEngine(rec.SslEngines, obj.SslEngines, opts...) &&
 		rec.AcmeScheduler == obj.AcmeScheduler &&
 		rec.CaBase == obj.CaBase &&
 		rec.CrtBase == obj.CrtBase &&
@@ -43,26 +47,40 @@ func (rec SslOptions) Equal(obj SslOptions) bool {
 		rec.Propquery == obj.Propquery &&
 		rec.Provider == obj.Provider &&
 		rec.ProviderPath == obj.ProviderPath &&
-		EqualPointerInt64(rec.SecurityLevel, obj.SecurityLevel) &&
+		EqualPointerInt64(rec.SecurityLevel, obj.SecurityLevel, opts...) &&
 		rec.ServerVerify == obj.ServerVerify &&
 		rec.SkipSelfIssuedCa == obj.SkipSelfIssuedCa
 }
 
-func EqualPointerSslEngine(x, y *SslEngine) bool {
+func EqualPointerSslEngine(x, y *SslEngine, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerSslEngine(x, y []*SslEngine) bool {
+func EqualSlicePointerSslEngine(x, y []*SslEngine, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSslEngine(vx, vy) {
+		if !EqualPointerSslEngine(vx, vy, opts...) {
 			return false
 		}
 	}

@@ -17,18 +17,22 @@
 
 package models
 
-func (rec Bind) Diff(obj Bind) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Bind) Diff(obj Bind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.BindParams.Diff(obj.BindParams) {
+	for diffKey, diffValue := range rec.BindParams.Diff(obj.BindParams, opts...) {
 		diff["BindParams."+diffKey] = diffValue
 	}
 	if rec.Address != obj.Address {
 		diff["Address"] = []interface{}{rec.Address, obj.Address}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd, opts...) {
 		diff["PortRangeEnd."+diffKey] = diffValue
 	}
 	return diff

@@ -17,18 +17,22 @@
 
 package models
 
-func (rec ClusterLogTarget) Diff(obj ClusterLogTarget) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ClusterLogTarget) Diff(obj ClusterLogTarget, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address) {
+	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address, opts...) {
 		diff["Address."+diffKey] = diffValue
 	}
 	if rec.LogFormat != obj.LogFormat {
 		diff["LogFormat"] = []interface{}{rec.LogFormat, obj.LogFormat}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Protocol, obj.Protocol) {
+	for diffKey, diffValue := range DiffPointerString(rec.Protocol, obj.Protocol, opts...) {
 		diff["Protocol."+diffKey] = diffValue
 	}
 	return diff

@@ -17,12 +17,16 @@
 
 package models
 
-func (rec ThreadGroup) Diff(obj ThreadGroup) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ThreadGroup) Diff(obj ThreadGroup, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Group, obj.Group) {
+	for diffKey, diffValue := range DiffPointerString(rec.Group, obj.Group, opts...) {
 		diff["Group."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.NumOrRange, obj.NumOrRange) {
+	for diffKey, diffValue := range DiffPointerString(rec.NumOrRange, obj.NumOrRange, opts...) {
 		diff["NumOrRange."+diffKey] = diffValue
 	}
 	return diff

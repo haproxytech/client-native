@@ -17,7 +17,11 @@
 
 package models
 
-func (rec PersistRule) Equal(obj PersistRule) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PersistRule) Equal(obj PersistRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.RdpCookieName == obj.RdpCookieName &&
-		EqualPointerString(rec.Type, obj.Type)
+		EqualPointerString(rec.Type, obj.Type, opts...)
 }

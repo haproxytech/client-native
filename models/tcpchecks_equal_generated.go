@@ -17,25 +17,43 @@
 
 package models
 
-func (x TCPChecks) Equal(y TCPChecks) bool {
-	return EqualTCPChecks(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x TCPChecks) Equal(y TCPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualTCPChecks(x, y, opts...)
 }
 
-func EqualPointerTCPCheck(x, y *TCPCheck) bool {
+func EqualPointerTCPCheck(x, y *TCPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualTCPChecks(x, y TCPChecks) bool {
+func EqualTCPChecks(x, y TCPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerTCPCheck(vx, vy) {
+		if !EqualPointerTCPCheck(vx, vy, opts...) {
 			return false
 		}
 	}

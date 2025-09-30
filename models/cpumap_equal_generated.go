@@ -17,7 +17,11 @@
 
 package models
 
-func (rec CPUMap) Equal(obj CPUMap) bool {
-	return EqualPointerString(rec.CPUSet, obj.CPUSet) &&
-		EqualPointerString(rec.Process, obj.Process)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CPUMap) Equal(obj CPUMap, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.CPUSet, obj.CPUSet, opts...) &&
+		EqualPointerString(rec.Process, obj.Process, opts...)
 }

@@ -17,25 +17,43 @@
 
 package models
 
-func (x Userlists) Equal(y Userlists) bool {
-	return EqualUserlists(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Userlists) Equal(y Userlists, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualUserlists(x, y, opts...)
 }
 
-func EqualPointerUserlist(x, y *Userlist) bool {
+func EqualPointerUserlist(x, y *Userlist, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualUserlists(x, y Userlists) bool {
+func EqualUserlists(x, y Userlists, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerUserlist(vx, vy) {
+		if !EqualPointerUserlist(vx, vy, opts...) {
 			return false
 		}
 	}

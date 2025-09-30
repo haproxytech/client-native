@@ -17,9 +17,13 @@
 
 package models
 
-func (rec PerformanceOptions) Equal(obj PerformanceOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PerformanceOptions) Equal(obj PerformanceOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BusyPolling == obj.BusyPolling &&
-		EqualPointerInt64(rec.MaxSpreadChecks, obj.MaxSpreadChecks) &&
+		EqualPointerInt64(rec.MaxSpreadChecks, obj.MaxSpreadChecks, opts...) &&
 		rec.Maxcompcpuusage == obj.Maxcompcpuusage &&
 		rec.Maxcomprate == obj.Maxcomprate &&
 		rec.Maxconn == obj.Maxconn &&
@@ -39,5 +43,5 @@ func (rec PerformanceOptions) Equal(obj PerformanceOptions) bool {
 		rec.ServerStateBase == obj.ServerStateBase &&
 		rec.ServerStateFile == obj.ServerStateFile &&
 		rec.SpreadChecks == obj.SpreadChecks &&
-		EqualPointerInt64(rec.ThreadHardLimit, obj.ThreadHardLimit)
+		EqualPointerInt64(rec.ThreadHardLimit, obj.ThreadHardLimit, opts...)
 }

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec InfoSystemMemInfo) Diff(obj InfoSystemMemInfo) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec InfoSystemMemInfo) Diff(obj InfoSystemMemInfo, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.DataplaneapiMemory != obj.DataplaneapiMemory {
 		diff["DataplaneapiMemory"] = []interface{}{rec.DataplaneapiMemory, obj.DataplaneapiMemory}

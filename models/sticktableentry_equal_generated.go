@@ -17,56 +17,60 @@
 
 package models
 
-func (rec StickTableEntry) Equal(obj StickTableEntry) bool {
-	return EqualPointerInt64(rec.BytesInCnt, obj.BytesInCnt) &&
-		EqualPointerInt64(rec.BytesInRate, obj.BytesInRate) &&
-		EqualPointerInt64(rec.BytesOutCnt, obj.BytesOutCnt) &&
-		EqualPointerInt64(rec.BytesOutRate, obj.BytesOutRate) &&
-		EqualPointerInt64(rec.ConnCnt, obj.ConnCnt) &&
-		EqualPointerInt64(rec.ConnCur, obj.ConnCur) &&
-		EqualPointerInt64(rec.ConnRate, obj.ConnRate) &&
-		EqualPointerInt64(rec.Exp, obj.Exp) &&
-		EqualPointerInt64(rec.GlitchCnt, obj.GlitchCnt) &&
-		EqualPointerInt64(rec.GlitchRate, obj.GlitchRate) &&
-		EqualPointerStickTableEntryGpc(rec.Gpc, obj.Gpc) &&
-		EqualPointerInt64(rec.Gpc0, obj.Gpc0) &&
-		EqualPointerInt64(rec.Gpc0Rate, obj.Gpc0Rate) &&
-		EqualPointerInt64(rec.Gpc1, obj.Gpc1) &&
-		EqualPointerInt64(rec.Gpc1Rate, obj.Gpc1Rate) &&
-		EqualPointerStickTableEntryGpcRate(rec.GpcRate, obj.GpcRate) &&
-		EqualPointerStickTableEntryGpt(rec.Gpt, obj.Gpt) &&
-		EqualPointerInt64(rec.Gpt0, obj.Gpt0) &&
-		EqualPointerInt64(rec.HTTPErrCnt, obj.HTTPErrCnt) &&
-		EqualPointerInt64(rec.HTTPErrRate, obj.HTTPErrRate) &&
-		EqualPointerInt64(rec.HTTPFailCnt, obj.HTTPFailCnt) &&
-		EqualPointerInt64(rec.HTTPFailRate, obj.HTTPFailRate) &&
-		EqualPointerInt64(rec.HTTPReqCnt, obj.HTTPReqCnt) &&
-		EqualPointerInt64(rec.HTTPReqRate, obj.HTTPReqRate) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StickTableEntry) Equal(obj StickTableEntry, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.BytesInCnt, obj.BytesInCnt, opts...) &&
+		EqualPointerInt64(rec.BytesInRate, obj.BytesInRate, opts...) &&
+		EqualPointerInt64(rec.BytesOutCnt, obj.BytesOutCnt, opts...) &&
+		EqualPointerInt64(rec.BytesOutRate, obj.BytesOutRate, opts...) &&
+		EqualPointerInt64(rec.ConnCnt, obj.ConnCnt, opts...) &&
+		EqualPointerInt64(rec.ConnCur, obj.ConnCur, opts...) &&
+		EqualPointerInt64(rec.ConnRate, obj.ConnRate, opts...) &&
+		EqualPointerInt64(rec.Exp, obj.Exp, opts...) &&
+		EqualPointerInt64(rec.GlitchCnt, obj.GlitchCnt, opts...) &&
+		EqualPointerInt64(rec.GlitchRate, obj.GlitchRate, opts...) &&
+		EqualPointerStickTableEntryGpc(rec.Gpc, obj.Gpc, opts...) &&
+		EqualPointerInt64(rec.Gpc0, obj.Gpc0, opts...) &&
+		EqualPointerInt64(rec.Gpc0Rate, obj.Gpc0Rate, opts...) &&
+		EqualPointerInt64(rec.Gpc1, obj.Gpc1, opts...) &&
+		EqualPointerInt64(rec.Gpc1Rate, obj.Gpc1Rate, opts...) &&
+		EqualPointerStickTableEntryGpcRate(rec.GpcRate, obj.GpcRate, opts...) &&
+		EqualPointerStickTableEntryGpt(rec.Gpt, obj.Gpt, opts...) &&
+		EqualPointerInt64(rec.Gpt0, obj.Gpt0, opts...) &&
+		EqualPointerInt64(rec.HTTPErrCnt, obj.HTTPErrCnt, opts...) &&
+		EqualPointerInt64(rec.HTTPErrRate, obj.HTTPErrRate, opts...) &&
+		EqualPointerInt64(rec.HTTPFailCnt, obj.HTTPFailCnt, opts...) &&
+		EqualPointerInt64(rec.HTTPFailRate, obj.HTTPFailRate, opts...) &&
+		EqualPointerInt64(rec.HTTPReqCnt, obj.HTTPReqCnt, opts...) &&
+		EqualPointerInt64(rec.HTTPReqRate, obj.HTTPReqRate, opts...) &&
 		rec.ID == obj.ID &&
 		rec.Key == obj.Key &&
-		EqualPointerInt64(rec.ServerID, obj.ServerID) &&
-		EqualPointerInt64(rec.SessCnt, obj.SessCnt) &&
-		EqualPointerInt64(rec.SessRate, obj.SessRate) &&
+		EqualPointerInt64(rec.ServerID, obj.ServerID, opts...) &&
+		EqualPointerInt64(rec.SessCnt, obj.SessCnt, opts...) &&
+		EqualPointerInt64(rec.SessRate, obj.SessRate, opts...) &&
 		rec.Use == obj.Use
 }
 
-func EqualPointerStickTableEntryGpc(x, y *StickTableEntryGpc) bool {
+func EqualPointerStickTableEntryGpc(x, y *StickTableEntryGpc, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerStickTableEntryGpcRate(x, y *StickTableEntryGpcRate) bool {
+func EqualPointerStickTableEntryGpcRate(x, y *StickTableEntryGpcRate, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerStickTableEntryGpt(x, y *StickTableEntryGpt) bool {
+func EqualPointerStickTableEntryGpt(x, y *StickTableEntryGpt, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

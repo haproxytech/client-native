@@ -17,18 +17,36 @@
 
 package models
 
-func (x HTTPChecks) Equal(y HTTPChecks) bool {
-	return EqualHTTPChecks(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x HTTPChecks) Equal(y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualHTTPChecks(x, y, opts...)
 }
 
-func EqualHTTPChecks(x, y HTTPChecks) bool {
+func EqualHTTPChecks(x, y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerHTTPCheck(vx, vy) {
+		if !EqualPointerHTTPCheck(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualHTTPChecks(x, y HTTPChecks) bool {
 	return true
 }
 
-func EqualPointerHTTPCheck(x, y *HTTPCheck) bool {
+func EqualPointerHTTPCheck(x, y *HTTPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

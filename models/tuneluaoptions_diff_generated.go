@@ -17,12 +17,16 @@
 
 package models
 
-func (rec TuneLuaOptions) Diff(obj TuneLuaOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneLuaOptions) Diff(obj TuneLuaOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.BoolSampleConversion != obj.BoolSampleConversion {
 		diff["BoolSampleConversion"] = []interface{}{rec.BoolSampleConversion, obj.BoolSampleConversion}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.BurstTimeout, obj.BurstTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.BurstTimeout, obj.BurstTimeout, opts...) {
 		diff["BurstTimeout."+diffKey] = diffValue
 	}
 	if rec.ForcedYield != obj.ForcedYield {
@@ -34,16 +38,16 @@ func (rec TuneLuaOptions) Diff(obj TuneLuaOptions) map[string][]interface{} {
 	if rec.LogStderr != obj.LogStderr {
 		diff["LogStderr"] = []interface{}{rec.LogStderr, obj.LogStderr}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxmem, obj.Maxmem) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxmem, obj.Maxmem, opts...) {
 		diff["Maxmem."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ServiceTimeout, obj.ServiceTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ServiceTimeout, obj.ServiceTimeout, opts...) {
 		diff["ServiceTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SessionTimeout, obj.SessionTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SessionTimeout, obj.SessionTimeout, opts...) {
 		diff["SessionTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TaskTimeout, obj.TaskTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TaskTimeout, obj.TaskTimeout, opts...) {
 		diff["TaskTimeout."+diffKey] = diffValue
 	}
 	return diff

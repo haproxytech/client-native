@@ -17,16 +17,20 @@
 
 package models
 
-func (rec NativeStat) Equal(obj NativeStat) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec NativeStat) Equal(obj NativeStat, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BackendName == obj.BackendName &&
 		rec.Name == obj.Name &&
-		EqualPointerNativeStatStats(rec.Stats, obj.Stats) &&
+		EqualPointerNativeStatStats(rec.Stats, obj.Stats, opts...) &&
 		rec.Type == obj.Type
 }
 
-func EqualPointerNativeStatStats(x, y *NativeStatStats) bool {
+func EqualPointerNativeStatStats(x, y *NativeStatStats, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

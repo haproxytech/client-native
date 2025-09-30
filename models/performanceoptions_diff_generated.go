@@ -17,12 +17,16 @@
 
 package models
 
-func (rec PerformanceOptions) Diff(obj PerformanceOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PerformanceOptions) Diff(obj PerformanceOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.BusyPolling != obj.BusyPolling {
 		diff["BusyPolling"] = []interface{}{rec.BusyPolling, obj.BusyPolling}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSpreadChecks, obj.MaxSpreadChecks) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSpreadChecks, obj.MaxSpreadChecks, opts...) {
 		diff["MaxSpreadChecks."+diffKey] = diffValue
 	}
 	if rec.Maxcompcpuusage != obj.Maxcompcpuusage {
@@ -82,7 +86,7 @@ func (rec PerformanceOptions) Diff(obj PerformanceOptions) map[string][]interfac
 	if rec.SpreadChecks != obj.SpreadChecks {
 		diff["SpreadChecks"] = []interface{}{rec.SpreadChecks, obj.SpreadChecks}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ThreadHardLimit, obj.ThreadHardLimit) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ThreadHardLimit, obj.ThreadHardLimit, opts...) {
 		diff["ThreadHardLimit."+diffKey] = diffValue
 	}
 	return diff

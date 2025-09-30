@@ -17,25 +17,43 @@
 
 package models
 
-func (x QUICInitialRules) Equal(y QUICInitialRules) bool {
-	return EqualQUICInitialRules(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x QUICInitialRules) Equal(y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualQUICInitialRules(x, y, opts...)
 }
 
-func EqualPointerQUICInitialRule(x, y *QUICInitialRule) bool {
+func EqualPointerQUICInitialRule(x, y *QUICInitialRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualQUICInitialRules(x, y QUICInitialRules) bool {
+func EqualQUICInitialRules(x, y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerQUICInitialRule(vx, vy) {
+		if !EqualPointerQUICInitialRule(vx, vy, opts...) {
 			return false
 		}
 	}

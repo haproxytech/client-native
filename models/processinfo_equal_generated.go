@@ -17,15 +17,19 @@
 
 package models
 
-func (rec ProcessInfo) Equal(obj ProcessInfo) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ProcessInfo) Equal(obj ProcessInfo, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Error == obj.Error &&
-		EqualPointerProcessInfoItem(rec.Info, obj.Info) &&
+		EqualPointerProcessInfoItem(rec.Info, obj.Info, opts...) &&
 		rec.RuntimeAPI == obj.RuntimeAPI
 }
 
-func EqualPointerProcessInfoItem(x, y *ProcessInfoItem) bool {
+func EqualPointerProcessInfoItem(x, y *ProcessInfoItem, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

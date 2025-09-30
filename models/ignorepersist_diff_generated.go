@@ -17,12 +17,16 @@
 
 package models
 
-func (rec IgnorePersist) Diff(obj IgnorePersist) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec IgnorePersist) Diff(obj IgnorePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Cond, obj.Cond) {
+	for diffKey, diffValue := range DiffPointerString(rec.Cond, obj.Cond, opts...) {
 		diff["Cond."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.CondTest, obj.CondTest) {
+	for diffKey, diffValue := range DiffPointerString(rec.CondTest, obj.CondTest, opts...) {
 		diff["CondTest."+diffKey] = diffValue
 	}
 	return diff

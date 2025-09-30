@@ -17,9 +17,13 @@
 
 package models
 
-func (rec HTTPErrorsSection) Diff(obj HTTPErrorsSection) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPErrorsSection) Diff(obj HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) {
+	for diffKey, diffValue := range DiffSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) {
 		diff["ErrorFiles"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.ACLFile != obj.ACLFile {
 		diff["ACLFile"] = []interface{}{rec.ACLFile, obj.ACLFile}
@@ -25,7 +29,7 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule) map[string][]in
 	if rec.ACLKeyfmt != obj.ACLKeyfmt {
 		diff["ACLKeyfmt"] = []interface{}{rec.ACLKeyfmt, obj.ACLKeyfmt}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureID, obj.CaptureID) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureID, obj.CaptureID, opts...) {
 		diff["CaptureID."+diffKey] = diffValue
 	}
 	if rec.CaptureLen != obj.CaptureLen {
@@ -73,7 +77,7 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule) map[string][]in
 	if rec.ScIdx != obj.ScIdx {
 		diff["ScIdx"] = []interface{}{rec.ScIdx, obj.ScIdx}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt, opts...) {
 		diff["ScInt."+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {

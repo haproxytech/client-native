@@ -17,11 +17,16 @@
 
 package models
 
-func (rec HTTPErrorRule) Equal(obj HTTPErrorRule) bool {
-	return EqualSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPErrorRule) Equal(obj HTTPErrorRule, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.ReturnContent == obj.ReturnContent &&
 		rec.ReturnContentFormat == obj.ReturnContentFormat &&
-		EqualPointerString(rec.ReturnContentType, obj.ReturnContentType) &&
+		EqualPointerString(rec.ReturnContentType, obj.ReturnContentType, opts...) &&
 		rec.Status == obj.Status &&
 		rec.Type == obj.Type
 }

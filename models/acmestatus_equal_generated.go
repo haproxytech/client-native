@@ -17,18 +17,36 @@
 
 package models
 
-func (x AcmeStatus) Equal(y AcmeStatus) bool {
-	return EqualAcmeStatus(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x AcmeStatus) Equal(y AcmeStatus, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualAcmeStatus(x, y, opts...)
 }
 
-func EqualAcmeStatus(x, y AcmeStatus) bool {
+func EqualAcmeStatus(x, y AcmeStatus, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerAcmeCertificateStatus(vx, vy) {
+		if !EqualPointerAcmeCertificateStatus(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualAcmeStatus(x, y AcmeStatus) bool {
 	return true
 }
 
-func EqualPointerAcmeCertificateStatus(x, y *AcmeCertificateStatus) bool {
+func EqualPointerAcmeCertificateStatus(x, y *AcmeCertificateStatus, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

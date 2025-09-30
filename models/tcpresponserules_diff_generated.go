@@ -19,13 +19,15 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x TCPResponseRules) Diff(y TCPResponseRules) map[string][]interface{} {
-	return DiffTCPResponseRules(x, y)
+func (x TCPResponseRules) Diff(y TCPResponseRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffTCPResponseRules(x, y, opts...)
 }
 
-func DiffPointerTCPResponseRule(x, y *TCPResponseRule) map[string][]interface{} {
+func DiffPointerTCPResponseRule(x, y *TCPResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -49,7 +51,12 @@ func DiffPointerTCPResponseRule(x, y *TCPResponseRule) map[string][]interface{} 
 	return diff
 }
 
-func DiffTCPResponseRules(x, y TCPResponseRules) map[string][]interface{} {
+func DiffTCPResponseRules(x, y TCPResponseRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -57,9 +64,10 @@ func DiffTCPResponseRules(x, y TCPResponseRules) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

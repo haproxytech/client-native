@@ -17,9 +17,13 @@
 
 package models
 
-func (rec SslCertificateID) Diff(obj SslCertificateID) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCertificateID) Diff(obj SslCertificateID, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerCertificateID(rec.CertificateID, obj.CertificateID) {
+	for diffKey, diffValue := range DiffPointerCertificateID(rec.CertificateID, obj.CertificateID, opts...) {
 		diff["CertificateID."+diffKey] = diffValue
 	}
 	if rec.CertificateIDKey != obj.CertificateIDKey {
@@ -31,7 +35,7 @@ func (rec SslCertificateID) Diff(obj SslCertificateID) map[string][]interface{} 
 	return diff
 }
 
-func DiffPointerCertificateID(x, y *CertificateID) map[string][]interface{} {
+func DiffPointerCertificateID(x, y *CertificateID, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

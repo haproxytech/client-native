@@ -17,12 +17,16 @@
 
 package models
 
-func (rec SslEngine) Diff(obj SslEngine) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslEngine) Diff(obj SslEngine, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Algorithms, obj.Algorithms) {
+	for diffKey, diffValue := range DiffPointerString(rec.Algorithms, obj.Algorithms, opts...) {
 		diff["Algorithms."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name) {
+	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
 		diff["Name."+diffKey] = diffValue
 	}
 	return diff

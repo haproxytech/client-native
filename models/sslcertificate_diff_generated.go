@@ -20,9 +20,10 @@ package models
 import (
 	"github.com/go-openapi/strfmt"
 	"github.com/haproxytech/client-native/v6/models/funcs"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec SslCertificate) Diff(obj SslCertificate) map[string][]interface{} {
+func (rec SslCertificate) Diff(obj SslCertificate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Algorithm != obj.Algorithm {
 		diff["Algorithm"] = []interface{}{rec.Algorithm, obj.Algorithm}
@@ -51,10 +52,10 @@ func (rec SslCertificate) Diff(obj SslCertificate) map[string][]interface{} {
 	if rec.Issuers != obj.Issuers {
 		diff["Issuers"] = []interface{}{rec.Issuers, obj.Issuers}
 	}
-	for diffKey, diffValue := range DiffPointerStrfmtDateTime(rec.NotAfter, obj.NotAfter) {
+	for diffKey, diffValue := range DiffPointerStrfmtDateTime(rec.NotAfter, obj.NotAfter, opts...) {
 		diff["NotAfter."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerStrfmtDateTime(rec.NotBefore, obj.NotBefore) {
+	for diffKey, diffValue := range DiffPointerStrfmtDateTime(rec.NotBefore, obj.NotBefore, opts...) {
 		diff["NotBefore."+diffKey] = diffValue
 	}
 	if rec.Serial != obj.Serial {
@@ -66,7 +67,7 @@ func (rec SslCertificate) Diff(obj SslCertificate) map[string][]interface{} {
 	if rec.Sha256FingerPrint != obj.Sha256FingerPrint {
 		diff["Sha256FingerPrint"] = []interface{}{rec.Sha256FingerPrint, obj.Sha256FingerPrint}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
 		diff["Size."+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {
@@ -87,7 +88,7 @@ func (rec SslCertificate) Diff(obj SslCertificate) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerStrfmtDateTime(x, y *strfmt.DateTime) map[string][]interface{} {
+func DiffPointerStrfmtDateTime(x, y *strfmt.DateTime, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec LogProfile) Diff(obj LogProfile) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LogProfile) Diff(obj LogProfile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.LogTag != obj.LogTag {
 		diff["LogTag"] = []interface{}{rec.LogTag, obj.LogTag}
@@ -25,7 +29,7 @@ func (rec LogProfile) Diff(obj LogProfile) map[string][]interface{} {
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range rec.Steps.Diff(obj.Steps) {
+	for diffKey, diffValue := range rec.Steps.Diff(obj.Steps, opts...) {
 		diff["Steps"+diffKey] = diffValue
 	}
 	return diff

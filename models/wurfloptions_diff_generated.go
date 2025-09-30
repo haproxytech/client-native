@@ -17,7 +17,11 @@
 
 package models
 
-func (rec WurflOptions) Diff(obj WurflOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec WurflOptions) Diff(obj WurflOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.CacheSize != obj.CacheSize {
 		diff["CacheSize"] = []interface{}{rec.CacheSize, obj.CacheSize}

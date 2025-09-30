@@ -17,9 +17,13 @@
 
 package models
 
-func (rec Forwardfor) Diff(obj Forwardfor) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Forwardfor) Diff(obj Forwardfor, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Enabled, obj.Enabled) {
+	for diffKey, diffValue := range DiffPointerString(rec.Enabled, obj.Enabled, opts...) {
 		diff["Enabled."+diffKey] = diffValue
 	}
 	if rec.Except != obj.Except {

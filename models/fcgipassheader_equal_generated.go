@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FCGIPassHeader) Equal(obj FCGIPassHeader) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGIPassHeader) Equal(obj FCGIPassHeader, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
 		rec.Name == obj.Name

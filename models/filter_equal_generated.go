@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Filter) Equal(obj Filter) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Filter) Equal(obj Filter, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AppName == obj.AppName &&
 		rec.BandwidthLimitName == obj.BandwidthLimitName &&
 		rec.CacheName == obj.CacheName &&
@@ -25,6 +29,7 @@ func (rec Filter) Equal(obj Filter) bool {
 		rec.DefaultPeriod == obj.DefaultPeriod &&
 		rec.Key == obj.Key &&
 		rec.Limit == obj.Limit &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MinSize == obj.MinSize &&
 		rec.SpoeConfig == obj.SpoeConfig &&
 		rec.SpoeEngine == obj.SpoeEngine &&

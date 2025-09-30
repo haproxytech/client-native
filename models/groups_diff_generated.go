@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x Groups) Diff(y Groups) map[string][]interface{} {
-	return DiffGroups(x, y)
+func (x Groups) Diff(y Groups, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffGroups(x, y, opts...)
 }
 
-func DiffGroups(x, y Groups) map[string][]interface{} {
+func DiffGroups(x, y Groups, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffGroups(x, y Groups) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffGroups(x, y Groups) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerGroup(x, y *Group) map[string][]interface{} {
+func DiffPointerGroup(x, y *Group, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

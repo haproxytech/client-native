@@ -17,24 +17,28 @@
 
 package models
 
-func (rec LogForwardBase) Diff(obj LogForwardBase) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LogForwardBase) Diff(obj LogForwardBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AssumeRfc6587Ntf != obj.AssumeRfc6587Ntf {
 		diff["AssumeRfc6587Ntf"] = []interface{}{rec.AssumeRfc6587Ntf, obj.AssumeRfc6587Ntf}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Backlog, obj.Backlog) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Backlog, obj.Backlog, opts...) {
 		diff["Backlog."+diffKey] = diffValue
 	}
 	if rec.DontParseLog != obj.DontParseLog {
 		diff["DontParseLog"] = []interface{}{rec.DontParseLog, obj.DontParseLog}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
 		diff["Maxconn."+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutClient, obj.TimeoutClient) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutClient, obj.TimeoutClient, opts...) {
 		diff["TimeoutClient."+diffKey] = diffValue
 	}
 	return diff

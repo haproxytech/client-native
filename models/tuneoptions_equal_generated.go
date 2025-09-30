@@ -17,29 +17,33 @@
 
 package models
 
-func (rec TuneOptions) Equal(obj TuneOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneOptions) Equal(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AppletZeroCopyForwarding == obj.AppletZeroCopyForwarding &&
 		rec.CompMaxlevel == obj.CompMaxlevel &&
 		rec.DisableFastForward == obj.DisableFastForward &&
 		rec.DisableZeroCopyForwarding == obj.DisableZeroCopyForwarding &&
-		EqualSliceString(rec.EpollMaskEvents, obj.EpollMaskEvents) &&
+		EqualSliceString(rec.EpollMaskEvents, obj.EpollMaskEvents, opts...) &&
 		rec.EventsMaxEventsAtOnce == obj.EventsMaxEventsAtOnce &&
 		rec.FailAlloc == obj.FailAlloc &&
 		rec.FdEdgeTriggered == obj.FdEdgeTriggered &&
-		EqualPointerInt64(rec.GlitchesKillCPUUsage, obj.GlitchesKillCPUUsage) &&
+		EqualPointerInt64(rec.GlitchesKillCPUUsage, obj.GlitchesKillCPUUsage, opts...) &&
 		rec.H1ZeroCopyFwdRecv == obj.H1ZeroCopyFwdRecv &&
 		rec.H1ZeroCopyFwdSend == obj.H1ZeroCopyFwdSend &&
-		EqualPointerInt64(rec.H2BeGlitchesThreshold, obj.H2BeGlitchesThreshold) &&
+		EqualPointerInt64(rec.H2BeGlitchesThreshold, obj.H2BeGlitchesThreshold, opts...) &&
 		rec.H2BeInitialWindowSize == obj.H2BeInitialWindowSize &&
 		rec.H2BeMaxConcurrentStreams == obj.H2BeMaxConcurrentStreams &&
-		EqualPointerInt64(rec.H2BeRxbuf, obj.H2BeRxbuf) &&
-		EqualPointerInt64(rec.H2FeGlitchesThreshold, obj.H2FeGlitchesThreshold) &&
+		EqualPointerInt64(rec.H2BeRxbuf, obj.H2BeRxbuf, opts...) &&
+		EqualPointerInt64(rec.H2FeGlitchesThreshold, obj.H2FeGlitchesThreshold, opts...) &&
 		rec.H2FeInitialWindowSize == obj.H2FeInitialWindowSize &&
 		rec.H2FeMaxConcurrentStreams == obj.H2FeMaxConcurrentStreams &&
-		EqualPointerInt64(rec.H2FeMaxTotalStreams, obj.H2FeMaxTotalStreams) &&
-		EqualPointerInt64(rec.H2FeRxbuf, obj.H2FeRxbuf) &&
+		EqualPointerInt64(rec.H2FeMaxTotalStreams, obj.H2FeMaxTotalStreams, opts...) &&
+		EqualPointerInt64(rec.H2FeRxbuf, obj.H2FeRxbuf, opts...) &&
 		rec.H2HeaderTableSize == obj.H2HeaderTableSize &&
-		EqualPointerInt64(rec.H2InitialWindowSize, obj.H2InitialWindowSize) &&
+		EqualPointerInt64(rec.H2InitialWindowSize, obj.H2InitialWindowSize, opts...) &&
 		rec.H2MaxConcurrentStreams == obj.H2MaxConcurrentStreams &&
 		rec.H2MaxFrameSize == obj.H2MaxFrameSize &&
 		rec.H2ZeroCopyFwdSend == obj.H2ZeroCopyFwdSend &&
@@ -47,27 +51,27 @@ func (rec TuneOptions) Equal(obj TuneOptions) bool {
 		rec.HTTPLogurilen == obj.HTTPLogurilen &&
 		rec.HTTPMaxhdr == obj.HTTPMaxhdr &&
 		rec.IdlePoolShared == obj.IdlePoolShared &&
-		EqualPointerInt64(rec.Idletimer, obj.Idletimer) &&
+		EqualPointerInt64(rec.Idletimer, obj.Idletimer, opts...) &&
 		rec.ListenerDefaultShards == obj.ListenerDefaultShards &&
 		rec.ListenerMultiQueue == obj.ListenerMultiQueue &&
-		EqualPointerInt64(rec.MaxChecksPerThread, obj.MaxChecksPerThread) &&
-		EqualPointerInt64(rec.MaxRulesAtOnce, obj.MaxRulesAtOnce) &&
+		EqualPointerInt64(rec.MaxChecksPerThread, obj.MaxChecksPerThread, opts...) &&
+		EqualPointerInt64(rec.MaxRulesAtOnce, obj.MaxRulesAtOnce, opts...) &&
 		rec.Maxaccept == obj.Maxaccept &&
 		rec.Maxpollevents == obj.Maxpollevents &&
 		rec.Maxrewrite == obj.Maxrewrite &&
-		EqualPointerInt64(rec.MemoryHotSize, obj.MemoryHotSize) &&
-		EqualPointerInt64(rec.NotsentLowatClient, obj.NotsentLowatClient) &&
-		EqualPointerInt64(rec.NotsentLowatServer, obj.NotsentLowatServer) &&
-		EqualPointerInt64(rec.PatternCacheSize, obj.PatternCacheSize) &&
+		EqualPointerInt64(rec.MemoryHotSize, obj.MemoryHotSize, opts...) &&
+		EqualPointerInt64(rec.NotsentLowatClient, obj.NotsentLowatClient, opts...) &&
+		EqualPointerInt64(rec.NotsentLowatServer, obj.NotsentLowatServer, opts...) &&
+		EqualPointerInt64(rec.PatternCacheSize, obj.PatternCacheSize, opts...) &&
 		rec.PeersMaxUpdatesAtOnce == obj.PeersMaxUpdatesAtOnce &&
 		rec.PoolHighFdRatio == obj.PoolHighFdRatio &&
 		rec.PoolLowFdRatio == obj.PoolLowFdRatio &&
 		rec.PtZeroCopyForwarding == obj.PtZeroCopyForwarding &&
-		EqualPointerInt64(rec.ReniceRuntime, obj.ReniceRuntime) &&
-		EqualPointerInt64(rec.ReniceStartup, obj.ReniceStartup) &&
-		EqualPointerInt64(rec.RingQueues, obj.RingQueues) &&
+		EqualPointerInt64(rec.ReniceRuntime, obj.ReniceRuntime, opts...) &&
+		EqualPointerInt64(rec.ReniceStartup, obj.ReniceStartup, opts...) &&
+		EqualPointerInt64(rec.RingQueues, obj.RingQueues, opts...) &&
 		rec.RunqueueDepth == obj.RunqueueDepth &&
 		rec.SchedLowLatency == obj.SchedLowLatency &&
-		EqualPointerInt64(rec.StickCounters, obj.StickCounters) &&
+		EqualPointerInt64(rec.StickCounters, obj.StickCounters, opts...) &&
 		rec.TakeoverOtherTgConnections == obj.TakeoverOtherTgConnections
 }

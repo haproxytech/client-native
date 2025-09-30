@@ -17,18 +17,36 @@
 
 package models
 
-func (x LogTargets) Equal(y LogTargets) bool {
-	return EqualLogTargets(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x LogTargets) Equal(y LogTargets, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualLogTargets(x, y, opts...)
 }
 
-func EqualLogTargets(x, y LogTargets) bool {
+func EqualLogTargets(x, y LogTargets, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerLogTarget(vx, vy) {
+		if !EqualPointerLogTarget(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualLogTargets(x, y LogTargets) bool {
 	return true
 }
 
-func EqualPointerLogTarget(x, y *LogTarget) bool {
+func EqualPointerLogTarget(x, y *LogTarget, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

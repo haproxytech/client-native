@@ -17,14 +17,18 @@
 
 package models
 
-func (rec TuneQuicOptions) Equal(obj TuneQuicOptions) bool {
-	return EqualPointerInt64(rec.FrontendConnTxBuffersLimit, obj.FrontendConnTxBuffersLimit) &&
-		EqualPointerInt64(rec.FrontendMaxIdleTimeout, obj.FrontendMaxIdleTimeout) &&
-		EqualPointerInt64(rec.FrontendMaxStreamsBidi, obj.FrontendMaxStreamsBidi) &&
-		EqualPointerInt64(rec.FrontendMaxTxMemory, obj.FrontendMaxTxMemory) &&
-		EqualPointerInt64(rec.MaxFrameLoss, obj.MaxFrameLoss) &&
-		EqualPointerInt64(rec.ReorderRatio, obj.ReorderRatio) &&
-		EqualPointerInt64(rec.RetryThreshold, obj.RetryThreshold) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneQuicOptions) Equal(obj TuneQuicOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.FrontendConnTxBuffersLimit, obj.FrontendConnTxBuffersLimit, opts...) &&
+		EqualPointerInt64(rec.FrontendMaxIdleTimeout, obj.FrontendMaxIdleTimeout, opts...) &&
+		EqualPointerInt64(rec.FrontendMaxStreamsBidi, obj.FrontendMaxStreamsBidi, opts...) &&
+		EqualPointerInt64(rec.FrontendMaxTxMemory, obj.FrontendMaxTxMemory, opts...) &&
+		EqualPointerInt64(rec.MaxFrameLoss, obj.MaxFrameLoss, opts...) &&
+		EqualPointerInt64(rec.ReorderRatio, obj.ReorderRatio, opts...) &&
+		EqualPointerInt64(rec.RetryThreshold, obj.RetryThreshold, opts...) &&
 		rec.SocketOwner == obj.SocketOwner &&
 		rec.ZeroCopyFwdSend == obj.ZeroCopyFwdSend
 }

@@ -17,19 +17,23 @@
 
 package models
 
-func (rec SslOcspResponse) Equal(obj SslOcspResponse) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslOcspResponse) Equal(obj SslOcspResponse, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Base64Response == obj.Base64Response &&
 		rec.OcspResponseStatus == obj.OcspResponseStatus &&
 		rec.ProducedAt.Equal(obj.ProducedAt) &&
-		EqualSliceString(rec.ResponderID, obj.ResponderID) &&
+		EqualSliceString(rec.ResponderID, obj.ResponderID, opts...) &&
 		rec.ResponseType == obj.ResponseType &&
-		EqualPointerOCSPResponses(rec.Responses, obj.Responses) &&
+		EqualPointerOCSPResponses(rec.Responses, obj.Responses, opts...) &&
 		rec.Version == obj.Version
 }
 
-func EqualPointerOCSPResponses(x, y *OCSPResponses) bool {
+func EqualPointerOCSPResponses(x, y *OCSPResponses, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

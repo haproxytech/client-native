@@ -17,19 +17,37 @@
 
 package models
 
-func (rec Userlist) Equal(obj Userlist) bool {
-	return rec.UserlistBase.Equal(obj.UserlistBase) &&
-		EqualMapStringGroup(rec.Groups, obj.Groups) &&
-		EqualMapStringUser(rec.Users, obj.Users)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Userlist) Equal(obj Userlist, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.UserlistBase.Equal(obj.UserlistBase, opts...) &&
+		EqualMapStringGroup(rec.Groups, obj.Groups, opts...) &&
+		EqualMapStringUser(rec.Users, obj.Users, opts...)
 }
 
-func EqualMapStringGroup(x, y map[string]Group) bool {
+func EqualMapStringGroup(x, y map[string]Group, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}
@@ -37,13 +55,27 @@ func EqualMapStringGroup(x, y map[string]Group) bool {
 	return true
 }
 
-func EqualMapStringUser(x, y map[string]User) bool {
+func EqualMapStringUser(x, y map[string]User, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}

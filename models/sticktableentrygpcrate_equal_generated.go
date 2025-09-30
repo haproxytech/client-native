@@ -17,7 +17,11 @@
 
 package models
 
-func (rec StickTableEntryGpcRate) Equal(obj StickTableEntryGpcRate) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StickTableEntryGpcRate) Equal(obj StickTableEntryGpcRate, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Idx == obj.Idx &&
-		EqualPointerInt64(rec.Value, obj.Value)
+		EqualPointerInt64(rec.Value, obj.Value, opts...)
 }

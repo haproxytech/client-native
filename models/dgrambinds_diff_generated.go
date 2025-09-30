@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x DgramBinds) Diff(y DgramBinds) map[string][]interface{} {
-	return DiffDgramBinds(x, y)
+func (x DgramBinds) Diff(y DgramBinds, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffDgramBinds(x, y, opts...)
 }
 
-func DiffDgramBinds(x, y DgramBinds) map[string][]interface{} {
+func DiffDgramBinds(x, y DgramBinds, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffDgramBinds(x, y DgramBinds) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffDgramBinds(x, y DgramBinds) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerDgramBind(x, y *DgramBind) map[string][]interface{} {
+func DiffPointerDgramBind(x, y *DgramBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

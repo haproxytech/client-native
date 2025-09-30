@@ -17,25 +17,43 @@
 
 package models
 
-func (x StickTableEntries) Equal(y StickTableEntries) bool {
-	return EqualStickTableEntries(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x StickTableEntries) Equal(y StickTableEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualStickTableEntries(x, y, opts...)
 }
 
-func EqualPointerStickTableEntry(x, y *StickTableEntry) bool {
+func EqualPointerStickTableEntry(x, y *StickTableEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualStickTableEntries(x, y StickTableEntries) bool {
+func EqualStickTableEntries(x, y StickTableEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerStickTableEntry(vx, vy) {
+		if !EqualPointerStickTableEntry(vx, vy, opts...) {
 			return false
 		}
 	}

@@ -17,9 +17,13 @@
 
 package models
 
-func (rec TuneBufferOptions) Diff(obj TuneBufferOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneBufferOptions) Diff(obj TuneBufferOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.BuffersLimit, obj.BuffersLimit) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.BuffersLimit, obj.BuffersLimit, opts...) {
 		diff["BuffersLimit."+diffKey] = diffValue
 	}
 	if rec.BuffersReserve != obj.BuffersReserve {
@@ -28,37 +32,37 @@ func (rec TuneBufferOptions) Diff(obj TuneBufferOptions) map[string][]interface{
 	if rec.Bufsize != obj.Bufsize {
 		diff["Bufsize"] = []interface{}{rec.Bufsize, obj.Bufsize}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.BufsizeSmall, obj.BufsizeSmall) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.BufsizeSmall, obj.BufsizeSmall, opts...) {
 		diff["BufsizeSmall."+diffKey] = diffValue
 	}
 	if rec.Pipesize != obj.Pipesize {
 		diff["Pipesize"] = []interface{}{rec.Pipesize, obj.Pipesize}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufBackend, obj.RcvbufBackend) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufBackend, obj.RcvbufBackend, opts...) {
 		diff["RcvbufBackend."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufClient, obj.RcvbufClient) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufClient, obj.RcvbufClient, opts...) {
 		diff["RcvbufClient."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufFrontend, obj.RcvbufFrontend) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufFrontend, obj.RcvbufFrontend, opts...) {
 		diff["RcvbufFrontend."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufServer, obj.RcvbufServer) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RcvbufServer, obj.RcvbufServer, opts...) {
 		diff["RcvbufServer."+diffKey] = diffValue
 	}
 	if rec.RecvEnough != obj.RecvEnough {
 		diff["RecvEnough"] = []interface{}{rec.RecvEnough, obj.RecvEnough}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufBackend, obj.SndbufBackend) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufBackend, obj.SndbufBackend, opts...) {
 		diff["SndbufBackend."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufClient, obj.SndbufClient) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufClient, obj.SndbufClient, opts...) {
 		diff["SndbufClient."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufFrontend, obj.SndbufFrontend) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufFrontend, obj.SndbufFrontend, opts...) {
 		diff["SndbufFrontend."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufServer, obj.SndbufServer) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SndbufServer, obj.SndbufServer, opts...) {
 		diff["SndbufServer."+diffKey] = diffValue
 	}
 	return diff

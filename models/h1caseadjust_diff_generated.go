@@ -17,12 +17,16 @@
 
 package models
 
-func (rec H1CaseAdjust) Diff(obj H1CaseAdjust) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec H1CaseAdjust) Diff(obj H1CaseAdjust, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.From, obj.From) {
+	for diffKey, diffValue := range DiffPointerString(rec.From, obj.From, opts...) {
 		diff["From."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.To, obj.To) {
+	for diffKey, diffValue := range DiffPointerString(rec.To, obj.To, opts...) {
 		diff["To."+diffKey] = diffValue
 	}
 	return diff

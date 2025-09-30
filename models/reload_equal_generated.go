@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Reload) Equal(obj Reload) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Reload) Equal(obj Reload, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ID == obj.ID &&
 		rec.ReloadTimestamp == obj.ReloadTimestamp &&
 		rec.Response == obj.Response &&

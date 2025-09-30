@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Transaction) Diff(obj Transaction) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Transaction) Diff(obj Transaction, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Version != obj.Version {
 		diff["Version"] = []interface{}{rec.Version, obj.Version}

@@ -17,34 +17,52 @@
 
 package models
 
-func (rec Site) Equal(obj Site) bool {
-	return EqualSlicePointerSiteFarm(rec.Farms, obj.Farms) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Site) Equal(obj Site, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerSiteFarm(rec.Farms, obj.Farms, opts...) &&
 		rec.Name == obj.Name &&
-		EqualPointerSiteService(rec.Service, obj.Service)
+		EqualPointerSiteService(rec.Service, obj.Service, opts...)
 }
 
-func EqualPointerSiteFarm(x, y *SiteFarm) bool {
+func EqualPointerSiteFarm(x, y *SiteFarm, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerSiteService(x, y *SiteService) bool {
+func EqualPointerSiteService(x, y *SiteService, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerSiteFarm(x, y []*SiteFarm) bool {
+func EqualSlicePointerSiteFarm(x, y []*SiteFarm, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSiteFarm(vx, vy) {
+		if !EqualPointerSiteFarm(vx, vy, opts...) {
 			return false
 		}
 	}

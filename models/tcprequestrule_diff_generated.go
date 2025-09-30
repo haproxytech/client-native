@@ -17,7 +17,11 @@
 
 package models
 
-func (rec TCPRequestRule) Diff(obj TCPRequestRule) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TCPRequestRule) Diff(obj TCPRequestRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Action != obj.Action {
 		diff["Action"] = []interface{}{rec.Action, obj.Action}
@@ -82,7 +86,7 @@ func (rec TCPRequestRule) Diff(obj TCPRequestRule) map[string][]interface{} {
 	if rec.ScIncID != obj.ScIncID {
 		diff["ScIncID"] = []interface{}{rec.ScIncID, obj.ScIncID}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt, opts...) {
 		diff["ScInt."+diffKey] = diffValue
 	}
 	if rec.ServerName != obj.ServerName {
@@ -100,7 +104,7 @@ func (rec TCPRequestRule) Diff(obj TCPRequestRule) map[string][]interface{} {
 	if rec.SwitchModeProto != obj.SwitchModeProto {
 		diff["SwitchModeProto"] = []interface{}{rec.SwitchModeProto, obj.SwitchModeProto}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout, opts...) {
 		diff["Timeout."+diffKey] = diffValue
 	}
 	if rec.TosValue != obj.TosValue {
@@ -109,7 +113,7 @@ func (rec TCPRequestRule) Diff(obj TCPRequestRule) map[string][]interface{} {
 	if rec.TrackKey != obj.TrackKey {
 		diff["TrackKey"] = []interface{}{rec.TrackKey, obj.TrackKey}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TrackStickCounter, obj.TrackStickCounter) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TrackStickCounter, obj.TrackStickCounter, opts...) {
 		diff["TrackStickCounter."+diffKey] = diffValue
 	}
 	if rec.TrackTable != obj.TrackTable {

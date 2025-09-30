@@ -19,9 +19,10 @@ package models
 
 import (
 	"github.com/go-openapi/strfmt"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec SslCertificate) Equal(obj SslCertificate) bool {
+func (rec SslCertificate) Equal(obj SslCertificate, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Algorithm == obj.Algorithm &&
 		rec.AuthorityKeyID == obj.AuthorityKeyID &&
 		rec.ChainIssuer == obj.ChainIssuer &&
@@ -31,12 +32,12 @@ func (rec SslCertificate) Equal(obj SslCertificate) bool {
 		rec.File == obj.File &&
 		rec.IPAddresses == obj.IPAddresses &&
 		rec.Issuers == obj.Issuers &&
-		EqualPointerStrfmtDateTime(rec.NotAfter, obj.NotAfter) &&
-		EqualPointerStrfmtDateTime(rec.NotBefore, obj.NotBefore) &&
+		EqualPointerStrfmtDateTime(rec.NotAfter, obj.NotAfter, opts...) &&
+		EqualPointerStrfmtDateTime(rec.NotBefore, obj.NotBefore, opts...) &&
 		rec.Serial == obj.Serial &&
 		rec.Sha1FingerPrint == obj.Sha1FingerPrint &&
 		rec.Sha256FingerPrint == obj.Sha256FingerPrint &&
-		EqualPointerInt64(rec.Size, obj.Size) &&
+		EqualPointerInt64(rec.Size, obj.Size, opts...) &&
 		rec.Status == obj.Status &&
 		rec.StorageName == obj.StorageName &&
 		rec.Subject == obj.Subject &&
@@ -44,7 +45,7 @@ func (rec SslCertificate) Equal(obj SslCertificate) bool {
 		rec.SubjectKeyID == obj.SubjectKeyID
 }
 
-func EqualPointerStrfmtDateTime(x, y *strfmt.DateTime) bool {
+func EqualPointerStrfmtDateTime(x, y *strfmt.DateTime, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

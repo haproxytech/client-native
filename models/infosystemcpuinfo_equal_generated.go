@@ -17,7 +17,11 @@
 
 package models
 
-func (rec InfoSystemCPUInfo) Equal(obj InfoSystemCPUInfo) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec InfoSystemCPUInfo) Equal(obj InfoSystemCPUInfo, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Model == obj.Model &&
 		rec.NumCpus == obj.NumCpus
 }

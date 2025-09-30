@@ -17,7 +17,11 @@
 
 package models
 
-func (rec StatsAuth) Equal(obj StatsAuth) bool {
-	return EqualPointerString(rec.Passwd, obj.Passwd) &&
-		EqualPointerString(rec.User, obj.User)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StatsAuth) Equal(obj StatsAuth, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Passwd, obj.Passwd, opts...) &&
+		EqualPointerString(rec.User, obj.User, opts...)
 }

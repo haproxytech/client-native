@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Global) Equal(obj Global) bool {
-	return rec.GlobalBase.Equal(obj.GlobalBase) &&
-		rec.LogTargetList.Equal(obj.LogTargetList)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Global) Equal(obj Global, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.GlobalBase.Equal(obj.GlobalBase, opts...) &&
+		rec.LogTargetList.Equal(obj.LogTargetList, opts...)
 }

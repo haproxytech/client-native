@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Ring) Equal(obj Ring) bool {
-	return rec.RingBase.Equal(obj.RingBase) &&
-		EqualMapStringServer(rec.Servers, obj.Servers)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Ring) Equal(obj Ring, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.RingBase.Equal(obj.RingBase, opts...) &&
+		EqualMapStringServer(rec.Servers, obj.Servers, opts...)
 }

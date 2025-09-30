@@ -17,7 +17,11 @@
 
 package models
 
-func (rec InfoSystemMemInfo) Equal(obj InfoSystemMemInfo) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec InfoSystemMemInfo) Equal(obj InfoSystemMemInfo, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.DataplaneapiMemory == obj.DataplaneapiMemory &&
 		rec.FreeMemory == obj.FreeMemory &&
 		rec.TotalMemory == obj.TotalMemory

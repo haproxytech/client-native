@@ -17,9 +17,13 @@
 
 package models
 
-func (rec CrtLoad) Diff(obj CrtLoad) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CrtLoad) Diff(obj CrtLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSliceString(rec.Domains, obj.Domains) {
+	for diffKey, diffValue := range DiffSliceString(rec.Domains, obj.Domains, opts...) {
 		diff["Domains"+diffKey] = diffValue
 	}
 	if rec.Acme != obj.Acme {

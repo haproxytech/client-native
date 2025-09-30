@@ -17,12 +17,16 @@
 
 package models
 
-func (rec RuntimeAPI) Diff(obj RuntimeAPI) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec RuntimeAPI) Diff(obj RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.BindParams.Diff(obj.BindParams) {
+	for diffKey, diffValue := range rec.BindParams.Diff(obj.BindParams, opts...) {
 		diff["BindParams."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address) {
+	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address, opts...) {
 		diff["Address."+diffKey] = diffValue
 	}
 	return diff

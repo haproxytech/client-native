@@ -17,19 +17,23 @@
 
 package models
 
-func (rec HTTPResponseRule) Equal(obj HTTPResponseRule) bool {
-	return EqualSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPResponseRule) Equal(obj HTTPResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders, opts...) &&
 		rec.ACLFile == obj.ACLFile &&
 		rec.ACLKeyfmt == obj.ACLKeyfmt &&
 		rec.BandwidthLimitLimit == obj.BandwidthLimitLimit &&
 		rec.BandwidthLimitName == obj.BandwidthLimitName &&
 		rec.BandwidthLimitPeriod == obj.BandwidthLimitPeriod &&
 		rec.CacheName == obj.CacheName &&
-		EqualPointerInt64(rec.CaptureID, obj.CaptureID) &&
+		EqualPointerInt64(rec.CaptureID, obj.CaptureID, opts...) &&
 		rec.CaptureSample == obj.CaptureSample &&
 		rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
-		EqualPointerInt64(rec.DenyStatus, obj.DenyStatus) &&
+		EqualPointerInt64(rec.DenyStatus, obj.DenyStatus, opts...) &&
 		rec.Expr == obj.Expr &&
 		rec.HdrFormat == obj.HdrFormat &&
 		rec.HdrMatch == obj.HdrMatch &&
@@ -42,20 +46,21 @@ func (rec HTTPResponseRule) Equal(obj HTTPResponseRule) bool {
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
 		rec.MarkValue == obj.MarkValue &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NiceValue == obj.NiceValue &&
-		EqualPointerInt64(rec.RedirCode, obj.RedirCode) &&
+		EqualPointerInt64(rec.RedirCode, obj.RedirCode, opts...) &&
 		rec.RedirOption == obj.RedirOption &&
 		rec.RedirType == obj.RedirType &&
 		rec.RedirValue == obj.RedirValue &&
 		rec.ReturnContent == obj.ReturnContent &&
 		rec.ReturnContentFormat == obj.ReturnContentFormat &&
-		EqualPointerString(rec.ReturnContentType, obj.ReturnContentType) &&
-		EqualPointerInt64(rec.ReturnStatusCode, obj.ReturnStatusCode) &&
+		EqualPointerString(rec.ReturnContentType, obj.ReturnContentType, opts...) &&
+		EqualPointerInt64(rec.ReturnStatusCode, obj.ReturnStatusCode, opts...) &&
 		rec.RstTTL == obj.RstTTL &&
 		rec.ScExpr == obj.ScExpr &&
 		rec.ScID == obj.ScID &&
 		rec.ScIdx == obj.ScIdx &&
-		EqualPointerInt64(rec.ScInt, obj.ScInt) &&
+		EqualPointerInt64(rec.ScInt, obj.ScInt, opts...) &&
 		rec.SpoeEngine == obj.SpoeEngine &&
 		rec.SpoeGroup == obj.SpoeGroup &&
 		rec.Status == obj.Status &&
@@ -65,13 +70,13 @@ func (rec HTTPResponseRule) Equal(obj HTTPResponseRule) bool {
 		rec.TimeoutType == obj.TimeoutType &&
 		rec.TosValue == obj.TosValue &&
 		rec.TrackScKey == obj.TrackScKey &&
-		EqualPointerInt64(rec.TrackScStickCounter, obj.TrackScStickCounter) &&
+		EqualPointerInt64(rec.TrackScStickCounter, obj.TrackScStickCounter, opts...) &&
 		rec.TrackScTable == obj.TrackScTable &&
 		rec.Type == obj.Type &&
 		rec.VarExpr == obj.VarExpr &&
 		rec.VarFormat == obj.VarFormat &&
 		rec.VarName == obj.VarName &&
 		rec.VarScope == obj.VarScope &&
-		EqualPointerInt64(rec.WaitAtLeast, obj.WaitAtLeast) &&
-		EqualPointerInt64(rec.WaitTime, obj.WaitTime)
+		EqualPointerInt64(rec.WaitAtLeast, obj.WaitAtLeast, opts...) &&
+		EqualPointerInt64(rec.WaitTime, obj.WaitTime, opts...)
 }

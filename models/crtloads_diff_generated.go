@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x CrtLoads) Diff(y CrtLoads) map[string][]interface{} {
-	return DiffCrtLoads(x, y)
+func (x CrtLoads) Diff(y CrtLoads, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffCrtLoads(x, y, opts...)
 }
 
-func DiffCrtLoads(x, y CrtLoads) map[string][]interface{} {
+func DiffCrtLoads(x, y CrtLoads, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffCrtLoads(x, y CrtLoads) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffCrtLoads(x, y CrtLoads) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerCrtLoad(x, y *CrtLoad) map[string][]interface{} {
+func DiffPointerCrtLoad(x, y *CrtLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

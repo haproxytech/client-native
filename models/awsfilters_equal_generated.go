@@ -17,12 +17,16 @@
 
 package models
 
-func (rec AwsFilters) Equal(obj AwsFilters) bool {
-	return EqualPointerString(rec.Key, obj.Key) &&
-		EqualPointerString(rec.Value, obj.Value)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec AwsFilters) Equal(obj AwsFilters, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Key, obj.Key, opts...) &&
+		EqualPointerString(rec.Value, obj.Value, opts...)
 }
 
-func EqualPointerString(x, y *string) bool {
+func EqualPointerString(x, y *string, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

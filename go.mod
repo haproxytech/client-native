@@ -17,6 +17,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/haproxytech/client-native/v5 v5.1.15
 	github.com/haproxytech/go-logger v1.1.0
+	github.com/haproxytech/go-method-gen v0.0.0-20251006115728-f80901b514c5
 	github.com/joho/godotenv v1.5.1
 	github.com/json-iterator/go v1.1.12
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
@@ -55,4 +56,5 @@ require (
 	golang.org/x/mod v0.28.0 // indirect
 	golang.org/x/net v0.44.0 // indirect
 	golang.org/x/sys v0.36.0 // indirect
+	mvdan.cc/gofumpt v0.9.1 // indirect
 )

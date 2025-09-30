@@ -17,25 +17,43 @@
 
 package models
 
-func (rec SiteFarm) Equal(obj SiteFarm) bool {
-	return EqualPointerBalance(rec.Balance, obj.Balance) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SiteFarm) Equal(obj SiteFarm, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerBalance(rec.Balance, obj.Balance, opts...) &&
 		rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
-		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor) &&
+		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) &&
 		rec.Mode == obj.Mode &&
 		rec.Name == obj.Name &&
-		EqualSlicePointerServer(rec.Servers, obj.Servers) &&
+		EqualSlicePointerServer(rec.Servers, obj.Servers, opts...) &&
 		rec.UseAs == obj.UseAs
 }
 
-func EqualSlicePointerServer(x, y []*Server) bool {
+func EqualSlicePointerServer(x, y []*Server, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerServer(vx, vy) {
+		if !EqualPointerServer(vx, vy, opts...) {
 			return false
 		}
 	}

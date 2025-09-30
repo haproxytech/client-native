@@ -17,7 +17,11 @@
 
 package models
 
-func (rec NativeStat) Diff(obj NativeStat) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec NativeStat) Diff(obj NativeStat, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.BackendName != obj.BackendName {
 		diff["BackendName"] = []interface{}{rec.BackendName, obj.BackendName}
@@ -25,7 +29,7 @@ func (rec NativeStat) Diff(obj NativeStat) map[string][]interface{} {
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range DiffPointerNativeStatStats(rec.Stats, obj.Stats) {
+	for diffKey, diffValue := range DiffPointerNativeStatStats(rec.Stats, obj.Stats, opts...) {
 		diff["Stats."+diffKey] = diffValue
 	}
 	if rec.Type != obj.Type {
@@ -34,7 +38,7 @@ func (rec NativeStat) Diff(obj NativeStat) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerNativeStatStats(x, y *NativeStatStats) map[string][]interface{} {
+func DiffPointerNativeStatStats(x, y *NativeStatStats, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

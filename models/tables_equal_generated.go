@@ -17,25 +17,43 @@
 
 package models
 
-func (x Tables) Equal(y Tables) bool {
-	return EqualTables(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Tables) Equal(y Tables, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualTables(x, y, opts...)
 }
 
-func EqualPointerTable(x, y *Table) bool {
+func EqualPointerTable(x, y *Table, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualTables(x, y Tables) bool {
+func EqualTables(x, y Tables, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerTable(vx, vy) {
+		if !EqualPointerTable(vx, vy, opts...) {
 			return false
 		}
 	}

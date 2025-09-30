@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SslOcspUpdate) Diff(obj SslOcspUpdate) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslOcspUpdate) Diff(obj SslOcspUpdate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.CertID != obj.CertID {
 		diff["CertID"] = []interface{}{rec.CertID, obj.CertID}

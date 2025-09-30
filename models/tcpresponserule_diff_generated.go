@@ -17,7 +17,11 @@
 
 package models
 
-func (rec TCPResponseRule) Diff(obj TCPResponseRule) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TCPResponseRule) Diff(obj TCPResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Action != obj.Action {
 		diff["Action"] = []interface{}{rec.Action, obj.Action}
@@ -67,7 +71,7 @@ func (rec TCPResponseRule) Diff(obj TCPResponseRule) map[string][]interface{} {
 	if rec.ScIdx != obj.ScIdx {
 		diff["ScIdx"] = []interface{}{rec.ScIdx, obj.ScIdx}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt, opts...) {
 		diff["ScInt."+diffKey] = diffValue
 	}
 	if rec.SpoeEngine != obj.SpoeEngine {
@@ -76,7 +80,7 @@ func (rec TCPResponseRule) Diff(obj TCPResponseRule) map[string][]interface{} {
 	if rec.SpoeGroup != obj.SpoeGroup {
 		diff["SpoeGroup"] = []interface{}{rec.SpoeGroup, obj.SpoeGroup}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout, opts...) {
 		diff["Timeout."+diffKey] = diffValue
 	}
 	if rec.TosValue != obj.TosValue {

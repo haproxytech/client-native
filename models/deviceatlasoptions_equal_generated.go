@@ -17,7 +17,11 @@
 
 package models
 
-func (rec DeviceAtlasOptions) Equal(obj DeviceAtlasOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DeviceAtlasOptions) Equal(obj DeviceAtlasOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.JSONFile == obj.JSONFile &&
 		rec.LogLevel == obj.LogLevel &&
 		rec.PropertiesCookie == obj.PropertiesCookie &&

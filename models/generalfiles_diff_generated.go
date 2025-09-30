@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x GeneralFiles) Diff(y GeneralFiles) map[string][]interface{} {
-	return DiffGeneralFiles(x, y)
+func (x GeneralFiles) Diff(y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffGeneralFiles(x, y, opts...)
 }
 
-func DiffGeneralFiles(x, y GeneralFiles) map[string][]interface{} {
+func DiffGeneralFiles(x, y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffGeneralFiles(x, y GeneralFiles) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffGeneralFiles(x, y GeneralFiles) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerGeneralFile(x, y *GeneralFile) map[string][]interface{} {
+func DiffPointerGeneralFile(x, y *GeneralFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

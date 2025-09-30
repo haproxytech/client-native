@@ -17,21 +17,25 @@
 
 package models
 
-func (rec ServerTemplate) Diff(obj ServerTemplate) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ServerTemplate) Diff(obj ServerTemplate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.ServerParams.Diff(obj.ServerParams) {
+	for diffKey, diffValue := range rec.ServerParams.Diff(obj.ServerParams, opts...) {
 		diff["ServerParams."+diffKey] = diffValue
 	}
 	if rec.Fqdn != obj.Fqdn {
 		diff["Fqdn"] = []interface{}{rec.Fqdn, obj.Fqdn}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ID, obj.ID) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ID, obj.ID, opts...) {
 		diff["ID."+diffKey] = diffValue
 	}
 	if rec.NumOrRange != obj.NumOrRange {
 		diff["NumOrRange"] = []interface{}{rec.NumOrRange, obj.NumOrRange}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
 	if rec.Prefix != obj.Prefix {

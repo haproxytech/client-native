@@ -17,25 +17,43 @@
 
 package models
 
-func (x ServerTemplates) Equal(y ServerTemplates) bool {
-	return EqualServerTemplates(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x ServerTemplates) Equal(y ServerTemplates, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualServerTemplates(x, y, opts...)
 }
 
-func EqualPointerServerTemplate(x, y *ServerTemplate) bool {
+func EqualPointerServerTemplate(x, y *ServerTemplate, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualServerTemplates(x, y ServerTemplates) bool {
+func EqualServerTemplates(x, y ServerTemplates, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerServerTemplate(vx, vy) {
+		if !EqualPointerServerTemplate(vx, vy, opts...) {
 			return false
 		}
 	}

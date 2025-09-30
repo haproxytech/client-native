@@ -17,11 +17,15 @@
 
 package models
 
-func (x SpoeScope) Diff(y SpoeScope) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x SpoeScope) Diff(y SpoeScope, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	return DiffSpoeScope(x, y)
 }
 
-func DiffSpoeScope(x, y SpoeScope) map[string][]interface{} {
+func DiffSpoeScope(x, y SpoeScope, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x != y {
 		diff["self"] = []interface{}{x, y}

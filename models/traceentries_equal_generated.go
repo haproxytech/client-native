@@ -17,25 +17,43 @@
 
 package models
 
-func (x TraceEntries) Equal(y TraceEntries) bool {
-	return EqualTraceEntries(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x TraceEntries) Equal(y TraceEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualTraceEntries(x, y, opts...)
 }
 
-func EqualPointerTraceEntry(x, y *TraceEntry) bool {
+func EqualPointerTraceEntry(x, y *TraceEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualTraceEntries(x, y TraceEntries) bool {
+func EqualTraceEntries(x, y TraceEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerTraceEntry(vx, vy) {
+		if !EqualPointerTraceEntry(vx, vy, opts...) {
 			return false
 		}
 	}

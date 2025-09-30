@@ -17,6 +17,11 @@
 
 package models
 
-func (rec TraceEntry) Equal(obj TraceEntry) bool {
-	return rec.Trace == obj.Trace
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TraceEntry) Equal(obj TraceEntry, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		rec.Trace == obj.Trace
 }

@@ -17,18 +17,36 @@
 
 package models
 
-func (x Groups) Equal(y Groups) bool {
-	return EqualGroups(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Groups) Equal(y Groups, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualGroups(x, y, opts...)
 }
 
-func EqualGroups(x, y Groups) bool {
+func EqualGroups(x, y Groups, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerGroup(vx, vy) {
+		if !EqualPointerGroup(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualGroups(x, y Groups) bool {
 	return true
 }
 
-func EqualPointerGroup(x, y *Group) bool {
+func EqualPointerGroup(x, y *Group, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

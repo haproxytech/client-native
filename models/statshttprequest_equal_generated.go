@@ -17,9 +17,13 @@
 
 package models
 
-func (rec StatsHTTPRequest) Equal(obj StatsHTTPRequest) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StatsHTTPRequest) Equal(obj StatsHTTPRequest, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
 		rec.Realm == obj.Realm &&
-		EqualPointerString(rec.Type, obj.Type)
+		EqualPointerString(rec.Type, obj.Type, opts...)
 }

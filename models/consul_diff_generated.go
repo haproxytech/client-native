@@ -17,9 +17,13 @@
 
 package models
 
-func (rec Consul) Diff(obj Consul) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Consul) Diff(obj Consul, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address) {
+	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address, opts...) {
 		diff["Address."+diffKey] = diffValue
 	}
 	if rec.Defaults != obj.Defaults {
@@ -28,19 +32,19 @@ func (rec Consul) Diff(obj Consul) map[string][]interface{} {
 	if rec.Description != obj.Description {
 		diff["Description"] = []interface{}{rec.Description, obj.Description}
 	}
-	for diffKey, diffValue := range DiffPointerBool(rec.Enabled, obj.Enabled) {
+	for diffKey, diffValue := range DiffPointerBool(rec.Enabled, obj.Enabled, opts...) {
 		diff["Enabled."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.HealthCheckPolicy, obj.HealthCheckPolicy) {
+	for diffKey, diffValue := range DiffPointerString(rec.HealthCheckPolicy, obj.HealthCheckPolicy, opts...) {
 		diff["HealthCheckPolicy."+diffKey] = diffValue
 	}
 	if rec.HealthCheckPolicyMin != obj.HealthCheckPolicyMin {
 		diff["HealthCheckPolicyMin"] = []interface{}{rec.HealthCheckPolicyMin, obj.HealthCheckPolicyMin}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.ID, obj.ID) {
+	for diffKey, diffValue := range DiffPointerString(rec.ID, obj.ID, opts...) {
 		diff["ID."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Mode, obj.Mode) {
+	for diffKey, diffValue := range DiffPointerString(rec.Mode, obj.Mode, opts...) {
 		diff["Mode."+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
@@ -49,25 +53,25 @@ func (rec Consul) Diff(obj Consul) map[string][]interface{} {
 	if rec.Namespace != obj.Namespace {
 		diff["Namespace"] = []interface{}{rec.Namespace, obj.Namespace}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RetryTimeout, obj.RetryTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RetryTimeout, obj.RetryTimeout, opts...) {
 		diff["RetryTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase, opts...) {
 		diff["ServerSlotsBase."+diffKey] = diffValue
 	}
 	if rec.ServerSlotsGrowthIncrement != obj.ServerSlotsGrowthIncrement {
 		diff["ServerSlotsGrowthIncrement"] = []interface{}{rec.ServerSlotsGrowthIncrement, obj.ServerSlotsGrowthIncrement}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType) {
+	for diffKey, diffValue := range DiffPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType, opts...) {
 		diff["ServerSlotsGrowthType."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.ServiceAllowlist, obj.ServiceAllowlist) {
+	for diffKey, diffValue := range DiffSliceString(rec.ServiceAllowlist, obj.ServiceAllowlist, opts...) {
 		diff["ServiceAllowlist"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.ServiceDenylist, obj.ServiceDenylist) {
+	for diffKey, diffValue := range DiffSliceString(rec.ServiceDenylist, obj.ServiceDenylist, opts...) {
 		diff["ServiceDenylist"+diffKey] = diffValue
 	}
 	if rec.ServiceNameRegexp != obj.ServiceNameRegexp {

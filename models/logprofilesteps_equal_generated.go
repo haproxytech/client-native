@@ -17,18 +17,36 @@
 
 package models
 
-func (x LogProfileSteps) Equal(y LogProfileSteps) bool {
-	return EqualLogProfileSteps(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x LogProfileSteps) Equal(y LogProfileSteps, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualLogProfileSteps(x, y, opts...)
 }
 
-func EqualLogProfileSteps(x, y LogProfileSteps) bool {
+func EqualLogProfileSteps(x, y LogProfileSteps, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerLogProfileStep(vx, vy) {
+		if !EqualPointerLogProfileStep(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualLogProfileSteps(x, y LogProfileSteps) bool {
 	return true
 }
 
-func EqualPointerLogProfileStep(x, y *LogProfileStep) bool {
+func EqualPointerLogProfileStep(x, y *LogProfileStep, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

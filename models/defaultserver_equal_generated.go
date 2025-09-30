@@ -17,6 +17,10 @@
 
 package models
 
-func (rec DefaultServer) Equal(obj DefaultServer) bool {
-	return rec.ServerParams.Equal(obj.ServerParams)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DefaultServer) Equal(obj DefaultServer, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.ServerParams.Equal(obj.ServerParams, opts...)
 }

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec InfoSystemCPUInfo) Diff(obj InfoSystemCPUInfo) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec InfoSystemCPUInfo) Diff(obj InfoSystemCPUInfo, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Model != obj.Model {
 		diff["Model"] = []interface{}{rec.Model, obj.Model}

@@ -17,13 +17,18 @@
 
 package models
 
-func (rec LogTarget) Equal(obj LogTarget) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LogTarget) Equal(obj LogTarget, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
 		rec.Facility == obj.Facility &&
 		rec.Format == obj.Format &&
 		rec.Global == obj.Global &&
 		rec.Length == obj.Length &&
 		rec.Level == obj.Level &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Minlevel == obj.Minlevel &&
 		rec.Nolog == obj.Nolog &&
 		rec.Profile == obj.Profile &&

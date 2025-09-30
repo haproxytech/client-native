@@ -17,7 +17,11 @@
 
 package models
 
-func (rec RuntimeAPI) Equal(obj RuntimeAPI) bool {
-	return rec.BindParams.Equal(obj.BindParams) &&
-		EqualPointerString(rec.Address, obj.Address)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec RuntimeAPI) Equal(obj RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.BindParams.Equal(obj.BindParams, opts...) &&
+		EqualPointerString(rec.Address, obj.Address, opts...)
 }

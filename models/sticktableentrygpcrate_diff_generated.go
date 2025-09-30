@@ -17,12 +17,16 @@
 
 package models
 
-func (rec StickTableEntryGpcRate) Diff(obj StickTableEntryGpcRate) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StickTableEntryGpcRate) Diff(obj StickTableEntryGpcRate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Idx != obj.Idx {
 		diff["Idx"] = []interface{}{rec.Idx, obj.Idx}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Value, obj.Value) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Value, obj.Value, opts...) {
 		diff["Value."+diffKey] = diffValue
 	}
 	return diff

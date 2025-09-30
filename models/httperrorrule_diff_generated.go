@@ -17,9 +17,13 @@
 
 package models
 
-func (rec HTTPErrorRule) Diff(obj HTTPErrorRule) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPErrorRule) Diff(obj HTTPErrorRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders) {
+	for diffKey, diffValue := range DiffSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders, opts...) {
 		diff["ReturnHeaders"+diffKey] = diffValue
 	}
 	if rec.ReturnContent != obj.ReturnContent {
@@ -28,7 +32,7 @@ func (rec HTTPErrorRule) Diff(obj HTTPErrorRule) map[string][]interface{} {
 	if rec.ReturnContentFormat != obj.ReturnContentFormat {
 		diff["ReturnContentFormat"] = []interface{}{rec.ReturnContentFormat, obj.ReturnContentFormat}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.ReturnContentType, obj.ReturnContentType) {
+	for diffKey, diffValue := range DiffPointerString(rec.ReturnContentType, obj.ReturnContentType, opts...) {
 		diff["ReturnContentType."+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {

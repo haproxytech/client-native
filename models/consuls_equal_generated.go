@@ -17,18 +17,36 @@
 
 package models
 
-func (x Consuls) Equal(y Consuls) bool {
-	return EqualConsuls(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Consuls) Equal(y Consuls, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualConsuls(x, y, opts...)
 }
 
-func EqualConsuls(x, y Consuls) bool {
+func EqualConsuls(x, y Consuls, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerConsul(vx, vy) {
+		if !EqualPointerConsul(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualConsuls(x, y Consuls) bool {
 	return true
 }
 
-func EqualPointerConsul(x, y *Consul) bool {
+func EqualPointerConsul(x, y *Consul, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

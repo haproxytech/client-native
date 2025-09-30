@@ -17,25 +17,43 @@
 
 package models
 
-func (x RuntimeServers) Equal(y RuntimeServers) bool {
-	return EqualRuntimeServers(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x RuntimeServers) Equal(y RuntimeServers, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualRuntimeServers(x, y, opts...)
 }
 
-func EqualPointerRuntimeServer(x, y *RuntimeServer) bool {
+func EqualPointerRuntimeServer(x, y *RuntimeServer, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualRuntimeServers(x, y RuntimeServers) bool {
+func EqualRuntimeServers(x, y RuntimeServers, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerRuntimeServer(vx, vy) {
+		if !EqualPointerRuntimeServer(vx, vy, opts...) {
 			return false
 		}
 	}

@@ -19,23 +19,36 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Resolver) Diff(obj Resolver) map[string][]interface{} {
+func (rec Resolver) Diff(obj Resolver, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.ResolverBase.Diff(obj.ResolverBase) {
+	for diffKey, diffValue := range rec.ResolverBase.Diff(obj.ResolverBase, opts...) {
 		diff["ResolverBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringNameserver(rec.Nameservers, obj.Nameservers) {
+	for diffKey, diffValue := range DiffMapStringNameserver(rec.Nameservers, obj.Nameservers, opts...) {
 		diff["Nameservers"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringNameserver(x, y map[string]Nameserver) map[string][]interface{} {
+func DiffMapStringNameserver(x, y map[string]Nameserver, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

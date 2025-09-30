@@ -17,9 +17,13 @@
 
 package models
 
-func (rec OCSPResponses) Equal(obj OCSPResponses) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec OCSPResponses) Equal(obj OCSPResponses, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.CertStatus == obj.CertStatus &&
-		EqualPointerCertificateID(rec.CertificateID, obj.CertificateID) &&
+		EqualPointerCertificateID(rec.CertificateID, obj.CertificateID, opts...) &&
 		rec.NextUpdate.Equal(obj.NextUpdate) &&
 		rec.RevocationReason == obj.RevocationReason &&
 		rec.ThisUpdate.Equal(obj.ThisUpdate)

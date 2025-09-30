@@ -17,12 +17,17 @@
 
 package models
 
-func (rec MailersSectionBase) Diff(obj MailersSectionBase) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec MailersSectionBase) Diff(obj MailersSectionBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
+
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout, opts...) {
 		diff["Timeout."+diffKey] = diffValue
 	}
 	return diff

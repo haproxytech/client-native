@@ -17,9 +17,13 @@
 
 package models
 
-func (rec SslCrtListEntry) Diff(obj SslCrtListEntry) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCrtListEntry) Diff(obj SslCrtListEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSliceString(rec.SNIFilter, obj.SNIFilter) {
+	for diffKey, diffValue := range DiffSliceString(rec.SNIFilter, obj.SNIFilter, opts...) {
 		diff["SNIFilter"+diffKey] = diffValue
 	}
 	if rec.SSLBindConfig != obj.SSLBindConfig {

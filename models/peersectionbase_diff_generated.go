@@ -17,12 +17,16 @@
 
 package models
 
-func (rec PeerSectionBase) Diff(obj PeerSectionBase) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PeerSectionBase) Diff(obj PeerSectionBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerDefaultBind(rec.DefaultBind, obj.DefaultBind) {
+	for diffKey, diffValue := range DiffPointerDefaultBind(rec.DefaultBind, obj.DefaultBind, opts...) {
 		diff["DefaultBind."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerDefaultServer(rec.DefaultServer, obj.DefaultServer) {
+	for diffKey, diffValue := range DiffPointerDefaultServer(rec.DefaultServer, obj.DefaultServer, opts...) {
 		diff["DefaultServer."+diffKey] = diffValue
 	}
 	if rec.Disabled != obj.Disabled {
@@ -40,7 +44,7 @@ func (rec PeerSectionBase) Diff(obj PeerSectionBase) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerDefaultBind(x, y *DefaultBind) map[string][]interface{} {
+func DiffPointerDefaultBind(x, y *DefaultBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

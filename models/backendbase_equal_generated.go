@@ -17,274 +17,293 @@
 
 package models
 
-func (rec BackendBase) Equal(obj BackendBase) bool {
-	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) &&
-		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors) &&
-		EqualSlicePointerForcePersist(rec.ForcePersistList, obj.ForcePersistList) &&
-		EqualSlicePointerIgnorePersist(rec.IgnorePersistList, obj.IgnorePersistList) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
+		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) &&
+		EqualSlicePointerForcePersist(rec.ForcePersistList, obj.ForcePersistList, opts...) &&
+		EqualSlicePointerIgnorePersist(rec.IgnorePersistList, obj.IgnorePersistList, opts...) &&
 		rec.Abortonclose == obj.Abortonclose &&
 		rec.AcceptInvalidHTTPResponse == obj.AcceptInvalidHTTPResponse &&
 		rec.AcceptUnsafeViolationsInHTTPResponse == obj.AcceptUnsafeViolationsInHTTPResponse &&
 		rec.AdvCheck == obj.AdvCheck &&
 		rec.Allbackups == obj.Allbackups &&
-		EqualPointerBalance(rec.Balance, obj.Balance) &&
-		EqualPointerInt64(rec.CheckTimeout, obj.CheckTimeout) &&
+		EqualPointerBalance(rec.Balance, obj.Balance, opts...) &&
+		EqualPointerInt64(rec.CheckTimeout, obj.CheckTimeout, opts...) &&
 		rec.Checkcache == obj.Checkcache &&
-		EqualPointerCompression(rec.Compression, obj.Compression) &&
-		EqualPointerInt64(rec.ConnectTimeout, obj.ConnectTimeout) &&
-		EqualPointerCookie(rec.Cookie, obj.Cookie) &&
-		EqualPointerDefaultServer(rec.DefaultServer, obj.DefaultServer) &&
+		EqualPointerCompression(rec.Compression, obj.Compression, opts...) &&
+		EqualPointerInt64(rec.ConnectTimeout, obj.ConnectTimeout, opts...) &&
+		EqualPointerCookie(rec.Cookie, obj.Cookie, opts...) &&
+		EqualPointerDefaultServer(rec.DefaultServer, obj.DefaultServer, opts...) &&
 		rec.Description == obj.Description &&
 		rec.Disabled == obj.Disabled &&
 		rec.DynamicCookieKey == obj.DynamicCookieKey &&
-		EqualPointerEmailAlert(rec.EmailAlert, obj.EmailAlert) &&
+		EqualPointerEmailAlert(rec.EmailAlert, obj.EmailAlert, opts...) &&
 		rec.Enabled == obj.Enabled &&
-		EqualPointerErrorloc(rec.Errorloc302, obj.Errorloc302) &&
-		EqualPointerErrorloc(rec.Errorloc303, obj.Errorloc303) &&
+		EqualPointerErrorloc(rec.Errorloc302, obj.Errorloc302, opts...) &&
+		EqualPointerErrorloc(rec.Errorloc303, obj.Errorloc303, opts...) &&
 		rec.ExternalCheck == obj.ExternalCheck &&
 		rec.ExternalCheckCommand == obj.ExternalCheckCommand &&
 		rec.ExternalCheckPath == obj.ExternalCheckPath &&
-		EqualPointerBackendForcePersist(rec.ForcePersist, obj.ForcePersist) &&
-		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor) &&
+		EqualPointerBackendForcePersist(rec.ForcePersist, obj.ForcePersist, opts...) &&
+		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) &&
 		rec.From == obj.From &&
-		EqualPointerInt64(rec.Fullconn, obj.Fullconn) &&
+		EqualPointerInt64(rec.Fullconn, obj.Fullconn, opts...) &&
 		rec.GUID == obj.GUID &&
 		rec.H1CaseAdjustBogusServer == obj.H1CaseAdjustBogusServer &&
-		EqualPointerInt64(rec.HashBalanceFactor, obj.HashBalanceFactor) &&
+		EqualPointerInt64(rec.HashBalanceFactor, obj.HashBalanceFactor, opts...) &&
 		rec.HashPreserveAffinity == obj.HashPreserveAffinity &&
-		EqualPointerHashType(rec.HashType, obj.HashType) &&
+		EqualPointerHashType(rec.HashType, obj.HashType, opts...) &&
 		rec.HTTPBufferRequest == obj.HTTPBufferRequest &&
 		rec.HTTPDropRequestTrailers == obj.HTTPDropRequestTrailers &&
 		rec.HTTPNoDelay == obj.HTTPNoDelay &&
 		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
-		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout) &&
+		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&
 		rec.HTTPPretendKeepalive == obj.HTTPPretendKeepalive &&
 		rec.HTTPProxy == obj.HTTPProxy &&
-		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout) &&
+		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) &&
 		rec.HTTPRestrictReqHdrNames == obj.HTTPRestrictReqHdrNames &&
 		rec.HTTPReuse == obj.HTTPReuse &&
-		EqualPointerString(rec.HTTPSendNameHeader, obj.HTTPSendNameHeader) &&
-		EqualPointerHttpchkParams(rec.HttpchkParams, obj.HttpchkParams) &&
-		EqualPointerInt64(rec.ID, obj.ID) &&
-		EqualPointerBackendIgnorePersist(rec.IgnorePersist, obj.IgnorePersist) &&
+		EqualPointerString(rec.HTTPSendNameHeader, obj.HTTPSendNameHeader, opts...) &&
+		EqualPointerHttpchkParams(rec.HttpchkParams, obj.HttpchkParams, opts...) &&
+		EqualPointerInt64(rec.ID, obj.ID, opts...) &&
+		EqualPointerBackendIgnorePersist(rec.IgnorePersist, obj.IgnorePersist, opts...) &&
 		rec.IndependentStreams == obj.IndependentStreams &&
 		rec.LoadServerStateFromFile == obj.LoadServerStateFromFile &&
 		rec.LogHealthChecks == obj.LogHealthChecks &&
 		rec.LogTag == obj.LogTag &&
-		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue) &&
+		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
-		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams) &&
+		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Nolinger == obj.Nolinger &&
-		EqualPointerOriginalto(rec.Originalto, obj.Originalto) &&
+		EqualPointerOriginalto(rec.Originalto, obj.Originalto, opts...) &&
 		rec.Persist == obj.Persist &&
-		EqualPointerPersistRule(rec.PersistRule, obj.PersistRule) &&
-		EqualPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams) &&
+		EqualPointerPersistRule(rec.PersistRule, obj.PersistRule, opts...) &&
+		EqualPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams, opts...) &&
 		rec.PreferLastServer == obj.PreferLastServer &&
-		EqualPointerInt64(rec.QueueTimeout, obj.QueueTimeout) &&
-		EqualPointerRedispatch(rec.Redispatch, obj.Redispatch) &&
-		EqualPointerInt64(rec.Retries, obj.Retries) &&
+		EqualPointerInt64(rec.QueueTimeout, obj.QueueTimeout, opts...) &&
+		EqualPointerRedispatch(rec.Redispatch, obj.Redispatch, opts...) &&
+		EqualPointerInt64(rec.Retries, obj.Retries, opts...) &&
 		rec.RetryOn == obj.RetryOn &&
-		EqualPointerInt64(rec.ServerFinTimeout, obj.ServerFinTimeout) &&
+		EqualPointerInt64(rec.ServerFinTimeout, obj.ServerFinTimeout, opts...) &&
 		rec.ServerStateFileName == obj.ServerStateFileName &&
-		EqualPointerInt64(rec.ServerTimeout, obj.ServerTimeout) &&
-		EqualPointerSmtpchkParams(rec.SmtpchkParams, obj.SmtpchkParams) &&
-		EqualPointerSource(rec.Source, obj.Source) &&
+		EqualPointerInt64(rec.ServerTimeout, obj.ServerTimeout, opts...) &&
+		EqualPointerSmtpchkParams(rec.SmtpchkParams, obj.SmtpchkParams, opts...) &&
+		EqualPointerSource(rec.Source, obj.Source, opts...) &&
 		rec.SpliceAuto == obj.SpliceAuto &&
 		rec.SpliceRequest == obj.SpliceRequest &&
 		rec.SpliceResponse == obj.SpliceResponse &&
 		rec.SpopCheck == obj.SpopCheck &&
 		rec.Srvtcpka == obj.Srvtcpka &&
-		EqualPointerInt64(rec.SrvtcpkaCnt, obj.SrvtcpkaCnt) &&
-		EqualPointerInt64(rec.SrvtcpkaIdle, obj.SrvtcpkaIdle) &&
-		EqualPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl) &&
-		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions) &&
-		EqualPointerConfigStickTable(rec.StickTable, obj.StickTable) &&
-		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout) &&
+		EqualPointerInt64(rec.SrvtcpkaCnt, obj.SrvtcpkaCnt, opts...) &&
+		EqualPointerInt64(rec.SrvtcpkaIdle, obj.SrvtcpkaIdle, opts...) &&
+		EqualPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl, opts...) &&
+		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) &&
+		EqualPointerConfigStickTable(rec.StickTable, obj.StickTable, opts...) &&
+		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) &&
 		rec.TCPSmartConnect == obj.TCPSmartConnect &&
 		rec.Tcpka == obj.Tcpka &&
 		rec.Transparent == obj.Transparent &&
-		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout) &&
+		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout, opts...) &&
 		rec.UseFCGIApp == obj.UseFCGIApp
 }
 
-func EqualPointerBackendForcePersist(x, y *BackendForcePersist) bool {
+func EqualPointerBackendForcePersist(x, y *BackendForcePersist, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerBackendIgnorePersist(x, y *BackendIgnorePersist) bool {
+func EqualPointerBackendIgnorePersist(x, y *BackendIgnorePersist, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerBalance(x, y *Balance) bool {
+func EqualPointerBalance(x, y *Balance, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerCompression(x, y *Compression) bool {
+func EqualPointerCompression(x, y *Compression, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerConfigStickTable(x, y *ConfigStickTable) bool {
+func EqualPointerConfigStickTable(x, y *ConfigStickTable, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerCookie(x, y *Cookie) bool {
+func EqualPointerCookie(x, y *Cookie, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerDefaultServer(x, y *DefaultServer) bool {
+func EqualPointerDefaultServer(x, y *DefaultServer, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerEmailAlert(x, y *EmailAlert) bool {
+func EqualPointerEmailAlert(x, y *EmailAlert, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerErrorfile(x, y *Errorfile) bool {
+func EqualPointerErrorfile(x, y *Errorfile, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerErrorfiles(x, y *Errorfiles) bool {
+func EqualPointerErrorfiles(x, y *Errorfiles, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerErrorloc(x, y *Errorloc) bool {
+func EqualPointerErrorloc(x, y *Errorloc, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerForcePersist(x, y *ForcePersist) bool {
+func EqualPointerForcePersist(x, y *ForcePersist, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerForwardfor(x, y *Forwardfor) bool {
+func EqualPointerForwardfor(x, y *Forwardfor, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerHashType(x, y *HashType) bool {
+func EqualPointerHashType(x, y *HashType, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerHttpchkParams(x, y *HttpchkParams) bool {
+func EqualPointerHttpchkParams(x, y *HttpchkParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerIgnorePersist(x, y *IgnorePersist) bool {
+func EqualPointerIgnorePersist(x, y *IgnorePersist, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerMysqlCheckParams(x, y *MysqlCheckParams) bool {
+func EqualPointerMysqlCheckParams(x, y *MysqlCheckParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerOriginalto(x, y *Originalto) bool {
+func EqualPointerOriginalto(x, y *Originalto, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerPersistRule(x, y *PersistRule) bool {
+func EqualPointerPersistRule(x, y *PersistRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerPgsqlCheckParams(x, y *PgsqlCheckParams) bool {
+func EqualPointerPgsqlCheckParams(x, y *PgsqlCheckParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerRedispatch(x, y *Redispatch) bool {
+func EqualPointerRedispatch(x, y *Redispatch, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerSmtpchkParams(x, y *SmtpchkParams) bool {
+func EqualPointerSmtpchkParams(x, y *SmtpchkParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerSource(x, y *Source) bool {
+func EqualPointerSource(x, y *Source, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerStatsOptions(x, y *StatsOptions) bool {
+func EqualPointerStatsOptions(x, y *StatsOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerErrorfile(x, y []*Errorfile) bool {
+func EqualSlicePointerErrorfile(x, y []*Errorfile, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerErrorfile(vx, vy) {
+		if !EqualPointerErrorfile(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -292,14 +311,28 @@ func EqualSlicePointerErrorfile(x, y []*Errorfile) bool {
 	return true
 }
 
-func EqualSlicePointerErrorfiles(x, y []*Errorfiles) bool {
+func EqualSlicePointerErrorfiles(x, y []*Errorfiles, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerErrorfiles(vx, vy) {
+		if !EqualPointerErrorfiles(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -307,14 +340,28 @@ func EqualSlicePointerErrorfiles(x, y []*Errorfiles) bool {
 	return true
 }
 
-func EqualSlicePointerForcePersist(x, y []*ForcePersist) bool {
+func EqualSlicePointerForcePersist(x, y []*ForcePersist, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerForcePersist(vx, vy) {
+		if !EqualPointerForcePersist(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -322,14 +369,28 @@ func EqualSlicePointerForcePersist(x, y []*ForcePersist) bool {
 	return true
 }
 
-func EqualSlicePointerIgnorePersist(x, y []*IgnorePersist) bool {
+func EqualSlicePointerIgnorePersist(x, y []*IgnorePersist, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerIgnorePersist(vx, vy) {
+		if !EqualPointerIgnorePersist(vx, vy, opts...) {
 			return false
 		}
 	}

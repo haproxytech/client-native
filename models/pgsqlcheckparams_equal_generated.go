@@ -17,6 +17,10 @@
 
 package models
 
-func (rec PgsqlCheckParams) Equal(obj PgsqlCheckParams) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PgsqlCheckParams) Equal(obj PgsqlCheckParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Username == obj.Username
 }

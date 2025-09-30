@@ -17,18 +17,36 @@
 
 package models
 
-func (x HTTPRequestRules) Equal(y HTTPRequestRules) bool {
-	return EqualHTTPRequestRules(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x HTTPRequestRules) Equal(y HTTPRequestRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualHTTPRequestRules(x, y, opts...)
 }
 
-func EqualHTTPRequestRules(x, y HTTPRequestRules) bool {
+func EqualHTTPRequestRules(x, y HTTPRequestRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerHTTPRequestRule(vx, vy) {
+		if !EqualPointerHTTPRequestRule(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualHTTPRequestRules(x, y HTTPRequestRules) bool {
 	return true
 }
 
-func EqualPointerHTTPRequestRule(x, y *HTTPRequestRule) bool {
+func EqualPointerHTTPRequestRule(x, y *HTTPRequestRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

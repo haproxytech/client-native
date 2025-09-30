@@ -17,8 +17,12 @@
 
 package models
 
-func (rec Source) Equal(obj Source) bool {
-	return EqualPointerString(rec.Address, obj.Address) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Source) Equal(obj Source, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Address, obj.Address, opts...) &&
 		rec.AddressSecond == obj.AddressSecond &&
 		rec.Hdr == obj.Hdr &&
 		rec.Interface == obj.Interface &&

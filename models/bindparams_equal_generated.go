@@ -17,7 +17,11 @@
 
 package models
 
-func (rec BindParams) Equal(obj BindParams) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AcceptNetscalerCip == obj.AcceptNetscalerCip &&
 		rec.AcceptProxy == obj.AcceptProxy &&
 		rec.Allow0rtt == obj.Allow0rtt &&
@@ -34,7 +38,7 @@ func (rec BindParams) Equal(obj BindParams) bool {
 		rec.CrtIgnoreErr == obj.CrtIgnoreErr &&
 		rec.CrtList == obj.CrtList &&
 		rec.Curves == obj.Curves &&
-		EqualSliceString(rec.DefaultCrtList, obj.DefaultCrtList) &&
+		EqualSliceString(rec.DefaultCrtList, obj.DefaultCrtList, opts...) &&
 		rec.DeferAccept == obj.DeferAccept &&
 		rec.Ecdhe == obj.Ecdhe &&
 		rec.ExposeFdListeners == obj.ExposeFdListeners &&
@@ -49,7 +53,7 @@ func (rec BindParams) Equal(obj BindParams) bool {
 		rec.Group == obj.Group &&
 		rec.GUIDPrefix == obj.GUIDPrefix &&
 		rec.ID == obj.ID &&
-		EqualPointerInt64(rec.IdlePing, obj.IdlePing) &&
+		EqualPointerInt64(rec.IdlePing, obj.IdlePing, opts...) &&
 		rec.Interface == obj.Interface &&
 		rec.Label == obj.Label &&
 		rec.Level == obj.Level &&
@@ -75,8 +79,8 @@ func (rec BindParams) Equal(obj BindParams) bool {
 		rec.QuicCcAlgo == obj.QuicCcAlgo &&
 		rec.QuicForceRetry == obj.QuicForceRetry &&
 		rec.QuicSocket == obj.QuicSocket &&
-		EqualPointerInt64(rec.QuicCcAlgoBurstSize, obj.QuicCcAlgoBurstSize) &&
-		EqualPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow) &&
+		EqualPointerInt64(rec.QuicCcAlgoBurstSize, obj.QuicCcAlgoBurstSize, opts...) &&
+		EqualPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow, opts...) &&
 		rec.SeverityOutput == obj.SeverityOutput &&
 		rec.Sigalgs == obj.Sigalgs &&
 		rec.Ssl == obj.Ssl &&
@@ -86,7 +90,7 @@ func (rec BindParams) Equal(obj BindParams) bool {
 		rec.SslMinVer == obj.SslMinVer &&
 		rec.Sslv3 == obj.Sslv3 &&
 		rec.StrictSni == obj.StrictSni &&
-		EqualPointerInt64(rec.TCPUserTimeout, obj.TCPUserTimeout) &&
+		EqualPointerInt64(rec.TCPUserTimeout, obj.TCPUserTimeout, opts...) &&
 		rec.Tfo == obj.Tfo &&
 		rec.Thread == obj.Thread &&
 		rec.TLSTicketKeys == obj.TLSTicketKeys &&

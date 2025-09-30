@@ -17,9 +17,13 @@
 
 package models
 
-func (rec Source) Diff(obj Source) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Source) Diff(obj Source, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address) {
+	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address, opts...) {
 		diff["Address."+diffKey] = diffValue
 	}
 	if rec.AddressSecond != obj.AddressSecond {

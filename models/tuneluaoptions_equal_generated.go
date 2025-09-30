@@ -17,14 +17,18 @@
 
 package models
 
-func (rec TuneLuaOptions) Equal(obj TuneLuaOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneLuaOptions) Equal(obj TuneLuaOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BoolSampleConversion == obj.BoolSampleConversion &&
-		EqualPointerInt64(rec.BurstTimeout, obj.BurstTimeout) &&
+		EqualPointerInt64(rec.BurstTimeout, obj.BurstTimeout, opts...) &&
 		rec.ForcedYield == obj.ForcedYield &&
 		rec.LogLoggers == obj.LogLoggers &&
 		rec.LogStderr == obj.LogStderr &&
-		EqualPointerInt64(rec.Maxmem, obj.Maxmem) &&
-		EqualPointerInt64(rec.ServiceTimeout, obj.ServiceTimeout) &&
-		EqualPointerInt64(rec.SessionTimeout, obj.SessionTimeout) &&
-		EqualPointerInt64(rec.TaskTimeout, obj.TaskTimeout)
+		EqualPointerInt64(rec.Maxmem, obj.Maxmem, opts...) &&
+		EqualPointerInt64(rec.ServiceTimeout, obj.ServiceTimeout, opts...) &&
+		EqualPointerInt64(rec.SessionTimeout, obj.SessionTimeout, opts...) &&
+		EqualPointerInt64(rec.TaskTimeout, obj.TaskTimeout, opts...)
 }

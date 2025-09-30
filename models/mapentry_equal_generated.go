@@ -17,7 +17,11 @@
 
 package models
 
-func (rec MapEntry) Equal(obj MapEntry) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec MapEntry) Equal(obj MapEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ID == obj.ID &&
 		rec.Key == obj.Key &&
 		rec.Value == obj.Value

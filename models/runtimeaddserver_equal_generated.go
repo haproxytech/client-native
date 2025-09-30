@@ -17,12 +17,16 @@
 
 package models
 
-func (rec RuntimeAddServer) Equal(obj RuntimeAddServer) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec RuntimeAddServer) Equal(obj RuntimeAddServer, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
 		rec.AgentAddr == obj.AgentAddr &&
 		rec.AgentCheck == obj.AgentCheck &&
-		EqualPointerInt64(rec.AgentInter, obj.AgentInter) &&
-		EqualPointerInt64(rec.AgentPort, obj.AgentPort) &&
+		EqualPointerInt64(rec.AgentInter, obj.AgentInter, opts...) &&
+		EqualPointerInt64(rec.AgentPort, obj.AgentPort, opts...) &&
 		rec.AgentSend == obj.AgentSend &&
 		rec.Allow0rtt == obj.Allow0rtt &&
 		rec.Alpn == obj.Alpn &&
@@ -37,23 +41,23 @@ func (rec RuntimeAddServer) Equal(obj RuntimeAddServer) bool {
 		rec.Ciphers == obj.Ciphers &&
 		rec.Ciphersuites == obj.Ciphersuites &&
 		rec.CrlFile == obj.CrlFile &&
-		EqualPointerInt64(rec.Downinter, obj.Downinter) &&
-		EqualPointerInt64(rec.ErrorLimit, obj.ErrorLimit) &&
-		EqualPointerInt64(rec.Fall, obj.Fall) &&
-		EqualPointerInt64(rec.Fastinter, obj.Fastinter) &&
+		EqualPointerInt64(rec.Downinter, obj.Downinter, opts...) &&
+		EqualPointerInt64(rec.ErrorLimit, obj.ErrorLimit, opts...) &&
+		EqualPointerInt64(rec.Fall, obj.Fall, opts...) &&
+		EqualPointerInt64(rec.Fastinter, obj.Fastinter, opts...) &&
 		rec.ForceSslv3 == obj.ForceSslv3 &&
 		rec.ForceTlsv10 == obj.ForceTlsv10 &&
 		rec.ForceTlsv11 == obj.ForceTlsv11 &&
 		rec.ForceTlsv12 == obj.ForceTlsv12 &&
 		rec.ForceTlsv13 == obj.ForceTlsv13 &&
 		rec.HealthCheckAddress == obj.HealthCheckAddress &&
-		EqualPointerInt64(rec.HealthCheckPort, obj.HealthCheckPort) &&
+		EqualPointerInt64(rec.HealthCheckPort, obj.HealthCheckPort, opts...) &&
 		rec.ID == obj.ID &&
-		EqualPointerInt64(rec.Inter, obj.Inter) &&
+		EqualPointerInt64(rec.Inter, obj.Inter, opts...) &&
 		rec.Maintenance == obj.Maintenance &&
-		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
-		EqualPointerInt64(rec.Maxqueue, obj.Maxqueue) &&
-		EqualPointerInt64(rec.Minconn, obj.Minconn) &&
+		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
+		EqualPointerInt64(rec.Maxqueue, obj.Maxqueue, opts...) &&
+		EqualPointerInt64(rec.Minconn, obj.Minconn, opts...) &&
 		rec.Name == obj.Name &&
 		rec.NoSslv3 == obj.NoSslv3 &&
 		rec.NoTlsv10 == obj.NoTlsv10 &&
@@ -65,18 +69,18 @@ func (rec RuntimeAddServer) Equal(obj RuntimeAddServer) bool {
 		rec.OnError == obj.OnError &&
 		rec.OnMarkedDown == obj.OnMarkedDown &&
 		rec.OnMarkedUp == obj.OnMarkedUp &&
-		EqualPointerInt64(rec.PoolLowConn, obj.PoolLowConn) &&
-		EqualPointerInt64(rec.PoolMaxConn, obj.PoolMaxConn) &&
-		EqualPointerInt64(rec.PoolPurgeDelay, obj.PoolPurgeDelay) &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
+		EqualPointerInt64(rec.PoolLowConn, obj.PoolLowConn, opts...) &&
+		EqualPointerInt64(rec.PoolMaxConn, obj.PoolMaxConn, opts...) &&
+		EqualPointerInt64(rec.PoolPurgeDelay, obj.PoolPurgeDelay, opts...) &&
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
 		rec.Proto == obj.Proto &&
-		EqualSliceString(rec.ProxyV2Options, obj.ProxyV2Options) &&
-		EqualPointerInt64(rec.Rise, obj.Rise) &&
+		EqualSliceString(rec.ProxyV2Options, obj.ProxyV2Options, opts...) &&
+		EqualPointerInt64(rec.Rise, obj.Rise, opts...) &&
 		rec.SendProxy == obj.SendProxy &&
 		rec.SendProxyV2 == obj.SendProxyV2 &&
 		rec.SendProxyV2Ssl == obj.SendProxyV2Ssl &&
 		rec.SendProxyV2SslCn == obj.SendProxyV2SslCn &&
-		EqualPointerInt64(rec.Slowstart, obj.Slowstart) &&
+		EqualPointerInt64(rec.Slowstart, obj.Slowstart, opts...) &&
 		rec.Sni == obj.Sni &&
 		rec.Source == obj.Source &&
 		rec.Ssl == obj.Ssl &&
@@ -90,6 +94,6 @@ func (rec RuntimeAddServer) Equal(obj RuntimeAddServer) bool {
 		rec.Track == obj.Track &&
 		rec.Verify == obj.Verify &&
 		rec.Verifyhost == obj.Verifyhost &&
-		EqualPointerInt64(rec.Weight, obj.Weight) &&
+		EqualPointerInt64(rec.Weight, obj.Weight, opts...) &&
 		rec.Ws == obj.Ws
 }

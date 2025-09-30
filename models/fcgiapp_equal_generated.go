@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FCGIApp) Equal(obj FCGIApp) bool {
-	return rec.FCGIAppBase.Equal(obj.FCGIAppBase) &&
-		rec.ACLList.Equal(obj.ACLList)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGIApp) Equal(obj FCGIApp, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.FCGIAppBase.Equal(obj.FCGIAppBase, opts...) &&
+		rec.ACLList.Equal(obj.ACLList, opts...)
 }

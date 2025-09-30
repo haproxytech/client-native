@@ -17,7 +17,11 @@
 
 package models
 
-func (rec BackendIgnorePersist) Equal(obj BackendIgnorePersist) bool {
-	return EqualPointerString(rec.Cond, obj.Cond) &&
-		EqualPointerString(rec.CondTest, obj.CondTest)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec BackendIgnorePersist) Equal(obj BackendIgnorePersist, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Cond, obj.Cond, opts...) &&
+		EqualPointerString(rec.CondTest, obj.CondTest, opts...)
 }

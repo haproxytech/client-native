@@ -17,11 +17,16 @@
 
 package models
 
-func (rec LogForwardBase) Equal(obj LogForwardBase) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LogForwardBase) Equal(obj LogForwardBase, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AssumeRfc6587Ntf == obj.AssumeRfc6587Ntf &&
-		EqualPointerInt64(rec.Backlog, obj.Backlog) &&
+		EqualPointerInt64(rec.Backlog, obj.Backlog, opts...) &&
 		rec.DontParseLog == obj.DontParseLog &&
-		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
+		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
-		EqualPointerInt64(rec.TimeoutClient, obj.TimeoutClient)
+		EqualPointerInt64(rec.TimeoutClient, obj.TimeoutClient, opts...)
 }

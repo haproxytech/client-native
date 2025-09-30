@@ -17,7 +17,11 @@
 
 package models
 
-func (rec RuntimeServer) Diff(obj RuntimeServer) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec RuntimeServer) Diff(obj RuntimeServer, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Address != obj.Address {
 		diff["Address"] = []interface{}{rec.Address, obj.Address}
@@ -34,7 +38,7 @@ func (rec RuntimeServer) Diff(obj RuntimeServer) map[string][]interface{} {
 	if rec.OperationalState != obj.OperationalState {
 		diff["OperationalState"] = []interface{}{rec.OperationalState, obj.OperationalState}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
 	return diff

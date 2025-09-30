@@ -17,18 +17,36 @@
 
 package models
 
-func (x FCGIApps) Equal(y FCGIApps) bool {
-	return EqualFCGIApps(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x FCGIApps) Equal(y FCGIApps, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualFCGIApps(x, y, opts...)
 }
 
-func EqualFCGIApps(x, y FCGIApps) bool {
+func EqualFCGIApps(x, y FCGIApps, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerFCGIApp(vx, vy) {
+		if !EqualPointerFCGIApp(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualFCGIApps(x, y FCGIApps) bool {
 	return true
 }
 
-func EqualPointerFCGIApp(x, y *FCGIApp) bool {
+func EqualPointerFCGIApp(x, y *FCGIApp, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

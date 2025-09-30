@@ -17,7 +17,11 @@
 
 package models
 
-func (rec LuaPrependPath) Equal(obj LuaPrependPath) bool {
-	return EqualPointerString(rec.Path, obj.Path) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LuaPrependPath) Equal(obj LuaPrependPath, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Path, obj.Path, opts...) &&
 		rec.Type == obj.Type
 }

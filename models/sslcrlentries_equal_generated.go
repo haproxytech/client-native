@@ -17,25 +17,43 @@
 
 package models
 
-func (x SslCrlEntries) Equal(y SslCrlEntries) bool {
-	return EqualSslCrlEntries(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x SslCrlEntries) Equal(y SslCrlEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSslCrlEntries(x, y, opts...)
 }
 
-func EqualPointerSslCrlEntry(x, y *SslCrlEntry) bool {
+func EqualPointerSslCrlEntry(x, y *SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSslCrlEntries(x, y SslCrlEntries) bool {
+func EqualSslCrlEntries(x, y SslCrlEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSslCrlEntry(vx, vy) {
+		if !EqualPointerSslCrlEntry(vx, vy, opts...) {
 			return false
 		}
 	}

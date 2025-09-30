@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Errorfile) Equal(obj Errorfile) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Errorfile) Equal(obj Errorfile, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Code == obj.Code &&
 		rec.File == obj.File
 }

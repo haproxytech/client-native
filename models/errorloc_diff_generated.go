@@ -17,12 +17,16 @@
 
 package models
 
-func (rec Errorloc) Diff(obj Errorloc) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Errorloc) Diff(obj Errorloc, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.Code, obj.Code) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Code, obj.Code, opts...) {
 		diff["Code."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.URL, obj.URL) {
+	for diffKey, diffValue := range DiffPointerString(rec.URL, obj.URL, opts...) {
 		diff["URL."+diffKey] = diffValue
 	}
 	return diff

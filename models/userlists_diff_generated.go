@@ -19,13 +19,15 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x Userlists) Diff(y Userlists) map[string][]interface{} {
-	return DiffUserlists(x, y)
+func (x Userlists) Diff(y Userlists, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffUserlists(x, y, opts...)
 }
 
-func DiffPointerUserlist(x, y *Userlist) map[string][]interface{} {
+func DiffPointerUserlist(x, y *Userlist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -49,7 +51,12 @@ func DiffPointerUserlist(x, y *Userlist) map[string][]interface{} {
 	return diff
 }
 
-func DiffUserlists(x, y Userlists) map[string][]interface{} {
+func DiffUserlists(x, y Userlists, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -57,9 +64,10 @@ func DiffUserlists(x, y Userlists) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

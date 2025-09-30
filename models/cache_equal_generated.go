@@ -17,11 +17,16 @@
 
 package models
 
-func (rec Cache) Equal(obj Cache) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Cache) Equal(obj Cache, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.MaxAge == obj.MaxAge &&
 		rec.MaxObjectSize == obj.MaxObjectSize &&
 		rec.MaxSecondaryEntries == obj.MaxSecondaryEntries &&
-		EqualPointerString(rec.Name, obj.Name) &&
-		EqualPointerBool(rec.ProcessVary, obj.ProcessVary) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		EqualPointerString(rec.Name, obj.Name, opts...) &&
+		EqualPointerBool(rec.ProcessVary, obj.ProcessVary, opts...) &&
 		rec.TotalMaxSize == obj.TotalMaxSize
 }

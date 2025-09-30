@@ -17,7 +17,11 @@
 
 package models
 
-func (rec BindParams) Diff(obj BindParams) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AcceptNetscalerCip != obj.AcceptNetscalerCip {
 		diff["AcceptNetscalerCip"] = []interface{}{rec.AcceptNetscalerCip, obj.AcceptNetscalerCip}
@@ -67,7 +71,7 @@ func (rec BindParams) Diff(obj BindParams) map[string][]interface{} {
 	if rec.Curves != obj.Curves {
 		diff["Curves"] = []interface{}{rec.Curves, obj.Curves}
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.DefaultCrtList, obj.DefaultCrtList) {
+	for diffKey, diffValue := range DiffSliceString(rec.DefaultCrtList, obj.DefaultCrtList, opts...) {
 		diff["DefaultCrtList"+diffKey] = diffValue
 	}
 	if rec.DeferAccept != obj.DeferAccept {
@@ -112,7 +116,7 @@ func (rec BindParams) Diff(obj BindParams) map[string][]interface{} {
 	if rec.ID != obj.ID {
 		diff["ID"] = []interface{}{rec.ID, obj.ID}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.IdlePing, obj.IdlePing) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.IdlePing, obj.IdlePing, opts...) {
 		diff["IdlePing."+diffKey] = diffValue
 	}
 	if rec.Interface != obj.Interface {
@@ -190,10 +194,10 @@ func (rec BindParams) Diff(obj BindParams) map[string][]interface{} {
 	if rec.QuicSocket != obj.QuicSocket {
 		diff["QuicSocket"] = []interface{}{rec.QuicSocket, obj.QuicSocket}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.QuicCcAlgoBurstSize, obj.QuicCcAlgoBurstSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.QuicCcAlgoBurstSize, obj.QuicCcAlgoBurstSize, opts...) {
 		diff["QuicCcAlgoBurstSize."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow, opts...) {
 		diff["QuicCcAlgoMaxWindow."+diffKey] = diffValue
 	}
 	if rec.SeverityOutput != obj.SeverityOutput {
@@ -223,7 +227,7 @@ func (rec BindParams) Diff(obj BindParams) map[string][]interface{} {
 	if rec.StrictSni != obj.StrictSni {
 		diff["StrictSni"] = []interface{}{rec.StrictSni, obj.StrictSni}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TCPUserTimeout, obj.TCPUserTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TCPUserTimeout, obj.TCPUserTimeout, opts...) {
 		diff["TCPUserTimeout."+diffKey] = diffValue
 	}
 	if rec.Tfo != obj.Tfo {

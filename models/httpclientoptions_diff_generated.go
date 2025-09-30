@@ -17,7 +17,11 @@
 
 package models
 
-func (rec HTTPClientOptions) Diff(obj HTTPClientOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HTTPClientOptions) Diff(obj HTTPClientOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.ResolversDisabled != obj.ResolversDisabled {
 		diff["ResolversDisabled"] = []interface{}{rec.ResolversDisabled, obj.ResolversDisabled}
@@ -34,10 +38,10 @@ func (rec HTTPClientOptions) Diff(obj HTTPClientOptions) map[string][]interface{
 	if rec.SslCaFile != obj.SslCaFile {
 		diff["SslCaFile"] = []interface{}{rec.SslCaFile, obj.SslCaFile}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.SslVerify, obj.SslVerify) {
+	for diffKey, diffValue := range DiffPointerString(rec.SslVerify, obj.SslVerify, opts...) {
 		diff["SslVerify."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect, opts...) {
 		diff["TimeoutConnect."+diffKey] = diffValue
 	}
 	return diff

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec ServerParamsSetProxyV2TlvFmt) Equal(obj ServerParamsSetProxyV2TlvFmt) bool {
-	return EqualPointerString(rec.ID, obj.ID) &&
-		EqualPointerString(rec.Value, obj.Value)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ServerParamsSetProxyV2TlvFmt) Equal(obj ServerParamsSetProxyV2TlvFmt, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.ID, obj.ID, opts...) &&
+		EqualPointerString(rec.Value, obj.Value, opts...)
 }

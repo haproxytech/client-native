@@ -17,18 +17,36 @@
 
 package models
 
-func (x MailersSections) Equal(y MailersSections) bool {
-	return EqualMailersSections(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x MailersSections) Equal(y MailersSections, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualMailersSections(x, y, opts...)
 }
 
-func EqualMailersSections(x, y MailersSections) bool {
+func EqualMailersSections(x, y MailersSections, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerMailersSection(vx, vy) {
+		if !EqualPointerMailersSection(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualMailersSections(x, y MailersSections) bool {
 	return true
 }
 
-func EqualPointerMailersSection(x, y *MailersSection) bool {
+func EqualPointerMailersSection(x, y *MailersSection, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

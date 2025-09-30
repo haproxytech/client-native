@@ -17,8 +17,12 @@
 
 package models
 
-func (rec SpoeMessageEvent) Equal(obj SpoeMessageEvent) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SpoeMessageEvent) Equal(obj SpoeMessageEvent, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
-		EqualPointerString(rec.Name, obj.Name)
+		EqualPointerString(rec.Name, obj.Name, opts...)
 }

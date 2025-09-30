@@ -17,18 +17,22 @@
 
 package models
 
-func (rec OcspUpdateOptions) Diff(obj OcspUpdateOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec OcspUpdateOptions) Diff(obj OcspUpdateOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerBool(rec.Disable, obj.Disable) {
+	for diffKey, diffValue := range DiffPointerBool(rec.Disable, obj.Disable, opts...) {
 		diff["Disable."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerOcspUpdateOptionsHttpproxy(rec.Httpproxy, obj.Httpproxy) {
+	for diffKey, diffValue := range DiffPointerOcspUpdateOptionsHttpproxy(rec.Httpproxy, obj.Httpproxy, opts...) {
 		diff["Httpproxy."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxdelay, obj.Maxdelay) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxdelay, obj.Maxdelay, opts...) {
 		diff["Maxdelay."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Mindelay, obj.Mindelay) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Mindelay, obj.Mindelay, opts...) {
 		diff["Mindelay."+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
@@ -37,7 +41,7 @@ func (rec OcspUpdateOptions) Diff(obj OcspUpdateOptions) map[string][]interface{
 	return diff
 }
 
-func DiffPointerOcspUpdateOptionsHttpproxy(x, y *OcspUpdateOptionsHttpproxy) map[string][]interface{} {
+func DiffPointerOcspUpdateOptionsHttpproxy(x, y *OcspUpdateOptionsHttpproxy, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

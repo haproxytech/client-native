@@ -17,22 +17,40 @@
 
 package models
 
-func (rec PeerSection) Equal(obj PeerSection) bool {
-	return rec.PeerSectionBase.Equal(obj.PeerSectionBase) &&
-		rec.LogTargetList.Equal(obj.LogTargetList) &&
-		EqualMapStringBind(rec.Binds, obj.Binds) &&
-		EqualMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries) &&
-		EqualMapStringServer(rec.Servers, obj.Servers) &&
-		EqualMapStringTable(rec.Tables, obj.Tables)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec PeerSection) Equal(obj PeerSection, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.PeerSectionBase.Equal(obj.PeerSectionBase, opts...) &&
+		rec.LogTargetList.Equal(obj.LogTargetList, opts...) &&
+		EqualMapStringBind(rec.Binds, obj.Binds, opts...) &&
+		EqualMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries, opts...) &&
+		EqualMapStringServer(rec.Servers, obj.Servers, opts...) &&
+		EqualMapStringTable(rec.Tables, obj.Tables, opts...)
 }
 
-func EqualMapStringPeerEntry(x, y map[string]PeerEntry) bool {
+func EqualMapStringPeerEntry(x, y map[string]PeerEntry, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}
@@ -40,13 +58,27 @@ func EqualMapStringPeerEntry(x, y map[string]PeerEntry) bool {
 	return true
 }
 
-func EqualMapStringTable(x, y map[string]Table) bool {
+func EqualMapStringTable(x, y map[string]Table, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}

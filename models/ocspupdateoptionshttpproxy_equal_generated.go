@@ -17,7 +17,11 @@
 
 package models
 
-func (rec OcspUpdateOptionsHttpproxy) Equal(obj OcspUpdateOptionsHttpproxy) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec OcspUpdateOptionsHttpproxy) Equal(obj OcspUpdateOptionsHttpproxy, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
-		EqualPointerInt64(rec.Port, obj.Port)
+		EqualPointerInt64(rec.Port, obj.Port, opts...)
 }

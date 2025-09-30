@@ -17,8 +17,12 @@
 
 package models
 
-func (rec SslCrtListEntry) Equal(obj SslCrtListEntry) bool {
-	return EqualSliceString(rec.SNIFilter, obj.SNIFilter) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslCrtListEntry) Equal(obj SslCrtListEntry, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSliceString(rec.SNIFilter, obj.SNIFilter, opts...) &&
 		rec.SSLBindConfig == obj.SSLBindConfig &&
 		rec.File == obj.File &&
 		rec.LineNumber == obj.LineNumber

@@ -17,14 +17,19 @@
 
 package models
 
-func (rec Table) Equal(obj Table) bool {
-	return EqualPointerString(rec.Expire, obj.Expire) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Table) Equal(obj Table, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Expire, obj.Expire, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.NoPurge == obj.NoPurge &&
 		rec.RecvOnly == obj.RecvOnly &&
 		rec.Size == obj.Size &&
 		rec.Store == obj.Store &&
 		rec.Type == obj.Type &&
-		EqualPointerInt64(rec.TypeLen, obj.TypeLen) &&
-		EqualPointerString(rec.WriteTo, obj.WriteTo)
+		EqualPointerInt64(rec.TypeLen, obj.TypeLen, opts...) &&
+		EqualPointerString(rec.WriteTo, obj.WriteTo, opts...)
 }

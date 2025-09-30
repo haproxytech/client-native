@@ -17,15 +17,19 @@
 
 package models
 
-func (rec Cookie) Equal(obj Cookie) bool {
-	return EqualSlicePointerAttr(rec.Attrs, obj.Attrs) &&
-		EqualSlicePointerDomain(rec.Domains, obj.Domains) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Cookie) Equal(obj Cookie, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerAttr(rec.Attrs, obj.Attrs, opts...) &&
+		EqualSlicePointerDomain(rec.Domains, obj.Domains, opts...) &&
 		rec.Dynamic == obj.Dynamic &&
 		rec.Httponly == obj.Httponly &&
 		rec.Indirect == obj.Indirect &&
 		rec.Maxidle == obj.Maxidle &&
 		rec.Maxlife == obj.Maxlife &&
-		EqualPointerString(rec.Name, obj.Name) &&
+		EqualPointerString(rec.Name, obj.Name, opts...) &&
 		rec.Nocache == obj.Nocache &&
 		rec.Postonly == obj.Postonly &&
 		rec.Preserve == obj.Preserve &&
@@ -33,28 +37,42 @@ func (rec Cookie) Equal(obj Cookie) bool {
 		rec.Type == obj.Type
 }
 
-func EqualPointerAttr(x, y *Attr) bool {
+func EqualPointerAttr(x, y *Attr, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerDomain(x, y *Domain) bool {
+func EqualPointerDomain(x, y *Domain, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerAttr(x, y []*Attr) bool {
+func EqualSlicePointerAttr(x, y []*Attr, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerAttr(vx, vy) {
+		if !EqualPointerAttr(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -62,14 +80,28 @@ func EqualSlicePointerAttr(x, y []*Attr) bool {
 	return true
 }
 
-func EqualSlicePointerDomain(x, y []*Domain) bool {
+func EqualSlicePointerDomain(x, y []*Domain, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerDomain(vx, vy) {
+		if !EqualPointerDomain(vx, vy, opts...) {
 			return false
 		}
 	}

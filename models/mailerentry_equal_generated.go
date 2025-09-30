@@ -17,8 +17,13 @@
 
 package models
 
-func (rec MailerEntry) Equal(obj MailerEntry) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec MailerEntry) Equal(obj MailerEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Port == obj.Port
 }

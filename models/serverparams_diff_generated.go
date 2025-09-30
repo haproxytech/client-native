@@ -17,7 +17,11 @@
 
 package models
 
-func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AgentAddr != obj.AgentAddr {
 		diff["AgentAddr"] = []interface{}{rec.AgentAddr, obj.AgentAddr}
@@ -25,10 +29,10 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.AgentCheck != obj.AgentCheck {
 		diff["AgentCheck"] = []interface{}{rec.AgentCheck, obj.AgentCheck}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.AgentInter, obj.AgentInter) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.AgentInter, obj.AgentInter, opts...) {
 		diff["AgentInter."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.AgentPort, obj.AgentPort) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.AgentPort, obj.AgentPort, opts...) {
 		diff["AgentPort."+diffKey] = diffValue
 	}
 	if rec.AgentSend != obj.AgentSend {
@@ -88,16 +92,16 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.Curves != obj.Curves {
 		diff["Curves"] = []interface{}{rec.Curves, obj.Curves}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Downinter, obj.Downinter) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Downinter, obj.Downinter, opts...) {
 		diff["Downinter."+diffKey] = diffValue
 	}
 	if rec.ErrorLimit != obj.ErrorLimit {
 		diff["ErrorLimit"] = []interface{}{rec.ErrorLimit, obj.ErrorLimit}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Fall, obj.Fall) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Fall, obj.Fall, opts...) {
 		diff["Fall."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Fastinter, obj.Fastinter) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Fastinter, obj.Fastinter, opts...) {
 		diff["Fastinter."+diffKey] = diffValue
 	}
 	if rec.ForceSslv3 != obj.ForceSslv3 {
@@ -124,22 +128,22 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.HealthCheckAddress != obj.HealthCheckAddress {
 		diff["HealthCheckAddress"] = []interface{}{rec.HealthCheckAddress, obj.HealthCheckAddress}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HealthCheckPort, obj.HealthCheckPort) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HealthCheckPort, obj.HealthCheckPort, opts...) {
 		diff["HealthCheckPort."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.IdlePing, obj.IdlePing) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.IdlePing, obj.IdlePing, opts...) {
 		diff["IdlePing."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.InitAddr, obj.InitAddr) {
+	for diffKey, diffValue := range DiffPointerString(rec.InitAddr, obj.InitAddr, opts...) {
 		diff["InitAddr."+diffKey] = diffValue
 	}
 	if rec.InitState != obj.InitState {
 		diff["InitState"] = []interface{}{rec.InitState, obj.InitState}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Inter, obj.Inter) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Inter, obj.Inter, opts...) {
 		diff["Inter."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.LogBufsize, obj.LogBufsize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.LogBufsize, obj.LogBufsize, opts...) {
 		diff["LogBufsize."+diffKey] = diffValue
 	}
 	if rec.LogProto != obj.LogProto {
@@ -148,16 +152,16 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.Maintenance != obj.Maintenance {
 		diff["Maintenance"] = []interface{}{rec.Maintenance, obj.Maintenance}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MaxReuse, obj.MaxReuse) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MaxReuse, obj.MaxReuse, opts...) {
 		diff["MaxReuse."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
 		diff["Maxconn."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Maxqueue, obj.Maxqueue) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Maxqueue, obj.Maxqueue, opts...) {
 		diff["Maxqueue."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Minconn, obj.Minconn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Minconn, obj.Minconn, opts...) {
 		diff["Minconn."+diffKey] = diffValue
 	}
 	if rec.Namespace != obj.Namespace {
@@ -199,19 +203,19 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.PoolConnName != obj.PoolConnName {
 		diff["PoolConnName"] = []interface{}{rec.PoolConnName, obj.PoolConnName}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.PoolLowConn, obj.PoolLowConn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.PoolLowConn, obj.PoolLowConn, opts...) {
 		diff["PoolLowConn."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.PoolMaxConn, obj.PoolMaxConn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.PoolMaxConn, obj.PoolMaxConn, opts...) {
 		diff["PoolMaxConn."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.PoolPurgeDelay, obj.PoolPurgeDelay) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.PoolPurgeDelay, obj.PoolPurgeDelay, opts...) {
 		diff["PoolPurgeDelay."+diffKey] = diffValue
 	}
 	if rec.Proto != obj.Proto {
 		diff["Proto"] = []interface{}{rec.Proto, obj.Proto}
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.ProxyV2Options, obj.ProxyV2Options) {
+	for diffKey, diffValue := range DiffSliceString(rec.ProxyV2Options, obj.ProxyV2Options, opts...) {
 		diff["ProxyV2Options"+diffKey] = diffValue
 	}
 	if rec.Redir != obj.Redir {
@@ -232,7 +236,7 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.Resolvers != obj.Resolvers {
 		diff["Resolvers"] = []interface{}{rec.Resolvers, obj.Resolvers}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Rise, obj.Rise) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Rise, obj.Rise, opts...) {
 		diff["Rise."+diffKey] = diffValue
 	}
 	if rec.SendProxy != obj.SendProxy {
@@ -247,7 +251,7 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.SendProxyV2SslCn != obj.SendProxyV2SslCn {
 		diff["SendProxyV2SslCn"] = []interface{}{rec.SendProxyV2SslCn, obj.SendProxyV2SslCn}
 	}
-	for diffKey, diffValue := range DiffPointerServerParamsSetProxyV2TlvFmt(rec.SetProxyV2TlvFmt, obj.SetProxyV2TlvFmt) {
+	for diffKey, diffValue := range DiffPointerServerParamsSetProxyV2TlvFmt(rec.SetProxyV2TlvFmt, obj.SetProxyV2TlvFmt, opts...) {
 		diff["SetProxyV2TlvFmt."+diffKey] = diffValue
 	}
 	if rec.Shard != obj.Shard {
@@ -256,7 +260,7 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.Sigalgs != obj.Sigalgs {
 		diff["Sigalgs"] = []interface{}{rec.Sigalgs, obj.Sigalgs}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Slowstart, obj.Slowstart) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Slowstart, obj.Slowstart, opts...) {
 		diff["Slowstart."+diffKey] = diffValue
 	}
 	if rec.Sni != obj.Sni {
@@ -295,7 +299,7 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.StrictMaxconn != obj.StrictMaxconn {
 		diff["StrictMaxconn"] = []interface{}{rec.StrictMaxconn, obj.StrictMaxconn}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TCPUt, obj.TCPUt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TCPUt, obj.TCPUt, opts...) {
 		diff["TCPUt."+diffKey] = diffValue
 	}
 	if rec.Tfo != obj.Tfo {
@@ -325,7 +329,7 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	if rec.Verifyhost != obj.Verifyhost {
 		diff["Verifyhost"] = []interface{}{rec.Verifyhost, obj.Verifyhost}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Weight, obj.Weight) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Weight, obj.Weight, opts...) {
 		diff["Weight."+diffKey] = diffValue
 	}
 	if rec.Ws != obj.Ws {
@@ -334,7 +338,7 @@ func (rec ServerParams) Diff(obj ServerParams) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerServerParamsSetProxyV2TlvFmt(x, y *ServerParamsSetProxyV2TlvFmt) map[string][]interface{} {
+func DiffPointerServerParamsSetProxyV2TlvFmt(x, y *ServerParamsSetProxyV2TlvFmt, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

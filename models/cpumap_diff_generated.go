@@ -17,12 +17,16 @@
 
 package models
 
-func (rec CPUMap) Diff(obj CPUMap) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CPUMap) Diff(obj CPUMap, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.CPUSet, obj.CPUSet) {
+	for diffKey, diffValue := range DiffPointerString(rec.CPUSet, obj.CPUSet, opts...) {
 		diff["CPUSet."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Process, obj.Process) {
+	for diffKey, diffValue := range DiffPointerString(rec.Process, obj.Process, opts...) {
 		diff["Process."+diffKey] = diffValue
 	}
 	return diff

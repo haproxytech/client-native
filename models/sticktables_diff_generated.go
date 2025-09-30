@@ -19,13 +19,15 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x StickTables) Diff(y StickTables) map[string][]interface{} {
-	return DiffStickTables(x, y)
+func (x StickTables) Diff(y StickTables, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffStickTables(x, y, opts...)
 }
 
-func DiffPointerStickTable(x, y *StickTable) map[string][]interface{} {
+func DiffPointerStickTable(x, y *StickTable, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -49,7 +51,12 @@ func DiffPointerStickTable(x, y *StickTable) map[string][]interface{} {
 	return diff
 }
 
-func DiffStickTables(x, y StickTables) map[string][]interface{} {
+func DiffStickTables(x, y StickTables, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -57,9 +64,10 @@ func DiffStickTables(x, y StickTables) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

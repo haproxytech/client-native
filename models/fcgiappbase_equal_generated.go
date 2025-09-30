@@ -17,49 +17,68 @@
 
 package models
 
-func (rec FCGIAppBase) Equal(obj FCGIAppBase) bool {
-	return EqualPointerString(rec.Docroot, obj.Docroot) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGIAppBase) Equal(obj FCGIAppBase, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Docroot, obj.Docroot, opts...) &&
 		rec.GetValues == obj.GetValues &&
 		rec.Index == obj.Index &&
 		rec.KeepConn == obj.KeepConn &&
-		EqualSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs) &&
+		EqualSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs, opts...) &&
 		rec.MaxReqs == obj.MaxReqs &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MpxsConns == obj.MpxsConns &&
 		rec.Name == obj.Name &&
-		EqualSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders) &&
+		EqualSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders, opts...) &&
 		rec.PathInfo == obj.PathInfo &&
-		EqualSlicePointerFCGISetParam(rec.SetParams, obj.SetParams)
+		EqualSlicePointerFCGISetParam(rec.SetParams, obj.SetParams, opts...)
 }
 
-func EqualPointerFCGILogStderr(x, y *FCGILogStderr) bool {
+func EqualPointerFCGILogStderr(x, y *FCGILogStderr, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerFCGIPassHeader(x, y *FCGIPassHeader) bool {
+func EqualPointerFCGIPassHeader(x, y *FCGIPassHeader, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerFCGISetParam(x, y *FCGISetParam) bool {
+func EqualPointerFCGISetParam(x, y *FCGISetParam, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerFCGILogStderr(x, y []*FCGILogStderr) bool {
+func EqualSlicePointerFCGILogStderr(x, y []*FCGILogStderr, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerFCGILogStderr(vx, vy) {
+		if !EqualPointerFCGILogStderr(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -67,14 +86,28 @@ func EqualSlicePointerFCGILogStderr(x, y []*FCGILogStderr) bool {
 	return true
 }
 
-func EqualSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) bool {
+func EqualSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerFCGIPassHeader(vx, vy) {
+		if !EqualPointerFCGIPassHeader(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -82,14 +115,28 @@ func EqualSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader) bool {
 	return true
 }
 
-func EqualSlicePointerFCGISetParam(x, y []*FCGISetParam) bool {
+func EqualSlicePointerFCGISetParam(x, y []*FCGISetParam, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerFCGISetParam(vx, vy) {
+		if !EqualPointerFCGISetParam(vx, vy, opts...) {
 			return false
 		}
 	}

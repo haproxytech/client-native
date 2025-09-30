@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FCGILogStderrSample) Equal(obj FCGILogStderrSample) bool {
-	return EqualPointerString(rec.Ranges, obj.Ranges) &&
-		EqualPointerInt64(rec.Size, obj.Size)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGILogStderrSample) Equal(obj FCGILogStderrSample, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Ranges, obj.Ranges, opts...) &&
+		EqualPointerInt64(rec.Size, obj.Size, opts...)
 }

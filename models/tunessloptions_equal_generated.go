@@ -17,15 +17,19 @@
 
 package models
 
-func (rec TuneSslOptions) Equal(obj TuneSslOptions) bool {
-	return EqualPointerInt64(rec.Cachesize, obj.Cachesize) &&
-		EqualPointerInt64(rec.CaptureBufferSize, obj.CaptureBufferSize) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneSslOptions) Equal(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.Cachesize, obj.Cachesize, opts...) &&
+		EqualPointerInt64(rec.CaptureBufferSize, obj.CaptureBufferSize, opts...) &&
 		rec.CtxCacheSize == obj.CtxCacheSize &&
 		rec.DefaultDhParam == obj.DefaultDhParam &&
 		rec.ForcePrivateCache == obj.ForcePrivateCache &&
 		rec.Keylog == obj.Keylog &&
-		EqualPointerInt64(rec.Lifetime, obj.Lifetime) &&
-		EqualPointerInt64(rec.Maxrecord, obj.Maxrecord) &&
-		EqualPointerInt64(rec.OcspUpdateMaxDelay, obj.OcspUpdateMaxDelay) &&
-		EqualPointerInt64(rec.OcspUpdateMinDelay, obj.OcspUpdateMinDelay)
+		EqualPointerInt64(rec.Lifetime, obj.Lifetime, opts...) &&
+		EqualPointerInt64(rec.Maxrecord, obj.Maxrecord, opts...) &&
+		EqualPointerInt64(rec.OcspUpdateMaxDelay, obj.OcspUpdateMaxDelay, opts...) &&
+		EqualPointerInt64(rec.OcspUpdateMinDelay, obj.OcspUpdateMinDelay, opts...)
 }

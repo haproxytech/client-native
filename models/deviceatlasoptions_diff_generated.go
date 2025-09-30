@@ -17,7 +17,11 @@
 
 package models
 
-func (rec DeviceAtlasOptions) Diff(obj DeviceAtlasOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DeviceAtlasOptions) Diff(obj DeviceAtlasOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.JSONFile != obj.JSONFile {
 		diff["JSONFile"] = []interface{}{rec.JSONFile, obj.JSONFile}

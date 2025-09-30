@@ -17,7 +17,11 @@
 
 package models
 
-func (rec TCPCheck) Equal(obj TCPCheck) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TCPCheck) Equal(obj TCPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Action == obj.Action &&
 		rec.Addr == obj.Addr &&
 		rec.Alpn == obj.Alpn &&
@@ -31,12 +35,13 @@ func (rec TCPCheck) Equal(obj TCPCheck) bool {
 		rec.HexString == obj.HexString &&
 		rec.Linger == obj.Linger &&
 		rec.Match == obj.Match &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MinRecv == obj.MinRecv &&
 		rec.OkStatus == obj.OkStatus &&
 		rec.OnError == obj.OnError &&
 		rec.OnSuccess == obj.OnSuccess &&
 		rec.Pattern == obj.Pattern &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
 		rec.PortString == obj.PortString &&
 		rec.Proto == obj.Proto &&
 		rec.SendProxy == obj.SendProxy &&

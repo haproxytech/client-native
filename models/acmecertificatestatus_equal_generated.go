@@ -17,7 +17,11 @@
 
 package models
 
-func (rec AcmeCertificateStatus) Equal(obj AcmeCertificateStatus) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec AcmeCertificateStatus) Equal(obj AcmeCertificateStatus, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AcmeSection == obj.AcmeSection &&
 		rec.Certificate == obj.Certificate &&
 		rec.ExpiriesIn == obj.ExpiriesIn &&

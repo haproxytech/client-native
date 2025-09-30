@@ -17,12 +17,16 @@
 
 package models
 
-func (rec ProcessInfo) Diff(obj ProcessInfo) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ProcessInfo) Diff(obj ProcessInfo, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Error != obj.Error {
 		diff["Error"] = []interface{}{rec.Error, obj.Error}
 	}
-	for diffKey, diffValue := range DiffPointerProcessInfoItem(rec.Info, obj.Info) {
+	for diffKey, diffValue := range DiffPointerProcessInfoItem(rec.Info, obj.Info, opts...) {
 		diff["Info."+diffKey] = diffValue
 	}
 	if rec.RuntimeAPI != obj.RuntimeAPI {
@@ -31,7 +35,7 @@ func (rec ProcessInfo) Diff(obj ProcessInfo) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerProcessInfoItem(x, y *ProcessInfoItem) map[string][]interface{} {
+func DiffPointerProcessInfoItem(x, y *ProcessInfoItem, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

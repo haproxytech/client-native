@@ -17,12 +17,16 @@
 
 package models
 
-func (rec ConfigStickTable) Diff(obj ConfigStickTable) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ConfigStickTable) Diff(obj ConfigStickTable, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.Expire, obj.Expire) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Expire, obj.Expire, opts...) {
 		diff["Expire."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Keylen, obj.Keylen) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Keylen, obj.Keylen, opts...) {
 		diff["Keylen."+diffKey] = diffValue
 	}
 	if rec.Nopurge != obj.Nopurge {
@@ -34,10 +38,10 @@ func (rec ConfigStickTable) Diff(obj ConfigStickTable) map[string][]interface{} 
 	if rec.RecvOnly != obj.RecvOnly {
 		diff["RecvOnly"] = []interface{}{rec.RecvOnly, obj.RecvOnly}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
 		diff["Size."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Srvkey, obj.Srvkey) {
+	for diffKey, diffValue := range DiffPointerString(rec.Srvkey, obj.Srvkey, opts...) {
 		diff["Srvkey."+diffKey] = diffValue
 	}
 	if rec.Store != obj.Store {
@@ -46,7 +50,7 @@ func (rec ConfigStickTable) Diff(obj ConfigStickTable) map[string][]interface{} 
 	if rec.Type != obj.Type {
 		diff["Type"] = []interface{}{rec.Type, obj.Type}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.WriteTo, obj.WriteTo) {
+	for diffKey, diffValue := range DiffPointerString(rec.WriteTo, obj.WriteTo, opts...) {
 		diff["WriteTo."+diffKey] = diffValue
 	}
 	return diff

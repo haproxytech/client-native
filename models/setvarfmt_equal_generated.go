@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SetVarFmt) Equal(obj SetVarFmt) bool {
-	return EqualPointerString(rec.Format, obj.Format) &&
-		EqualPointerString(rec.Name, obj.Name)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SetVarFmt) Equal(obj SetVarFmt, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Format, obj.Format, opts...) &&
+		EqualPointerString(rec.Name, obj.Name, opts...)
 }

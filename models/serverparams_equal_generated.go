@@ -17,11 +17,15 @@
 
 package models
 
-func (rec ServerParams) Equal(obj ServerParams) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AgentAddr == obj.AgentAddr &&
 		rec.AgentCheck == obj.AgentCheck &&
-		EqualPointerInt64(rec.AgentInter, obj.AgentInter) &&
-		EqualPointerInt64(rec.AgentPort, obj.AgentPort) &&
+		EqualPointerInt64(rec.AgentInter, obj.AgentInter, opts...) &&
+		EqualPointerInt64(rec.AgentPort, obj.AgentPort, opts...) &&
 		rec.AgentSend == obj.AgentSend &&
 		rec.Allow0rtt == obj.Allow0rtt &&
 		rec.Alpn == obj.Alpn &&
@@ -41,10 +45,10 @@ func (rec ServerParams) Equal(obj ServerParams) bool {
 		rec.Cookie == obj.Cookie &&
 		rec.CrlFile == obj.CrlFile &&
 		rec.Curves == obj.Curves &&
-		EqualPointerInt64(rec.Downinter, obj.Downinter) &&
+		EqualPointerInt64(rec.Downinter, obj.Downinter, opts...) &&
 		rec.ErrorLimit == obj.ErrorLimit &&
-		EqualPointerInt64(rec.Fall, obj.Fall) &&
-		EqualPointerInt64(rec.Fastinter, obj.Fastinter) &&
+		EqualPointerInt64(rec.Fall, obj.Fall, opts...) &&
+		EqualPointerInt64(rec.Fastinter, obj.Fastinter, opts...) &&
 		rec.ForceSslv3 == obj.ForceSslv3 &&
 		rec.ForceTlsv10 == obj.ForceTlsv10 &&
 		rec.ForceTlsv11 == obj.ForceTlsv11 &&
@@ -53,18 +57,18 @@ func (rec ServerParams) Equal(obj ServerParams) bool {
 		rec.GUID == obj.GUID &&
 		rec.HashKey == obj.HashKey &&
 		rec.HealthCheckAddress == obj.HealthCheckAddress &&
-		EqualPointerInt64(rec.HealthCheckPort, obj.HealthCheckPort) &&
-		EqualPointerInt64(rec.IdlePing, obj.IdlePing) &&
-		EqualPointerString(rec.InitAddr, obj.InitAddr) &&
+		EqualPointerInt64(rec.HealthCheckPort, obj.HealthCheckPort, opts...) &&
+		EqualPointerInt64(rec.IdlePing, obj.IdlePing, opts...) &&
+		EqualPointerString(rec.InitAddr, obj.InitAddr, opts...) &&
 		rec.InitState == obj.InitState &&
-		EqualPointerInt64(rec.Inter, obj.Inter) &&
-		EqualPointerInt64(rec.LogBufsize, obj.LogBufsize) &&
+		EqualPointerInt64(rec.Inter, obj.Inter, opts...) &&
+		EqualPointerInt64(rec.LogBufsize, obj.LogBufsize, opts...) &&
 		rec.LogProto == obj.LogProto &&
 		rec.Maintenance == obj.Maintenance &&
-		EqualPointerInt64(rec.MaxReuse, obj.MaxReuse) &&
-		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
-		EqualPointerInt64(rec.Maxqueue, obj.Maxqueue) &&
-		EqualPointerInt64(rec.Minconn, obj.Minconn) &&
+		EqualPointerInt64(rec.MaxReuse, obj.MaxReuse, opts...) &&
+		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
+		EqualPointerInt64(rec.Maxqueue, obj.Maxqueue, opts...) &&
+		EqualPointerInt64(rec.Minconn, obj.Minconn, opts...) &&
 		rec.Namespace == obj.Namespace &&
 		rec.NoSslv3 == obj.NoSslv3 &&
 		rec.NoTlsv10 == obj.NoTlsv10 &&
@@ -78,26 +82,26 @@ func (rec ServerParams) Equal(obj ServerParams) bool {
 		rec.OnMarkedDown == obj.OnMarkedDown &&
 		rec.OnMarkedUp == obj.OnMarkedUp &&
 		rec.PoolConnName == obj.PoolConnName &&
-		EqualPointerInt64(rec.PoolLowConn, obj.PoolLowConn) &&
-		EqualPointerInt64(rec.PoolMaxConn, obj.PoolMaxConn) &&
-		EqualPointerInt64(rec.PoolPurgeDelay, obj.PoolPurgeDelay) &&
+		EqualPointerInt64(rec.PoolLowConn, obj.PoolLowConn, opts...) &&
+		EqualPointerInt64(rec.PoolMaxConn, obj.PoolMaxConn, opts...) &&
+		EqualPointerInt64(rec.PoolPurgeDelay, obj.PoolPurgeDelay, opts...) &&
 		rec.Proto == obj.Proto &&
-		EqualSliceString(rec.ProxyV2Options, obj.ProxyV2Options) &&
+		EqualSliceString(rec.ProxyV2Options, obj.ProxyV2Options, opts...) &&
 		rec.Redir == obj.Redir &&
 		rec.Renegotiate == obj.Renegotiate &&
 		rec.ResolveNet == obj.ResolveNet &&
 		rec.ResolvePrefer == obj.ResolvePrefer &&
 		rec.ResolveOpts == obj.ResolveOpts &&
 		rec.Resolvers == obj.Resolvers &&
-		EqualPointerInt64(rec.Rise, obj.Rise) &&
+		EqualPointerInt64(rec.Rise, obj.Rise, opts...) &&
 		rec.SendProxy == obj.SendProxy &&
 		rec.SendProxyV2 == obj.SendProxyV2 &&
 		rec.SendProxyV2Ssl == obj.SendProxyV2Ssl &&
 		rec.SendProxyV2SslCn == obj.SendProxyV2SslCn &&
-		EqualPointerServerParamsSetProxyV2TlvFmt(rec.SetProxyV2TlvFmt, obj.SetProxyV2TlvFmt) &&
+		EqualPointerServerParamsSetProxyV2TlvFmt(rec.SetProxyV2TlvFmt, obj.SetProxyV2TlvFmt, opts...) &&
 		rec.Shard == obj.Shard &&
 		rec.Sigalgs == obj.Sigalgs &&
-		EqualPointerInt64(rec.Slowstart, obj.Slowstart) &&
+		EqualPointerInt64(rec.Slowstart, obj.Slowstart, opts...) &&
 		rec.Sni == obj.Sni &&
 		rec.Socks4 == obj.Socks4 &&
 		rec.Source == obj.Source &&
@@ -110,7 +114,7 @@ func (rec ServerParams) Equal(obj ServerParams) bool {
 		rec.Sslv3 == obj.Sslv3 &&
 		rec.Stick == obj.Stick &&
 		rec.StrictMaxconn == obj.StrictMaxconn &&
-		EqualPointerInt64(rec.TCPUt, obj.TCPUt) &&
+		EqualPointerInt64(rec.TCPUt, obj.TCPUt, opts...) &&
 		rec.Tfo == obj.Tfo &&
 		rec.TLSTickets == obj.TLSTickets &&
 		rec.Tlsv10 == obj.Tlsv10 &&
@@ -120,13 +124,13 @@ func (rec ServerParams) Equal(obj ServerParams) bool {
 		rec.Track == obj.Track &&
 		rec.Verify == obj.Verify &&
 		rec.Verifyhost == obj.Verifyhost &&
-		EqualPointerInt64(rec.Weight, obj.Weight) &&
+		EqualPointerInt64(rec.Weight, obj.Weight, opts...) &&
 		rec.Ws == obj.Ws
 }
 
-func EqualPointerServerParamsSetProxyV2TlvFmt(x, y *ServerParamsSetProxyV2TlvFmt) bool {
+func EqualPointerServerParamsSetProxyV2TlvFmt(x, y *ServerParamsSetProxyV2TlvFmt, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

@@ -17,9 +17,13 @@
 
 package models
 
-func (rec Table) Diff(obj Table) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Table) Diff(obj Table, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Expire, obj.Expire) {
+	for diffKey, diffValue := range DiffPointerString(rec.Expire, obj.Expire, opts...) {
 		diff["Expire."+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
@@ -40,10 +44,10 @@ func (rec Table) Diff(obj Table) map[string][]interface{} {
 	if rec.Type != obj.Type {
 		diff["Type"] = []interface{}{rec.Type, obj.Type}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TypeLen, obj.TypeLen) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TypeLen, obj.TypeLen, opts...) {
 		diff["TypeLen."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.WriteTo, obj.WriteTo) {
+	for diffKey, diffValue := range DiffPointerString(rec.WriteTo, obj.WriteTo, opts...) {
 		diff["WriteTo."+diffKey] = diffValue
 	}
 	return diff

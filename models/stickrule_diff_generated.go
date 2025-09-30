@@ -17,7 +17,11 @@
 
 package models
 
-func (rec StickRule) Diff(obj StickRule) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StickRule) Diff(obj StickRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Cond != obj.Cond {
 		diff["Cond"] = []interface{}{rec.Cond, obj.Cond}

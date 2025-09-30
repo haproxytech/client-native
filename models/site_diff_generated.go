@@ -19,23 +19,25 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec Site) Diff(obj Site) map[string][]interface{} {
+func (rec Site) Diff(obj Site, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerSiteFarm(rec.Farms, obj.Farms) {
+	for diffKey, diffValue := range DiffSlicePointerSiteFarm(rec.Farms, obj.Farms, opts...) {
 		diff["Farms"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-	for diffKey, diffValue := range DiffPointerSiteService(rec.Service, obj.Service) {
+	for diffKey, diffValue := range DiffPointerSiteService(rec.Service, obj.Service, opts...) {
 		diff["Service."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerSiteFarm(x, y *SiteFarm) map[string][]interface{} {
+func DiffPointerSiteFarm(x, y *SiteFarm, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -59,7 +61,7 @@ func DiffPointerSiteFarm(x, y *SiteFarm) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSiteService(x, y *SiteService) map[string][]interface{} {
+func DiffPointerSiteService(x, y *SiteService, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -83,7 +85,12 @@ func DiffPointerSiteService(x, y *SiteService) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerSiteFarm(x, y []*SiteFarm) map[string][]interface{} {
+func DiffSlicePointerSiteFarm(x, y []*SiteFarm, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -91,9 +98,10 @@ func DiffSlicePointerSiteFarm(x, y []*SiteFarm) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

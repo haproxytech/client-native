@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SpoeAgent) Equal(obj SpoeAgent) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SpoeAgent) Equal(obj SpoeAgent, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Async == obj.Async &&
 		rec.ContinueOnError == obj.ContinueOnError &&
 		rec.DontlogNormal == obj.DontlogNormal &&
@@ -26,13 +30,13 @@ func (rec SpoeAgent) Equal(obj SpoeAgent) bool {
 		rec.Groups == obj.Groups &&
 		rec.HelloTimeout == obj.HelloTimeout &&
 		rec.IdleTimeout == obj.IdleTimeout &&
-		rec.Log.Equal(obj.Log) &&
+		rec.Log.Equal(obj.Log, opts...) &&
 		rec.MaxFrameSize == obj.MaxFrameSize &&
 		rec.MaxWaitingFrames == obj.MaxWaitingFrames &&
 		rec.Maxconnrate == obj.Maxconnrate &&
 		rec.Maxerrrate == obj.Maxerrrate &&
 		rec.Messages == obj.Messages &&
-		EqualPointerString(rec.Name, obj.Name) &&
+		EqualPointerString(rec.Name, obj.Name, opts...) &&
 		rec.OptionSetOnError == obj.OptionSetOnError &&
 		rec.OptionSetProcessTime == obj.OptionSetProcessTime &&
 		rec.OptionSetTotalTime == obj.OptionSetTotalTime &&

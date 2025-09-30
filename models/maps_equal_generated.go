@@ -17,18 +17,36 @@
 
 package models
 
-func (x Maps) Equal(y Maps) bool {
-	return EqualMaps(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Maps) Equal(y Maps, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualMaps(x, y, opts...)
 }
 
-func EqualMaps(x, y Maps) bool {
+func EqualMaps(x, y Maps, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerMap(vx, vy) {
+		if !EqualPointerMap(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualMaps(x, y Maps) bool {
 	return true
 }
 
-func EqualPointerMap(x, y *Map) bool {
+func EqualPointerMap(x, y *Map, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

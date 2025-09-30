@@ -17,10 +17,14 @@
 
 package models
 
-func (x SpoeScope) Equal(y SpoeScope) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x SpoeScope) Equal(y SpoeScope, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualSpoeScope(x, y)
 }
 
-func EqualSpoeScope(x, y SpoeScope) bool {
+func EqualSpoeScope(x, y SpoeScope, opts ...eqdiff.GoMethodGenOptions) bool {
 	return x == y
 }

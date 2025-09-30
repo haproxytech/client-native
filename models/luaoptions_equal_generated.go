@@ -17,34 +17,52 @@
 
 package models
 
-func (rec LuaOptions) Equal(obj LuaOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LuaOptions) Equal(obj LuaOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.LoadPerThread == obj.LoadPerThread &&
-		EqualSlicePointerLuaLoad(rec.Loads, obj.Loads) &&
-		EqualSlicePointerLuaPrependPath(rec.PrependPath, obj.PrependPath)
+		EqualSlicePointerLuaLoad(rec.Loads, obj.Loads, opts...) &&
+		EqualSlicePointerLuaPrependPath(rec.PrependPath, obj.PrependPath, opts...)
 }
 
-func EqualPointerLuaLoad(x, y *LuaLoad) bool {
+func EqualPointerLuaLoad(x, y *LuaLoad, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerLuaPrependPath(x, y *LuaPrependPath) bool {
+func EqualPointerLuaPrependPath(x, y *LuaPrependPath, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerLuaLoad(x, y []*LuaLoad) bool {
+func EqualSlicePointerLuaLoad(x, y []*LuaLoad, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerLuaLoad(vx, vy) {
+		if !EqualPointerLuaLoad(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -52,14 +70,28 @@ func EqualSlicePointerLuaLoad(x, y []*LuaLoad) bool {
 	return true
 }
 
-func EqualSlicePointerLuaPrependPath(x, y []*LuaPrependPath) bool {
+func EqualSlicePointerLuaPrependPath(x, y []*LuaPrependPath, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerLuaPrependPath(vx, vy) {
+		if !EqualPointerLuaPrependPath(vx, vy, opts...) {
 			return false
 		}
 	}

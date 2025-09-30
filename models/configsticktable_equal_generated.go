@@ -17,15 +17,20 @@
 
 package models
 
-func (rec ConfigStickTable) Equal(obj ConfigStickTable) bool {
-	return EqualPointerInt64(rec.Expire, obj.Expire) &&
-		EqualPointerInt64(rec.Keylen, obj.Keylen) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ConfigStickTable) Equal(obj ConfigStickTable, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.Expire, obj.Expire, opts...) &&
+		EqualPointerInt64(rec.Keylen, obj.Keylen, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Nopurge == obj.Nopurge &&
 		rec.Peers == obj.Peers &&
 		rec.RecvOnly == obj.RecvOnly &&
-		EqualPointerInt64(rec.Size, obj.Size) &&
-		EqualPointerString(rec.Srvkey, obj.Srvkey) &&
+		EqualPointerInt64(rec.Size, obj.Size, opts...) &&
+		EqualPointerString(rec.Srvkey, obj.Srvkey, opts...) &&
 		rec.Store == obj.Store &&
 		rec.Type == obj.Type &&
-		EqualPointerString(rec.WriteTo, obj.WriteTo)
+		EqualPointerString(rec.WriteTo, obj.WriteTo, opts...)
 }

@@ -17,21 +17,25 @@
 
 package models
 
-func (rec FrontendBase) Equal(obj FrontendBase) bool {
-	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) &&
-		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors) &&
-		EqualSliceString(rec.LogSteps, obj.LogSteps) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
+		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) &&
+		EqualSliceString(rec.LogSteps, obj.LogSteps, opts...) &&
 		rec.AcceptInvalidHTTPRequest == obj.AcceptInvalidHTTPRequest &&
 		rec.AcceptUnsafeViolationsInHTTPRequest == obj.AcceptUnsafeViolationsInHTTPRequest &&
-		EqualPointerInt64(rec.Backlog, obj.Backlog) &&
+		EqualPointerInt64(rec.Backlog, obj.Backlog, opts...) &&
 		rec.Clflog == obj.Clflog &&
-		EqualPointerInt64(rec.ClientFinTimeout, obj.ClientFinTimeout) &&
-		EqualPointerInt64(rec.ClientTimeout, obj.ClientTimeout) &&
+		EqualPointerInt64(rec.ClientFinTimeout, obj.ClientFinTimeout, opts...) &&
+		EqualPointerInt64(rec.ClientTimeout, obj.ClientTimeout, opts...) &&
 		rec.Clitcpka == obj.Clitcpka &&
-		EqualPointerInt64(rec.ClitcpkaCnt, obj.ClitcpkaCnt) &&
-		EqualPointerInt64(rec.ClitcpkaIdle, obj.ClitcpkaIdle) &&
-		EqualPointerInt64(rec.ClitcpkaIntvl, obj.ClitcpkaIntvl) &&
-		EqualPointerCompression(rec.Compression, obj.Compression) &&
+		EqualPointerInt64(rec.ClitcpkaCnt, obj.ClitcpkaCnt, opts...) &&
+		EqualPointerInt64(rec.ClitcpkaIdle, obj.ClitcpkaIdle, opts...) &&
+		EqualPointerInt64(rec.ClitcpkaIntvl, obj.ClitcpkaIntvl, opts...) &&
+		EqualPointerCompression(rec.Compression, obj.Compression, opts...) &&
 		rec.Contstats == obj.Contstats &&
 		rec.DefaultBackend == obj.DefaultBackend &&
 		rec.Description == obj.Description &&
@@ -39,12 +43,12 @@ func (rec FrontendBase) Equal(obj FrontendBase) bool {
 		rec.Disabled == obj.Disabled &&
 		rec.DontlogNormal == obj.DontlogNormal &&
 		rec.Dontlognull == obj.Dontlognull &&
-		EqualPointerEmailAlert(rec.EmailAlert, obj.EmailAlert) &&
+		EqualPointerEmailAlert(rec.EmailAlert, obj.EmailAlert, opts...) &&
 		rec.Enabled == obj.Enabled &&
 		rec.ErrorLogFormat == obj.ErrorLogFormat &&
-		EqualPointerErrorloc(rec.Errorloc302, obj.Errorloc302) &&
-		EqualPointerErrorloc(rec.Errorloc303, obj.Errorloc303) &&
-		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor) &&
+		EqualPointerErrorloc(rec.Errorloc302, obj.Errorloc302, opts...) &&
+		EqualPointerErrorloc(rec.Errorloc303, obj.Errorloc303, opts...) &&
+		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) &&
 		rec.From == obj.From &&
 		rec.GUID == obj.GUID &&
 		rec.H1CaseAdjustBogusClient == obj.H1CaseAdjustBogusClient &&
@@ -53,14 +57,14 @@ func (rec FrontendBase) Equal(obj FrontendBase) bool {
 		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
 		rec.HTTPIgnoreProbes == obj.HTTPIgnoreProbes &&
-		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout) &&
+		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&
 		rec.HTTPNoDelay == obj.HTTPNoDelay &&
-		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout) &&
+		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) &&
 		rec.HTTPRestrictReqHdrNames == obj.HTTPRestrictReqHdrNames &&
 		rec.HTTPUseProxyHeader == obj.HTTPUseProxyHeader &&
 		rec.Httplog == obj.Httplog &&
 		rec.Httpslog == obj.Httpslog &&
-		EqualPointerInt64(rec.ID, obj.ID) &&
+		EqualPointerInt64(rec.ID, obj.ID, opts...) &&
 		rec.IdleCloseOnResponse == obj.IdleCloseOnResponse &&
 		rec.IndependentStreams == obj.IndependentStreams &&
 		rec.LogFormat == obj.LogFormat &&
@@ -68,20 +72,21 @@ func (rec FrontendBase) Equal(obj FrontendBase) bool {
 		rec.LogSeparateErrors == obj.LogSeparateErrors &&
 		rec.LogTag == obj.LogTag &&
 		rec.Logasap == obj.Logasap &&
-		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
+		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
-		EqualPointerMonitorFail(rec.MonitorFail, obj.MonitorFail) &&
-		rec.MonitorURI.Equal(obj.MonitorURI) &&
+		EqualPointerMonitorFail(rec.MonitorFail, obj.MonitorFail, opts...) &&
+		rec.MonitorURI.Equal(obj.MonitorURI, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Nolinger == obj.Nolinger &&
-		EqualPointerOriginalto(rec.Originalto, obj.Originalto) &&
+		EqualPointerOriginalto(rec.Originalto, obj.Originalto, opts...) &&
 		rec.SocketStats == obj.SocketStats &&
 		rec.SpliceAuto == obj.SpliceAuto &&
 		rec.SpliceRequest == obj.SpliceRequest &&
 		rec.SpliceResponse == obj.SpliceResponse &&
-		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions) &&
-		EqualPointerConfigStickTable(rec.StickTable, obj.StickTable) &&
-		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout) &&
+		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) &&
+		EqualPointerConfigStickTable(rec.StickTable, obj.StickTable, opts...) &&
+		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) &&
 		rec.TCPSmartAccept == obj.TCPSmartAccept &&
 		rec.Tcpka == obj.Tcpka &&
 		rec.Tcplog == obj.Tcplog &&
@@ -89,9 +94,9 @@ func (rec FrontendBase) Equal(obj FrontendBase) bool {
 		rec.UniqueIDHeader == obj.UniqueIDHeader
 }
 
-func EqualPointerMonitorFail(x, y *MonitorFail) bool {
+func EqualPointerMonitorFail(x, y *MonitorFail, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

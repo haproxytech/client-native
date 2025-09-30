@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FCGISetParam) Equal(obj FCGISetParam) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGISetParam) Equal(obj FCGISetParam, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
 		rec.Format == obj.Format &&

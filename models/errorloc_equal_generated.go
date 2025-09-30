@@ -17,7 +17,12 @@
 
 package models
 
-func (rec Errorloc) Equal(obj Errorloc) bool {
-	return EqualPointerInt64(rec.Code, obj.Code) &&
-		EqualPointerString(rec.URL, obj.URL)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Errorloc) Equal(obj Errorloc, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.Code, obj.Code, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		EqualPointerString(rec.URL, obj.URL, opts...)
 }

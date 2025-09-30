@@ -17,12 +17,16 @@
 
 package models
 
-func (rec AcmeProvider) Diff(obj AcmeProvider) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AccountKey != obj.AccountKey {
 		diff["AccountKey"] = []interface{}{rec.AccountKey, obj.AccountKey}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Bits, obj.Bits) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Bits, obj.Bits, opts...) {
 		diff["Bits."+diffKey] = diffValue
 	}
 	if rec.Challenge != obj.Challenge {
@@ -49,7 +53,7 @@ func (rec AcmeProvider) Diff(obj AcmeProvider) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerInt64(x, y *int64) map[string][]interface{} {
+func DiffPointerInt64(x, y *int64, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

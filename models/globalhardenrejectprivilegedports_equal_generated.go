@@ -17,7 +17,11 @@
 
 package models
 
-func (rec GlobalHardenRejectPrivilegedPorts) Equal(obj GlobalHardenRejectPrivilegedPorts) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalHardenRejectPrivilegedPorts) Equal(obj GlobalHardenRejectPrivilegedPorts, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Quic == obj.Quic &&
 		rec.TCP == obj.TCP
 }

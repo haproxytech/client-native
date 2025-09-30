@@ -17,9 +17,14 @@
 
 package models
 
-func (rec Bind) Equal(obj Bind) bool {
-	return rec.BindParams.Equal(obj.BindParams) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Bind) Equal(obj Bind, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.BindParams.Equal(obj.BindParams, opts...) &&
 		rec.Address == obj.Address &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
-		EqualPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd)
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
+		EqualPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd, opts...)
 }

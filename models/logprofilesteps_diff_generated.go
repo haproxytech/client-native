@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x LogProfileSteps) Diff(y LogProfileSteps) map[string][]interface{} {
-	return DiffLogProfileSteps(x, y)
+func (x LogProfileSteps) Diff(y LogProfileSteps, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffLogProfileSteps(x, y, opts...)
 }
 
-func DiffLogProfileSteps(x, y LogProfileSteps) map[string][]interface{} {
+func DiffLogProfileSteps(x, y LogProfileSteps, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffLogProfileSteps(x, y LogProfileSteps) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffLogProfileSteps(x, y LogProfileSteps) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerLogProfileStep(x, y *LogProfileStep) map[string][]interface{} {
+func DiffPointerLogProfileStep(x, y *LogProfileStep, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

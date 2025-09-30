@@ -17,9 +17,13 @@
 
 package models
 
-func (rec ClusterLogTarget) Equal(obj ClusterLogTarget) bool {
-	return EqualPointerString(rec.Address, obj.Address) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ClusterLogTarget) Equal(obj ClusterLogTarget, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Address, obj.Address, opts...) &&
 		rec.LogFormat == obj.LogFormat &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
-		EqualPointerString(rec.Protocol, obj.Protocol)
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
+		EqualPointerString(rec.Protocol, obj.Protocol, opts...)
 }

@@ -19,14 +19,16 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec EnvironmentOptions) Diff(obj EnvironmentOptions) map[string][]interface{} {
+func (rec EnvironmentOptions) Diff(obj EnvironmentOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs) {
+	for diffKey, diffValue := range DiffSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs, opts...) {
 		diff["PresetEnvs"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs) {
+	for diffKey, diffValue := range DiffSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs, opts...) {
 		diff["SetEnvs"+diffKey] = diffValue
 	}
 	if rec.Resetenv != obj.Resetenv {
@@ -38,7 +40,7 @@ func (rec EnvironmentOptions) Diff(obj EnvironmentOptions) map[string][]interfac
 	return diff
 }
 
-func DiffPointerPresetEnv(x, y *PresetEnv) map[string][]interface{} {
+func DiffPointerPresetEnv(x, y *PresetEnv, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -62,7 +64,7 @@ func DiffPointerPresetEnv(x, y *PresetEnv) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSetEnv(x, y *SetEnv) map[string][]interface{} {
+func DiffPointerSetEnv(x, y *SetEnv, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -86,7 +88,12 @@ func DiffPointerSetEnv(x, y *SetEnv) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerPresetEnv(x, y []*PresetEnv) map[string][]interface{} {
+func DiffSlicePointerPresetEnv(x, y []*PresetEnv, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -94,9 +101,10 @@ func DiffSlicePointerPresetEnv(x, y []*PresetEnv) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -126,7 +134,12 @@ func DiffSlicePointerPresetEnv(x, y []*PresetEnv) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerSetEnv(x, y []*SetEnv) map[string][]interface{} {
+func DiffSlicePointerSetEnv(x, y []*SetEnv, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -134,9 +147,10 @@ func DiffSlicePointerSetEnv(x, y []*SetEnv) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

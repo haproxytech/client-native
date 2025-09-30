@@ -17,16 +17,20 @@
 
 package models
 
-func (rec ClusterSettings) Equal(obj ClusterSettings) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ClusterSettings) Equal(obj ClusterSettings, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BootstrapKey == obj.BootstrapKey &&
-		EqualPointerClusterSettingsCluster(rec.Cluster, obj.Cluster) &&
+		EqualPointerClusterSettingsCluster(rec.Cluster, obj.Cluster, opts...) &&
 		rec.Mode == obj.Mode &&
 		rec.Status == obj.Status
 }
 
-func EqualPointerClusterSettingsCluster(x, y *ClusterSettingsCluster) bool {
+func EqualPointerClusterSettingsCluster(x, y *ClusterSettingsCluster, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FiftyOneDegreesOptions) Diff(obj FiftyOneDegreesOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FiftyOneDegreesOptions) Diff(obj FiftyOneDegreesOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.CacheSize != obj.CacheSize {
 		diff["CacheSize"] = []interface{}{rec.CacheSize, obj.CacheSize}

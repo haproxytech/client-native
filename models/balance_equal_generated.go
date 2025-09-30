@@ -17,8 +17,12 @@
 
 package models
 
-func (rec Balance) Equal(obj Balance) bool {
-	return EqualPointerString(rec.Algorithm, obj.Algorithm) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Balance) Equal(obj Balance, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Algorithm, obj.Algorithm, opts...) &&
 		rec.HashExpression == obj.HashExpression &&
 		rec.HdrName == obj.HdrName &&
 		rec.HdrUseDomainOnly == obj.HdrUseDomainOnly &&

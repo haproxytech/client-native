@@ -17,11 +17,16 @@
 
 package models
 
-func (rec ServerTemplate) Equal(obj ServerTemplate) bool {
-	return rec.ServerParams.Equal(obj.ServerParams) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ServerTemplate) Equal(obj ServerTemplate, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.ServerParams.Equal(obj.ServerParams, opts...) &&
 		rec.Fqdn == obj.Fqdn &&
-		EqualPointerInt64(rec.ID, obj.ID) &&
+		EqualPointerInt64(rec.ID, obj.ID, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NumOrRange == obj.NumOrRange &&
-		EqualPointerInt64(rec.Port, obj.Port) &&
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
 		rec.Prefix == obj.Prefix
 }

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec CPUSet) Equal(obj CPUSet) bool {
-	return EqualPointerString(rec.Directive, obj.Directive) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CPUSet) Equal(obj CPUSet, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Directive, obj.Directive, opts...) &&
 		rec.Set == obj.Set
 }

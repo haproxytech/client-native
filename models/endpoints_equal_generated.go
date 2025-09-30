@@ -17,18 +17,36 @@
 
 package models
 
-func (x Endpoints) Equal(y Endpoints) bool {
-	return EqualEndpoints(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Endpoints) Equal(y Endpoints, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualEndpoints(x, y, opts...)
 }
 
-func EqualEndpoints(x, y Endpoints) bool {
+func EqualEndpoints(x, y Endpoints, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerEndpoint(vx, vy) {
+		if !EqualPointerEndpoint(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualEndpoints(x, y Endpoints) bool {
 	return true
 }
 
-func EqualPointerEndpoint(x, y *Endpoint) bool {
+func EqualPointerEndpoint(x, y *Endpoint, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

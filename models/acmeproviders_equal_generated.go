@@ -17,18 +17,36 @@
 
 package models
 
-func (x AcmeProviders) Equal(y AcmeProviders) bool {
-	return EqualAcmeProviders(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x AcmeProviders) Equal(y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualAcmeProviders(x, y, opts...)
 }
 
-func EqualAcmeProviders(x, y AcmeProviders) bool {
+func EqualAcmeProviders(x, y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerAcmeProvider(vx, vy) {
+		if !EqualPointerAcmeProvider(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualAcmeProviders(x, y AcmeProviders) bool {
 	return true
 }
 
-func EqualPointerAcmeProvider(x, y *AcmeProvider) bool {
+func EqualPointerAcmeProvider(x, y *AcmeProvider, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

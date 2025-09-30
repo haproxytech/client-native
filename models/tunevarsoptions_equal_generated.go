@@ -17,10 +17,14 @@
 
 package models
 
-func (rec TuneVarsOptions) Equal(obj TuneVarsOptions) bool {
-	return EqualPointerInt64(rec.GlobalMaxSize, obj.GlobalMaxSize) &&
-		EqualPointerInt64(rec.ProcMaxSize, obj.ProcMaxSize) &&
-		EqualPointerInt64(rec.ReqresMaxSize, obj.ReqresMaxSize) &&
-		EqualPointerInt64(rec.SessMaxSize, obj.SessMaxSize) &&
-		EqualPointerInt64(rec.TxnMaxSize, obj.TxnMaxSize)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneVarsOptions) Equal(obj TuneVarsOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerInt64(rec.GlobalMaxSize, obj.GlobalMaxSize, opts...) &&
+		EqualPointerInt64(rec.ProcMaxSize, obj.ProcMaxSize, opts...) &&
+		EqualPointerInt64(rec.ReqresMaxSize, obj.ReqresMaxSize, opts...) &&
+		EqualPointerInt64(rec.SessMaxSize, obj.SessMaxSize, opts...) &&
+		EqualPointerInt64(rec.TxnMaxSize, obj.TxnMaxSize, opts...)
 }

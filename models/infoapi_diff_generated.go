@@ -19,11 +19,12 @@ package models
 
 import (
 	"github.com/haproxytech/client-native/v6/models/funcs"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec InfoAPI) Diff(obj InfoAPI) map[string][]interface{} {
+func (rec InfoAPI) Diff(obj InfoAPI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.BuildDate, obj.BuildDate) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.BuildDate, obj.BuildDate, opts...) {
 		diff["BuildDate."+diffKey] = diffValue
 	}
 	if rec.Version != obj.Version {

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec ThreadGroup) Equal(obj ThreadGroup) bool {
-	return EqualPointerString(rec.Group, obj.Group) &&
-		EqualPointerString(rec.NumOrRange, obj.NumOrRange)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ThreadGroup) Equal(obj ThreadGroup, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Group, obj.Group, opts...) &&
+		EqualPointerString(rec.NumOrRange, obj.NumOrRange, opts...)
 }

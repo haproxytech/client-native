@@ -17,7 +17,11 @@
 
 package models
 
-func (rec FCGISetParam) Diff(obj FCGISetParam) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec FCGISetParam) Diff(obj FCGISetParam, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Cond != obj.Cond {
 		diff["Cond"] = []interface{}{rec.Cond, obj.Cond}

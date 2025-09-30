@@ -17,18 +17,36 @@
 
 package models
 
-func (x Acls) Equal(y Acls) bool {
-	return EqualAcls(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x Acls) Equal(y Acls, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualAcls(x, y, opts...)
 }
 
-func EqualAcls(x, y Acls) bool {
+func EqualAcls(x, y Acls, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerACL(vx, vy) {
+		if !EqualPointerACL(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualAcls(x, y Acls) bool {
 	return true
 }
 
-func EqualPointerACL(x, y *ACL) bool {
+func EqualPointerACL(x, y *ACL, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

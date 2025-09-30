@@ -17,12 +17,16 @@
 
 package models
 
-func (rec ClusterSettings) Diff(obj ClusterSettings) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ClusterSettings) Diff(obj ClusterSettings, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.BootstrapKey != obj.BootstrapKey {
 		diff["BootstrapKey"] = []interface{}{rec.BootstrapKey, obj.BootstrapKey}
 	}
-	for diffKey, diffValue := range DiffPointerClusterSettingsCluster(rec.Cluster, obj.Cluster) {
+	for diffKey, diffValue := range DiffPointerClusterSettingsCluster(rec.Cluster, obj.Cluster, opts...) {
 		diff["Cluster."+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
@@ -34,7 +38,7 @@ func (rec ClusterSettings) Diff(obj ClusterSettings) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerClusterSettingsCluster(x, y *ClusterSettingsCluster) map[string][]interface{} {
+func DiffPointerClusterSettingsCluster(x, y *ClusterSettingsCluster, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

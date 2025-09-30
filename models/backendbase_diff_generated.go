@@ -19,20 +19,22 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
+func (rec BackendBase) Diff(obj BackendBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles) {
+	for diffKey, diffValue := range DiffSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) {
 		diff["ErrorFiles"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors) {
+	for diffKey, diffValue := range DiffSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) {
 		diff["ErrorFilesFromHTTPErrors"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerForcePersist(rec.ForcePersistList, obj.ForcePersistList) {
+	for diffKey, diffValue := range DiffSlicePointerForcePersist(rec.ForcePersistList, obj.ForcePersistList, opts...) {
 		diff["ForcePersistList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffSlicePointerIgnorePersist(rec.IgnorePersistList, obj.IgnorePersistList) {
+	for diffKey, diffValue := range DiffSlicePointerIgnorePersist(rec.IgnorePersistList, obj.IgnorePersistList, opts...) {
 		diff["IgnorePersistList"+diffKey] = diffValue
 	}
 	if rec.Abortonclose != obj.Abortonclose {
@@ -50,25 +52,25 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.Allbackups != obj.Allbackups {
 		diff["Allbackups"] = []interface{}{rec.Allbackups, obj.Allbackups}
 	}
-	for diffKey, diffValue := range DiffPointerBalance(rec.Balance, obj.Balance) {
+	for diffKey, diffValue := range DiffPointerBalance(rec.Balance, obj.Balance, opts...) {
 		diff["Balance."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.CheckTimeout, obj.CheckTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.CheckTimeout, obj.CheckTimeout, opts...) {
 		diff["CheckTimeout."+diffKey] = diffValue
 	}
 	if rec.Checkcache != obj.Checkcache {
 		diff["Checkcache"] = []interface{}{rec.Checkcache, obj.Checkcache}
 	}
-	for diffKey, diffValue := range DiffPointerCompression(rec.Compression, obj.Compression) {
+	for diffKey, diffValue := range DiffPointerCompression(rec.Compression, obj.Compression, opts...) {
 		diff["Compression."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ConnectTimeout, obj.ConnectTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ConnectTimeout, obj.ConnectTimeout, opts...) {
 		diff["ConnectTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerCookie(rec.Cookie, obj.Cookie) {
+	for diffKey, diffValue := range DiffPointerCookie(rec.Cookie, obj.Cookie, opts...) {
 		diff["Cookie."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerDefaultServer(rec.DefaultServer, obj.DefaultServer) {
+	for diffKey, diffValue := range DiffPointerDefaultServer(rec.DefaultServer, obj.DefaultServer, opts...) {
 		diff["DefaultServer."+diffKey] = diffValue
 	}
 	if rec.Description != obj.Description {
@@ -80,16 +82,16 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.DynamicCookieKey != obj.DynamicCookieKey {
 		diff["DynamicCookieKey"] = []interface{}{rec.DynamicCookieKey, obj.DynamicCookieKey}
 	}
-	for diffKey, diffValue := range DiffPointerEmailAlert(rec.EmailAlert, obj.EmailAlert) {
+	for diffKey, diffValue := range DiffPointerEmailAlert(rec.EmailAlert, obj.EmailAlert, opts...) {
 		diff["EmailAlert."+diffKey] = diffValue
 	}
 	if rec.Enabled != obj.Enabled {
 		diff["Enabled"] = []interface{}{rec.Enabled, obj.Enabled}
 	}
-	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc302, obj.Errorloc302) {
+	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc302, obj.Errorloc302, opts...) {
 		diff["Errorloc302."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc303, obj.Errorloc303) {
+	for diffKey, diffValue := range DiffPointerErrorloc(rec.Errorloc303, obj.Errorloc303, opts...) {
 		diff["Errorloc303."+diffKey] = diffValue
 	}
 	if rec.ExternalCheck != obj.ExternalCheck {
@@ -101,16 +103,16 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.ExternalCheckPath != obj.ExternalCheckPath {
 		diff["ExternalCheckPath"] = []interface{}{rec.ExternalCheckPath, obj.ExternalCheckPath}
 	}
-	for diffKey, diffValue := range DiffPointerBackendForcePersist(rec.ForcePersist, obj.ForcePersist) {
+	for diffKey, diffValue := range DiffPointerBackendForcePersist(rec.ForcePersist, obj.ForcePersist, opts...) {
 		diff["ForcePersist."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor) {
+	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) {
 		diff["Forwardfor."+diffKey] = diffValue
 	}
 	if rec.From != obj.From {
 		diff["From"] = []interface{}{rec.From, obj.From}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Fullconn, obj.Fullconn) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Fullconn, obj.Fullconn, opts...) {
 		diff["Fullconn."+diffKey] = diffValue
 	}
 	if rec.GUID != obj.GUID {
@@ -119,13 +121,13 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.H1CaseAdjustBogusServer != obj.H1CaseAdjustBogusServer {
 		diff["H1CaseAdjustBogusServer"] = []interface{}{rec.H1CaseAdjustBogusServer, obj.H1CaseAdjustBogusServer}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HashBalanceFactor, obj.HashBalanceFactor) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HashBalanceFactor, obj.HashBalanceFactor, opts...) {
 		diff["HashBalanceFactor."+diffKey] = diffValue
 	}
 	if rec.HashPreserveAffinity != obj.HashPreserveAffinity {
 		diff["HashPreserveAffinity"] = []interface{}{rec.HashPreserveAffinity, obj.HashPreserveAffinity}
 	}
-	for diffKey, diffValue := range DiffPointerHashType(rec.HashType, obj.HashType) {
+	for diffKey, diffValue := range DiffPointerHashType(rec.HashType, obj.HashType, opts...) {
 		diff["HashType."+diffKey] = diffValue
 	}
 	if rec.HTTPBufferRequest != obj.HTTPBufferRequest {
@@ -143,7 +145,7 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.HTTPConnectionMode != obj.HTTPConnectionMode {
 		diff["HTTPConnectionMode"] = []interface{}{rec.HTTPConnectionMode, obj.HTTPConnectionMode}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) {
 		diff["HTTPKeepAliveTimeout."+diffKey] = diffValue
 	}
 	if rec.HTTPPretendKeepalive != obj.HTTPPretendKeepalive {
@@ -152,7 +154,7 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.HTTPProxy != obj.HTTPProxy {
 		diff["HTTPProxy"] = []interface{}{rec.HTTPProxy, obj.HTTPProxy}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) {
 		diff["HTTPRequestTimeout."+diffKey] = diffValue
 	}
 	if rec.HTTPRestrictReqHdrNames != obj.HTTPRestrictReqHdrNames {
@@ -161,16 +163,16 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.HTTPReuse != obj.HTTPReuse {
 		diff["HTTPReuse"] = []interface{}{rec.HTTPReuse, obj.HTTPReuse}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.HTTPSendNameHeader, obj.HTTPSendNameHeader) {
+	for diffKey, diffValue := range DiffPointerString(rec.HTTPSendNameHeader, obj.HTTPSendNameHeader, opts...) {
 		diff["HTTPSendNameHeader."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerHttpchkParams(rec.HttpchkParams, obj.HttpchkParams) {
+	for diffKey, diffValue := range DiffPointerHttpchkParams(rec.HttpchkParams, obj.HttpchkParams, opts...) {
 		diff["HttpchkParams."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ID, obj.ID) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ID, obj.ID, opts...) {
 		diff["ID."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerBackendIgnorePersist(rec.IgnorePersist, obj.IgnorePersist) {
+	for diffKey, diffValue := range DiffPointerBackendIgnorePersist(rec.IgnorePersist, obj.IgnorePersist, opts...) {
 		diff["IgnorePersist."+diffKey] = diffValue
 	}
 	if rec.IndependentStreams != obj.IndependentStreams {
@@ -185,13 +187,13 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.LogTag != obj.LogTag {
 		diff["LogTag"] = []interface{}{rec.LogTag, obj.LogTag}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) {
 		diff["MaxKeepAliveQueue."+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
 		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}
 	}
-	for diffKey, diffValue := range DiffPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams) {
+	for diffKey, diffValue := range DiffPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams, opts...) {
 		diff["MysqlCheckParams."+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
@@ -200,46 +202,46 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.Nolinger != obj.Nolinger {
 		diff["Nolinger"] = []interface{}{rec.Nolinger, obj.Nolinger}
 	}
-	for diffKey, diffValue := range DiffPointerOriginalto(rec.Originalto, obj.Originalto) {
+	for diffKey, diffValue := range DiffPointerOriginalto(rec.Originalto, obj.Originalto, opts...) {
 		diff["Originalto."+diffKey] = diffValue
 	}
 	if rec.Persist != obj.Persist {
 		diff["Persist"] = []interface{}{rec.Persist, obj.Persist}
 	}
-	for diffKey, diffValue := range DiffPointerPersistRule(rec.PersistRule, obj.PersistRule) {
+	for diffKey, diffValue := range DiffPointerPersistRule(rec.PersistRule, obj.PersistRule, opts...) {
 		diff["PersistRule."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams) {
+	for diffKey, diffValue := range DiffPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams, opts...) {
 		diff["PgsqlCheckParams."+diffKey] = diffValue
 	}
 	if rec.PreferLastServer != obj.PreferLastServer {
 		diff["PreferLastServer"] = []interface{}{rec.PreferLastServer, obj.PreferLastServer}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.QueueTimeout, obj.QueueTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.QueueTimeout, obj.QueueTimeout, opts...) {
 		diff["QueueTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerRedispatch(rec.Redispatch, obj.Redispatch) {
+	for diffKey, diffValue := range DiffPointerRedispatch(rec.Redispatch, obj.Redispatch, opts...) {
 		diff["Redispatch."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Retries, obj.Retries) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Retries, obj.Retries, opts...) {
 		diff["Retries."+diffKey] = diffValue
 	}
 	if rec.RetryOn != obj.RetryOn {
 		diff["RetryOn"] = []interface{}{rec.RetryOn, obj.RetryOn}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ServerFinTimeout, obj.ServerFinTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ServerFinTimeout, obj.ServerFinTimeout, opts...) {
 		diff["ServerFinTimeout."+diffKey] = diffValue
 	}
 	if rec.ServerStateFileName != obj.ServerStateFileName {
 		diff["ServerStateFileName"] = []interface{}{rec.ServerStateFileName, obj.ServerStateFileName}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ServerTimeout, obj.ServerTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ServerTimeout, obj.ServerTimeout, opts...) {
 		diff["ServerTimeout."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerSmtpchkParams(rec.SmtpchkParams, obj.SmtpchkParams) {
+	for diffKey, diffValue := range DiffPointerSmtpchkParams(rec.SmtpchkParams, obj.SmtpchkParams, opts...) {
 		diff["SmtpchkParams."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerSource(rec.Source, obj.Source) {
+	for diffKey, diffValue := range DiffPointerSource(rec.Source, obj.Source, opts...) {
 		diff["Source."+diffKey] = diffValue
 	}
 	if rec.SpliceAuto != obj.SpliceAuto {
@@ -257,22 +259,22 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.Srvtcpka != obj.Srvtcpka {
 		diff["Srvtcpka"] = []interface{}{rec.Srvtcpka, obj.Srvtcpka}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SrvtcpkaCnt, obj.SrvtcpkaCnt) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SrvtcpkaCnt, obj.SrvtcpkaCnt, opts...) {
 		diff["SrvtcpkaCnt."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SrvtcpkaIdle, obj.SrvtcpkaIdle) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SrvtcpkaIdle, obj.SrvtcpkaIdle, opts...) {
 		diff["SrvtcpkaIdle."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl, opts...) {
 		diff["SrvtcpkaIntvl."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerStatsOptions(rec.StatsOptions, obj.StatsOptions) {
+	for diffKey, diffValue := range DiffPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) {
 		diff["StatsOptions."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerConfigStickTable(rec.StickTable, obj.StickTable) {
+	for diffKey, diffValue := range DiffPointerConfigStickTable(rec.StickTable, obj.StickTable, opts...) {
 		diff["StickTable."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) {
 		diff["TarpitTimeout."+diffKey] = diffValue
 	}
 	if rec.TCPSmartConnect != obj.TCPSmartConnect {
@@ -284,7 +286,7 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	if rec.Transparent != obj.Transparent {
 		diff["Transparent"] = []interface{}{rec.Transparent, obj.Transparent}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout, opts...) {
 		diff["TunnelTimeout."+diffKey] = diffValue
 	}
 	if rec.UseFCGIApp != obj.UseFCGIApp {
@@ -293,7 +295,7 @@ func (rec BackendBase) Diff(obj BackendBase) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerBackendForcePersist(x, y *BackendForcePersist) map[string][]interface{} {
+func DiffPointerBackendForcePersist(x, y *BackendForcePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -317,7 +319,7 @@ func DiffPointerBackendForcePersist(x, y *BackendForcePersist) map[string][]inte
 	return diff
 }
 
-func DiffPointerBackendIgnorePersist(x, y *BackendIgnorePersist) map[string][]interface{} {
+func DiffPointerBackendIgnorePersist(x, y *BackendIgnorePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -341,7 +343,7 @@ func DiffPointerBackendIgnorePersist(x, y *BackendIgnorePersist) map[string][]in
 	return diff
 }
 
-func DiffPointerBalance(x, y *Balance) map[string][]interface{} {
+func DiffPointerBalance(x, y *Balance, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -365,7 +367,7 @@ func DiffPointerBalance(x, y *Balance) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerCompression(x, y *Compression) map[string][]interface{} {
+func DiffPointerCompression(x, y *Compression, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -389,7 +391,7 @@ func DiffPointerCompression(x, y *Compression) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerConfigStickTable(x, y *ConfigStickTable) map[string][]interface{} {
+func DiffPointerConfigStickTable(x, y *ConfigStickTable, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -413,7 +415,7 @@ func DiffPointerConfigStickTable(x, y *ConfigStickTable) map[string][]interface{
 	return diff
 }
 
-func DiffPointerCookie(x, y *Cookie) map[string][]interface{} {
+func DiffPointerCookie(x, y *Cookie, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -437,7 +439,7 @@ func DiffPointerCookie(x, y *Cookie) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerDefaultServer(x, y *DefaultServer) map[string][]interface{} {
+func DiffPointerDefaultServer(x, y *DefaultServer, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -461,7 +463,7 @@ func DiffPointerDefaultServer(x, y *DefaultServer) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerEmailAlert(x, y *EmailAlert) map[string][]interface{} {
+func DiffPointerEmailAlert(x, y *EmailAlert, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -485,7 +487,7 @@ func DiffPointerEmailAlert(x, y *EmailAlert) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerErrorfile(x, y *Errorfile) map[string][]interface{} {
+func DiffPointerErrorfile(x, y *Errorfile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -509,7 +511,7 @@ func DiffPointerErrorfile(x, y *Errorfile) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerErrorfiles(x, y *Errorfiles) map[string][]interface{} {
+func DiffPointerErrorfiles(x, y *Errorfiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -533,7 +535,7 @@ func DiffPointerErrorfiles(x, y *Errorfiles) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerErrorloc(x, y *Errorloc) map[string][]interface{} {
+func DiffPointerErrorloc(x, y *Errorloc, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -557,7 +559,7 @@ func DiffPointerErrorloc(x, y *Errorloc) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerForcePersist(x, y *ForcePersist) map[string][]interface{} {
+func DiffPointerForcePersist(x, y *ForcePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -581,7 +583,7 @@ func DiffPointerForcePersist(x, y *ForcePersist) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerForwardfor(x, y *Forwardfor) map[string][]interface{} {
+func DiffPointerForwardfor(x, y *Forwardfor, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -605,7 +607,7 @@ func DiffPointerForwardfor(x, y *Forwardfor) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerHashType(x, y *HashType) map[string][]interface{} {
+func DiffPointerHashType(x, y *HashType, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -629,7 +631,7 @@ func DiffPointerHashType(x, y *HashType) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerHttpchkParams(x, y *HttpchkParams) map[string][]interface{} {
+func DiffPointerHttpchkParams(x, y *HttpchkParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -653,7 +655,7 @@ func DiffPointerHttpchkParams(x, y *HttpchkParams) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerIgnorePersist(x, y *IgnorePersist) map[string][]interface{} {
+func DiffPointerIgnorePersist(x, y *IgnorePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -677,7 +679,7 @@ func DiffPointerIgnorePersist(x, y *IgnorePersist) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerMysqlCheckParams(x, y *MysqlCheckParams) map[string][]interface{} {
+func DiffPointerMysqlCheckParams(x, y *MysqlCheckParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -701,7 +703,7 @@ func DiffPointerMysqlCheckParams(x, y *MysqlCheckParams) map[string][]interface{
 	return diff
 }
 
-func DiffPointerOriginalto(x, y *Originalto) map[string][]interface{} {
+func DiffPointerOriginalto(x, y *Originalto, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -725,7 +727,7 @@ func DiffPointerOriginalto(x, y *Originalto) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerPersistRule(x, y *PersistRule) map[string][]interface{} {
+func DiffPointerPersistRule(x, y *PersistRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -749,7 +751,7 @@ func DiffPointerPersistRule(x, y *PersistRule) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerPgsqlCheckParams(x, y *PgsqlCheckParams) map[string][]interface{} {
+func DiffPointerPgsqlCheckParams(x, y *PgsqlCheckParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -773,7 +775,7 @@ func DiffPointerPgsqlCheckParams(x, y *PgsqlCheckParams) map[string][]interface{
 	return diff
 }
 
-func DiffPointerRedispatch(x, y *Redispatch) map[string][]interface{} {
+func DiffPointerRedispatch(x, y *Redispatch, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -797,7 +799,7 @@ func DiffPointerRedispatch(x, y *Redispatch) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSmtpchkParams(x, y *SmtpchkParams) map[string][]interface{} {
+func DiffPointerSmtpchkParams(x, y *SmtpchkParams, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -821,7 +823,7 @@ func DiffPointerSmtpchkParams(x, y *SmtpchkParams) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerSource(x, y *Source) map[string][]interface{} {
+func DiffPointerSource(x, y *Source, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -845,7 +847,7 @@ func DiffPointerSource(x, y *Source) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerStatsOptions(x, y *StatsOptions) map[string][]interface{} {
+func DiffPointerStatsOptions(x, y *StatsOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -869,7 +871,12 @@ func DiffPointerStatsOptions(x, y *StatsOptions) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerErrorfile(x, y []*Errorfile) map[string][]interface{} {
+func DiffSlicePointerErrorfile(x, y []*Errorfile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -877,9 +884,10 @@ func DiffSlicePointerErrorfile(x, y []*Errorfile) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -909,7 +917,12 @@ func DiffSlicePointerErrorfile(x, y []*Errorfile) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerErrorfiles(x, y []*Errorfiles) map[string][]interface{} {
+func DiffSlicePointerErrorfiles(x, y []*Errorfiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -917,9 +930,10 @@ func DiffSlicePointerErrorfiles(x, y []*Errorfiles) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -949,7 +963,12 @@ func DiffSlicePointerErrorfiles(x, y []*Errorfiles) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerForcePersist(x, y []*ForcePersist) map[string][]interface{} {
+func DiffSlicePointerForcePersist(x, y []*ForcePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -957,9 +976,10 @@ func DiffSlicePointerForcePersist(x, y []*ForcePersist) map[string][]interface{}
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -989,7 +1009,12 @@ func DiffSlicePointerForcePersist(x, y []*ForcePersist) map[string][]interface{}
 	return diff
 }
 
-func DiffSlicePointerIgnorePersist(x, y []*IgnorePersist) map[string][]interface{} {
+func DiffSlicePointerIgnorePersist(x, y []*IgnorePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -997,9 +1022,10 @@ func DiffSlicePointerIgnorePersist(x, y []*IgnorePersist) map[string][]interface
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

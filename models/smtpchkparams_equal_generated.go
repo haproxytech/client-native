@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SmtpchkParams) Equal(obj SmtpchkParams) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SmtpchkParams) Equal(obj SmtpchkParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Domain == obj.Domain &&
 		rec.Hello == obj.Hello
 }

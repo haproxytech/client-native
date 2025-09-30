@@ -17,12 +17,16 @@
 
 package models
 
-func (rec StatsAuth) Diff(obj StatsAuth) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec StatsAuth) Diff(obj StatsAuth, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.Passwd, obj.Passwd) {
+	for diffKey, diffValue := range DiffPointerString(rec.Passwd, obj.Passwd, opts...) {
 		diff["Passwd."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.User, obj.User) {
+	for diffKey, diffValue := range DiffPointerString(rec.User, obj.User, opts...) {
 		diff["User."+diffKey] = diffValue
 	}
 	return diff

@@ -17,12 +17,16 @@
 
 package models
 
-func (rec ServerParamsSetProxyV2TlvFmt) Diff(obj ServerParamsSetProxyV2TlvFmt) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec ServerParamsSetProxyV2TlvFmt) Diff(obj ServerParamsSetProxyV2TlvFmt, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerString(rec.ID, obj.ID) {
+	for diffKey, diffValue := range DiffPointerString(rec.ID, obj.ID, opts...) {
 		diff["ID."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value) {
+	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value, opts...) {
 		diff["Value."+diffKey] = diffValue
 	}
 	return diff

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec H1CaseAdjust) Equal(obj H1CaseAdjust) bool {
-	return EqualPointerString(rec.From, obj.From) &&
-		EqualPointerString(rec.To, obj.To)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec H1CaseAdjust) Equal(obj H1CaseAdjust, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.From, obj.From, opts...) &&
+		EqualPointerString(rec.To, obj.To, opts...)
 }

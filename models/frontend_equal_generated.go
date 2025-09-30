@@ -17,30 +17,48 @@
 
 package models
 
-func (rec Frontend) Equal(obj Frontend) bool {
-	return rec.FrontendBase.Equal(obj.FrontendBase) &&
-		rec.ACLList.Equal(obj.ACLList) &&
-		rec.BackendSwitchingRuleList.Equal(obj.BackendSwitchingRuleList) &&
-		rec.CaptureList.Equal(obj.CaptureList) &&
-		rec.FilterList.Equal(obj.FilterList) &&
-		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList) &&
-		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList) &&
-		rec.HTTPRequestRuleList.Equal(obj.HTTPRequestRuleList) &&
-		rec.HTTPResponseRuleList.Equal(obj.HTTPResponseRuleList) &&
-		rec.LogTargetList.Equal(obj.LogTargetList) &&
-		rec.QUICInitialRuleList.Equal(obj.QUICInitialRuleList) &&
-		rec.SSLFrontUses.Equal(obj.SSLFrontUses) &&
-		rec.TCPRequestRuleList.Equal(obj.TCPRequestRuleList) &&
-		EqualMapStringBind(rec.Binds, obj.Binds)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Frontend) Equal(obj Frontend, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.FrontendBase.Equal(obj.FrontendBase, opts...) &&
+		rec.ACLList.Equal(obj.ACLList, opts...) &&
+		rec.BackendSwitchingRuleList.Equal(obj.BackendSwitchingRuleList, opts...) &&
+		rec.CaptureList.Equal(obj.CaptureList, opts...) &&
+		rec.FilterList.Equal(obj.FilterList, opts...) &&
+		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList, opts...) &&
+		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList, opts...) &&
+		rec.HTTPRequestRuleList.Equal(obj.HTTPRequestRuleList, opts...) &&
+		rec.HTTPResponseRuleList.Equal(obj.HTTPResponseRuleList, opts...) &&
+		rec.LogTargetList.Equal(obj.LogTargetList, opts...) &&
+		rec.QUICInitialRuleList.Equal(obj.QUICInitialRuleList, opts...) &&
+		rec.SSLFrontUses.Equal(obj.SSLFrontUses, opts...) &&
+		rec.TCPRequestRuleList.Equal(obj.TCPRequestRuleList, opts...) &&
+		EqualMapStringBind(rec.Binds, obj.Binds, opts...)
 }
 
-func EqualMapStringBind(x, y map[string]Bind) bool {
+func EqualMapStringBind(x, y map[string]Bind, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}

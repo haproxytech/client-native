@@ -17,21 +17,39 @@
 
 package models
 
-func (rec SiteService) Equal(obj SiteService) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SiteService) Equal(obj SiteService, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
-		EqualSlicePointerBind(rec.Listeners, obj.Listeners) &&
-		EqualPointerInt64(rec.Maxconn, obj.Maxconn) &&
+		EqualSlicePointerBind(rec.Listeners, obj.Listeners, opts...) &&
+		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
 		rec.Mode == obj.Mode
 }
 
-func EqualSlicePointerBind(x, y []*Bind) bool {
+func EqualSlicePointerBind(x, y []*Bind, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerBind(vx, vy) {
+		if !EqualPointerBind(vx, vy, opts...) {
 			return false
 		}
 	}

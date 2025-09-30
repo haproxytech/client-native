@@ -17,7 +17,11 @@
 
 package models
 
-func (rec TuneZlibOptions) Equal(obj TuneZlibOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneZlibOptions) Equal(obj TuneZlibOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Memlevel == obj.Memlevel &&
 		rec.Windowsize == obj.Windowsize
 }

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SetEnv) Equal(obj SetEnv) bool {
-	return EqualPointerString(rec.Name, obj.Name) &&
-		EqualPointerString(rec.Value, obj.Value)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SetEnv) Equal(obj SetEnv, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualPointerString(rec.Name, obj.Name, opts...) &&
+		EqualPointerString(rec.Value, obj.Value, opts...)
 }

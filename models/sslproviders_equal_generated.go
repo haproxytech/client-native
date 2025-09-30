@@ -17,6 +17,10 @@
 
 package models
 
-func (rec SslProviders) Equal(obj SslProviders) bool {
-	return EqualSliceString(rec.Providers, obj.Providers)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslProviders) Equal(obj SslProviders, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSliceString(rec.Providers, obj.Providers, opts...)
 }

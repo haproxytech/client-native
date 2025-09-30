@@ -17,16 +17,20 @@
 
 package models
 
-func (rec SpoeMessage) Equal(obj SpoeMessage) bool {
-	return rec.ACL.Equal(obj.ACL) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SpoeMessage) Equal(obj SpoeMessage, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.ACL.Equal(obj.ACL, opts...) &&
 		rec.Args == obj.Args &&
-		EqualPointerSpoeMessageEvent(rec.Event, obj.Event) &&
-		EqualPointerString(rec.Name, obj.Name)
+		EqualPointerSpoeMessageEvent(rec.Event, obj.Event, opts...) &&
+		EqualPointerString(rec.Name, obj.Name, opts...)
 }
 
-func EqualPointerSpoeMessageEvent(x, y *SpoeMessageEvent) bool {
+func EqualPointerSpoeMessageEvent(x, y *SpoeMessageEvent, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

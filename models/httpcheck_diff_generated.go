@@ -19,11 +19,13 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec HTTPCheck) Diff(obj HTTPCheck) map[string][]interface{} {
+func (rec HTTPCheck) Diff(obj HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffSlicePointerReturnHeader(rec.CheckHeaders, obj.CheckHeaders) {
+	for diffKey, diffValue := range DiffSlicePointerReturnHeader(rec.CheckHeaders, obj.CheckHeaders, opts...) {
 		diff["CheckHeaders"+diffKey] = diffValue
 	}
 	if rec.Addr != obj.Addr {
@@ -59,7 +61,7 @@ func (rec HTTPCheck) Diff(obj HTTPCheck) map[string][]interface{} {
 	if rec.Method != obj.Method {
 		diff["Method"] = []interface{}{rec.Method, obj.Method}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MinRecv, obj.MinRecv) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MinRecv, obj.MinRecv, opts...) {
 		diff["MinRecv."+diffKey] = diffValue
 	}
 	if rec.OkStatus != obj.OkStatus {
@@ -74,7 +76,7 @@ func (rec HTTPCheck) Diff(obj HTTPCheck) map[string][]interface{} {
 	if rec.Pattern != obj.Pattern {
 		diff["Pattern"] = []interface{}{rec.Pattern, obj.Pattern}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
 	if rec.PortString != obj.PortString {
@@ -128,7 +130,7 @@ func (rec HTTPCheck) Diff(obj HTTPCheck) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerReturnHeader(x, y *ReturnHeader) map[string][]interface{} {
+func DiffPointerReturnHeader(x, y *ReturnHeader, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -152,7 +154,12 @@ func DiffPointerReturnHeader(x, y *ReturnHeader) map[string][]interface{} {
 	return diff
 }
 
-func DiffSlicePointerReturnHeader(x, y []*ReturnHeader) map[string][]interface{} {
+func DiffSlicePointerReturnHeader(x, y []*ReturnHeader, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -160,9 +167,10 @@ func DiffSlicePointerReturnHeader(x, y []*ReturnHeader) map[string][]interface{}
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

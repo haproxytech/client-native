@@ -17,13 +17,18 @@
 
 package models
 
-func (rec CrtLoad) Equal(obj CrtLoad) bool {
-	return EqualSliceString(rec.Domains, obj.Domains) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CrtLoad) Equal(obj CrtLoad, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSliceString(rec.Domains, obj.Domains, opts...) &&
 		rec.Acme == obj.Acme &&
 		rec.Alias == obj.Alias &&
 		rec.Certificate == obj.Certificate &&
 		rec.Issuer == obj.Issuer &&
 		rec.Key == obj.Key &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Ocsp == obj.Ocsp &&
 		rec.OcspUpdate == obj.OcspUpdate &&
 		rec.Sctl == obj.Sctl

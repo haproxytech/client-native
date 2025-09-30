@@ -17,7 +17,11 @@
 
 package models
 
-func (rec TCPRequestRule) Equal(obj TCPRequestRule) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TCPRequestRule) Equal(obj TCPRequestRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Action == obj.Action &&
 		rec.BandwidthLimitLimit == obj.BandwidthLimitLimit &&
 		rec.BandwidthLimitName == obj.BandwidthLimitName &&
@@ -32,6 +36,7 @@ func (rec TCPRequestRule) Equal(obj TCPRequestRule) bool {
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MarkValue == obj.MarkValue &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NiceValue == obj.NiceValue &&
 		rec.ResolveProtocol == obj.ResolveProtocol &&
 		rec.ResolveResolvers == obj.ResolveResolvers &&
@@ -39,16 +44,16 @@ func (rec TCPRequestRule) Equal(obj TCPRequestRule) bool {
 		rec.RstTTL == obj.RstTTL &&
 		rec.ScIdx == obj.ScIdx &&
 		rec.ScIncID == obj.ScIncID &&
-		EqualPointerInt64(rec.ScInt, obj.ScInt) &&
+		EqualPointerInt64(rec.ScInt, obj.ScInt, opts...) &&
 		rec.ServerName == obj.ServerName &&
 		rec.ServiceName == obj.ServiceName &&
 		rec.SpoeEngineName == obj.SpoeEngineName &&
 		rec.SpoeGroupName == obj.SpoeGroupName &&
 		rec.SwitchModeProto == obj.SwitchModeProto &&
-		EqualPointerInt64(rec.Timeout, obj.Timeout) &&
+		EqualPointerInt64(rec.Timeout, obj.Timeout, opts...) &&
 		rec.TosValue == obj.TosValue &&
 		rec.TrackKey == obj.TrackKey &&
-		EqualPointerInt64(rec.TrackStickCounter, obj.TrackStickCounter) &&
+		EqualPointerInt64(rec.TrackStickCounter, obj.TrackStickCounter, opts...) &&
 		rec.TrackTable == obj.TrackTable &&
 		rec.Type == obj.Type &&
 		rec.VarFormat == obj.VarFormat &&

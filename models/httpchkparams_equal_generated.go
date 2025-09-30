@@ -17,7 +17,11 @@
 
 package models
 
-func (rec HttpchkParams) Equal(obj HttpchkParams) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec HttpchkParams) Equal(obj HttpchkParams, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Host == obj.Host &&
 		rec.Method == obj.Method &&
 		rec.URI == obj.URI &&

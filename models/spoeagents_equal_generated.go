@@ -17,25 +17,43 @@
 
 package models
 
-func (x SpoeAgents) Equal(y SpoeAgents) bool {
-	return EqualSpoeAgents(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x SpoeAgents) Equal(y SpoeAgents, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSpoeAgents(x, y, opts...)
 }
 
-func EqualPointerSpoeAgent(x, y *SpoeAgent) bool {
+func EqualPointerSpoeAgent(x, y *SpoeAgent, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSpoeAgents(x, y SpoeAgents) bool {
+func EqualSpoeAgents(x, y SpoeAgents, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSpoeAgent(vx, vy) {
+		if !EqualPointerSpoeAgent(vx, vy, opts...) {
 			return false
 		}
 	}

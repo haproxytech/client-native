@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SslOcspUpdate) Equal(obj SslOcspUpdate) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SslOcspUpdate) Equal(obj SslOcspUpdate, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.CertID == obj.CertID &&
 		rec.Failures == obj.Failures &&
 		rec.LastUpdate == obj.LastUpdate &&

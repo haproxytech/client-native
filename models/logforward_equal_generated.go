@@ -17,20 +17,38 @@
 
 package models
 
-func (rec LogForward) Equal(obj LogForward) bool {
-	return rec.LogForwardBase.Equal(obj.LogForwardBase) &&
-		rec.LogTargetList.Equal(obj.LogTargetList) &&
-		EqualMapStringBind(rec.Binds, obj.Binds) &&
-		EqualMapStringDgramBind(rec.DgramBinds, obj.DgramBinds)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec LogForward) Equal(obj LogForward, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.LogForwardBase.Equal(obj.LogForwardBase, opts...) &&
+		rec.LogTargetList.Equal(obj.LogTargetList, opts...) &&
+		EqualMapStringBind(rec.Binds, obj.Binds, opts...) &&
+		EqualMapStringDgramBind(rec.DgramBinds, obj.DgramBinds, opts...)
 }
 
-func EqualMapStringDgramBind(x, y map[string]DgramBind) bool {
+func EqualMapStringDgramBind(x, y map[string]DgramBind, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || !opt.TreatNilNotAsEmpty {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy) {
+		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
 			return false
 		}
 	}

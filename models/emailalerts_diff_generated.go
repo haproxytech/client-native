@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x EmailAlerts) Diff(y EmailAlerts) map[string][]interface{} {
-	return DiffEmailAlerts(x, y)
+func (x EmailAlerts) Diff(y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffEmailAlerts(x, y, opts...)
 }
 
-func DiffEmailAlerts(x, y EmailAlerts) map[string][]interface{} {
+func DiffEmailAlerts(x, y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffEmailAlerts(x, y EmailAlerts) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

@@ -4,17 +4,18 @@ import (
 	"time"
 
 	"github.com/go-openapi/strfmt"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func DiffStrfmtDate(x, y strfmt.Date) map[string][]interface{} {
-	return DiffTimeTime(time.Time(x), time.Time(y))
+func DiffStrfmtDate(x, y strfmt.Date, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffTimeTime(time.Time(x), time.Time(y), opts...)
 }
 
-func DiffStrfmtDateTime(x, y strfmt.DateTime) map[string][]interface{} {
-	return DiffTimeTime(time.Time(x), time.Time(y))
+func DiffStrfmtDateTime(x, y strfmt.DateTime, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffTimeTime(time.Time(x), time.Time(y), opts...)
 }
 
-func DiffTimeTime(x, y time.Time) map[string][]interface{} {
+func DiffTimeTime(x, y time.Time, _ ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	out := make(map[string][]interface{})
 
 	xu := x.UTC()

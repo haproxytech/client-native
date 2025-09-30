@@ -19,9 +19,10 @@ package models
 
 import (
 	"github.com/haproxytech/client-native/v6/models/funcs"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec AcmeCertificateStatus) Diff(obj AcmeCertificateStatus) map[string][]interface{} {
+func (rec AcmeCertificateStatus) Diff(obj AcmeCertificateStatus, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AcmeSection != obj.AcmeSection {
 		diff["AcmeSection"] = []interface{}{rec.AcmeSection, obj.AcmeSection}
@@ -32,13 +33,13 @@ func (rec AcmeCertificateStatus) Diff(obj AcmeCertificateStatus) map[string][]in
 	if rec.ExpiriesIn != obj.ExpiriesIn {
 		diff["ExpiriesIn"] = []interface{}{rec.ExpiriesIn, obj.ExpiriesIn}
 	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.ExpiryDate, obj.ExpiryDate) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.ExpiryDate, obj.ExpiryDate, opts...) {
 		diff["ExpiryDate."+diffKey] = diffValue
 	}
 	if rec.RenewalIn != obj.RenewalIn {
 		diff["RenewalIn"] = []interface{}{rec.RenewalIn, obj.RenewalIn}
 	}
-	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.ScheduledRenewal, obj.ScheduledRenewal) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.ScheduledRenewal, obj.ScheduledRenewal, opts...) {
 		diff["ScheduledRenewal."+diffKey] = diffValue
 	}
 	if rec.State != obj.State {

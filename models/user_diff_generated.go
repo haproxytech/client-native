@@ -17,7 +17,11 @@
 
 package models
 
-func (rec User) Diff(obj User) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec User) Diff(obj User, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Groups != obj.Groups {
 		diff["Groups"] = []interface{}{rec.Groups, obj.Groups}
@@ -25,7 +29,7 @@ func (rec User) Diff(obj User) map[string][]interface{} {
 	if rec.Password != obj.Password {
 		diff["Password"] = []interface{}{rec.Password, obj.Password}
 	}
-	for diffKey, diffValue := range DiffPointerBool(rec.SecurePassword, obj.SecurePassword) {
+	for diffKey, diffValue := range DiffPointerBool(rec.SecurePassword, obj.SecurePassword, opts...) {
 		diff["SecurePassword."+diffKey] = diffValue
 	}
 	if rec.Username != obj.Username {

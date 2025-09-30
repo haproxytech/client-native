@@ -17,18 +17,36 @@
 
 package models
 
-func (x HTTPErrorsSections) Equal(y HTTPErrorsSections) bool {
-	return EqualHTTPErrorsSections(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x HTTPErrorsSections) Equal(y HTTPErrorsSections, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualHTTPErrorsSections(x, y, opts...)
 }
 
-func EqualHTTPErrorsSections(x, y HTTPErrorsSections) bool {
+func EqualHTTPErrorsSections(x, y HTTPErrorsSections, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerHTTPErrorsSection(vx, vy) {
+		if !EqualPointerHTTPErrorsSection(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualHTTPErrorsSections(x, y HTTPErrorsSections) bool {
 	return true
 }
 
-func EqualPointerHTTPErrorsSection(x, y *HTTPErrorsSection) bool {
+func EqualPointerHTTPErrorsSection(x, y *HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

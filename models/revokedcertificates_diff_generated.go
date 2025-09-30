@@ -19,11 +19,12 @@ package models
 
 import (
 	"github.com/haproxytech/client-native/v6/models/funcs"
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec RevokedCertificates) Diff(obj RevokedCertificates) map[string][]interface{} {
+func (rec RevokedCertificates) Diff(obj RevokedCertificates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.RevocationDate, obj.RevocationDate) {
+	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.RevocationDate, obj.RevocationDate, opts...) {
 		diff["RevocationDate."+diffKey] = diffValue
 	}
 	if rec.SerialNumber != obj.SerialNumber {

@@ -17,15 +17,19 @@
 
 package models
 
-func (rec GlobalHarden) Diff(obj GlobalHarden) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec GlobalHarden) Diff(obj GlobalHarden, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerGlobalHardenRejectPrivilegedPorts(rec.RejectPrivilegedPorts, obj.RejectPrivilegedPorts) {
+	for diffKey, diffValue := range DiffPointerGlobalHardenRejectPrivilegedPorts(rec.RejectPrivilegedPorts, obj.RejectPrivilegedPorts, opts...) {
 		diff["RejectPrivilegedPorts."+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffPointerGlobalHardenRejectPrivilegedPorts(x, y *GlobalHardenRejectPrivilegedPorts) map[string][]interface{} {
+func DiffPointerGlobalHardenRejectPrivilegedPorts(x, y *GlobalHardenRejectPrivilegedPorts, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

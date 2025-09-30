@@ -17,7 +17,11 @@
 
 package models
 
-func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.AppletZeroCopyForwarding != obj.AppletZeroCopyForwarding {
 		diff["AppletZeroCopyForwarding"] = []interface{}{rec.AppletZeroCopyForwarding, obj.AppletZeroCopyForwarding}
@@ -31,7 +35,7 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.DisableZeroCopyForwarding != obj.DisableZeroCopyForwarding {
 		diff["DisableZeroCopyForwarding"] = []interface{}{rec.DisableZeroCopyForwarding, obj.DisableZeroCopyForwarding}
 	}
-	for diffKey, diffValue := range DiffSliceString(rec.EpollMaskEvents, obj.EpollMaskEvents) {
+	for diffKey, diffValue := range DiffSliceString(rec.EpollMaskEvents, obj.EpollMaskEvents, opts...) {
 		diff["EpollMaskEvents"+diffKey] = diffValue
 	}
 	if rec.EventsMaxEventsAtOnce != obj.EventsMaxEventsAtOnce {
@@ -43,7 +47,7 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.FdEdgeTriggered != obj.FdEdgeTriggered {
 		diff["FdEdgeTriggered"] = []interface{}{rec.FdEdgeTriggered, obj.FdEdgeTriggered}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.GlitchesKillCPUUsage, obj.GlitchesKillCPUUsage) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.GlitchesKillCPUUsage, obj.GlitchesKillCPUUsage, opts...) {
 		diff["GlitchesKillCPUUsage."+diffKey] = diffValue
 	}
 	if rec.H1ZeroCopyFwdRecv != obj.H1ZeroCopyFwdRecv {
@@ -52,7 +56,7 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.H1ZeroCopyFwdSend != obj.H1ZeroCopyFwdSend {
 		diff["H1ZeroCopyFwdSend"] = []interface{}{rec.H1ZeroCopyFwdSend, obj.H1ZeroCopyFwdSend}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.H2BeGlitchesThreshold, obj.H2BeGlitchesThreshold) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.H2BeGlitchesThreshold, obj.H2BeGlitchesThreshold, opts...) {
 		diff["H2BeGlitchesThreshold."+diffKey] = diffValue
 	}
 	if rec.H2BeInitialWindowSize != obj.H2BeInitialWindowSize {
@@ -61,10 +65,10 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.H2BeMaxConcurrentStreams != obj.H2BeMaxConcurrentStreams {
 		diff["H2BeMaxConcurrentStreams"] = []interface{}{rec.H2BeMaxConcurrentStreams, obj.H2BeMaxConcurrentStreams}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.H2BeRxbuf, obj.H2BeRxbuf) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.H2BeRxbuf, obj.H2BeRxbuf, opts...) {
 		diff["H2BeRxbuf."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeGlitchesThreshold, obj.H2FeGlitchesThreshold) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeGlitchesThreshold, obj.H2FeGlitchesThreshold, opts...) {
 		diff["H2FeGlitchesThreshold."+diffKey] = diffValue
 	}
 	if rec.H2FeInitialWindowSize != obj.H2FeInitialWindowSize {
@@ -73,16 +77,16 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.H2FeMaxConcurrentStreams != obj.H2FeMaxConcurrentStreams {
 		diff["H2FeMaxConcurrentStreams"] = []interface{}{rec.H2FeMaxConcurrentStreams, obj.H2FeMaxConcurrentStreams}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeMaxTotalStreams, obj.H2FeMaxTotalStreams) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeMaxTotalStreams, obj.H2FeMaxTotalStreams, opts...) {
 		diff["H2FeMaxTotalStreams."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeRxbuf, obj.H2FeRxbuf) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeRxbuf, obj.H2FeRxbuf, opts...) {
 		diff["H2FeRxbuf."+diffKey] = diffValue
 	}
 	if rec.H2HeaderTableSize != obj.H2HeaderTableSize {
 		diff["H2HeaderTableSize"] = []interface{}{rec.H2HeaderTableSize, obj.H2HeaderTableSize}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.H2InitialWindowSize, obj.H2InitialWindowSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.H2InitialWindowSize, obj.H2InitialWindowSize, opts...) {
 		diff["H2InitialWindowSize."+diffKey] = diffValue
 	}
 	if rec.H2MaxConcurrentStreams != obj.H2MaxConcurrentStreams {
@@ -106,7 +110,7 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.IdlePoolShared != obj.IdlePoolShared {
 		diff["IdlePoolShared"] = []interface{}{rec.IdlePoolShared, obj.IdlePoolShared}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Idletimer, obj.Idletimer) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Idletimer, obj.Idletimer, opts...) {
 		diff["Idletimer."+diffKey] = diffValue
 	}
 	if rec.ListenerDefaultShards != obj.ListenerDefaultShards {
@@ -115,10 +119,10 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.ListenerMultiQueue != obj.ListenerMultiQueue {
 		diff["ListenerMultiQueue"] = []interface{}{rec.ListenerMultiQueue, obj.ListenerMultiQueue}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MaxChecksPerThread, obj.MaxChecksPerThread) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MaxChecksPerThread, obj.MaxChecksPerThread, opts...) {
 		diff["MaxChecksPerThread."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MaxRulesAtOnce, obj.MaxRulesAtOnce) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MaxRulesAtOnce, obj.MaxRulesAtOnce, opts...) {
 		diff["MaxRulesAtOnce."+diffKey] = diffValue
 	}
 	if rec.Maxaccept != obj.Maxaccept {
@@ -130,16 +134,16 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.Maxrewrite != obj.Maxrewrite {
 		diff["Maxrewrite"] = []interface{}{rec.Maxrewrite, obj.Maxrewrite}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.MemoryHotSize, obj.MemoryHotSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.MemoryHotSize, obj.MemoryHotSize, opts...) {
 		diff["MemoryHotSize."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.NotsentLowatClient, obj.NotsentLowatClient) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.NotsentLowatClient, obj.NotsentLowatClient, opts...) {
 		diff["NotsentLowatClient."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.NotsentLowatServer, obj.NotsentLowatServer) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.NotsentLowatServer, obj.NotsentLowatServer, opts...) {
 		diff["NotsentLowatServer."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.PatternCacheSize, obj.PatternCacheSize) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.PatternCacheSize, obj.PatternCacheSize, opts...) {
 		diff["PatternCacheSize."+diffKey] = diffValue
 	}
 	if rec.PeersMaxUpdatesAtOnce != obj.PeersMaxUpdatesAtOnce {
@@ -154,13 +158,13 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.PtZeroCopyForwarding != obj.PtZeroCopyForwarding {
 		diff["PtZeroCopyForwarding"] = []interface{}{rec.PtZeroCopyForwarding, obj.PtZeroCopyForwarding}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ReniceRuntime, obj.ReniceRuntime) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ReniceRuntime, obj.ReniceRuntime, opts...) {
 		diff["ReniceRuntime."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ReniceStartup, obj.ReniceStartup) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.ReniceStartup, obj.ReniceStartup, opts...) {
 		diff["ReniceStartup."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.RingQueues, obj.RingQueues) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.RingQueues, obj.RingQueues, opts...) {
 		diff["RingQueues."+diffKey] = diffValue
 	}
 	if rec.RunqueueDepth != obj.RunqueueDepth {
@@ -169,7 +173,7 @@ func (rec TuneOptions) Diff(obj TuneOptions) map[string][]interface{} {
 	if rec.SchedLowLatency != obj.SchedLowLatency {
 		diff["SchedLowLatency"] = []interface{}{rec.SchedLowLatency, obj.SchedLowLatency}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.StickCounters, obj.StickCounters) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.StickCounters, obj.StickCounters, opts...) {
 		diff["StickCounters."+diffKey] = diffValue
 	}
 	if rec.TakeoverOtherTgConnections != obj.TakeoverOtherTgConnections {

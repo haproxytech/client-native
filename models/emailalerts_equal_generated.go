@@ -17,18 +17,36 @@
 
 package models
 
-func (x EmailAlerts) Equal(y EmailAlerts) bool {
-	return EqualEmailAlerts(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x EmailAlerts) Equal(y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualEmailAlerts(x, y, opts...)
 }
 
-func EqualEmailAlerts(x, y EmailAlerts) bool {
+func EqualEmailAlerts(x, y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerEmailAlert(vx, vy) {
+		if !EqualPointerEmailAlert(vx, vy, opts...) {
 			return false
 		}
 	}

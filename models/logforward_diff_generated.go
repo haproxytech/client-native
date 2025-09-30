@@ -19,29 +19,42 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec LogForward) Diff(obj LogForward) map[string][]interface{} {
+func (rec LogForward) Diff(obj LogForward, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range rec.LogForwardBase.Diff(obj.LogForwardBase) {
+	for diffKey, diffValue := range rec.LogForwardBase.Diff(obj.LogForwardBase, opts...) {
 		diff["LogForwardBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList) {
+	for diffKey, diffValue := range rec.LogTargetList.Diff(obj.LogTargetList, opts...) {
 		diff["LogTargetList"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds) {
+	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds, opts...) {
 		diff["Binds"+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffMapStringDgramBind(rec.DgramBinds, obj.DgramBinds) {
+	for diffKey, diffValue := range DiffMapStringDgramBind(rec.DgramBinds, obj.DgramBinds, opts...) {
 		diff["DgramBinds"+diffKey] = diffValue
 	}
 	return diff
 }
 
-func DiffMapStringDgramBind(x, y map[string]DgramBind) map[string][]interface{} {
+func DiffMapStringDgramBind(x, y map[string]DgramBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
 		return diff
+	}
+
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
+			return diff
+		}
 	}
 
 	if x == nil {

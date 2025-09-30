@@ -17,35 +17,53 @@
 
 package models
 
-func (rec EnvironmentOptions) Equal(obj EnvironmentOptions) bool {
-	return EqualSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs) &&
-		EqualSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs) &&
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec EnvironmentOptions) Equal(obj EnvironmentOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs, opts...) &&
+		EqualSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs, opts...) &&
 		rec.Resetenv == obj.Resetenv &&
 		rec.Unsetenv == obj.Unsetenv
 }
 
-func EqualPointerPresetEnv(x, y *PresetEnv) bool {
+func EqualPointerPresetEnv(x, y *PresetEnv, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualPointerSetEnv(x, y *SetEnv) bool {
+func EqualPointerSetEnv(x, y *SetEnv, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualSlicePointerPresetEnv(x, y []*PresetEnv) bool {
+func EqualSlicePointerPresetEnv(x, y []*PresetEnv, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerPresetEnv(vx, vy) {
+		if !EqualPointerPresetEnv(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -53,14 +71,28 @@ func EqualSlicePointerPresetEnv(x, y []*PresetEnv) bool {
 	return true
 }
 
-func EqualSlicePointerSetEnv(x, y []*SetEnv) bool {
+func EqualSlicePointerSetEnv(x, y []*SetEnv, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerSetEnv(vx, vy) {
+		if !EqualPointerSetEnv(vx, vy, opts...) {
 			return false
 		}
 	}

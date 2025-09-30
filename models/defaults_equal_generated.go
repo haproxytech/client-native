@@ -17,17 +17,21 @@
 
 package models
 
-func (rec Defaults) Equal(obj Defaults) bool {
-	return rec.DefaultsBase.Equal(obj.DefaultsBase) &&
-		rec.ACLList.Equal(obj.ACLList) &&
-		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList) &&
-		rec.HTTPCheckList.Equal(obj.HTTPCheckList) &&
-		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList) &&
-		rec.HTTPRequestRuleList.Equal(obj.HTTPRequestRuleList) &&
-		rec.HTTPResponseRuleList.Equal(obj.HTTPResponseRuleList) &&
-		rec.LogTargetList.Equal(obj.LogTargetList) &&
-		rec.QUICInitialRuleList.Equal(obj.QUICInitialRuleList) &&
-		rec.TCPCheckRuleList.Equal(obj.TCPCheckRuleList) &&
-		rec.TCPRequestRuleList.Equal(obj.TCPRequestRuleList) &&
-		rec.TCPResponseRuleList.Equal(obj.TCPResponseRuleList)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Defaults) Equal(obj Defaults, opts ...eqdiff.GoMethodGenOptions) bool {
+	return rec.DefaultsBase.Equal(obj.DefaultsBase, opts...) &&
+		rec.ACLList.Equal(obj.ACLList, opts...) &&
+		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList, opts...) &&
+		rec.HTTPCheckList.Equal(obj.HTTPCheckList, opts...) &&
+		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList, opts...) &&
+		rec.HTTPRequestRuleList.Equal(obj.HTTPRequestRuleList, opts...) &&
+		rec.HTTPResponseRuleList.Equal(obj.HTTPResponseRuleList, opts...) &&
+		rec.LogTargetList.Equal(obj.LogTargetList, opts...) &&
+		rec.QUICInitialRuleList.Equal(obj.QUICInitialRuleList, opts...) &&
+		rec.TCPCheckRuleList.Equal(obj.TCPCheckRuleList, opts...) &&
+		rec.TCPRequestRuleList.Equal(obj.TCPRequestRuleList, opts...) &&
+		rec.TCPResponseRuleList.Equal(obj.TCPResponseRuleList, opts...)
 }

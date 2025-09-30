@@ -17,9 +17,14 @@
 
 package models
 
-func (rec User) Equal(obj User) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec User) Equal(obj User, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Groups == obj.Groups &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Password == obj.Password &&
-		EqualPointerBool(rec.SecurePassword, obj.SecurePassword) &&
+		EqualPointerBool(rec.SecurePassword, obj.SecurePassword, opts...) &&
 		rec.Username == obj.Username
 }

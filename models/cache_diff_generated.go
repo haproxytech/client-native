@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Cache) Diff(obj Cache) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Cache) Diff(obj Cache, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.MaxAge != obj.MaxAge {
 		diff["MaxAge"] = []interface{}{rec.MaxAge, obj.MaxAge}
@@ -28,10 +32,10 @@ func (rec Cache) Diff(obj Cache) map[string][]interface{} {
 	if rec.MaxSecondaryEntries != obj.MaxSecondaryEntries {
 		diff["MaxSecondaryEntries"] = []interface{}{rec.MaxSecondaryEntries, obj.MaxSecondaryEntries}
 	}
-	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name) {
+	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
 		diff["Name."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerBool(rec.ProcessVary, obj.ProcessVary) {
+	for diffKey, diffValue := range DiffPointerBool(rec.ProcessVary, obj.ProcessVary, opts...) {
 		diff["ProcessVary."+diffKey] = diffValue
 	}
 	if rec.TotalMaxSize != obj.TotalMaxSize {

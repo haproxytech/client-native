@@ -19,13 +19,15 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x QUICInitialRules) Diff(y QUICInitialRules) map[string][]interface{} {
-	return DiffQUICInitialRules(x, y)
+func (x QUICInitialRules) Diff(y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffQUICInitialRules(x, y, opts...)
 }
 
-func DiffPointerQUICInitialRule(x, y *QUICInitialRule) map[string][]interface{} {
+func DiffPointerQUICInitialRule(x, y *QUICInitialRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff
@@ -49,7 +51,12 @@ func DiffPointerQUICInitialRule(x, y *QUICInitialRule) map[string][]interface{} 
 	return diff
 }
 
-func DiffQUICInitialRules(x, y QUICInitialRules) map[string][]interface{} {
+func DiffQUICInitialRules(x, y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -57,9 +64,10 @@ func DiffQUICInitialRules(x, y QUICInitialRules) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {

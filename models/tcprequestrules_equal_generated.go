@@ -17,25 +17,43 @@
 
 package models
 
-func (x TCPRequestRules) Equal(y TCPRequestRules) bool {
-	return EqualTCPRequestRules(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x TCPRequestRules) Equal(y TCPRequestRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualTCPRequestRules(x, y, opts...)
 }
 
-func EqualPointerTCPRequestRule(x, y *TCPRequestRule) bool {
+func EqualPointerTCPRequestRule(x, y *TCPRequestRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }
 
-func EqualTCPRequestRules(x, y TCPRequestRules) bool {
+func EqualTCPRequestRules(x, y TCPRequestRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerTCPRequestRule(vx, vy) {
+		if !EqualPointerTCPRequestRule(vx, vy, opts...) {
 			return false
 		}
 	}

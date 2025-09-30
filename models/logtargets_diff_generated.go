@@ -19,13 +19,20 @@ package models
 
 import (
 	"fmt"
+
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (x LogTargets) Diff(y LogTargets) map[string][]interface{} {
-	return DiffLogTargets(x, y)
+func (x LogTargets) Diff(y LogTargets, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	return DiffLogTargets(x, y, opts...)
 }
 
-func DiffLogTargets(x, y LogTargets) map[string][]interface{} {
+func DiffLogTargets(x, y LogTargets, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
 	diff := make(map[string][]interface{})
 	lenX := len(x)
 	lenY := len(y)
@@ -33,9 +40,10 @@ func DiffLogTargets(x, y LogTargets) map[string][]interface{} {
 	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
 		return diff
 	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
 	}
 
 	if y == nil {
@@ -65,7 +73,7 @@ func DiffLogTargets(x, y LogTargets) map[string][]interface{} {
 	return diff
 }
 
-func DiffPointerLogTarget(x, y *LogTarget) map[string][]interface{} {
+func DiffPointerLogTarget(x, y *LogTarget, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

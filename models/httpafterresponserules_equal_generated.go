@@ -17,18 +17,36 @@
 
 package models
 
-func (x HTTPAfterResponseRules) Equal(y HTTPAfterResponseRules) bool {
-	return EqualHTTPAfterResponseRules(x, y)
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (x HTTPAfterResponseRules) Equal(y HTTPAfterResponseRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	return EqualHTTPAfterResponseRules(x, y, opts...)
 }
 
-func EqualHTTPAfterResponseRules(x, y HTTPAfterResponseRules) bool {
+func EqualHTTPAfterResponseRules(x, y HTTPAfterResponseRules, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
 	if len(x) != len(y) {
 		return false
 	}
 
 	for i, vx := range x {
 		vy := y[i]
-		if !EqualPointerHTTPAfterResponseRule(vx, vy) {
+		if !EqualPointerHTTPAfterResponseRule(vx, vy, opts...) {
 			return false
 		}
 	}
@@ -36,9 +54,9 @@ func EqualHTTPAfterResponseRules(x, y HTTPAfterResponseRules) bool {
 	return true
 }
 
-func EqualPointerHTTPAfterResponseRule(x, y *HTTPAfterResponseRule) bool {
+func EqualPointerHTTPAfterResponseRule(x, y *HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}
-	return (*x).Equal(*y)
+	return (*x).Equal(*y, opts...)
 }

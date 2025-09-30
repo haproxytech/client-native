@@ -17,7 +17,11 @@
 
 package models
 
-func (rec WurflOptions) Equal(obj WurflOptions) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec WurflOptions) Equal(obj WurflOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.CacheSize == obj.CacheSize &&
 		rec.DataFile == obj.DataFile &&
 		rec.InformationList == obj.InformationList &&

@@ -17,7 +17,11 @@
 
 package models
 
-func (rec SpoeTransaction) Equal(obj SpoeTransaction) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec SpoeTransaction) Equal(obj SpoeTransaction, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Version == obj.Version &&
 		rec.ID == obj.ID &&
 		rec.Status == obj.Status

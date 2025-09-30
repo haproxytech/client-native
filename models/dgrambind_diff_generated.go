@@ -17,7 +17,11 @@
 
 package models
 
-func (rec DgramBind) Diff(obj DgramBind) map[string][]interface{} {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec DgramBind) Diff(obj DgramBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if rec.Address != obj.Address {
 		diff["Address"] = []interface{}{rec.Address, obj.Address}
@@ -31,10 +35,10 @@ func (rec DgramBind) Diff(obj DgramBind) map[string][]interface{} {
 	if rec.Namespace != obj.Namespace {
 		diff["Namespace"] = []interface{}{rec.Namespace, obj.Namespace}
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd) {
+	for diffKey, diffValue := range DiffPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd, opts...) {
 		diff["PortRangeEnd."+diffKey] = diffValue
 	}
 	if rec.Transparent != obj.Transparent {

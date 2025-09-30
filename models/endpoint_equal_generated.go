@@ -17,7 +17,11 @@
 
 package models
 
-func (rec Endpoint) Equal(obj Endpoint) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec Endpoint) Equal(obj Endpoint, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Description == obj.Description &&
 		rec.Title == obj.Title &&
 		rec.URL == obj.URL

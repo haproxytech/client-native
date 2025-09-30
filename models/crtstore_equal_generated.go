@@ -17,9 +17,14 @@
 
 package models
 
-func (rec CrtStore) Equal(obj CrtStore) bool {
+import (
+	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
+)
+
+func (rec CrtStore) Equal(obj CrtStore, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.CrtBase == obj.CrtBase &&
 		rec.KeyBase == obj.KeyBase &&
-		rec.Loads.Equal(obj.Loads) &&
+		rec.Loads.Equal(obj.Loads, opts...) &&
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name
 }
