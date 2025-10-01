@@ -29,8 +29,7 @@ func TestWholeConfigsSectionsFcgiapp(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		Name, Config string
-	}{
-	}
+	}{}
 	for _, config := range tests {
 		t.Run(config.Name, func(t *testing.T) {
 			t.Parallel()

@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"github.com/haproxytech/client-native/v6/misc"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -55,6 +56,10 @@ type OcspUpdateOptions struct {
 
 // Validate validates this ocsp update options
 func (m *OcspUpdateOptions) Validate(formats strfmt.Registry) error {
+	if swag.IsZero(m.Disable) {
+		m.Disable = misc.Ptr(false)
+	}
+
 	var res []error
 
 	if err := m.validateHttpproxy(formats); err != nil {

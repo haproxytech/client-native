@@ -92,6 +92,10 @@ type FCGIAppBase struct {
 
 // Validate validates this fcgi app base
 func (m *FCGIAppBase) Validate(formats strfmt.Registry) error {
+	if swag.IsZero(m.MaxReqs) {
+		m.MaxReqs = 1
+	}
+
 	var res []error
 
 	if err := m.validateDocroot(formats); err != nil {

@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"github.com/haproxytech/client-native/v6/misc"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -125,6 +126,19 @@ type Consul struct {
 
 // Validate validates this consul
 func (m *Consul) Validate(formats strfmt.Registry) error {
+	if swag.IsZero(m.HealthCheckPolicy) {
+		m.HealthCheckPolicy = misc.Ptr("none")
+	}
+	if swag.IsZero(m.Mode) {
+		m.Mode = misc.Ptr("http")
+	}
+	if swag.IsZero(m.ServerSlotsBase) {
+		m.ServerSlotsBase = misc.Ptr(int64(10))
+	}
+	if swag.IsZero(m.ServerSlotsGrowthType) {
+		m.ServerSlotsGrowthType = misc.Ptr("exponential")
+	}
+
 	var res []error
 
 	if err := m.validateAddress(formats); err != nil {

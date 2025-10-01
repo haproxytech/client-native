@@ -11,7 +11,7 @@ import (
 
 // These type aliases are provided for backward compatibility.
 type (
-	CrtListEntry   = models.SslCrtListEntry //nolint:gofumpt
+	CrtListEntry   = models.SslCrtListEntry
 	CrtListEntries = models.SslCrtListEntries
 	CrtList        = models.SslCrtList
 	CrtLists       = models.SslCrtLists

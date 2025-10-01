@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"github.com/haproxytech/client-native/v6/misc"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -98,6 +99,13 @@ type AwsRegion struct {
 
 // Validate validates this aws region
 func (m *AwsRegion) Validate(formats strfmt.Registry) error {
+	if swag.IsZero(m.ServerSlotsBase) {
+		m.ServerSlotsBase = misc.Ptr(int64(10))
+	}
+	if swag.IsZero(m.ServerSlotsGrowthType) {
+		m.ServerSlotsGrowthType = misc.Ptr("exponential")
+	}
+
 	var res []error
 
 	if err := m.validateAllowlist(formats); err != nil {
