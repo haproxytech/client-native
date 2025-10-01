@@ -83,7 +83,6 @@ func TestGetStructuredLogForward(t *testing.T) {
 
 	_, _, err = clientTest.GetStructuredLogForward("doesnotexist", "")
 	require.Error(t, err, "should throw error, non existent log forwards section")
-
 }
 
 func TestCreateEditDeleteStructuredLogForward(t *testing.T) {
@@ -154,5 +153,4 @@ func TestCreateEditDeleteStructuredLogForward(t *testing.T) {
 
 	err = clientTest.DeleteLogForward("doesnotexist", "", version)
 	require.Error(t, err, "should throw error, non existent log forward")
-
 }

@@ -27,6 +27,7 @@ allowed:
   - cli
   - clickhouse
   - cnt
+  - codebase
   - composable
   - conf
   - config
@@ -68,6 +69,7 @@ allowed:
   - github
   - gitlab
   - godaddy
+  - gofumpt
   - gokc
   - golang
   - golangci

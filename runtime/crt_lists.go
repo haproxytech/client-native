@@ -10,10 +10,12 @@ import (
 )
 
 // These type aliases are provided for backward compatibility.
-type CrtListEntry = models.SslCrtListEntry //nolint:gofumpt
-type CrtListEntries = models.SslCrtListEntries
-type CrtList = models.SslCrtList
-type CrtLists = models.SslCrtLists
+type (
+	CrtListEntry   = models.SslCrtListEntry //nolint:gofumpt
+	CrtListEntries = models.SslCrtListEntries
+	CrtList        = models.SslCrtList
+	CrtLists       = models.SslCrtLists
+)
 
 // ShowCrtLists returns CrtList files description from runtime
 func (s *SingleRuntime) ShowCrtLists() (models.SslCrtLists, error) {
