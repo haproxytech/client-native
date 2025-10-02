@@ -204,7 +204,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 	}
 
 	// acme-vars
-	acme.AcmeVars = parseAcmeVars(varsStr)
+	acme.AcmeVars = ParseAcmeVars(varsStr)
 
 	return acme, nil
 }
@@ -293,7 +293,8 @@ func serializeAcmeVars(vars map[string]string) (string, error) {
 	return sb.String(), nil
 }
 
-func parseAcmeVars(vars string) map[string]string {
+// Exported because used in dataplaneapi.
+func ParseAcmeVars(vars string) map[string]string {
 	n := len(vars)
 	if n == 0 {
 		return nil
