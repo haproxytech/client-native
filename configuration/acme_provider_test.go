@@ -46,7 +46,7 @@ func Test_serializeAcmeVars(t *testing.T) {
 	}
 }
 
-func Test_parseAcmeVars(t *testing.T) {
+func Test_ParseAcmeVars(t *testing.T) {
 	tests := []struct {
 		vars string
 		want map[string]string
@@ -58,7 +58,7 @@ func Test_parseAcmeVars(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.vars, func(t *testing.T) {
-			got := parseAcmeVars(tt.vars)
+			got := ParseAcmeVars(tt.vars)
 			if !cmp.Equal(got, tt.want) {
 				t.Errorf("parseAcmeVars() = %#v, want %#v", got, tt.want)
 			}
