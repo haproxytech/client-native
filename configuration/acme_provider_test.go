@@ -24,22 +24,28 @@ import (
 func Test_serializeAcmeVars(t *testing.T) {
 	tests := []struct {
 		vars    map[string]string
-		want    string
+		want    []string
 		wantErr bool
 	}{
 		{
 			vars:    map[string]string{"foo": "bar", "ApiKey": "FEFF,==\""},
-			want:    `"foo=bar,ApiKey=FEFF\,==\""`,
+			want:    []string{`"foo=bar,ApiKey=FEFF\,==\""`, `"ApiKey=FEFF\,==\",foo=bar"`},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.want, func(t *testing.T) {
+		t.Run(tt.want[0], func(t *testing.T) {
 			got, err := serializeAcmeVars(tt.vars)
 			if tt.wantErr != (err != nil) {
 				t.Errorf("serializeAcmeVars() got error '%v', wantErr=%v", err, tt.wantErr)
 			}
-			if got != tt.want {
+			ok := false
+			for _, wanted := range tt.want {
+				if !ok {
+					ok = (got == wanted)
+				}
+			}
+			if !ok {
 				t.Errorf("serializeAcmeVars() = %v, want %v", got, tt.want)
 			}
 		})
