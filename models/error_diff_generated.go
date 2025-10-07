@@ -18,8 +18,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
@@ -33,56 +31,6 @@ func (rec Error) Diff(obj Error, opts ...eqdiff.GoMethodGenOptions) map[string][
 	}
 	for diffKey, diffValue := range DiffMapStringString(rec.Error, obj.Error, opts...) {
 		diff["Error"+diffKey] = diffValue
-	}
-	return diff
-}
-
-func DiffMapStringString(x, y map[string]string, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if (x == nil && y == nil) || (len(x) == 0 && len(y) == 0) {
-		return diff
-	}
-
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
-		if (x == nil && len(y) == 0) || (y == nil && len(x) == 0) {
-			return diff
-		}
-	}
-
-	if x == nil {
-		return map[string][]interface{}{"": {nil, y}}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for kx, vx := range x {
-		key := fmt.Sprintf("[%v]", kx)
-		vy := y[kx]
-
-		if vx != vy {
-			diff[key] = []interface{}{vx, vy}
-		}
-
-	}
-	for ky, vy := range y {
-		key := fmt.Sprintf("[%v]", ky)
-		if _, found := diff[key]; found {
-			continue
-		}
-
-		vx := x[ky]
-
-		if vx != vy {
-			diff[key] = []interface{}{vx, vy}
-		}
-
 	}
 	return diff
 }

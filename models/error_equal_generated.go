@@ -26,31 +26,3 @@ func (rec Error) Equal(obj Error, opts ...eqdiff.GoMethodGenOptions) bool {
 		EqualPointerString(rec.Message, obj.Message, opts...) &&
 		EqualMapStringString(rec.Error, obj.Error, opts...)
 }
-
-func EqualMapStringString(x, y map[string]string, opts ...eqdiff.GoMethodGenOptions) bool {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	if (x == nil) != (y == nil) {
-		if opt == nil || !opt.TreatNilNotAsEmpty {
-			if len(x) == 0 && len(y) == 0 {
-				return true
-			}
-		}
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || vx != vy {
-			return false
-		}
-	}
-
-	return true
-}

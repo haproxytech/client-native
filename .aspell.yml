@@ -191,4 +191,5 @@ allowed:
   - yaml
   - async
   - rehaul
+  - rebase
   - XXXX
