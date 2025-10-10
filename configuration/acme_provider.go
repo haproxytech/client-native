@@ -18,6 +18,7 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -271,12 +272,19 @@ func serializeAcmeVars(vars map[string]string) (string, error) {
 	if len(vars) == 0 {
 		return "", nil
 	}
-
 	var sb strings.Builder
 	first := true
 
+	// Extract and sort the keys
+	keys := make([]string, 0, len(vars))
+	for name := range vars {
+		keys = append(keys, name)
+	}
+	sort.Strings(keys)
+
 	sb.WriteByte('"')
-	for k, v := range vars {
+	for _, k := range keys {
+		v := vars[k]
 		if len(k) == 0 {
 			continue
 		}

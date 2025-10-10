@@ -58,7 +58,7 @@ func Test_ParseAcmeVars(t *testing.T) {
 		want map[string]string
 	}{
 		{
-			vars: `"foo=bar,ApiKey=FEFF\,==\""`,
+			vars: `"ApiKey=FEFF\,==\",foo=bar"`,
 			want: map[string]string{"foo": "bar", "ApiKey": "FEFF,==\""},
 		},
 	}
