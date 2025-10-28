@@ -89,6 +89,10 @@ func (s AcmeProvider) Equal(t AcmeProvider, opts ...Options) bool {
 		return false
 	}
 
+	if s.ReuseKey != t.ReuseKey {
+		return false
+	}
+
 	return true
 }
 
@@ -161,6 +165,10 @@ func (s AcmeProvider) Diff(t AcmeProvider, opts ...Options) map[string][]interfa
 
 	if s.Name != t.Name {
 		diff["Name"] = []interface{}{s.Name, t.Name}
+	}
+
+	if s.ReuseKey != t.ReuseKey {
+		diff["ReuseKey"] = []interface{}{s.ReuseKey, t.ReuseKey}
 	}
 
 	return diff

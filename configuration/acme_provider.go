@@ -172,6 +172,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		"directory":     &acme.Directory,
 		"keytype":       &acme.Keytype,
 		"map":           &acme.Map,
+		"reuse-key":     &acme.ReuseKey,
 	}
 
 	for kw, dest := range stringAttr {
@@ -188,6 +189,8 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		}
 		*dest = str.Value
 	}
+
+	acme.ReuseKey = onOff(acme.ReuseKey)
 
 	// bits
 	val, err := p.Get(parser.Acme, name, "bits")
@@ -239,6 +242,7 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 		"directory":     acme.Directory,
 		"keytype":       acme.Keytype,
 		"map":           acme.Map,
+		"reuse-key":     onOff(acme.ReuseKey),
 	}
 
 	for kw, val := range stringAttr {
@@ -357,4 +361,19 @@ func acmeValidKey(key string) bool {
 		}
 	}
 	return true
+}
+
+func onOff(s string) string {
+	switch len(s) {
+	case 2: // on
+		return "enabled"
+	case 3: // off
+		return "disabled"
+	case 7: // enabled
+		return "on"
+	case 8: // disabled
+		return "off"
+	default:
+		return s
+	}
 }
