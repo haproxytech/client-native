@@ -1044,5 +1044,6 @@ func (p *configParser) getAcmeParser() *Parsers {
 	addParser(parser, &sequence, &simple.Word{Name: "directory"})
 	addParser(parser, &sequence, &simple.Word{Name: "keytype"})
 	addParser(parser, &sequence, &simple.Word{Name: "map"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reuse-key"})
 	return p.createParsers(parser, sequence)
 }

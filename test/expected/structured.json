@@ -3181,7 +3181,8 @@
             "challenge": "http-01",
             "directory": "https://acme.example.com/directory",
             "keytype": "ECDSA",
-            "map": "acme@t"
+            "map": "acme@t",
+            "reuse_key": "enabled"
         }
     },
     "crt_stores": {

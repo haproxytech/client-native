@@ -51,6 +51,10 @@ acme:
     map:
       type: string
       description: The map which will be used to store the ACME token (key) and thumbprint
+    reuse_key:
+      type: string
+      enum: [enabled, disabled]
+      description: Try to reuse the private key instead of generating a new one.
     metadata:
       additionalProperties:
         type: object

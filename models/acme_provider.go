@@ -85,6 +85,11 @@ type AcmeProvider struct {
 	// ACME provider's name
 	// Required: true
 	Name string `json:"name"`
+
+	// Try to reuse the private key instead of generating a new one.
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	ReuseKey string `json:"reuse_key,omitempty"`
 }
 
 // Validate validates this acme provider
@@ -108,6 +113,10 @@ func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReuseKey(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -229,6 +238,48 @@ func (m *AcmeProvider) validateKeytype(formats strfmt.Registry) error {
 func (m *AcmeProvider) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var acmeProviderTypeReuseKeyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		acmeProviderTypeReuseKeyPropEnum = append(acmeProviderTypeReuseKeyPropEnum, v)
+	}
+}
+
+const (
+
+	// AcmeProviderReuseKeyEnabled captures enum value "enabled"
+	AcmeProviderReuseKeyEnabled string = "enabled"
+
+	// AcmeProviderReuseKeyDisabled captures enum value "disabled"
+	AcmeProviderReuseKeyDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *AcmeProvider) validateReuseKeyEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, acmeProviderTypeReuseKeyPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *AcmeProvider) validateReuseKey(formats strfmt.Registry) error {
+	if swag.IsZero(m.ReuseKey) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateReuseKeyEnum("reuse_key", "body", m.ReuseKey); err != nil {
 		return err
 	}
 
