@@ -1555,7 +1555,7 @@ func (s *SectionObject) CreateEditSection() error {
 	for i := range objValue.NumField() {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
-		if typeField.Name != "Name" && typeField.Name != "ID" {
+		if typeField.Name != "Name" {
 			if err := s.setFieldValue(typeField.Name, field); err != nil {
 				return err
 			}
