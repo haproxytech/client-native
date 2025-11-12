@@ -630,15 +630,12 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	if s.CheckViaSocks4 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "check-via-socks4"})
 	}
-	if s.Sslv3 == "enabled" {
+	if s.Sslv3 == "enabled" || s.ForceSslv3 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
 	}
 	if s.Sslv3 == "disabled" ||
 		s.NoSslv3 == "enabled" { // deprecated, keeping the behavior, for backward compatibility. Can be removed when field is removed
 		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
-	}
-	if s.ForceSslv3 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
 	}
 	if s.ForceSslv3 == "disabled" ||
 		s.NoSslv3 == "enabled" { // deprecated, keeping the behavior, for backward compatibility. Can be removed when field is removed
