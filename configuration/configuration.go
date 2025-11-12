@@ -3022,7 +3022,7 @@ func (s *SectionObject) logSteps(field reflect.Value) error {
 	if len(d) == 0 {
 		return s.set("log-steps", nil)
 	}
-	return s.set("log-steps", d)
+	return s.set("log-steps", types.StringC{Value: d})
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
