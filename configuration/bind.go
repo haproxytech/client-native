@@ -586,7 +586,7 @@ func serializeBindParams(b models.BindParams, path string, opt *options.Configur
 		b.NoTLSTickets {
 		options = append(options, &params.BindOptionWord{Name: "no-tls-tickets"})
 	}
-	if b.TLSTickets == "disabled" {
+	if b.TLSTickets == "enabled" {
 		options = append(options, &params.BindOptionWord{Name: "tls-tickets"})
 	}
 	if b.GenerateCertificates {
