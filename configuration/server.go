@@ -410,7 +410,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 					serverParams.ErrorLimit = c
 				}
 			case "fall":
-				serverParams.Fall = misc.ParseTimeout(v.Value)
+				f, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					serverParams.Fall = &f
+				}
 			case "guid":
 				serverParams.GUID = v.Value
 			case "idle-ping":
@@ -488,7 +491,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			case "redir":
 				serverParams.Redir = v.Value
 			case "rise":
-				serverParams.Rise = misc.ParseTimeout(v.Value)
+				r, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					serverParams.Rise = &r
+				}
 			case "resolve-opts":
 				serverParams.ResolveOpts = v.Value
 			case "resolve-prefer":

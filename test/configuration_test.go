@@ -375,7 +375,7 @@ defaults unnamed_defaults_1
   timeout server-fin 1000
   timeout client-fin 1000
   timeout tarpit 2000
-  default-server fall 2s rise 4s inter 5s port 8888
+  default-server fall 2 rise 4 inter 5s port 8888
   default_backend test
   option external-check
   external-check path /bin
@@ -767,7 +767,7 @@ backend test # my comment
   option splice-response
   option http-restrict-req-hdr-names preserve
   option http-drop-request-trailers
-  default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6 force-sslv3
+  default-server fall 2 rise 4 inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6 force-sslv3
   stick store-request src table test # my comment
   stick match src table test
   stick on src table test
@@ -891,7 +891,7 @@ backend test # my comment
 
 peers mycluster
   enabled
-  default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
+  default-server fall 2 rise 4 inter 5s port 8888 slowstart 6000
   default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1
   peer hapee 192.168.1.1:1023 shard 1
   peer aggregator HARDCODEDCLUSTERIP:10023
@@ -1061,7 +1061,7 @@ backend test_2 from test_defaults_2 # {"comment": "my comment"}
   no option splice-auto
   no option splice-request
   no option splice-response
-  default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000 no-tlsv10
+  default-server fall 2 rise 4 inter 5s port 8888 slowstart 6000 no-tlsv10
   option contstats
   timeout check 2s
   timeout tunnel 5s
