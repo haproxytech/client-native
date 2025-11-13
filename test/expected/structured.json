@@ -522,12 +522,12 @@
                 "type": "rewrite"
             },
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
                 "log-bufsize": 6,
                 "pool_low_conn": 128,
-                "rise": 4000,
+                "rise": 4,
                 "ws": "auto",
                 "sslv3": "enabled",
                 "force_sslv3": "enabled"
@@ -1145,10 +1145,10 @@
                 "type": "rewrite"
             },
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
-                "rise": 4000,
+                "rise": 4,
                 "slowstart": 6000,
                 "tlsv10": "disabled",
                 "force_tlsv10": "disabled"
@@ -3398,10 +3398,10 @@
             "connect_timeout": 5000,
             "default_backend": "test",
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
-                "rise": 4000
+                "rise": 4
             },
             "disable_h2_upgrade": "enabled",
             "dontlog_normal": "enabled",
@@ -3536,10 +3536,10 @@
                 "v4v6": true
             },
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
-                "rise": 4000,
+                "rise": 4,
                 "slowstart": 6000
             },
             "enabled": true,
