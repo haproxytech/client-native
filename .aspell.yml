@@ -19,8 +19,11 @@ allowed:
   - backends
   - backport
   - bmarkovic
+  - botmgmt
+  - botmgtupdate
   - browserslist
   - bvue
+  - bwlim
   - caniuse
   - casbin
   - chmigrate
@@ -29,6 +32,7 @@ allowed:
   - cnt
   - codebase
   - composable
+  - cond
   - conf
   - config
   - const
@@ -79,6 +83,7 @@ allowed:
   - gotoolchain
   - gpc
   - gpt
+  - gptstr
   - hapee
   - haproxy
   - healthcheck
@@ -158,6 +163,7 @@ allowed:
   - sni
   - spammy
   - ssl
+  - sslv
   - sso
   - struct
   - subnet
