@@ -1133,15 +1133,22 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			}
 		}
 	case "sc-add-gpc":
+		if len(f.ScExpr) > 0 && f.ScInt != nil {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int and expr are exclusive")
+		}
+		if len(f.ScExpr) == 0 && f.ScInt == nil {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int or expr has to be set")
+		}
 		rule = &actions.ScAddGpc{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Int:      f.ScInt,
+			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
-			Comment:  comment,
 		}
 	case "sc-inc-gpc":
-		rule = &actions.ScAddGpc{
+		rule = &actions.ScIncGpc{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Idx:      strconv.FormatInt(f.ScIdx, 10),
 			Cond:     f.Cond,
