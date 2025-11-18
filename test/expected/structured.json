@@ -1713,6 +1713,7 @@
                     "cond": "if",
                     "cond_test": "FALSE",
                     "sc_id": 1,
+                    "sc_int": 1,
                     "type": "sc-add-gpc"
                 },
                 {
