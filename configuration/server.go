@@ -647,52 +647,29 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 		s.NoSslv3 == "enabled" { // deprecated, keeping the behavior, for backward compatibility. Can be removed when field is removed
 		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
 	}
-	if s.Tlsv10 == "enabled" {
+	if s.Tlsv10 == "enabled" || s.ForceTlsv10 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
 	}
-	if s.Tlsv10 == "disabled" {
+	if s.Tlsv10 == "disabled" || s.ForceTlsv10 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
 	}
-	if s.ForceTlsv10 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
-	}
-	if s.ForceTlsv10 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
-	}
-	if s.Tlsv11 == "enabled" {
+	if s.Tlsv11 == "enabled" || s.ForceTlsv11 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
 	}
-	if s.Tlsv11 == "disabled" {
+	if s.Tlsv11 == "disabled" || s.ForceTlsv11 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
 	}
-	if s.ForceTlsv11 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
-	}
-	if s.ForceTlsv11 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
-	}
-	if s.Tlsv12 == "enabled" {
+
+	if s.Tlsv12 == "enabled" || s.ForceTlsv12 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
 	}
-	if s.Tlsv12 == "disabled" {
+	if s.Tlsv12 == "disabled" || s.ForceTlsv12 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
 	}
-	if s.ForceTlsv12 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
-	}
-	if s.ForceTlsv12 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
-	}
-	if s.Tlsv13 == "enabled" {
+	if s.Tlsv13 == "enabled" || s.ForceTlsv13 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
 	}
-	if s.Tlsv13 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
-	}
-	if s.ForceTlsv13 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
-	}
-	if s.ForceTlsv13 == "disabled" {
+	if s.Tlsv13 == "disabled" || s.ForceTlsv13 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
 	}
 	if s.Maintenance == "enabled" {
