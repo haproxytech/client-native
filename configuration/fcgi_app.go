@@ -397,7 +397,7 @@ func SerializeFCGIAppSection(p parser.Parser, data *models.FCGIApp) error {
 		}
 	}
 
-	if err := p.Set(parser.FCGIApp, data.Name, "option mpxs-conns", serializeSimpleOption(data.GetValues)); err != nil {
+	if err := p.Set(parser.FCGIApp, data.Name, "option mpxs-conns", serializeSimpleOption(data.MpxsConns)); err != nil {
 		return err
 	}
 

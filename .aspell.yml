@@ -33,6 +33,7 @@ allowed:
   - cond
   - conf
   - config
+  - conns
   - const
   - cpu
   - crd
@@ -63,6 +64,7 @@ allowed:
   - eslint
   - failsafe
   - fbt
+  - fcgi
   - usefcgiapp
   - formatter
   - formatters
@@ -118,6 +120,7 @@ allowed:
   - minsize
   - mixin
   - mkdir
+  - mpxs
   - multipartsearch
   - multiselect
   - mutex
