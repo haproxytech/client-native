@@ -63,6 +63,7 @@ allowed:
   - eslint
   - failsafe
   - fbt
+  - usefcgiapp
   - formatter
   - formatters
   - frontend

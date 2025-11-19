@@ -1704,6 +1704,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.originalto(field)
 	case "LogSteps":
 		return true, s.logSteps(field)
+	case "UseFCGIApp":
+		return true, s.useFCGIApp(field)
 	default:
 		return false, nil
 	}
@@ -3023,6 +3025,20 @@ func (s *SectionObject) logSteps(field reflect.Value) error {
 		return s.set("log-steps", nil)
 	}
 	return s.set("log-steps", types.StringC{Value: d})
+}
+
+func (s *SectionObject) useFCGIApp(field reflect.Value) error {
+	if !(s.Section == parser.Backends) {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("use-fcgi-app", nil)
+	}
+	useFCGIApp := field.String()
+	if useFCGIApp == "" {
+		return nil
+	}
+	return s.set("use-fcgi-app", types.UseFcgiApp{Name: useFCGIApp})
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
