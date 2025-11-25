@@ -447,6 +447,11 @@ type ServerParams struct {
 	// strict maxconn
 	StrictMaxconn bool `json:"strict-maxconn,omitempty"`
 
+	// tcp md5sig
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	TCPMd5sig string `json:"tcp_md5sig,omitempty"`
+
 	// tcp ut
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
@@ -775,6 +780,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStick(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPMd5sig(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2803,6 +2812,18 @@ func (m *ServerParams) validateStick(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateStickEnum("stick", "body", m.Stick); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateTCPMd5sig(formats strfmt.Registry) error {
+	if swag.IsZero(m.TCPMd5sig) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("tcp_md5sig", "body", m.TCPMd5sig, `^[^\s]+$`); err != nil {
 		return err
 	}
 

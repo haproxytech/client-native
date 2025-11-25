@@ -1078,6 +1078,9 @@ definitions:
         type: string
       strict-maxconn:
         type: boolean
+      tcp_md5sig:
+        pattern: ^[^\s]+$
+        type: string
       tcp_ut:
         minimum: 0
         type: integer

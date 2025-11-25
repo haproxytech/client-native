@@ -206,6 +206,7 @@ func TestWholeConfigsSectionsDefaults(t *testing.T) {
 		{"defaults_defaultserversslminverTLSv13", defaults_defaultserversslminverTLSv13},
 		{"defaults_defaultserversslreuse", defaults_defaultserversslreuse},
 		{"defaults_defaultserverstick", defaults_defaultserverstick},
+		{"defaults_defaultservertcpmd5sigsecretpass", defaults_defaultservertcpmd5sigsecretpass},
 		{"defaults_defaultservertcput20ms", defaults_defaultservertcput20ms},
 		{"defaults_defaultservertfo", defaults_defaultservertfo},
 		{"defaults_defaultservertlstickets", defaults_defaultservertlstickets},

@@ -254,6 +254,7 @@ backend test
   default-server ws h2
   default-server ws auto
   default-server log-bufsize 10
+  default-server tcp-md5sig secretpass
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -449,6 +450,7 @@ backend test
   server name 127.0.0.1 no-check-reuse-pool
   server name 127.0.0.1 check-pool-conn-name foo
   server name 127.0.0.1 strict-maxconn
+  server name 127.0.0.1 tcp-md5sig secretpass
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
   stick on src table pop if !localhost
   stick match src table pop if !localhost
@@ -1318,6 +1320,7 @@ defaults test
   default-server ws h2
   default-server ws auto
   default-server log-bufsize 10
+  default-server tcp-md5sig secretpass
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -2992,6 +2995,7 @@ peers test
   default-server ws h2
   default-server ws auto
   default-server log-bufsize 10
+  default-server tcp-md5sig secretpass
   peer name 127.0.0.1:8080
   peer name 127.0.0.1:8080 shard 1
   default-bind user root mode 600 accept-proxy
@@ -3721,6 +3725,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  default-server log-bufsize 10
 `, 3},
+	{`  default-server tcp-md5sig secretpass
+`, 3},
 	{`  email-alert from admin@example.com
 `, 3},
 	{`  email-alert to a@z,x@y
@@ -4122,6 +4128,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  server name 127.0.0.1 check-pool-conn-name foo
 `, 1},
 	{`  server name 127.0.0.1 strict-maxconn
+`, 1},
+	{`  server name 127.0.0.1 tcp-md5sig secretpass
 `, 1},
 	{`  stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
 `, 2},

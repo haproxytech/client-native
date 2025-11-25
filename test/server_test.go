@@ -172,6 +172,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 			IdlePing:          misc.Int64P(10000),
 			CheckReusePool:    "enabled",
 			CheckPoolConnName: "bar",
+			TCPMd5sig:         "secretpass",
 		},
 	}
 

@@ -532,6 +532,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.SslMinVer = v.Value
 			case "socks4":
 				serverParams.Socks4 = v.Value
+			case "tcp-md5sig":
+				serverParams.TCPMd5sig = v.Value
 			case "tcp-ut":
 				serverParams.TCPUt = misc.ParseTimeout(v.Value)
 			case "track":
@@ -947,6 +949,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.HashKey != "" {
 		options = append(options, &params.ServerOptionValue{Name: "hash-key", Value: s.HashKey})
+	}
+	if s.TCPMd5sig != "" {
+		options = append(options, &params.ServerOptionValue{Name: "tcp-md5sig", Value: s.TCPMd5sig})
 	}
 	return options
 }

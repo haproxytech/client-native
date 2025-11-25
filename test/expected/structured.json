@@ -1098,7 +1098,8 @@
                     "init-state": "fully-up",
                     "idle_ping": 10000,
                     "check-reuse-pool": "enabled",
-                    "strict-maxconn": true
+                    "strict-maxconn": true,
+                    "tcp_md5sig" : "secretpass"
                 },
                 "webserv2": {
                     "cookie": "BLAH",

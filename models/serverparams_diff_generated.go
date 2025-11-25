@@ -299,6 +299,9 @@ func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions
 	if rec.StrictMaxconn != obj.StrictMaxconn {
 		diff["StrictMaxconn"] = []interface{}{rec.StrictMaxconn, obj.StrictMaxconn}
 	}
+	if rec.TCPMd5sig != obj.TCPMd5sig {
+		diff["TCPMd5sig"] = []interface{}{rec.TCPMd5sig, obj.TCPMd5sig}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TCPUt, obj.TCPUt, opts...) {
 		diff["TCPUt."+diffKey] = diffValue
 	}

@@ -114,6 +114,7 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		rec.Sslv3 == obj.Sslv3 &&
 		rec.Stick == obj.Stick &&
 		rec.StrictMaxconn == obj.StrictMaxconn &&
+		rec.TCPMd5sig == obj.TCPMd5sig &&
 		EqualPointerInt64(rec.TCPUt, obj.TCPUt, opts...) &&
 		rec.Tfo == obj.Tfo &&
 		rec.TLSTickets == obj.TLSTickets &&

@@ -781,6 +781,10 @@ const backend_defaultserverlogbufsize10 = `
 backend test
   default-server log-bufsize 10
 `
+const backend_defaultservertcpmd5sigsecretpass = `
+backend test
+  default-server tcp-md5sig secretpass
+`
 const backend_emailalertfromadminexamplecom = `
 backend test
   email-alert from admin@example.com
@@ -1764,6 +1768,10 @@ backend test
 const backend_servername127001strictmaxconn = `
 backend test
   server name 127.0.0.1 strict-maxconn
+`
+const backend_servername127001tcpmd5sigsecretp = `
+backend test
+  server name 127.0.0.1 tcp-md5sig secretpass
 `
 const backend_sticktabletypeipsize1mexpire5mst = `
 backend test
