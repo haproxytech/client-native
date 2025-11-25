@@ -157,6 +157,7 @@ func TestBind(t *testing.T) {
 		"bind :443 idle-ping 10":               true,
 		"bind :443 ssl tls-tickets":            true,
 		"bind :443 ssl no-strict-sni":          true,
+		"bind :443 tcp-md5sig secretpass":      true,
 		"bind":                                 false,
 		"bind :443 quic-cc-algo something":     false,
 		"bind :443 quic-cc-algo nocc()":        false,
@@ -165,6 +166,7 @@ func TestBind(t *testing.T) {
 		"bind :443 user":                       false,
 		"bind :443 user mode 600":              false,
 		"bind :443 user mode 600 accept-proxy": false,
+		"bind :443 tcp-md5sig":                 false,
 		"---":                                  false,
 		"--- ---":                              false,
 	}

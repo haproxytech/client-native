@@ -305,6 +305,9 @@ bind_params:
       x-dependency:
         ssl:
           value: true
+    tcp_md5sig:
+      type: string
+      pattern: '^[^\s]+$'
     tcp_user_timeout:
       type: integer
       x-nullable: true

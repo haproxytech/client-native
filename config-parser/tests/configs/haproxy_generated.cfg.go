@@ -2165,6 +2165,7 @@ frontend test
   bind :443 idle-ping 10
   bind :443 ssl tls-tickets
   bind :443 ssl no-strict-sni
+  bind :443 tcp-md5sig secretpass
   bind-process all
   email-alert from admin@example.com
   email-alert to a@z,x@y
@@ -3340,6 +3341,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  bind :443 ssl tls-tickets
 `, 1},
 	{`  bind :443 ssl no-strict-sni
+`, 1},
+	{`  bind :443 tcp-md5sig secretpass
 `, 1},
 	{`  dgram-bind :80,:443
 `, 1},

@@ -305,6 +305,8 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 				b.Name = v.Value
 			case "tcp-ut":
 				b.TCPUserTimeout = misc.ParseTimeout(v.Value)
+			case "tcp-md5sig":
+				b.TCPMd5sig = v.Value
 			case "crt":
 				b.SslCertificate = v.Value
 			case "ca-file":
@@ -472,6 +474,9 @@ func serializeBindParams(b models.BindParams, path string, opt *options.Configur
 	}
 	if b.TCPUserTimeout != nil {
 		options = append(options, &params.BindOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*b.TCPUserTimeout, 10)})
+	}
+	if b.TCPMd5sig != "" {
+		options = append(options, &params.BindOptionValue{Name: "tcp-md5sig", Value: b.TCPMd5sig})
 	}
 	if b.Ssl {
 		options = append(options, &params.BindOptionWord{Name: "ssl"})

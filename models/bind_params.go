@@ -281,6 +281,11 @@ type BindParams struct {
 	// strict sni
 	StrictSni bool `json:"strict_sni,omitempty"`
 
+	// tcp md5sig
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	TCPMd5sig string `json:"tcp_md5sig,omitempty"`
+
 	// tcp user timeout
 	TCPUserTimeout *int64 `json:"tcp_user_timeout,omitempty"`
 
@@ -409,6 +414,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslv3(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPMd5sig(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -922,6 +931,18 @@ func (m *BindParams) validateSslv3(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslv3Enum("sslv3", "body", m.Sslv3); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateTCPMd5sig(formats strfmt.Registry) error {
+	if swag.IsZero(m.TCPMd5sig) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("tcp_md5sig", "body", m.TCPMd5sig, `^[^\s]+$`); err != nil {
 		return err
 	}
 

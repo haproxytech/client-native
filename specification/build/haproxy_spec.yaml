@@ -550,6 +550,9 @@ definitions:
           ssl:
             value: true
         x-deprecated: true
+      tcp_md5sig:
+        pattern: ^[^\s]+$
+        type: string
       tcp_user_timeout:
         type: integer
         x-nullable: true

@@ -422,7 +422,7 @@ defaults unnamed_defaults_1
 frontend test
   mode http
   backlog 2048
-  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
+  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa tcp-md5sig secretpass
   bind 192.168.1.1:8080 name webserv2 thread 1/all force-tlsv10 ssl no-strict-sni tls-tickets
   bind 192.168.1.2:8080 name webserv3 thread 1/1 no-tlsv10 strict-sni no-tls-tickets
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1 force-sslv3 idle-ping 10000

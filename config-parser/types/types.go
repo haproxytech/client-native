@@ -269,6 +269,8 @@ type ACL struct{}
 //test:fail:bind :443 user
 //test:fail:bind :443 user mode 600
 //test:fail:bind :443 user mode 600 accept-proxy
+//test:ok:bind :443 tcp-md5sig secretpass
+//test:fail:bind :443 tcp-md5sig
 type Bind struct {
 	Path    string // can be address:port or socket path
 	Params  []params.BindOption
@@ -1572,6 +1574,8 @@ type OptionHTTPRestrictReqHdrNames struct {
 //test:ok:default-bind user root mode 600 accept-proxy
 //test:ok:default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1
 //test:ok:default-bind tls-ticket-keys /tmp/tls_ticket_keys
+//test:ok:default-bind tcp-md5sig secretpass
+//test:fail:default-bind tcp-md5sig
 type DefaultBind struct {
 	Params  []params.BindOption
 	Comment string

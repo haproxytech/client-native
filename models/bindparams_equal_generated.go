@@ -90,6 +90,7 @@ func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) b
 		rec.SslMinVer == obj.SslMinVer &&
 		rec.Sslv3 == obj.Sslv3 &&
 		rec.StrictSni == obj.StrictSni &&
+		rec.TCPMd5sig == obj.TCPMd5sig &&
 		EqualPointerInt64(rec.TCPUserTimeout, obj.TCPUserTimeout, opts...) &&
 		rec.Tfo == obj.Tfo &&
 		rec.Thread == obj.Thread &&

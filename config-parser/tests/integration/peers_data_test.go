@@ -621,3 +621,7 @@ const peers_defaultbindtlsticketkeystmptlsti = `
 peers test
   default-bind tls-ticket-keys /tmp/tls_ticket_keys
 `
+const peers_defaultbindtcpmd5sigsecretpass = `
+peers test
+  default-bind tcp-md5sig secretpass
+`

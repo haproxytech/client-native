@@ -304,6 +304,7 @@ var bindOptionFactoryMethods = map[string]func() BindOption{ //nolint:gochecknog
 	"sigalgs":              func() BindOption { return &BindOptionValue{Name: "sigalgs"} },
 	"ssl-max-ver":          func() BindOption { return &BindOptionValue{Name: "ssl-max-ver"} },
 	"ssl-min-ver":          func() BindOption { return &BindOptionValue{Name: "ssl-min-ver"} },
+	"tcp-md5sig":           func() BindOption { return &BindOptionValue{Name: "tcp-md5sig"} },
 	"tcp-ut":               func() BindOption { return &BindOptionValue{Name: "tcp-ut"} },
 	"thread":               func() BindOption { return &BindOptionValue{Name: "thread"} },
 	"tls-ticket-keys":      func() BindOption { return &BindOptionValue{Name: "tls-ticket-keys"} },

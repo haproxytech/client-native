@@ -2886,7 +2886,8 @@
                     "default_crt_list": [
                         "foobar.pem.rsa",
                         "foobar.pem.ecdsa"
-                    ]
+                    ],
+                    "tcp_md5sig": "secretpass"
                 },
                 "webserv2": {
                     "name": "webserv2",
