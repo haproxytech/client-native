@@ -231,7 +231,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 72 {
+		if len(listDiffFields) != 73 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -241,7 +241,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalBase to be different in 72 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalBase to be different in 73 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

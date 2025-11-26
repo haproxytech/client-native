@@ -228,6 +228,11 @@ type GlobalBase struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Setcap string `json:"setcap,omitempty"`
 
+	// shm stats file
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	ShmStatsFile string `json:"shm_stats_file,omitempty"`
+
 	// ssl options
 	SslOptions *SslOptions `json:"ssl_options,omitempty"`
 
@@ -418,6 +423,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSetcap(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateShmStatsFile(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1149,6 +1158,18 @@ func (m *GlobalBase) validateSetcap(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("setcap", "body", m.Setcap, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateShmStatsFile(formats strfmt.Registry) error {
+	if swag.IsZero(m.ShmStatsFile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("shm_stats_file", "body", m.ShmStatsFile, `^[^\s]+$`); err != nil {
 		return err
 	}
 

@@ -2541,6 +2541,10 @@ definitions:
         type: string
         x-display-name: OS Capabilities
         x-omitempty: true
+      shm_stats_file:
+        pattern: ^[^\s]+$
+        type: string
+        x-display-name: Shared Memory Statistics File (EXPERIMENTAL)
       ssl_options:
         $ref: '#/definitions/ssl_options'
       stats_file:

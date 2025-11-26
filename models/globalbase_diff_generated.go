@@ -187,6 +187,9 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.Setcap != obj.Setcap {
 		diff["Setcap"] = []interface{}{rec.Setcap, obj.Setcap}
 	}
+	if rec.ShmStatsFile != obj.ShmStatsFile {
+		diff["ShmStatsFile"] = []interface{}{rec.ShmStatsFile, obj.ShmStatsFile}
+	}
 	for diffKey, diffValue := range DiffPointerSslOptions(rec.SslOptions, obj.SslOptions, opts...) {
 		diff["SslOptions."+diffKey] = diffValue
 	}

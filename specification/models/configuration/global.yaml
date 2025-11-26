@@ -367,6 +367,10 @@ global_base:
       pattern: ^[^\s]+$
       type: string
       x-display-name: DNS accept family
+    shm_stats_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Shared Memory Statistics File (EXPERIMENTAL)
     environment_options:
       $ref: "#/definitions/environment_options"
     performance_options:

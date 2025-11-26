@@ -2325,6 +2325,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.DNSAcceptFamily = dnsAcceptFamily
 
+	shmStatsFile, err := parseStringOption(p, "shm-stats-file")
+	if err != nil {
+		return nil, err
+	}
+	global.ShmStatsFile = shmStatsFile
+
 	envOptions, err := parseEnvironmentOptions(p)
 	if err != nil {
 		return nil, err
@@ -3232,6 +3238,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeStringOption(p, "dns-accept-family", data.DNSAcceptFamily); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "shm-stats-file", data.ShmStatsFile); err != nil {
 		return err
 	}
 

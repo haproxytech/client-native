@@ -287,6 +287,7 @@ global
   ocsp-update.mindelay 7
   ocsp-update.mode on
   dns-accept-family ipv4,ipv6
+  shm-stats-file some_file
   warn-blocked-traffic-after 50ms
   acme.scheduler off
   stress-level 5
