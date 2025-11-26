@@ -480,6 +480,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Word{Name: "acme.scheduler"})
 	addParser(parser, &sequence, &simple.Number{Name: "stress-level"})
 	addParser(parser, &sequence, &simple.Word{Name: "shm-stats-file"})
+	addParser(parser, &sequence, &simple.Number{Name: "shm-stats-file-max-objects"})
 	// the ConfigSnippet must be at the end to parsers load order to ensure
 	// the overloading of any option has been declared previously
 	addParser(parser, &sequence, &parsers.ConfigSnippet{})

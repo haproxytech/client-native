@@ -233,6 +233,11 @@ type GlobalBase struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ShmStatsFile string `json:"shm_stats_file,omitempty"`
 
+	// shm stats file max objects
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	ShmStatsFileMaxObjects *int64 `json:"shm_stats_file_max_objects,omitempty"`
+
 	// ssl options
 	SslOptions *SslOptions `json:"ssl_options,omitempty"`
 
@@ -427,6 +432,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateShmStatsFile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateShmStatsFileMaxObjects(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1170,6 +1179,18 @@ func (m *GlobalBase) validateShmStatsFile(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("shm_stats_file", "body", m.ShmStatsFile, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateShmStatsFileMaxObjects(formats strfmt.Registry) error {
+	if swag.IsZero(m.ShmStatsFileMaxObjects) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("shm_stats_file_max_objects", "body", *m.ShmStatsFileMaxObjects, 0, false); err != nil {
 		return err
 	}
 

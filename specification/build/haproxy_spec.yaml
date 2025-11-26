@@ -2545,6 +2545,11 @@ definitions:
         pattern: ^[^\s]+$
         type: string
         x-display-name: Shared Memory Statistics File (EXPERIMENTAL)
+      shm_stats_file_max_objects:
+        minimum: 0
+        type: integer
+        x-display-name: Maximum number of objects the shared memory used for shared counters will be able to store per thread group. (EXPERIMENTAL)
+        x-nullable: true
       ssl_options:
         $ref: '#/definitions/ssl_options'
       stats_file:

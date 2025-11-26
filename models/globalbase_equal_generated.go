@@ -78,6 +78,7 @@ func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) b
 		rec.SetDumpable == obj.SetDumpable &&
 		rec.Setcap == obj.Setcap &&
 		rec.ShmStatsFile == obj.ShmStatsFile &&
+		EqualPointerInt64(rec.ShmStatsFileMaxObjects, obj.ShmStatsFileMaxObjects, opts...) &&
 		EqualPointerSslOptions(rec.SslOptions, obj.SslOptions, opts...) &&
 		rec.StatsFile == obj.StatsFile &&
 		EqualPointerInt64(rec.StatsMaxconn, obj.StatsMaxconn, opts...) &&

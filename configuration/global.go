@@ -2331,6 +2331,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.ShmStatsFile = shmStatsFile
 
+	shmStatSileMaxObjects, err := parseInt64POption(p, "shm-stats-file-max-objects")
+	if err != nil {
+		return nil, err
+	}
+	global.ShmStatsFileMaxObjects = shmStatSileMaxObjects
+
 	envOptions, err := parseEnvironmentOptions(p)
 	if err != nil {
 		return nil, err
@@ -3242,6 +3248,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeStringOption(p, "shm-stats-file", data.ShmStatsFile); err != nil {
+		return err
+	}
+
+	if err := serializeInt64POption(p, "shm-stats-file-max-objects", data.ShmStatsFileMaxObjects); err != nil {
 		return err
 	}
 

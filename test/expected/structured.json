@@ -175,6 +175,7 @@
         },
         "dns_accept_family": "ipv4,ipv6",
         "shm_stats_file": "some_file",
+        "shm_stats_file_max_objects": 100,
         "expose_deprecated_directives": true,
         "expose_experimental_directives": true,
         "external_check": true,
