@@ -32,7 +32,10 @@ type DefaultBind struct {
 
 func (d *DefaultBind) Parse(line string, parts []string, comment string) (string, error) {
 	if parts[0] == "default-bind" && len(parts) > 1 {
-		paramsBindOptions, _ := params.ParseBindOptions(parts[1:])
+		paramsBindOptions, err := params.ParseBindOptions(parts[1:])
+		if err != nil {
+			return "", &errors.ParseError{Parser: "DefaultBind", Line: line}
+		}
 		d.data = &types.DefaultBind{
 			Params:  paramsBindOptions,
 			Comment: comment,
