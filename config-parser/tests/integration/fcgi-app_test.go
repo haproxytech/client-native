@@ -30,6 +30,17 @@ func TestWholeConfigsSectionsFcgiapp(t *testing.T) {
 	tests := []struct {
 		Name, Config string
 	}{
+		{"fcgiapp_logstderr1270011515len8192format", fcgiapp_logstderr1270011515len8192format},
+		{"fcgiapp_logstderr1270011515len8192format_", fcgiapp_logstderr1270011515len8192format_},
+		{"fcgiapp_logstderr1270011515local2", fcgiapp_logstderr1270011515local2},
+		{"fcgiapp_logstderrglobal", fcgiapp_logstderrglobal},
+		{"fcgiapp_optionmaxreqs1024", fcgiapp_optionmaxreqs1024},
+		{"fcgiapp_passheaderxheader", fcgiapp_passheaderxheader},
+		{"fcgiapp_passheaderxheaderifacl", fcgiapp_passheaderxheaderifacl},
+		{"fcgiapp_passheaderxheaderunlessacl", fcgiapp_passheaderxheaderunlessacl},
+		{"fcgiapp_setparamnamefmt", fcgiapp_setparamnamefmt},
+		{"fcgiapp_setparamnamefmtifacl", fcgiapp_setparamnamefmtifacl},
+		{"fcgiapp_setparamnamefmtunlessacl", fcgiapp_setparamnamefmtunlessacl},
 	}
 	for _, config := range tests {
 		t.Run(config.Name, func(t *testing.T) {
