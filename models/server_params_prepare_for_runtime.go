@@ -33,6 +33,9 @@ func (s *ServerParams) prepareForRuntimeDoNotSendDisabledFields() {
 	if s.CheckSsl == "disabled" {
 		s.CheckSsl = ""
 	}
+	if s.CheckSniAuto == "disabled" {
+		s.CheckSniAuto = ""
+	}
 	if s.CheckViaSocks4 == "disabled" {
 		s.CheckViaSocks4 = ""
 	}

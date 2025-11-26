@@ -609,6 +609,14 @@ const peers_defaultservernosniauto = `
 peers test
   default-server no-sni-auto
 `
+const peers_defaultserverchecksniauto = `
+peers test
+  default-server check-sni-auto
+`
+const peers_defaultservernochecksniauto = `
+peers test
+  default-server no-check-sni-auto
+`
 const peers_peername1270018080 = `
 peers test
   peer name 127.0.0.1:8080

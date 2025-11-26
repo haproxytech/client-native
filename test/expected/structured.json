@@ -1100,7 +1100,8 @@
                     "check-reuse-pool": "enabled",
                     "strict-maxconn": true,
                     "tcp_md5sig" : "secretpass",
-                    "sni_auto": "enabled"
+                    "sni_auto": "enabled",
+                    "check_sni_auto": "enabled"
                 },
                 "webserv2": {
                     "cookie": "BLAH",
@@ -3360,7 +3361,8 @@
               "health_check_port": 8888,
               "inter": 5000,
               "rise": 4000,
-              "sni_auto": "enabled"
+              "sni_auto": "enabled",
+              "check_sni_auto": "enabled"
             }
         },
         "test_defaults_2": {

@@ -175,6 +175,8 @@ func TestDefaultServer(t *testing.T) {
 		"default-server tcp-md5sig secretpass": true,
 		"default-server sni-auto":              true,
 		"default-server no-sni-auto":           true,
+		"default-server check-sni-auto":        true,
+		"default-server no-check-sni-auto":     true,
 		"default-server":                       false,
 		"default-server tcp-md5sig":            false,
 		"---":                                  false,

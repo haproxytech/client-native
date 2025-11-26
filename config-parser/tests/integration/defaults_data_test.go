@@ -793,6 +793,14 @@ const defaults_defaultservernosniauto = `
 defaults test
   default-server no-sni-auto
 `
+const defaults_defaultserverchecksniauto = `
+defaults test
+  default-server check-sni-auto
+`
+const defaults_defaultservernochecksniauto = `
+defaults test
+  default-server no-check-sni-auto
+`
 const defaults_emailalertfromadminexamplecom = `
 defaults test
   email-alert from admin@example.com

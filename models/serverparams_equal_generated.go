@@ -38,6 +38,7 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		rec.CheckSsl == obj.CheckSsl &&
 		rec.CheckAlpn == obj.CheckAlpn &&
 		rec.CheckProto == obj.CheckProto &&
+		rec.CheckSniAuto == obj.CheckSniAuto &&
 		rec.CheckViaSocks4 == obj.CheckViaSocks4 &&
 		rec.Ciphers == obj.Ciphers &&
 		rec.Ciphersuites == obj.Ciphersuites &&

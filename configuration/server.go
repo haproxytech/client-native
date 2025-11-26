@@ -348,6 +348,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.SniAuto = "enabled"
 			case "no-sni-auto":
 				serverParams.SniAuto = "disabled"
+			case "check-sni-auto":
+				serverParams.CheckSniAuto = "enabled"
+			case "no-check-sni-auto":
+				serverParams.CheckSniAuto = "disabled"
 			case "ssl":
 				serverParams.Ssl = "enabled"
 			case "no-ssl":
@@ -722,6 +726,12 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.SniAuto == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-sni-auto"})
+	}
+	if s.CheckSniAuto == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "check-sni-auto"})
+	}
+	if s.CheckSniAuto == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-check-sni-auto"})
 	}
 	if s.Ssl == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "ssl"})

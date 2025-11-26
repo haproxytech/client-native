@@ -694,6 +694,11 @@ definitions:
         pattern: ^[^\s]+$
         type: string
         x-display-name: Name
+      check_sni_auto:
+        enum:
+          - enabled
+          - disabled
+        type: string
       check_via_socks4:
         enum:
           - enabled

@@ -365,6 +365,9 @@ server_params:
     sni_auto:
       type: string
       enum: [enabled, disabled]
+    check_sni_auto:
+      type: string
+      enum: [enabled, disabled]
     source:
       type: string
     ssl:

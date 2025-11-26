@@ -257,6 +257,8 @@ backend test
   default-server tcp-md5sig secretpass
   default-server sni-auto
   default-server no-sni-auto
+  default-server check-sni-auto
+  default-server no-check-sni-auto
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -455,6 +457,8 @@ backend test
   server name 127.0.0.1 tcp-md5sig secretpass
   server name 127.0.0.1 sni-auto
   server name 127.0.0.1 no-sni-auto
+  server name 127.0.0.1 check-sni-auto
+  server name 127.0.0.1 no-check-sni-auto
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
   stick on src table pop if !localhost
   stick match src table pop if !localhost
@@ -1327,6 +1331,8 @@ defaults test
   default-server tcp-md5sig secretpass
   default-server sni-auto
   default-server no-sni-auto
+  default-server check-sni-auto
+  default-server no-check-sni-auto
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -3005,6 +3011,8 @@ peers test
   default-server tcp-md5sig secretpass
   default-server sni-auto
   default-server no-sni-auto
+  default-server check-sni-auto
+  default-server no-check-sni-auto
   peer name 127.0.0.1:8080
   peer name 127.0.0.1:8080 shard 1
   default-bind user root mode 600 accept-proxy
@@ -3742,6 +3750,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  default-server no-sni-auto
 `, 3},
+	{`  default-server check-sni-auto
+`, 3},
+	{`  default-server no-check-sni-auto
+`, 3},
 	{`  email-alert from admin@example.com
 `, 3},
 	{`  email-alert to a@z,x@y
@@ -4149,6 +4161,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  server name 127.0.0.1 sni-auto
 `, 1},
 	{`  server name 127.0.0.1 no-sni-auto
+`, 1},
+	{`  server name 127.0.0.1 check-sni-auto
+`, 1},
+	{`  server name 127.0.0.1 no-check-sni-auto
 `, 1},
 	{`  stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
 `, 2},

@@ -113,6 +113,11 @@ type ServerParams struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CheckProto string `json:"check_proto,omitempty"`
 
+	// check sni auto
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	CheckSniAuto string `json:"check_sni_auto,omitempty"`
+
 	// check via socks4
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -569,6 +574,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCheckProto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckSniAuto(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1184,6 +1193,48 @@ func (m *ServerParams) validateCheckProto(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("check_proto", "body", m.CheckProto, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeCheckSniAutoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeCheckSniAutoPropEnum = append(serverParamsTypeCheckSniAutoPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsCheckSniAutoEnabled captures enum value "enabled"
+	ServerParamsCheckSniAutoEnabled string = "enabled"
+
+	// ServerParamsCheckSniAutoDisabled captures enum value "disabled"
+	ServerParamsCheckSniAutoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateCheckSniAutoEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeCheckSniAutoPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateCheckSniAuto(formats strfmt.Registry) error {
+	if swag.IsZero(m.CheckSniAuto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckSniAutoEnum("check_sni_auto", "body", m.CheckSniAuto); err != nil {
 		return err
 	}
 

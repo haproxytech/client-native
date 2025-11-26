@@ -793,6 +793,14 @@ const backend_defaultservernosniauto = `
 backend test
   default-server no-sni-auto
 `
+const backend_defaultserverchecksniauto = `
+backend test
+  default-server check-sni-auto
+`
+const backend_defaultservernochecksniauto = `
+backend test
+  default-server no-check-sni-auto
+`
 const backend_emailalertfromadminexamplecom = `
 backend test
   email-alert from admin@example.com
@@ -1788,6 +1796,14 @@ backend test
 const backend_servername127001nosniauto = `
 backend test
   server name 127.0.0.1 no-sni-auto
+`
+const backend_servername127001checksniauto = `
+backend test
+  server name 127.0.0.1 check-sni-auto
+`
+const backend_servername127001nochecksniauto = `
+backend test
+  server name 127.0.0.1 no-check-sni-auto
 `
 const backend_sticktabletypeipsize1mexpire5mst = `
 backend test
