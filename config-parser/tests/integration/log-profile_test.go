@@ -29,7 +29,12 @@ func TestWholeConfigsSectionsLogprofile(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		Name, Config string
-	}{}
+	}{
+		{"logprofile_onanysdcustomsd", logprofile_onanysdcustomsd},
+		{"logprofile_onconnectdrop", logprofile_onconnectdrop},
+		{"logprofile_onerrorformatcierror", logprofile_onerrorformatcierror},
+		{"logprofile_onerrorformatcierrorsdabsd", logprofile_onerrorformatcierrorsdabsd},
+	}
 	for _, config := range tests {
 		t.Run(config.Name, func(t *testing.T) {
 			t.Parallel()

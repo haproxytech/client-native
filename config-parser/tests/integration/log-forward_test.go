@@ -29,7 +29,15 @@ func TestWholeConfigsSectionsLogforward(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		Name, Config string
-	}{}
+	}{
+		{"logforward_dgrambind10001100801000110443", logforward_dgrambind10001100801000110443},
+		{"logforward_dgrambind443interfaceeth0", logforward_dgrambind443interfaceeth0},
+		{"logforward_dgrambind443interfaceeth1", logforward_dgrambind443interfaceeth1},
+		{"logforward_dgrambind443interfacepppoewan", logforward_dgrambind443interfacepppoewan},
+		{"logforward_dgrambind443namespaceexample", logforward_dgrambind443namespaceexample},
+		{"logforward_dgrambind443transparent", logforward_dgrambind443transparent},
+		{"logforward_dgrambind80443", logforward_dgrambind80443},
+	}
 	for _, config := range tests {
 		t.Run(config.Name, func(t *testing.T) {
 			t.Parallel()

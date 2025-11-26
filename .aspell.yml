@@ -73,6 +73,7 @@ allowed:
   - frontend
   - frontends
   - fullpage
+  - gentype
   - github
   - gitlab
   - godaddy
