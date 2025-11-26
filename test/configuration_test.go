@@ -324,6 +324,7 @@ defaults test_defaults # testing_defaults
   balance roundrobin
   hash-balance-factor 150
   hash-preserve-affinity maxconn
+  default-server fall 2000 rise 4000 inter 5s port 8888 sni-auto
 
 defaults test_defaults_2 from test_defaults
   option srvtcpka
@@ -809,7 +810,7 @@ backend test # my comment
   external-check command /bin/false
   use-server webserv if TRUE # my comment
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 no-renegotiate log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up idle-ping 10s check-reuse-pool strict-maxconn tcp-md5sig secretpass # my comment
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 no-renegotiate log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up idle-ping 10s check-reuse-pool strict-maxconn tcp-md5sig secretpass sni-auto# my comment
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 hash-key akey pool-conn-name apoolconnname no-check-reuse-pool check-pool-conn-name foo renegotiate # {"comment": "my structured comment", "id": "my_random_id_for_server"}
   http-request set-dst hdr(x-dst) # my comment
   http-request set-dst-port int(4000)

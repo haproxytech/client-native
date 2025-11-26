@@ -173,6 +173,8 @@ func TestDefaultServer(t *testing.T) {
 		"default-server ws auto":               true,
 		"default-server log-bufsize 10":        true,
 		"default-server tcp-md5sig secretpass": true,
+		"default-server sni-auto":              true,
+		"default-server no-sni-auto":           true,
 		"default-server":                       false,
 		"default-server tcp-md5sig":            false,
 		"---":                                  false,

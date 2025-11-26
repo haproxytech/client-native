@@ -344,6 +344,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.SendProxyV2SslCn = "enabled"
 			case "no-send-proxy-v2-ssl-cn":
 				serverParams.SendProxyV2SslCn = "disabled"
+			case "sni-auto":
+				serverParams.SniAuto = "enabled"
+			case "no-sni-auto":
+				serverParams.SniAuto = "disabled"
 			case "ssl":
 				serverParams.Ssl = "enabled"
 			case "no-ssl":
@@ -712,6 +716,12 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.SendProxyV2SslCn == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-send-proxy-v2-ssl-cn"})
+	}
+	if s.SniAuto == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "sni-auto"})
+	}
+	if s.SniAuto == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-sni-auto"})
 	}
 	if s.Ssl == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "ssl"})

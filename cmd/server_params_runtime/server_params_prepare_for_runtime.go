@@ -45,6 +45,7 @@ var ServerParamsPrepareForRuntimeMap = map[string]string{ //nolint:gochecknoglob
 	"Stick":            FuncDoNotSendDisabledFields,
 	"Tfo":              FuncDoNotSendDisabledFields,
 	"TLSTickets":       FuncDoNotSendDisabledFields,
+	"SniAuto":          FuncDoNotSendDisabledFields,
 }
 
 func checkMissingEnumFields(allFields []string) ([]string, error) {

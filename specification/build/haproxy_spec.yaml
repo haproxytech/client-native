@@ -1022,6 +1022,11 @@ definitions:
       sni:
         pattern: ^[^\s]+$
         type: string
+      sni_auto:
+        enum:
+          - enabled
+          - disabled
+        type: string
       socks4:
         pattern: ^[^\s]+$
         type: string

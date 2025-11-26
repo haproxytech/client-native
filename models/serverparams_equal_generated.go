@@ -103,6 +103,7 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		rec.Sigalgs == obj.Sigalgs &&
 		EqualPointerInt64(rec.Slowstart, obj.Slowstart, opts...) &&
 		rec.Sni == obj.Sni &&
+		rec.SniAuto == obj.SniAuto &&
 		rec.Socks4 == obj.Socks4 &&
 		rec.Source == obj.Source &&
 		rec.Ssl == obj.Ssl &&

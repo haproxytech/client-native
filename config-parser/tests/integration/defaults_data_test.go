@@ -785,6 +785,14 @@ const defaults_defaultservertcpmd5sigsecretpass = `
 defaults test
   default-server tcp-md5sig secretpass
 `
+const defaults_defaultserversniauto = `
+defaults test
+  default-server sni-auto
+`
+const defaults_defaultservernosniauto = `
+defaults test
+  default-server no-sni-auto
+`
 const defaults_emailalertfromadminexamplecom = `
 defaults test
   email-alert from admin@example.com

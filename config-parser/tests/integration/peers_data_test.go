@@ -601,6 +601,14 @@ const peers_defaultservertcpmd5sigsecretpass = `
 peers test
   default-server tcp-md5sig secretpass
 `
+const peers_defaultserversniauto = `
+peers test
+  default-server sni-auto
+`
+const peers_defaultservernosniauto = `
+peers test
+  default-server no-sni-auto
+`
 const peers_peername1270018080 = `
 peers test
   peer name 127.0.0.1:8080

@@ -173,6 +173,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 			CheckReusePool:    "enabled",
 			CheckPoolConnName: "bar",
 			TCPMd5sig:         "secretpass",
+			SniAuto:           "enabled",
 		},
 	}
 

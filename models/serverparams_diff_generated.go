@@ -266,6 +266,9 @@ func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions
 	if rec.Sni != obj.Sni {
 		diff["Sni"] = []interface{}{rec.Sni, obj.Sni}
 	}
+	if rec.SniAuto != obj.SniAuto {
+		diff["SniAuto"] = []interface{}{rec.SniAuto, obj.SniAuto}
+	}
 	if rec.Socks4 != obj.Socks4 {
 		diff["Socks4"] = []interface{}{rec.Socks4, obj.Socks4}
 	}

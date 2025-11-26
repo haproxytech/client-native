@@ -626,6 +626,8 @@ type CPUSet struct {
 //test:fail:default-server
 //test:ok:default-server tcp-md5sig secretpass
 //test:fail:default-server tcp-md5sig
+//test:ok:default-server sni-auto
+//test:ok:default-server no-sni-auto
 type DefaultServer struct {
 	Params  []params.ServerOption
 	Comment string
@@ -1156,6 +1158,8 @@ type Peer struct {
 //test:fail:server name 127.0.0.1 log-bufsize
 //test:ok:server name 127.0.0.1 tcp-md5sig secretpass
 //test:fail:server name 127.0.0.1 tcp-md5sig
+//test:ok:server name 127.0.0.1 sni-auto
+//test:ok:server name 127.0.0.1 no-sni-auto
 type Server struct {
 	Name    string
 	Address string

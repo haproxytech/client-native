@@ -66,6 +66,9 @@ func (s *ServerParams) prepareForRuntimeDoNotSendDisabledFields() {
 	if s.SendProxyV2SslCn == "disabled" {
 		s.SendProxyV2SslCn = ""
 	}
+	if s.SniAuto == "disabled" {
+		s.SniAuto = ""
+	}
 	if s.Ssl == "disabled" {
 		s.Ssl = ""
 	}

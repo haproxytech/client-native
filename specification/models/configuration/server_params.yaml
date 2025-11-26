@@ -362,6 +362,9 @@ server_params:
     sni:
       type: string
       pattern: '^[^\s]+$'
+    sni_auto:
+      type: string
+      enum: [enabled, disabled]
     source:
       type: string
     ssl:

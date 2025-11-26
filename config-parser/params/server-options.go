@@ -257,6 +257,8 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"sigalgs":                 func() ServerOption { return &ServerOptionValue{Name: "sigalgs"} },
 	"slowstart":               func() ServerOption { return &ServerOptionValue{Name: "slowstart"} },
 	"sni":                     func() ServerOption { return &ServerOptionValue{Name: "sni"} },
+	"sni-auto":                func() ServerOption { return &ServerOptionWord{Name: "sni-auto"} },
+	"no-sni-auto":             func() ServerOption { return &ServerOptionWord{Name: "no-sni-auto"} },
 	"source":                  func() ServerOption { return &ServerOptionValue{Name: "source"} },
 	"strict-maxconn":          func() ServerOption { return &ServerOptionWord{Name: "strict-maxconn"} },
 	"usesrc":                  func() ServerOption { return &ServerOptionValue{Name: "usesrc"} },

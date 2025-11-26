@@ -785,6 +785,14 @@ const backend_defaultservertcpmd5sigsecretpass = `
 backend test
   default-server tcp-md5sig secretpass
 `
+const backend_defaultserversniauto = `
+backend test
+  default-server sni-auto
+`
+const backend_defaultservernosniauto = `
+backend test
+  default-server no-sni-auto
+`
 const backend_emailalertfromadminexamplecom = `
 backend test
   email-alert from admin@example.com
@@ -1772,6 +1780,14 @@ backend test
 const backend_servername127001tcpmd5sigsecretp = `
 backend test
   server name 127.0.0.1 tcp-md5sig secretpass
+`
+const backend_servername127001sniauto = `
+backend test
+  server name 127.0.0.1 sni-auto
+`
+const backend_servername127001nosniauto = `
+backend test
+  server name 127.0.0.1 no-sni-auto
 `
 const backend_sticktabletypeipsize1mexpire5mst = `
 backend test
