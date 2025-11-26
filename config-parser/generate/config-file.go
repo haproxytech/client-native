@@ -285,7 +285,7 @@ func (c *ConfigFile) StringFiles(baseFolder string) {
 			}
 			usedNiceNames[niceName] = struct{}{}
 			sectionName := " test"
-			if sectionType == "global" {
+			if sectionType == "global" || sectionType == "dynamic-update" {
 				sectionName = ""
 			}
 			oneTest := "const " + niceName + " = `\n" + sectionType + sectionName + "\n" + "  " + line + "\n`" + "\n"
@@ -308,8 +308,9 @@ func (c *ConfigFile) StringFiles(baseFolder string) {
 		testName := cases.Title(language.Und, cases.NoLower).String(getNiceName(sectionName))
 		testFile.WriteString(strings.Replace(testHeader, "TestWholeConfigsSections", "TestWholeConfigsSections"+testName, 1))
 		sortedNames := []string{}
+		sectionNameWithoutDash := strings.ReplaceAll(sectionName, "-", "")
 		for name := range usedNiceNames {
-			if strings.HasPrefix(name, sectionName) {
+			if strings.HasPrefix(name, sectionNameWithoutDash) {
 				sortedNames = append(sortedNames, name)
 			}
 		}
