@@ -30,6 +30,15 @@ func TestWholeConfigsSectionsCrtstore(t *testing.T) {
 	tests := []struct {
 		Name, Config string
 	}{
+		{"crtstore_loadcrtfoopem", crtstore_loadcrtfoopem},
+		{"crtstore_loadcrtfoopemacmeLEdomainsexampl", crtstore_loadcrtfoopemacmeLEdomainsexampl},
+		{"crtstore_loadcrtfoopemaliasfoocom", crtstore_loadcrtfoopemaliasfoocom},
+		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr", crtstore_loadcrtfoopemaliasfoocomkeyfoopr},
+		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr_", crtstore_loadcrtfoopemaliasfoocomkeyfoopr_},
+		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr__", crtstore_loadcrtfoopemaliasfoocomkeyfoopr__},
+		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr___", crtstore_loadcrtfoopemaliasfoocomkeyfoopr___},
+		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr____", crtstore_loadcrtfoopemaliasfoocomkeyfoopr____},
+		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr_____", crtstore_loadcrtfoopemaliasfoocomkeyfoopr_____},
 	}
 	for _, config := range tests {
 		t.Run(config.Name, func(t *testing.T) {
