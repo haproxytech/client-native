@@ -29,13 +29,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestCrtStoreEqual(t *testing.T) {
+func TestCrtStoreBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b CrtStore
+		a, b CrtStoreBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample CrtStore
-		var result CrtStore
+		var sample CrtStoreBase
+		var result CrtStoreBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -50,7 +50,7 @@ func TestCrtStoreEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b CrtStore
+			a, b CrtStoreBase
 		}{sample, result})
 	}
 
@@ -66,18 +66,18 @@ func TestCrtStoreEqual(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected CrtStore to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected CrtStoreBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestCrtStoreEqualFalse(t *testing.T) {
+func TestCrtStoreBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b CrtStore
+		a, b CrtStoreBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample CrtStore
-		var result CrtStore
+		var sample CrtStoreBase
+		var result CrtStoreBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -87,7 +87,7 @@ func TestCrtStoreEqualFalse(t *testing.T) {
 			t.Error(err)
 		}
 		samples = append(samples, struct {
-			a, b CrtStore
+			a, b CrtStoreBase
 		}{sample, result})
 	}
 
@@ -103,18 +103,18 @@ func TestCrtStoreEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected CrtStore to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected CrtStoreBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestCrtStoreDiff(t *testing.T) {
+func TestCrtStoreBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b CrtStore
+		a, b CrtStoreBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample CrtStore
-		var result CrtStore
+		var sample CrtStoreBase
+		var result CrtStoreBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -129,7 +129,7 @@ func TestCrtStoreDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b CrtStore
+			a, b CrtStoreBase
 		}{sample, result})
 	}
 
@@ -145,18 +145,18 @@ func TestCrtStoreDiff(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected CrtStore to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected CrtStoreBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestCrtStoreDiffFalse(t *testing.T) {
+func TestCrtStoreBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b CrtStore
+		a, b CrtStoreBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample CrtStore
-		var result CrtStore
+		var sample CrtStoreBase
+		var result CrtStoreBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -166,13 +166,13 @@ func TestCrtStoreDiffFalse(t *testing.T) {
 			t.Error(err)
 		}
 		samples = append(samples, struct {
-			a, b CrtStore
+			a, b CrtStoreBase
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		if len(result) != 3 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -182,7 +182,7 @@ func TestCrtStoreDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected CrtStore to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected CrtStoreBase to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

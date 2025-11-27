@@ -152,7 +152,7 @@ func (c *client) CreateResolver(data *models.Resolver, transactionID string, ver
 
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
-		return err
+		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
 	if p.SectionExists(parser.Resolvers, data.Name) {

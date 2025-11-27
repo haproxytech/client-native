@@ -17,69 +17,86 @@
 
 package models
 
-// Equal checks if two structs of type CrtStore are equal
+import "reflect"
+
+// Equal checks if two structs of type CrtStoreBase are equal
 //
 // By default empty maps and slices are equal to nil:
 //
-//	var a, b CrtStore
+//	var a, b CrtStoreBase
 //	equal := a.Equal(b)
 //
 // For more advanced use case you can configure these options (default values are shown):
 //
-//	var a, b CrtStore
+//	var a, b CrtStoreBase
 //	equal := a.Equal(b,Options{
 //		NilSameAsEmpty: true,
 //	})
-func (s CrtStore) Equal(t CrtStore, opts ...Options) bool {
+func (s CrtStoreBase) Equal(t CrtStoreBase, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if !s.CrtStoreBase.Equal(t.CrtStoreBase, opt) {
+	if s.CrtBase != t.CrtBase {
 		return false
 	}
 
-	if !CheckSameNilAndLenMap[string, CrtLoad](s.CrtLoads, t.CrtLoads, opt) {
+	if s.KeyBase != t.KeyBase {
 		return false
 	}
 
-	for k, v := range s.CrtLoads {
-		if !t.CrtLoads[k].Equal(v, opt) {
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
 			return false
 		}
+	}
+
+	if s.Name != t.Name {
+		return false
 	}
 
 	return true
 }
 
-// Diff checks if two structs of type CrtStore are equal
+// Diff checks if two structs of type CrtStoreBase are equal
 //
 // By default empty maps and slices are equal to nil:
 //
-//	var a, b CrtStore
+//	var a, b CrtStoreBase
 //	diff := a.Diff(b)
 //
 // For more advanced use case you can configure these options (default values are shown):
 //
-//	var a, b CrtStore
+//	var a, b CrtStoreBase
 //	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
-func (s CrtStore) Diff(t CrtStore, opts ...Options) map[string][]interface{} {
+func (s CrtStoreBase) Diff(t CrtStoreBase, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-
-	if !s.CrtStoreBase.Equal(t.CrtStoreBase, opt) {
-		diff["CrtStoreBase"] = []interface{}{s.CrtStoreBase, t.CrtStoreBase}
+	if s.CrtBase != t.CrtBase {
+		diff["CrtBase"] = []interface{}{s.CrtBase, t.CrtBase}
 	}
 
-	if !CheckSameNilAndLenMap[string, CrtLoad](s.CrtLoads, t.CrtLoads, opt) {
-		diff["CrtLoads"] = []interface{}{s.CrtLoads, t.CrtLoads}
+	if s.KeyBase != t.KeyBase {
+		diff["KeyBase"] = []interface{}{s.KeyBase, t.KeyBase}
 	}
 
-	for k, v := range s.CrtLoads {
-		if !t.CrtLoads[k].Equal(v, opt) {
-			diff["CrtLoads"] = []interface{}{s.CrtLoads, t.CrtLoads}
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
 		}
+	}
+
+	if s.Name != t.Name {
+		diff["Name"] = []interface{}{s.Name, t.Name}
 	}
 
 	return diff
