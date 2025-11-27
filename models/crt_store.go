@@ -33,38 +33,69 @@ import (
 //
 // # Storage mechanism to load and store certificates used in the configuration
 //
-// swagger:model crt_store
+// swagger:model CrtStore
 type CrtStore struct {
+	CrtStoreBase `json:",inline"`
 
-	// Default directory to fetch SSL certificates from
-	CrtBase string `json:"crt_base,omitempty"`
+	// crt loads
+	CrtLoads map[string]CrtLoad `json:"crt_loads,omitempty"`
+}
 
-	// Default directory to fetch SSL private keys from
-	KeyBase string `json:"key_base,omitempty"`
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *CrtStore) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 CrtStoreBase
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.CrtStoreBase = aO0
 
-	// loads
-	Loads CrtLoads `json:"loads,omitempty"`
+	// AO1
+	var dataAO1 struct {
+		CrtLoads map[string]CrtLoad `json:"crt_loads,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
 
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Schemaless
-	Metadata map[string]interface{} `json:"metadata,omitempty"`
+	m.CrtLoads = dataAO1.CrtLoads
 
-	// name
-	// Required: true
-	// Pattern: ^[A-Za-z0-9-_]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_]+$`
-	Name string `json:"name"`
+	return nil
+}
+
+// MarshalJSON marshals this object to a JSON structure
+func (m CrtStore) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
+
+	aO0, err := swag.WriteJSON(m.CrtStoreBase)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		CrtLoads map[string]CrtLoad `json:"crt_loads,omitempty"`
+	}
+
+	dataAO1.CrtLoads = m.CrtLoads
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this crt store
 func (m *CrtStore) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateLoads(formats); err != nil {
+	// validation for a type composition with CrtStoreBase
+	if err := m.CrtStoreBase.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateName(formats); err != nil {
+	if err := m.validateCrtLoads(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -74,31 +105,28 @@ func (m *CrtStore) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *CrtStore) validateLoads(formats strfmt.Registry) error {
-	if swag.IsZero(m.Loads) { // not required
+func (m *CrtStore) validateCrtLoads(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CrtLoads) { // not required
 		return nil
 	}
 
-	if err := m.Loads.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("loads")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("loads")
+	for k := range m.CrtLoads {
+
+		if err := validate.Required("crt_loads"+"."+k, "body", m.CrtLoads[k]); err != nil {
+			return err
 		}
-		return err
-	}
+		if val, ok := m.CrtLoads[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("crt_loads" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("crt_loads" + "." + k)
+				}
+				return err
+			}
+		}
 
-	return nil
-}
-
-func (m *CrtStore) validateName(formats strfmt.Registry) error {
-
-	if err := validate.RequiredString("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_]+$`); err != nil {
-		return err
 	}
 
 	return nil
@@ -108,7 +136,12 @@ func (m *CrtStore) validateName(formats strfmt.Registry) error {
 func (m *CrtStore) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateLoads(ctx, formats); err != nil {
+	// validation for a type composition with CrtStoreBase
+	if err := m.CrtStoreBase.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCrtLoads(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -118,15 +151,16 @@ func (m *CrtStore) ContextValidate(ctx context.Context, formats strfmt.Registry)
 	return nil
 }
 
-func (m *CrtStore) contextValidateLoads(ctx context.Context, formats strfmt.Registry) error {
+func (m *CrtStore) contextValidateCrtLoads(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := m.Loads.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("loads")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("loads")
+	for k := range m.CrtLoads {
+
+		if val, ok := m.CrtLoads[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
 		}
-		return err
+
 	}
 
 	return nil

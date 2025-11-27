@@ -21,35 +21,16 @@ import (
 	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
-func (rec CrtStore) Equal(obj CrtStore, opts ...eqdiff.GoMethodGenOptions) bool {
-	return rec.CrtStoreBase.Equal(obj.CrtStoreBase, opts...) &&
-		EqualMapStringCrtLoad(rec.CrtLoads, obj.CrtLoads, opts...)
-}
-
-func EqualMapStringCrtLoad(x, y map[string]CrtLoad, opts ...eqdiff.GoMethodGenOptions) bool {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
+func (rec CrtStoreBase) Diff(obj CrtStoreBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if rec.CrtBase != obj.CrtBase {
+		diff["CrtBase"] = []interface{}{rec.CrtBase, obj.CrtBase}
 	}
-
-	if (x == nil) != (y == nil) {
-		if opt == nil || !opt.TreatNilNotAsEmpty {
-			if len(x) == 0 && len(y) == 0 {
-				return true
-			}
-		}
-		return false
+	if rec.KeyBase != obj.KeyBase {
+		diff["KeyBase"] = []interface{}{rec.KeyBase, obj.KeyBase}
 	}
-
-	if len(x) != len(y) {
-		return false
+	if rec.Name != obj.Name {
+		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
-
-	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !vx.Equal(vy, opts...) {
-			return false
-		}
-	}
-
-	return true
+	return diff
 }

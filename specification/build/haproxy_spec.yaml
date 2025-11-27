@@ -11691,6 +11691,22 @@ definitions:
     type: object
     x-go-name: HTTPCodes
   crt_store:
+    allOf:
+      - $ref: '#/definitions/crt_store_base'
+      - properties:
+          crt_loads:
+            additionalProperties:
+              $ref: '#/definitions/crt_load'
+        type: object
+    description: Storage mechanism to load and store certificates used in the configuration
+    title: Certificate Store
+    x-go-name: CrtStore
+  crt_stores:
+    description: List of Certificate Stores
+    type: array
+    items:
+      $ref: "#/definitions/crt_store"
+  crt_store_base:
     additionalProperties: false
     description: Storage mechanism to load and store certificates used in the configuration
     properties:
@@ -11700,8 +11716,6 @@ definitions:
       key_base:
         description: Default directory to fetch SSL private keys from
         type: string
-      loads:
-        $ref: '#/definitions/crt_loads'
       metadata:
         additionalProperties:
           type: object
@@ -11713,11 +11727,6 @@ definitions:
       - name
     title: Certificate Store
     type: object
-  crt_stores:
-    description: List of Certificate Stores
-    type: array
-    items:
-      $ref: "#/definitions/crt_store"
   crt_load:
     description: Loads a certificate from a store with options
     properties:
@@ -24818,6 +24827,7 @@ paths:
       operationId: getCrtStores
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -24844,6 +24854,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Certificate Store created
@@ -24879,6 +24890,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "202":
           description: Configuration change accepted and reload requested
@@ -24905,6 +24917,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -24938,6 +24951,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: crt_store configuration updated
@@ -24960,13 +24974,13 @@ paths:
       summary: Modify a Certificate Store
       tags:
         - CrtStore
-  /services/haproxy/configuration/crt_loads:
+  /services/haproxy/configuration/crt_stores/{crt_store}/crt_loads:
     get:
       description: Returns the list of loaded certificates from the specified crt_store
       operationId: getCrtLoads
       parameters:
         - description: Parent crt_store name
-          in: query
+          in: path
           name: crt_store
           required: true
           type: string
@@ -24990,7 +25004,7 @@ paths:
       operationId: createCrtLoad
       parameters:
         - description: Parent crt_store section name
-          in: query
+          in: path
           name: crt_store
           required: true
           type: string
@@ -25024,7 +25038,7 @@ paths:
       summary: Add a new certificate to load
       tags:
         - CrtLoad
-  /services/haproxy/configuration/crt_loads/{certificate}:
+  /services/haproxy/configuration/crt_stores/{crt_store}/crt_loads/{certificate}:
     delete:
       description: Deletes a load entry by its certificate name in the specified crt_store section
       operationId: deleteCrtLoad
@@ -25035,7 +25049,7 @@ paths:
           required: true
           type: string
         - description: Parent crt_store section name
-          in: query
+          in: path
           name: crt_store
           required: true
           type: string
@@ -25068,7 +25082,7 @@ paths:
           required: true
           type: string
         - description: Parent crt_store name
-          in: query
+          in: path
           name: crt_store
           required: true
           type: string
@@ -25099,7 +25113,7 @@ paths:
           required: true
           type: string
         - description: Parent crt_store section name
-          in: query
+          in: path
           name: crt_store
           required: true
           type: string
