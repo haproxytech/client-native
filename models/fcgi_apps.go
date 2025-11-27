@@ -31,7 +31,7 @@ import (
 
 // FCGIApps fcgi apps
 //
-// swagger:model fcgiApps
+// swagger:model fcgi_apps
 type FCGIApps []*FCGIApp
 
 // Validate validates this fcgi apps

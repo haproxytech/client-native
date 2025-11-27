@@ -32,7 +32,7 @@ import (
 // FCGILogStderr Enables logging of STDERR messages that the FastCGI application reports.
 // It is an optional setting. By default, HAProxy Enterprise ignores STDERR messages.
 //
-// swagger:model fcgiLogStderr
+// swagger:model fcgi_log_stderr
 type FCGILogStderr struct {
 
 	// address
