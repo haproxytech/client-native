@@ -42,6 +42,7 @@ allowed:
   - cpu
   - crd
   - cronjob
+  - crt
   - cve
   - cwe
   - dapi

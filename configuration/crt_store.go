@@ -18,10 +18,10 @@ package configuration
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/config-parser/common"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 	"github.com/haproxytech/client-native/v6/misc"
@@ -81,16 +81,29 @@ func (c *client) GetCrtStore(name, transactionID string) (int64, *models.CrtStor
 			fmt.Sprintf("%s section '%s' does not exist", CrtStoreParentName, name))
 	}
 
-	store, err := ParseCrtStore(p, name)
-	if err != nil {
+	crtStore := &models.CrtStore{CrtStoreBase: models.CrtStoreBase{Name: name}}
+	if err := ParseCrtStore(p, crtStore); err != nil {
 		return 0, nil, err
 	}
 
-	return v, store, nil
+	return v, crtStore, nil
 }
 
 func (c *client) DeleteCrtStore(name, transactionID string, version int64) error {
-	return c.deleteSection(parser.CrtStore, name, transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	if !p.SectionExists(parser.CrtStore, name) {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.CrtStore, name))
+		return c.HandleError(name, "", "", t, transactionID == "", e)
+	}
+	if err := p.SectionsDelete(parser.CrtStore, name); err != nil {
+		return c.HandleError(name, "", "", t, transactionID == "", err)
+	}
+
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func (c *client) CreateCrtStore(data *models.CrtStore, transactionID string, version int64) error {
@@ -146,10 +159,12 @@ func (c *client) EditCrtStore(name string, data *models.CrtStore, transactionID 
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func ParseCrtStore(p parser.Parser, name string) (*models.CrtStore, error) {
-	store := &models.CrtStore{Name: name}
+func ParseCrtStore(p parser.Parser, store *models.CrtStore) error {
+	var err error
+	var data common.ParserData
+	name := store.Name
 
-	if data, err := p.SectionGet(parser.CrtStore, name); err == nil {
+	if data, err = p.SectionGet(parser.CrtStore, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
 			store.Metadata = misc.ParseMetadata(d.Comment)
@@ -159,71 +174,31 @@ func ParseCrtStore(p parser.Parser, name string) (*models.CrtStore, error) {
 	// get optional crt-base
 	crtBase, err := p.Get(parser.CrtStore, name, "crt-base", false)
 	if err != nil {
-		if errors.Is(err, parser_errors.ErrFetch) {
-			return store, nil
+		if !errors.Is(err, parser_errors.ErrFetch) {
+			return err
 		}
-		return nil, err
+	} else {
+		sc, ok := crtBase.(*types.StringC)
+		if !ok {
+			return misc.CreateTypeAssertError("crt-base")
+		}
+		store.CrtBase = sc.Value
 	}
-	sc, ok := crtBase.(*types.StringC)
-	if !ok {
-		return nil, misc.CreateTypeAssertError("crt-base")
-	}
-	store.CrtBase = sc.Value
 
 	// get optional key-base
 	keyBase, err := p.Get(parser.CrtStore, name, "key-base", false)
 	if err != nil {
-		if errors.Is(err, parser_errors.ErrFetch) {
-			return store, nil
+		if !errors.Is(err, parser_errors.ErrFetch) {
+			return err
 		}
-		return nil, err
-	}
-	sc, ok = keyBase.(*types.StringC)
-	if !ok {
-		return nil, misc.CreateTypeAssertError("key-base")
-	}
-	store.KeyBase = sc.Value
-
-	// get optional loads
-	loads, err := p.Get(parser.CrtStore, name, "load", false)
-	if err != nil {
-		if errors.Is(err, parser_errors.ErrFetch) {
-			return store, nil
+	} else {
+		sc, ok := keyBase.(*types.StringC)
+		if !ok {
+			return misc.CreateTypeAssertError("key-base")
 		}
-		return nil, err
+		store.KeyBase = sc.Value
 	}
-	tloads, ok := loads.([]types.LoadCert)
-	if !ok {
-		return nil, misc.CreateTypeAssertError("load crt")
-	}
-	store.Loads = make(models.CrtLoads, len(tloads))
-	for i, l := range tloads {
-		domains := strings.Split(l.Domains, ",")
-		if len(domains) == 1 && domains[0] == "" {
-			domains = nil
-		}
-		mload := &models.CrtLoad{
-			Acme:        l.Acme,
-			Alias:       l.Alias,
-			Certificate: l.Certificate,
-			Domains:     domains,
-			Issuer:      l.Issuer,
-			Key:         l.Key,
-			Ocsp:        l.Ocsp,
-			Sctl:        l.Sctl,
-			Metadata:    misc.ParseMetadata(l.Comment),
-		}
-		if l.OcspUpdate != nil {
-			if *l.OcspUpdate {
-				mload.OcspUpdate = models.CrtLoadOcspUpdateEnabled
-			} else {
-				mload.OcspUpdate = models.CrtLoadOcspUpdateDisabled
-			}
-		}
-		store.Loads[i] = mload
-	}
-
-	return store, nil
+	return nil
 }
 
 func SerializeCrtStore(p parser.Parser, store *models.CrtStore) error {
@@ -249,15 +224,6 @@ func SerializeCrtStore(p parser.Parser, store *models.CrtStore) error {
 	keyBase := types.StringC{Value: store.KeyBase}
 	if err := p.Set(parser.CrtStore, store.Name, "key-base", keyBase); err != nil {
 		return err
-	}
-
-	if len(store.Loads) > 0 {
-		for i, load := range store.Loads {
-			err := p.Insert(parser.CrtStore, store.Name, "load", SerializeCrtLoad(load), i)
-			if err != nil {
-				return err
-			}
-		}
 	}
 
 	return nil

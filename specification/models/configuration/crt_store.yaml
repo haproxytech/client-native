@@ -2,6 +2,17 @@
 crt_store:
   title: Certificate Store
   description: Storage mechanism to load and store certificates used in the configuration
+  x-go-name: CrtStore
+  allOf:
+    - $ref: "#/definitions/crt_store_base"
+    - type: object
+      properties:
+        crt_loads:
+          additionalProperties:
+            $ref: "#/definitions/crt_load"
+crt_store_base:
+  title: Certificate Store
+  description: Storage mechanism to load and store certificates used in the configuration
   type: object
   required:
     - name
@@ -16,8 +27,6 @@ crt_store:
     key_base:
       type: string
       description: Default directory to fetch SSL private keys from
-    loads:
-      $ref: "#/definitions/crt_loads"
     metadata:
       additionalProperties:
         type: object

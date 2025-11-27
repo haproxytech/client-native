@@ -101,12 +101,10 @@ func TestCreateEditDeleteCrtStore(t *testing.T) {
 	const name = "test-store-42"
 
 	store := &models.CrtStore{
-		Name:    name,
-		CrtBase: "/secure/certs",
-		KeyBase: "/secure/keys",
-		Loads: models.CrtLoads{
-			&models.CrtLoad{Certificate: "/secure/certs/x1.pem", Key: "/secure/keys/x1priv.pem"},
-			&models.CrtLoad{Certificate: "/secure/certs/x1.pem", Ocsp: "/ocsp.der", OcspUpdate: "enabled"},
+		CrtStoreBase: models.CrtStoreBase{
+			Name:    name,
+			CrtBase: "/secure/certs",
+			KeyBase: "/secure/keys",
 		},
 	}
 
@@ -201,9 +199,11 @@ func TestCreateEditDeleteCrtLoads(t *testing.T) {
 	const name = "test-store-66"
 
 	store := &models.CrtStore{
-		Name:    name,
-		CrtBase: "/secure/certs",
-		KeyBase: "/secure/keys",
+		CrtStoreBase: models.CrtStoreBase{
+			Name:    name,
+			CrtBase: "/secure/certs",
+			KeyBase: "/secure/keys",
+		},
 	}
 
 	err := clientTest.CreateCrtStore(store, "", version)
