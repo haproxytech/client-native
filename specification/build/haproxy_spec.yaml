@@ -54,9 +54,9 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/program"
-  fcgiApp:
+  fcgi_app:
     allOf:
-      - $ref: '#/definitions/fcgiAppBase'
+      - $ref: '#/definitions/fcgi_app_base'
       - properties:
           acl_list:
             $ref: '#/definitions/acls'
@@ -65,7 +65,7 @@ definitions:
     description: App with all it's children resources
     type: object
     x-go-name: FCGIApp
-  fcgiAppBase:
+  fcgi_app_base:
     description: HAProxy FastCGI application configuration
     properties:
       docroot:
@@ -88,7 +88,7 @@ definitions:
         type: string
       log_stderrs:
         items:
-          $ref: '#/definitions/fcgiLogStderr'
+          $ref: '#/definitions/fcgi_log_stderr'
           x-go-name: FCGIAppLogStderr
         type: array
         x-omitempty: true
@@ -113,7 +113,7 @@ definitions:
         x-nullable: false
       pass_headers:
         items:
-          $ref: '#/definitions/fcgiPassHeader'
+          $ref: '#/definitions/fcgi_pass_header'
           x-go-name: FCGIAppLogPassHeader
         type: array
         x-omitempty: true
@@ -125,7 +125,7 @@ definitions:
         type: string
       set_params:
         items:
-          $ref: '#/definitions/fcgiSetParam'
+          $ref: '#/definitions/fcgi_set_param'
         type: array
         x-omitempty: true
     required:
@@ -133,11 +133,11 @@ definitions:
       - docroot
     title: FCGI application base
     type: object
-  fcgiApps:
+  fcgi_apps:
     type: array
     items:
-      $ref: "#/definitions/fcgiApp"
-  fcgiSetParam:
+      $ref: "#/definitions/fcgi_app"
+  fcgi_set_param:
     description: |-
       Sets a FastCGI parameter to pass to this application.
       Its value, defined by <format> can take a formatted string, the same as the log directive.
@@ -160,7 +160,7 @@ definitions:
       name:
         type: string
     type: object
-  fcgiPassHeader:
+  fcgi_pass_header:
     description: |-
       Specifies the name of a request header to pass to the FastCGI application.
       Optionally, you can follow it with an ACL-based condition, in which case the FastCGI application evaluates it only if the condition is true.
@@ -184,7 +184,7 @@ definitions:
       name:
         type: string
     type: object
-  fcgiLogStderr:
+  fcgi_log_stderr:
     description: |-
       Enables logging of STDERR messages that the FastCGI application reports.
       It is an optional setting. By default, HAProxy Enterprise ignores STDERR messages.
@@ -14890,7 +14890,7 @@ paths:
               description: Configuration file version
               type: string
           schema:
-            $ref: '#/definitions/fcgiApps'
+            $ref: '#/definitions/fcgi_apps'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return an array of FCGI apps
@@ -14904,7 +14904,7 @@ paths:
           name: data
           required: true
           schema:
-            $ref: '#/definitions/fcgiApp'
+            $ref: '#/definitions/fcgi_app'
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
@@ -14913,7 +14913,7 @@ paths:
         "201":
           description: Application created
           schema:
-            $ref: '#/definitions/fcgiApp'
+            $ref: '#/definitions/fcgi_app'
         "202":
           description: Configuration change accepted and reload requested
           headers:
@@ -14921,7 +14921,7 @@ paths:
               description: ID of the requested reload
               type: string
           schema:
-            $ref: '#/definitions/fcgiApp'
+            $ref: '#/definitions/fcgi_app'
         "400":
           $ref: '#/responses/BadRequest'
         "409":
@@ -14979,7 +14979,7 @@ paths:
               description: Configuration file version
               type: string
           schema:
-            $ref: '#/definitions/fcgiApp'
+            $ref: '#/definitions/fcgi_app'
         "404":
           $ref: '#/responses/NotFound'
         default:
@@ -15000,7 +15000,7 @@ paths:
           name: data
           required: true
           schema:
-            $ref: '#/definitions/fcgiApp'
+            $ref: '#/definitions/fcgi_app'
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
@@ -15009,7 +15009,7 @@ paths:
         "200":
           description: Application replaced
           schema:
-            $ref: '#/definitions/fcgiApp'
+            $ref: '#/definitions/fcgi_app'
         "202":
           description: Configuration change accepted and reload requested
           headers:
@@ -15017,7 +15017,7 @@ paths:
               description: ID of the requested reload
               type: string
           schema:
-            $ref: '#/definitions/fcgiApp'
+            $ref: '#/definitions/fcgi_app'
         "400":
           $ref: '#/responses/BadRequest'
         "404":

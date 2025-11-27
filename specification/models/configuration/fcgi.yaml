@@ -4,7 +4,7 @@ app:
   description: App with all it's children resources
   x-go-name: FCGIApp
   allOf:
-    - $ref: "#/definitions/fcgiAppBase"
+    - $ref: "#/definitions/fcgi_app_base"
     - type: object
       properties:
         acl_list:
@@ -34,13 +34,13 @@ app_base:
       x-omitempty: true
       items:
         x-go-name: FCGIAppLogStderr
-        $ref: "#/definitions/fcgiLogStderr"
+        $ref: "#/definitions/fcgi_log_stderr"
     pass_headers:
       type: array
       x-omitempty: true
       items:
         x-go-name: FCGIAppLogPassHeader
-        $ref: "#/definitions/fcgiPassHeader"
+        $ref: "#/definitions/fcgi_pass_header"
     path_info:
       type: string
       description: |-
@@ -68,12 +68,12 @@ app_base:
       type: array
       x-omitempty: true
       items:
-        $ref: "#/definitions/fcgiSetParam"
+        $ref: "#/definitions/fcgi_set_param"
     metadata:
       additionalProperties:
         type: object
 
-setParam:
+set_param:
   description: |-
     Sets a FastCGI parameter to pass to this application.
     Its value, defined by <format> can take a formatted string, the same as the log directive.
@@ -95,7 +95,7 @@ setParam:
         cond:
           required: true
 
-passHeader:
+pass_header:
   description: |-
     Specifies the name of a request header to pass to the FastCGI application.
     Optionally, you can follow it with an ACL-based condition, in which case the FastCGI application evaluates it only if the condition is true.
@@ -118,7 +118,7 @@ passHeader:
         cond:
           required: true
 
-logStderr:
+log_stderr:
   description: |-
     Enables logging of STDERR messages that the FastCGI application reports.
     It is an optional setting. By default, HAProxy Enterprise ignores STDERR messages.

@@ -35,7 +35,7 @@ import (
 //
 // # HAProxy FastCGI application configuration
 //
-// swagger:model fcgiAppBase
+// swagger:model fcgi_app_base
 type FCGIAppBase struct {
 
 	// Defines the document root on the remote host. The parameter serves to build the default value of FastCGI parameters SCRIPT_FILENAME and PATH_TRANSLATED. It is a mandatory setting.

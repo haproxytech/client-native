@@ -20,20 +20,20 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/program"
-  fcgiApp:
+  fcgi_app:
     $ref: "models/configuration/fcgi.yaml#/app"
-  fcgiAppBase:
+  fcgi_app_base:
     $ref: "models/configuration/fcgi.yaml#/app_base"
-  fcgiApps:
+  fcgi_apps:
     type: array
     items:
-      $ref: "#/definitions/fcgiApp"
-  fcgiSetParam:
-    $ref: "models/configuration/fcgi.yaml#/setParam"
-  fcgiPassHeader:
-    $ref: "models/configuration/fcgi.yaml#/passHeader"
-  fcgiLogStderr:
-    $ref: "models/configuration/fcgi.yaml#/logStderr"
+      $ref: "#/definitions/fcgi_app"
+  fcgi_set_param:
+    $ref: "models/configuration/fcgi.yaml#/set_param"
+  fcgi_pass_header:
+    $ref: "models/configuration/fcgi.yaml#/pass_header"
+  fcgi_log_stderr:
+    $ref: "models/configuration/fcgi.yaml#/log_stderr"
   bind_params:
     $ref: "models/configuration/bind_params.yaml#/bind_params"
   server_params:
