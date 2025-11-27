@@ -80,6 +80,8 @@ func TestWholeConfigsSectionsPeers(t *testing.T) {
 		{"peers_defaultserverinitaddrlastlibcnon_", peers_defaultserverinitaddrlastlibcnon_},
 		{"peers_defaultserverinter1000weight13", peers_defaultserverinter1000weight13},
 		{"peers_defaultserverinter1500ms", peers_defaultserverinter1500ms},
+		{"peers_defaultserverktlsoff", peers_defaultserverktlsoff},
+		{"peers_defaultserverktlson", peers_defaultserverktlson},
 		{"peers_defaultserverlogbufsize10", peers_defaultserverlogbufsize10},
 		{"peers_defaultserverlogprotolegacy", peers_defaultserverlogprotolegacy},
 		{"peers_defaultserverlogprotooctetcount", peers_defaultserverlogprotooctetcount},

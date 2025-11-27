@@ -569,6 +569,11 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 					Value: &v.Value,
 				}
 			}
+		case *params.ServerOptionOnOff:
+			switch v.Name {
+			case "ktls":
+				serverParams.Ktls = v.Value
+			}
 		}
 	}
 	// Add corresponding arguments to the source option.
@@ -972,6 +977,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.TCPMd5sig != "" {
 		options = append(options, &params.ServerOptionValue{Name: "tcp-md5sig", Value: s.TCPMd5sig})
+	}
+	if s.Ktls != "" {
+		options = append(options, &params.ServerOptionOnOff{Name: "ktls", Value: s.Ktls})
 	}
 	return options
 }

@@ -157,6 +157,36 @@ func (b *ServerOptionIDValue) String() string {
 	return fmt.Sprintf("%s(%s) %s", b.Name, b.ID, b.Value)
 }
 
+type ServerOptionOnOff struct {
+	Name  string
+	Value string
+}
+
+func (s *ServerOptionOnOff) Parse(options []string, currentIndex int) (int, error) {
+	if currentIndex+1 < len(options) {
+		if options[currentIndex] == s.Name {
+			s.Value = options[currentIndex+1]
+			if !s.Valid() {
+				return 0, &NotAllowedValuesError{Have: s.Value, Want: []string{"on", "off"}}
+			}
+			return 2, nil
+		}
+		return 0, &NotFoundError{Have: options[currentIndex], Want: s.Name}
+	}
+	return 0, &NotEnoughParamsError{}
+}
+
+func (s *ServerOptionOnOff) Valid() bool {
+	return s.Value == "on" || s.Value == "off"
+}
+
+func (s *ServerOptionOnOff) String() string {
+	if s.Name == "" || s.Value == "" {
+		return ""
+	}
+	return s.Name + " " + s.Value
+}
+
 var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochecknoglobals
 	"agent-check":             func() ServerOption { return &ServerOptionWord{Name: "agent-check"} },
 	"no-agent-check":          func() ServerOption { return &ServerOptionWord{Name: "no-agent-check"} },
@@ -281,6 +311,7 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"guid":                    func() ServerOption { return &ServerOptionValue{Name: "guid"} },
 	"pool-conn-name":          func() ServerOption { return &ServerOptionValue{Name: "pool-conn-name"} },
 	"hash-key":                func() ServerOption { return &ServerOptionValue{Name: "hash-key"} },
+	"ktls":                    func() ServerOption { return &ServerOptionOnOff{Name: "ktls"} },
 }
 
 var serverParamOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochecknoglobals

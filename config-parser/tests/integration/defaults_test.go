@@ -120,6 +120,8 @@ func TestWholeConfigsSectionsDefaults(t *testing.T) {
 		{"defaults_defaultserverinitaddrlastlibcnon_", defaults_defaultserverinitaddrlastlibcnon_},
 		{"defaults_defaultserverinter1000weight13", defaults_defaultserverinter1000weight13},
 		{"defaults_defaultserverinter1500ms", defaults_defaultserverinter1500ms},
+		{"defaults_defaultserverktlsoff", defaults_defaultserverktlsoff},
+		{"defaults_defaultserverktlson", defaults_defaultserverktlson},
 		{"defaults_defaultserverlogbufsize10", defaults_defaultserverlogbufsize10},
 		{"defaults_defaultserverlogprotolegacy", defaults_defaultserverlogprotolegacy},
 		{"defaults_defaultserverlogprotooctetcount", defaults_defaultserverlogprotooctetcount},

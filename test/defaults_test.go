@@ -24,6 +24,8 @@ func TestPushDefaults(t *testing.T) {
 	cpkaCnt := int64(10)
 	cpkaTimeout := int64(10000)
 	statsRealm := "Haproxy Stats"
+	inter := int64(5000)
+	slowStart := int64(6000)
 	d := &models.Defaults{
 		DefaultsBase: models.DefaultsBase{
 			Name: "unnamed_defaults_1",
@@ -121,6 +123,39 @@ func TestPushDefaults(t *testing.T) {
 			Source: &models.Source{
 				Address:   misc.StringP("127.0.0.1"),
 				Interface: "lo",
+			},
+			DefaultServer: &models.DefaultServer{
+				ServerParams: models.ServerParams{
+					Backup:         "enabled",
+					Check:          "enabled",
+					Maintenance:    "enabled",
+					Ssl:            "enabled",
+					AgentCheck:     "enabled",
+					SslCertificate: "dummy.crt",
+					TLSTickets:     "enabled",
+					Verify:         "none",
+					Inter:          &inter,
+					OnMarkedDown:   "shutdown-sessions",
+					OnError:        "mark-down",
+					OnMarkedUp:     "shutdown-backup-sessions",
+					Slowstart:      &slowStart,
+					ProxyV2Options: []string{"ssl", "unique-id"},
+					Curves:         "brainpoolP384r1",
+					Sigalgs:        "RSA+SHA256",
+					ClientSigalgs:  "ECDSA+SHA256",
+					LogBufsize:     misc.Int64P(11),
+					SetProxyV2TlvFmt: &models.ServerParamsSetProxyV2TlvFmt{
+						ID:    misc.StringP("0x50"),
+						Value: misc.StringP("%[fc_pp_tlv(0x20)]"),
+					},
+					IdlePing:          misc.Int64P(10000),
+					CheckReusePool:    "enabled",
+					CheckPoolConnName: "bar",
+					TCPMd5sig:         "secretpass",
+					SniAuto:           "enabled",
+					CheckSniAuto:      "enabled",
+					Ktls:              "off",
+				},
 			},
 		},
 	}

@@ -177,8 +177,12 @@ func TestDefaultServer(t *testing.T) {
 		"default-server no-sni-auto":           true,
 		"default-server check-sni-auto":        true,
 		"default-server no-check-sni-auto":     true,
+		"default-server ktls on":               true,
+		"default-server ktls off":              true,
 		"default-server":                       false,
 		"default-server tcp-md5sig":            false,
+		"default-server ktls":                  false,
+		"default-server ktls somthing":         false,
 		"---":                                  false,
 		"--- ---":                              false,
 	}

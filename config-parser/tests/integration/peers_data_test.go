@@ -617,6 +617,14 @@ const peers_defaultservernochecksniauto = `
 peers test
   default-server no-check-sni-auto
 `
+const peers_defaultserverktlson = `
+peers test
+  default-server ktls on
+`
+const peers_defaultserverktlsoff = `
+peers test
+  default-server ktls off
+`
 const peers_peername1270018080 = `
 peers test
   peer name 127.0.0.1:8080

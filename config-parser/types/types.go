@@ -631,6 +631,10 @@ type CPUSet struct {
 //test:ok:default-server no-sni-auto
 //test:ok:default-server check-sni-auto
 //test:ok:default-server no-check-sni-auto
+//test:ok:default-server ktls on
+//test:ok:default-server ktls off
+//test:fail:default-server ktls
+//test:fail:default-server ktls somthing
 type DefaultServer struct {
 	Params  []params.ServerOption
 	Comment string
@@ -1165,6 +1169,10 @@ type Peer struct {
 //test:ok:server name 127.0.0.1 no-sni-auto
 //test:ok:server name 127.0.0.1 check-sni-auto
 //test:ok:server name 127.0.0.1 no-check-sni-auto
+//test:ok:server name 127.0.0.1 ktls on
+//test:ok:server name 127.0.0.1 ktls off
+//test:fail:server name 127.0.0.1 ktls
+//test:fail:server name 127.0.0.1 ktls something
 type Server struct {
 	Name    string
 	Address string

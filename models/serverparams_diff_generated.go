@@ -146,6 +146,9 @@ func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions
 	for diffKey, diffValue := range DiffPointerInt64(rec.Inter, obj.Inter, opts...) {
 		diff["Inter."+diffKey] = diffValue
 	}
+	if rec.Ktls != obj.Ktls {
+		diff["Ktls"] = []interface{}{rec.Ktls, obj.Ktls}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.LogBufsize, obj.LogBufsize, opts...) {
 		diff["LogBufsize."+diffKey] = diffValue
 	}

@@ -801,6 +801,14 @@ const defaults_defaultservernochecksniauto = `
 defaults test
   default-server no-check-sni-auto
 `
+const defaults_defaultserverktlson = `
+defaults test
+  default-server ktls on
+`
+const defaults_defaultserverktlsoff = `
+defaults test
+  default-server ktls off
+`
 const defaults_emailalertfromadminexamplecom = `
 defaults test
   email-alert from admin@example.com

@@ -820,6 +820,15 @@ definitions:
         x-default-unit: ms
         x-duration: true
         x-nullable: true
+      ktls:
+        enum:
+          - "on"
+          - "off"
+        type: string
+        x-display-name: |-
+          Enables or disables ktls for those sockets. If enabled, kTLS will be used if the kernel supports it and the cipher is compatible.
+          This is only available on Linux kernel 4.17 and above.
+          EXPERIMENTAL OPTION.
       log-bufsize:
         type: integer
         x-nullable: true

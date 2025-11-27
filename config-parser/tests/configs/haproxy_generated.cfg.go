@@ -259,6 +259,8 @@ backend test
   default-server no-sni-auto
   default-server check-sni-auto
   default-server no-check-sni-auto
+  default-server ktls on
+  default-server ktls off
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -459,6 +461,8 @@ backend test
   server name 127.0.0.1 no-sni-auto
   server name 127.0.0.1 check-sni-auto
   server name 127.0.0.1 no-check-sni-auto
+  server name 127.0.0.1 ktls on
+  server name 127.0.0.1 ktls off
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
   stick on src table pop if !localhost
   stick match src table pop if !localhost
@@ -1333,6 +1337,8 @@ defaults test
   default-server no-sni-auto
   default-server check-sni-auto
   default-server no-check-sni-auto
+  default-server ktls on
+  default-server ktls off
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -3014,6 +3020,8 @@ peers test
   default-server no-sni-auto
   default-server check-sni-auto
   default-server no-check-sni-auto
+  default-server ktls on
+  default-server ktls off
   peer name 127.0.0.1:8080
   peer name 127.0.0.1:8080 shard 1
   default-bind user root mode 600 accept-proxy
@@ -3757,6 +3765,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  default-server no-check-sni-auto
 `, 3},
+	{`  default-server ktls on
+`, 3},
+	{`  default-server ktls off
+`, 3},
 	{`  email-alert from admin@example.com
 `, 3},
 	{`  email-alert to a@z,x@y
@@ -4168,6 +4180,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  server name 127.0.0.1 check-sni-auto
 `, 1},
 	{`  server name 127.0.0.1 no-check-sni-auto
+`, 1},
+	{`  server name 127.0.0.1 ktls on
+`, 1},
+	{`  server name 127.0.0.1 ktls off
 `, 1},
 	{`  stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
 `, 2},

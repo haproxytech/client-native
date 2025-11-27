@@ -226,6 +226,11 @@ type ServerParams struct {
 	// +kubebuilder:validation:Minimum=0
 	Inter *int64 `json:"inter,omitempty"`
 
+	// ktls
+	// Enum: ["on","off"]
+	// +kubebuilder:validation:Enum=on;off;
+	Ktls string `json:"ktls,omitempty"`
+
 	// log bufsize
 	LogBufsize *int64 `json:"log-bufsize,omitempty"`
 
@@ -646,6 +651,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateInter(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateKtls(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1659,6 +1668,48 @@ func (m *ServerParams) validateInter(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("inter", "body", *m.Inter, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeKtlsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["on","off"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeKtlsPropEnum = append(serverParamsTypeKtlsPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsKtlsOn captures enum value "on"
+	ServerParamsKtlsOn string = "on"
+
+	// ServerParamsKtlsOff captures enum value "off"
+	ServerParamsKtlsOff string = "off"
+)
+
+// prop value enum
+func (m *ServerParams) validateKtlsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeKtlsPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateKtls(formats strfmt.Registry) error {
+	if swag.IsZero(m.Ktls) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateKtlsEnum("ktls", "body", m.Ktls); err != nil {
 		return err
 	}
 

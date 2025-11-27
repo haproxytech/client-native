@@ -1104,7 +1104,8 @@
                     "strict-maxconn": true,
                     "tcp_md5sig": "secretpass",
                     "sni_auto": "enabled",
-                    "check_sni_auto": "enabled"
+                    "check_sni_auto": "enabled",
+                    "ktls": "on"
                 },
                 "webserv2": {
                     "cookie": "BLAH",
@@ -3375,7 +3376,8 @@
                 "inter": 5000,
                 "rise": 4000,
                 "sni_auto": "enabled",
-                "check_sni_auto": "enabled"
+                "check_sni_auto": "enabled",
+                "ktls": "off"
             }
         },
         "test_defaults_2": {

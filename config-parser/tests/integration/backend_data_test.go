@@ -801,6 +801,14 @@ const backend_defaultservernochecksniauto = `
 backend test
   default-server no-check-sni-auto
 `
+const backend_defaultserverktlson = `
+backend test
+  default-server ktls on
+`
+const backend_defaultserverktlsoff = `
+backend test
+  default-server ktls off
+`
 const backend_emailalertfromadminexamplecom = `
 backend test
   email-alert from admin@example.com
@@ -1804,6 +1812,14 @@ backend test
 const backend_servername127001nochecksniauto = `
 backend test
   server name 127.0.0.1 no-check-sni-auto
+`
+const backend_servername127001ktlson = `
+backend test
+  server name 127.0.0.1 ktls on
+`
+const backend_servername127001ktlsoff = `
+backend test
+  server name 127.0.0.1 ktls off
 `
 const backend_sticktabletypeipsize1mexpire5mst = `
 backend test

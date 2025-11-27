@@ -63,6 +63,7 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		EqualPointerString(rec.InitAddr, obj.InitAddr, opts...) &&
 		rec.InitState == obj.InitState &&
 		EqualPointerInt64(rec.Inter, obj.Inter, opts...) &&
+		rec.Ktls == obj.Ktls &&
 		EqualPointerInt64(rec.LogBufsize, obj.LogBufsize, opts...) &&
 		rec.LogProto == obj.LogProto &&
 		rec.Maintenance == obj.Maintenance &&
