@@ -110,6 +110,7 @@ allowed:
   - jwt
   - kasbin
   - kpi
+  - ktls
   - kubebuilder
   - kubernetes
   - lifecycle

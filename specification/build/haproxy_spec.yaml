@@ -1371,6 +1371,9 @@ definitions:
       nokqueue:
         type: boolean
         x-display-name: Disable the use of the "kqueue" event polling system on BSD
+      noktls:
+        type: boolean
+        x-display-name: Disables the use of ktls. It is equivalent to the command line argument "-dT"
       nopoll:
         type: boolean
         x-display-name: Disable the use of the "poll" event polling system

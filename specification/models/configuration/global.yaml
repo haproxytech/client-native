@@ -1124,6 +1124,9 @@ performance_options:
   properties:
     busy_polling:
       type: boolean
+    noktls:
+      type: boolean
+      x-display-name: Disables the use of ktls. It is equivalent to the command line argument "-dT"
     max_spread_checks:
       type: integer
       minimum: 0

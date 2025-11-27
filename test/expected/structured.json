@@ -40,7 +40,8 @@
             "server_state_base": "/path",
             "server_state_file": "serverstatefile",
             "spread_checks": 10,
-            "thread_hard_limit": 77
+            "thread_hard_limit": 77,
+            "noktls": true
         },
         "ssl_options": {
             "engines": [

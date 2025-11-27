@@ -76,6 +76,9 @@ type PerformanceOptions struct {
 	// nokqueue
 	Nokqueue bool `json:"nokqueue,omitempty"`
 
+	// noktls
+	Noktls bool `json:"noktls,omitempty"`
+
 	// nopoll
 	Nopoll bool `json:"nopoll,omitempty"`
 

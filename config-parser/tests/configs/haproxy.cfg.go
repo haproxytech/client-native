@@ -75,6 +75,7 @@ global
   dns-accept-family ipv4,ipv6
   shm-stats-file some_file
   shm-stats-file-max-objects 100
+  noktls
   # random comment before snippet
   ###_config-snippet_### BEGIN
   tune.ssl.default-dh-param 2048

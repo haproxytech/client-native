@@ -62,6 +62,9 @@ func (rec PerformanceOptions) Diff(obj PerformanceOptions, opts ...eqdiff.GoMeth
 	if rec.Nokqueue != obj.Nokqueue {
 		diff["Nokqueue"] = []interface{}{rec.Nokqueue, obj.Nokqueue}
 	}
+	if rec.Noktls != obj.Noktls {
+		diff["Noktls"] = []interface{}{rec.Noktls, obj.Noktls}
+	}
 	if rec.Nopoll != obj.Nopoll {
 		diff["Nopoll"] = []interface{}{rec.Nopoll, obj.Nopoll}
 	}

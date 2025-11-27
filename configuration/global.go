@@ -385,6 +385,15 @@ func parsePerformanceOptions(p parser.Parser) (*models.PerformanceOptions, error
 		options.BusyPolling = busyPolling
 	}
 
+	noktls, err := parseBoolOption(p, "noktls")
+	if err != nil {
+		return nil, err
+	}
+	if noktls {
+		isEmpty = false
+		options.Noktls = noktls
+	}
+
 	maxSpreadChecks, err := parseTimeoutOption(p, "max-spread-checks")
 	if err != nil {
 		return nil, err
@@ -2995,6 +3004,10 @@ func serializePerformanceOptions(p parser.Parser, options *models.PerformanceOpt
 	}
 
 	if err := serializeBoolOption(p, "busy-polling", options.BusyPolling); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "noktls", options.Noktls); err != nil {
 		return err
 	}
 

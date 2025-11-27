@@ -35,6 +35,7 @@ func (rec PerformanceOptions) Equal(obj PerformanceOptions, opts ...eqdiff.GoMet
 		rec.Noevports == obj.Noevports &&
 		rec.Nogetaddrinfo == obj.Nogetaddrinfo &&
 		rec.Nokqueue == obj.Nokqueue &&
+		rec.Noktls == obj.Noktls &&
 		rec.Nopoll == obj.Nopoll &&
 		rec.Noreuseport == obj.Noreuseport &&
 		rec.Nosplice == obj.Nosplice &&

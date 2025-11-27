@@ -294,6 +294,7 @@ global
   stress-level 5
   tune.epoll.mask-events err,hup,rdhup
   tune.max-rules-at-once 60
+  noktls
 
 defaults test_defaults # testing_defaults
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3

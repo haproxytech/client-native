@@ -99,6 +99,7 @@ func TestPerformanceOptionsEqualFalse(t *testing.T) {
 		result.Noevports = !sample.Noevports
 		result.Nogetaddrinfo = !sample.Nogetaddrinfo
 		result.Nokqueue = !sample.Nokqueue
+		result.Noktls = !sample.Noktls
 		result.Nopoll = !sample.Nopoll
 		result.Noreuseport = !sample.Noreuseport
 		result.Nosplice = !sample.Nosplice
@@ -196,6 +197,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 		result.Noevports = !sample.Noevports
 		result.Nogetaddrinfo = !sample.Nogetaddrinfo
 		result.Nokqueue = !sample.Nokqueue
+		result.Noktls = !sample.Noktls
 		result.Nopoll = !sample.Nopoll
 		result.Noreuseport = !sample.Noreuseport
 		result.Nosplice = !sample.Nosplice
@@ -209,7 +211,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 22 {
+		if len(listDiffFields) != 23 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -219,7 +221,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected PerformanceOptions to be different in 22 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected PerformanceOptions to be different in 23 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
