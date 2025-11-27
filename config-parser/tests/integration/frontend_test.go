@@ -87,6 +87,8 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_bind443interfaceeth0", frontend_bind443interfaceeth0},
 		{"frontend_bind443interfaceeth1", frontend_bind443interfaceeth1},
 		{"frontend_bind443interfacepppoewan", frontend_bind443interfacepppoewan},
+		{"frontend_bind443ktlsoff", frontend_bind443ktlsoff},
+		{"frontend_bind443ktlson", frontend_bind443ktlson},
 		{"frontend_bind443leveladmin", frontend_bind443leveladmin},
 		{"frontend_bind443levelopeerator", frontend_bind443levelopeerator},
 		{"frontend_bind443leveluser", frontend_bind443leveluser},

@@ -649,3 +649,11 @@ const peers_defaultbindtcpmd5sigsecretpass = `
 peers test
   default-bind tcp-md5sig secretpass
 `
+const peers_defaultbindktlson = `
+peers test
+  default-bind ktls on
+`
+const peers_defaultbindktlsoff = `
+peers test
+  default-bind ktls off
+`

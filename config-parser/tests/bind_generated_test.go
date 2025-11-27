@@ -159,6 +159,8 @@ func TestBind(t *testing.T) {
 		"bind :443 ssl no-strict-sni":                                   true,
 		"bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem": true,
 		"bind :443 tcp-md5sig secretpass":                               true,
+		"bind :443 ktls on":                                             true,
+		"bind :443 ktls off":                                            true,
 		"bind":                                                          false,
 		"bind :443 quic-cc-algo something":                              false,
 		"bind :443 quic-cc-algo nocc()":                                 false,
@@ -168,6 +170,8 @@ func TestBind(t *testing.T) {
 		"bind :443 user mode 600":                                       false,
 		"bind :443 user mode 600 accept-proxy":                          false,
 		"bind :443 tcp-md5sig":                                          false,
+		"bind :443 ktls":                                                false,
+		"bind :443 ktls something":                                      false,
 		"---":                                                           false,
 		"--- ---":                                                       false,
 	}

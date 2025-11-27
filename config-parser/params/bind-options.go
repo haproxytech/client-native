@@ -317,6 +317,7 @@ var bindOptionFactoryMethods = map[string]func() BindOption{ //nolint:gochecknog
 	"default-crt":          func() BindOption { return &BindOptionValue{Name: "default-crt"} },
 
 	"quic-cc-algo": func() BindOption { return &BindOptionParams{Name: "quic-cc-algo"} },
+	"ktls":         func() BindOption { return &BindOptionOnOff{Name: "ktls"} },
 }
 
 // Parse ...

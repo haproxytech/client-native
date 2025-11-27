@@ -131,6 +131,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Nbconn:         12,
 			DefaultCrtList: []string{"foobar2.pem.rsa", "foobar2.pem.ecdsa"},
 			TCPMd5sig:      "secretpass",
+			Ktls:           "off",
 		},
 	}
 

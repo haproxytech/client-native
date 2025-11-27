@@ -355,4 +355,11 @@ bind_params:
       x-nullable: true
       x-dependency:
         quic-cc-algo:
+    ktls:
+      type: string
+      enum: [on, off]
+      x-display-name: |-
+        Enables or disables ktls for those sockets. If enabled, kTLS will be used if the kernel supports it and the cipher is compatible.
+        This is only available on Linux kernel 4.17 and above.
+        EXPERIMENTAL OPTION.
   additionalProperties: false

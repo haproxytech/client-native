@@ -2897,7 +2897,8 @@
                         "foobar.pem.rsa",
                         "foobar.pem.ecdsa"
                     ],
-                    "tcp_md5sig": "secretpass"
+                    "tcp_md5sig": "secretpass",
+                    "ktls": "on"
                 },
                 "webserv2": {
                     "name": "webserv2",
@@ -3562,7 +3563,8 @@
                 "alpn": "h2,http/1.1",
                 "ssl": true,
                 "ssl_certificate": "/etc/haproxy/site.pem",
-                "v4v6": true
+                "v4v6": true,
+                "ktls": "off"
             },
             "default_server": {
                 "fall": 2,

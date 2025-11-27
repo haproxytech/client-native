@@ -426,7 +426,7 @@ defaults unnamed_defaults_1
 frontend test
   mode http
   backlog 2048
-  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa tcp-md5sig secretpass
+  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa tcp-md5sig secretpass ktls on
   bind 192.168.1.1:8080 name webserv2 thread 1/all force-tlsv10 ssl no-strict-sni tls-tickets
   bind 192.168.1.2:8080 name webserv3 thread 1/1 no-tlsv10 strict-sni no-tls-tickets
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1 force-sslv3 idle-ping 10000
@@ -898,7 +898,7 @@ backend test # my comment
 peers mycluster
   enabled
   default-server fall 2 rise 4 inter 5s port 8888 slowstart 6000
-  default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1
+  default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1 ktls off
   peer hapee 192.168.1.1:1023 shard 1
   peer aggregator HARDCODEDCLUSTERIP:10023
   shards 3

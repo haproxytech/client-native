@@ -122,6 +122,9 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.Interface != obj.Interface {
 		diff["Interface"] = []interface{}{rec.Interface, obj.Interface}
 	}
+	if rec.Ktls != obj.Ktls {
+		diff["Ktls"] = []interface{}{rec.Ktls, obj.Ktls}
+	}
 	if rec.Label != obj.Label {
 		diff["Label"] = []interface{}{rec.Label, obj.Label}
 	}

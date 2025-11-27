@@ -55,6 +55,7 @@ func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) b
 		rec.ID == obj.ID &&
 		EqualPointerInt64(rec.IdlePing, obj.IdlePing, opts...) &&
 		rec.Interface == obj.Interface &&
+		rec.Ktls == obj.Ktls &&
 		rec.Label == obj.Label &&
 		rec.Level == obj.Level &&
 		rec.Maxconn == obj.Maxconn &&

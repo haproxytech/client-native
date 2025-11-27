@@ -31,8 +31,12 @@ func TestDefaultBind(t *testing.T) {
 		"default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1": true,
 		"default-bind tls-ticket-keys /tmp/tls_ticket_keys":                true,
 		"default-bind tcp-md5sig secretpass":                               true,
+		"default-bind ktls on":                                             true,
+		"default-bind ktls off":                                            true,
 		"default-bind":                                                     false,
 		"default-bind tcp-md5sig":                                          false,
+		"default-bind ktls":                                                false,
+		"default-bind ktls something":                                      false,
 		"---":                                                              false,
 		"--- ---":                                                          false,
 	}

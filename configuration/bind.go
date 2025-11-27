@@ -435,6 +435,11 @@ func parseBindParams(bindOptions []params.BindOption) (models.BindParams, string
 					}
 				}
 			}
+		case *params.BindOptionOnOff:
+			switch v.Name {
+			case "ktls":
+				b.Ktls = v.Value
+			}
 		}
 	}
 	return b, name
@@ -721,6 +726,9 @@ func serializeBindParams(b models.BindParams, name string, path string, opt *opt
 	}
 	if b.Nice != 0 {
 		options = append(options, &params.BindOptionValue{Name: "nice", Value: strconv.FormatInt(b.Nice, 10)})
+	}
+	if b.Ktls != "" {
+		options = append(options, &params.BindOptionOnOff{Name: "ktls", Value: b.Ktls})
 	}
 	return options
 }

@@ -605,6 +605,14 @@ const frontend_bind443tcpmd5sigsecretpass = `
 frontend test
   bind :443 tcp-md5sig secretpass
 `
+const frontend_bind443ktlson = `
+frontend test
+  bind :443 ktls on
+`
+const frontend_bind443ktlsoff = `
+frontend test
+  bind :443 ktls off
+`
 const frontend_bindprocessall = `
 frontend test
   bind-process all

@@ -143,6 +143,11 @@ type BindParams struct {
 	// interface
 	Interface string `json:"interface,omitempty"`
 
+	// ktls
+	// Enum: ["on","off"]
+	// +kubebuilder:validation:Enum=on;off;
+	Ktls string `json:"ktls,omitempty"`
+
 	// label
 	Label string `json:"label,omitempty"`
 
@@ -364,6 +369,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateKtls(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLevel(formats); err != nil {
 		res = append(res, err)
 	}
@@ -530,6 +539,48 @@ func (m *BindParams) validateIdlePing(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("idle_ping", "body", *m.IdlePing, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var bindParamsTypeKtlsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["on","off"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bindParamsTypeKtlsPropEnum = append(bindParamsTypeKtlsPropEnum, v)
+	}
+}
+
+const (
+
+	// BindParamsKtlsOn captures enum value "on"
+	BindParamsKtlsOn string = "on"
+
+	// BindParamsKtlsOff captures enum value "off"
+	BindParamsKtlsOff string = "off"
+)
+
+// prop value enum
+func (m *BindParams) validateKtlsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, bindParamsTypeKtlsPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BindParams) validateKtls(formats strfmt.Registry) error {
+	if swag.IsZero(m.Ktls) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateKtlsEnum("ktls", "body", m.Ktls); err != nil {
 		return err
 	}
 

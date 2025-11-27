@@ -30,6 +30,8 @@ func TestWholeConfigsSectionsPeers(t *testing.T) {
 	tests := []struct {
 		Name, Config string
 	}{
+		{"peers_defaultbindktlsoff", peers_defaultbindktlsoff},
+		{"peers_defaultbindktlson", peers_defaultbindktlson},
 		{"peers_defaultbindtcpmd5sigsecretpass", peers_defaultbindtcpmd5sigsecretpass},
 		{"peers_defaultbindtlsticketkeystmptlsti", peers_defaultbindtlsticketkeystmptlsti},
 		{"peers_defaultbinduserrootmode600accept", peers_defaultbinduserrootmode600accept},
