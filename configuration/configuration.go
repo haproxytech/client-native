@@ -1084,7 +1084,7 @@ func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 			opt.StatsMaxconn = mc.Value
 		case *stats.Refresh:
 			if v.Delay != "" {
-				opt.StatsRefreshDelay = misc.ParseTimeout(v.Delay)
+				opt.StatsRefreshDelay = misc.ParseTimeoutDefaultSeconds(v.Delay)
 			}
 		case *stats.ShowNode:
 			opt.StatsShowNodeName = misc.StringP(v.Name)
@@ -2574,7 +2574,7 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 	}
 	if opt.StatsRefreshDelay != nil {
 		s := &stats.Refresh{
-			Delay: strconv.FormatInt(*opt.StatsRefreshDelay, 10),
+			Delay: misc.SerializeTime(*opt.StatsRefreshDelay, s.Options.PreferredTimeSuffix),
 		}
 		ss = append(ss, s)
 	}

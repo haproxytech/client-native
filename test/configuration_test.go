@@ -679,6 +679,7 @@ frontend test
   stats auth admin2:AdMiN1234
   stats show-modules
   stats realm HAProxy\\ Statistics
+  stats refresh 10
   email-alert from srv01@example.com
   email-alert to problems@example.com
   email-alert level warning

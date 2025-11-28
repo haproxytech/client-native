@@ -1606,7 +1606,8 @@
                 "stats_realm": true,
                 "stats_realm_realm": "HAProxy\\\\ Statistics",
                 "stats_show_modules": true,
-                "stats_show_node_name": null
+                "stats_show_node_name": null,
+                "stats_refresh_delay": 10000
             },
             "tarpit_timeout": 2000,
             "tcp_smart_accept": "enabled",
