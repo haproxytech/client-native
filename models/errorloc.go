@@ -36,8 +36,8 @@ import (
 type Errorloc struct {
 	// code
 	// Required: true
-	// Enum: [200 400 401 403 404 405 407 408 410 413 425 429 500 501 502 503 504]
-	// +kubebuilder:validation:Enum=200 400 401 403 404 405 407 408 410 413 425 429 500 501 502 503 504;
+	// Enum: [200,400,401,403,404,405,407,408,410,413,425,429,500,501,502,503,504]
+	// +kubebuilder:validation:Enum=200;400;401;403;404;405;407;408;410;413;425;429;500;501;502;503;504;
 	Code *int64 `json:"code"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields

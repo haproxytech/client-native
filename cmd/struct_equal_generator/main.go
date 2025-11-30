@@ -71,7 +71,7 @@ func scanAllTypes(fileName string) []string {
 	return typesInFile
 }
 
-func generate(fileName string, args Args) (string, error) { //nolint:gocognit,maintidx
+func generate(fileName string, args Args) (string, error) { //nolint:gocognit
 	fset := token.NewFileSet()
 	var packageName string
 
@@ -81,20 +81,11 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 	}
 	sourceOfFile = string(src)
 
-	// node, err := parser.ParseFile(fset, fileName, nil, parser.ParseComments)
 	node, err := parser.ParseFile(fset, "", src, 0)
 	if err != nil {
 		return packageName, err
 	}
-	generatedFileName := strings.TrimSuffix(fileName, ".go") + "_compare.go"
 	generatedFileNameTest := strings.TrimSuffix(fileName, ".go") + "_compare_test.go"
-
-	_ = os.Truncate(generatedFileName, 0)
-	file, err := os.OpenFile(generatedFileName, os.O_CREATE|os.O_WRONLY, 0o600)
-	if err != nil {
-		return packageName, err
-	}
-	defer file.Close()
 
 	_ = os.Truncate(generatedFileNameTest, 0)
 	fileTest, err := os.OpenFile(generatedFileNameTest, os.O_CREATE|os.O_WRONLY, 0o600)
@@ -102,21 +93,6 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 		return packageName, err
 	}
 	defer fileTest.Close()
-
-	// Adding the header to the generated file
-	tmpl, err := template.New("generate.tmpl").Parse(tmplHeader)
-	// ParseFiles(path.Join(templatePath))
-	if err != nil {
-		return packageName, err
-	}
-
-	err = tmpl.Execute(file, map[string]interface{}{
-		"Package": node.Name.String(),
-		"License": args.License,
-	})
-	if err != nil {
-		return packageName, err
-	}
 
 	// Adding the header to the generated file
 	tmpl2, err := template.New("generate.tmpl").Parse(tmplHeader)
@@ -176,7 +152,6 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 				hasTests = true
 				err = generateEqualAndDiff(generateEqualAndDiffOptions{
 					PackageName:       packageName,
-					File:              file,
 					FileTest:          fileTest,
 					Name:              currSpecType.Name.Name,
 					CurrType:          currSpecType,
@@ -192,7 +167,6 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 				hasTests = true
 				err = generateEqualAndDiff(generateEqualAndDiffOptions{
 					PackageName:  packageName,
-					File:         file,
 					FileTest:     fileTest,
 					Name:         currSpecType.Name.Name,
 					NeedsOptions: false,
@@ -211,7 +185,6 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 				}
 				err = generateEqualAndDiff(generateEqualAndDiffOptions{
 					PackageName:       packageName,
-					File:              file,
 					FileTest:          fileTest,
 					Name:              currSpecType.Name.Name,
 					Type:              res.Name,
@@ -237,7 +210,6 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 				}
 				err = generateEqualAndDiff(generateEqualAndDiffOptions{
 					PackageName:       packageName,
-					File:              file,
 					FileTest:          fileTest,
 					Name:              currSpecType.Name.Name,
 					Type:              res.Name,
@@ -264,11 +236,6 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 		}
 	} else {
 		os.Remove(generatedFileNameTest)
-	}
-	// Format the file
-	err = fmtFile(generatedFileName)
-	if err != nil {
-		return packageName, err
 	}
 	return packageName, nil
 }

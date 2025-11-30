@@ -249,7 +249,6 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Word{Name: "crt-base"})
 	addParser(parser, &sequence, &parsers.MasterWorker{})
 	addParser(parser, &sequence, &parsers.ExternalCheck{})
-	addParser(parser, &sequence, &parsers.NoSplice{})
 	addParser(parser, &sequence, &parsers.NbProc{})
 	addParser(parser, &sequence, &parsers.NbThread{})
 	addParser(parser, &sequence, &parsers.CPUMap{})
@@ -1035,6 +1034,8 @@ func (p *configParser) getAcmeParser() *Parsers {
 	parser := map[string]ParserInterface{}
 	sequence := []Section{}
 	addParser(parser, &sequence, &simple.Word{Name: "account-key"})
+	addParser(parser, &sequence, &simple.Word{Name: "acme-provider"})
+	addParser(parser, &sequence, &simple.Word{Name: "acme-vars"})
 	addParser(parser, &sequence, &simple.Number{Name: "bits"})
 	addParser(parser, &sequence, &simple.Word{Name: "challenge"})
 	addParser(parser, &sequence, &simple.Word{Name: "contact"})
@@ -1042,5 +1043,6 @@ func (p *configParser) getAcmeParser() *Parsers {
 	addParser(parser, &sequence, &simple.Word{Name: "directory"})
 	addParser(parser, &sequence, &simple.Word{Name: "keytype"})
 	addParser(parser, &sequence, &simple.Word{Name: "map"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reuse-key"})
 	return p.createParsers(parser, sequence)
 }

@@ -31,7 +31,7 @@ import (
 
 // FCGIApps fcgi apps
 //
-// swagger:model fcgiApps
+// swagger:model fcgi_apps
 type FCGIApps []*FCGIApp
 
 // Validate validates this fcgi apps
@@ -69,6 +69,11 @@ func (m FCGIApps) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 	for i := 0; i < len(m); i++ {
 
 		if m[i] != nil {
+
+			if swag.IsZero(m[i]) { // not required
+				return nil
+			}
+
 			if err := m[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName(strconv.Itoa(i))

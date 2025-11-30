@@ -19,17 +19,23 @@ allowed:
   - backends
   - backport
   - bmarkovic
+  - botmgmt
+  - botmgtupdate
   - browserslist
   - bvue
+  - bwlim
   - caniuse
   - casbin
   - chmigrate
   - cli
   - clickhouse
-  - cnt  
+  - cnt
+  - codebase
   - composable
+  - cond
   - conf
   - config
+  - conns
   - const
   - cpu
   - crd
@@ -60,21 +66,28 @@ allowed:
   - eslint
   - failsafe
   - fbt
+  - fcgi
+  - usefcgiapp
   - formatter
   - formatters
   - frontend
   - frontends
   - fullpage
+  - gentype
   - github
   - gitlab
+  - godaddy
+  - gofumpt
   - gokc
   - golang
   - golangci
   - gorm
   - goroutines
   - govulncheck
+  - gotoolchain
   - gpc
-  - gpt  
+  - gpt
+  - gptstr
   - hapee
   - haproxy
   - healthcheck
@@ -112,6 +125,7 @@ allowed:
   - minsize
   - mixin
   - mkdir
+  - mpxs
   - multipartsearch
   - multiselect
   - mutex
@@ -151,9 +165,11 @@ allowed:
   - scrollbar
   - scss
   - searchselect
+  - sig
   - sni
   - spammy
   - ssl
+  - sslv
   - sso
   - struct
   - subnet
@@ -189,3 +205,5 @@ allowed:
   - yaml
   - async
   - rehaul
+  - rebase
+  - XXXX

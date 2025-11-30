@@ -361,23 +361,27 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 			Comment: comment,
 		}
 	case "bwlim-in":
+		minSize := misc.SerializeSize(f.MinSize)
 		return &filters.BandwidthLimit{
 			Attribute:     "bwlim-in",
 			Name:          f.BandwidthLimitName,
 			DefaultLimit:  misc.SerializeSize(f.DefaultLimit),
 			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod, opt.PreferredTimeSuffix),
 			Limit:         misc.SerializeSize(f.Limit),
+			MinSize:       &minSize,
 			Key:           f.Key,
 			Table:         &f.Table,
 			Comment:       comment,
 		}
 	case "bwlim-out":
+		minSize := misc.SerializeSize(f.MinSize)
 		return &filters.BandwidthLimit{
 			Attribute:     "bwlim-out",
 			Name:          f.BandwidthLimitName,
 			DefaultLimit:  misc.SerializeSize(f.DefaultLimit),
 			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod, opt.PreferredTimeSuffix),
 			Limit:         misc.SerializeSize(f.Limit),
+			MinSize:       &minSize,
 			Key:           f.Key,
 			Table:         &f.Table,
 			Comment:       comment,

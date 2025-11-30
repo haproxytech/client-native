@@ -68,5 +68,4 @@ func TestPutStructuredTraces(t *testing.T) {
 
 	err = clientTest.PushStructuredTraces(traces, "", 55)
 	require.Error(err, "Should have returned version conflict.")
-
 }

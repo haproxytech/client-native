@@ -176,7 +176,8 @@ func TestSourceDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 8 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 8 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

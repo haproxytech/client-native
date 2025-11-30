@@ -597,6 +597,10 @@ const peers_defaultserverlogbufsize10 = `
 peers test
   default-server log-bufsize 10
 `
+const peers_defaultservertcpmd5sigsecretpass = `
+peers test
+  default-server tcp-md5sig secretpass
+`
 const peers_peername1270018080 = `
 peers test
   peer name 127.0.0.1:8080
@@ -616,4 +620,8 @@ peers test
 const peers_defaultbindtlsticketkeystmptlsti = `
 peers test
   default-bind tls-ticket-keys /tmp/tls_ticket_keys
+`
+const peers_defaultbindtcpmd5sigsecretpass = `
+peers test
+  default-bind tcp-md5sig secretpass
 `

@@ -1,0 +1,8 @@
+github.com/go-openapi/strfmt.Date:
+  diff:
+    pkg: "github.com/haproxytech/client-native/v6/models/funcs"
+    name: "DiffStrfmtDate"
+github.com/go-openapi/strfmt.DateTime:
+  diff:
+    pkg: "github.com/haproxytech/client-native/v6/models/funcs"
+    name: "DiffStrfmtDateTime"

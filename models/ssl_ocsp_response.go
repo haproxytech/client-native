@@ -126,6 +126,11 @@ func (m *SslOcspResponse) ContextValidate(ctx context.Context, formats strfmt.Re
 func (m *SslOcspResponse) contextValidateResponses(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Responses != nil {
+
+		if swag.IsZero(m.Responses) { // not required
+			return nil
+		}
+
 		if err := m.Responses.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("responses")
@@ -264,6 +269,11 @@ func (m *OCSPResponses) ContextValidate(ctx context.Context, formats strfmt.Regi
 func (m *OCSPResponses) contextValidateCertificateID(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.CertificateID != nil {
+
+		if swag.IsZero(m.CertificateID) { // not required
+			return nil
+		}
+
 		if err := m.CertificateID.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("responses" + "." + "certificate_id")

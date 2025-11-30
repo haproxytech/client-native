@@ -375,7 +375,7 @@ defaults unnamed_defaults_1
   timeout server-fin 1000
   timeout client-fin 1000
   timeout tarpit 2000
-  default-server fall 2s rise 4s inter 5s port 8888
+  default-server fall 2 rise 4 inter 5s port 8888
   default_backend test
   option external-check
   external-check path /bin
@@ -422,7 +422,7 @@ defaults unnamed_defaults_1
 frontend test
   mode http
   backlog 2048
-  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
+  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa tcp-md5sig secretpass
   bind 192.168.1.1:8080 name webserv2 thread 1/all force-tlsv10 ssl no-strict-sni tls-tickets
   bind 192.168.1.2:8080 name webserv3 thread 1/1 no-tlsv10 strict-sni no-tls-tickets
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1 force-sslv3 idle-ping 10000
@@ -767,7 +767,7 @@ backend test # my comment
   option splice-response
   option http-restrict-req-hdr-names preserve
   option http-drop-request-trailers
-  default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6 force-sslv3
+  default-server fall 2 rise 4 inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6 force-sslv3
   stick store-request src table test # my comment
   stick match src table test
   stick on src table test
@@ -808,7 +808,7 @@ backend test # my comment
   external-check command /bin/false
   use-server webserv if TRUE # my comment
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 no-renegotiate log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up idle-ping 10s check-reuse-pool strict-maxconn # my comment
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 no-renegotiate log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up idle-ping 10s check-reuse-pool strict-maxconn tcp-md5sig secretpass # my comment
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 hash-key akey pool-conn-name apoolconnname no-check-reuse-pool check-pool-conn-name foo renegotiate # {"comment": "my structured comment", "id": "my_random_id_for_server"}
   http-request set-dst hdr(x-dst) # my comment
   http-request set-dst-port int(4000)
@@ -891,7 +891,7 @@ backend test # my comment
 
 peers mycluster
   enabled
-  default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
+  default-server fall 2 rise 4 inter 5s port 8888 slowstart 6000
   default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1
   peer hapee 192.168.1.1:1023 shard 1
   peer aggregator HARDCODEDCLUSTERIP:10023
@@ -1012,11 +1012,14 @@ mailers localmailer1
 
 acme test
   contact me@example.com
+  acme-provider gandy
+  acme-vars "ApiKey=ple744587,Zone=example.com"
   bits 4096
   challenge http-01
   directory https://acme.example.com/directory
   keytype ECDSA
   map acme@t
+  reuse-key on
 
 crt-store cert-bunker1
   crt-base /secure/certs
@@ -1058,7 +1061,7 @@ backend test_2 from test_defaults_2 # {"comment": "my comment"}
   no option splice-auto
   no option splice-request
   no option splice-response
-  default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000 no-tlsv10
+  default-server fall 2 rise 4 inter 5s port 8888 slowstart 6000 no-tlsv10
   option contstats
   timeout check 2s
   timeout tunnel 5s

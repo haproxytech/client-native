@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
@@ -277,7 +278,7 @@ func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error)
 	return b, nil
 }
 
-func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit
+func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit,gocyclo,cyclop
 	p := *a.Parser
 	var err error
 
@@ -289,9 +290,16 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 		return a.HandleError(b.Name, "", "", a.TID, a.TID == "", err)
 	}
 
-	for _, server := range b.Servers {
-		if err = p.Insert(parser.Backends, b.Name, "server", SerializeServer(server, a.Options), -1); err != nil {
-			return a.HandleError(server.Name, BackendParentName, b.Name, a.TID, a.TID == "", err)
+	// Ensure sorting of servers by name
+	orderedNames := make([]string, 0, len(b.Servers))
+	for name := range b.Servers {
+		orderedNames = append(orderedNames, name)
+	}
+	sort.Strings(orderedNames)
+	for _, name := range orderedNames {
+		localS := b.Servers[name]
+		if err = p.Insert(parser.Backends, b.Name, "server", SerializeServer(localS, a.Options), -1); err != nil {
+			return a.HandleError(localS.Name, BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
 	}
 	for i, filter := range b.FilterList {
@@ -309,9 +317,17 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
 	}
-	for _, template := range b.ServerTemplates {
-		if err = p.Insert(parser.Backends, b.Name, "server-template", SerializeServerTemplate(template, a.Options), -1); err != nil {
-			return a.HandleError(template.Prefix, BackendParentName, b.Name, a.TID, a.TID == "", err)
+
+	// Ensure sorting of ServerTemplates by name
+	orderedNames = make([]string, 0, len(b.ServerTemplates))
+	for name := range b.ServerTemplates {
+		orderedNames = append(orderedNames, name)
+	}
+	sort.Strings(orderedNames)
+	for _, name := range orderedNames {
+		localT := b.ServerTemplates[name]
+		if err = p.Insert(parser.Backends, b.Name, "server-template", SerializeServerTemplate(localT, a.Options), -1); err != nil {
+			return a.HandleError(localT.Prefix, BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
 	}
 	for i, rule := range b.HTTPAfterResponseRuleList {

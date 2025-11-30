@@ -157,6 +157,11 @@ func (m *SslCrlEntry) contextValidateRevokedCertificates(ctx context.Context, fo
 	for i := 0; i < len(m.RevokedCertificates); i++ {
 
 		if m.RevokedCertificates[i] != nil {
+
+			if swag.IsZero(m.RevokedCertificates[i]) { // not required
+				return nil
+			}
+
 			if err := m.RevokedCertificates[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("revoked_certificates" + "." + strconv.Itoa(i))

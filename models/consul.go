@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"github.com/haproxytech/client-native/v6/misc"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -60,8 +61,8 @@ type Consul struct {
 	//   all: a node is considered valid if all health checks are 'passing'
 	//   min: a node is considered valid if the number of 'passing' checks is greater or equal to the 'health_check_policy_min' value.
 	//     If the node has less health checks configured then 'health_check_policy_min' it is considered invalid.
-	// Enum: [none any all min]
-	// +kubebuilder:validation:Enum=none any all min;
+	// Enum: ["none","any","all","min"]
+	// +kubebuilder:validation:Enum=none;any;all;min;
 	HealthCheckPolicy *string `json:"health_check_policy,omitempty"`
 
 	// health check policy min
@@ -73,8 +74,8 @@ type Consul struct {
 	ID *string `json:"id,omitempty"`
 
 	// mode
-	// Enum: [http https]
-	// +kubebuilder:validation:Enum=http https;
+	// Enum: ["http","https"]
+	// +kubebuilder:validation:Enum=http;https;
 	Mode *string `json:"mode,omitempty"`
 
 	// name
@@ -104,8 +105,8 @@ type Consul struct {
 	ServerSlotsGrowthIncrement int64 `json:"server_slots_growth_increment,omitempty"`
 
 	// server slots growth type
-	// Enum: [linear exponential]
-	// +kubebuilder:validation:Enum=linear exponential;
+	// Enum: ["linear","exponential"]
+	// +kubebuilder:validation:Enum=linear;exponential;
 	ServerSlotsGrowthType *string `json:"server_slots_growth_type,omitempty"`
 
 	// service allowlist
@@ -125,6 +126,19 @@ type Consul struct {
 
 // Validate validates this consul
 func (m *Consul) Validate(formats strfmt.Registry) error {
+	if swag.IsZero(m.HealthCheckPolicy) {
+		m.HealthCheckPolicy = misc.Ptr("none")
+	}
+	if swag.IsZero(m.Mode) {
+		m.Mode = misc.Ptr("http")
+	}
+	if swag.IsZero(m.ServerSlotsBase) {
+		m.ServerSlotsBase = misc.Ptr(int64(10))
+	}
+	if swag.IsZero(m.ServerSlotsGrowthType) {
+		m.ServerSlotsGrowthType = misc.Ptr("exponential")
+	}
+
 	var res []error
 
 	if err := m.validateAddress(formats); err != nil {

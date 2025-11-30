@@ -385,6 +385,9 @@ server_params:
       x-dependency:
         check-via-socks4:
           required: true
+    tcp_md5sig:
+      type: string
+      pattern: '^[^\s]+$'
     tcp_ut:
       type: integer
       minimum: 0

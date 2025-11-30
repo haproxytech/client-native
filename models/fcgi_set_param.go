@@ -34,11 +34,11 @@ import (
 // Its value, defined by <format> can take a formatted string, the same as the log directive.
 // Optionally, you can follow it with an ACL-based condition, in which case the FastCGI application evaluates it only if the condition is true.
 //
-// swagger:model fcgiSetParam
+// swagger:model fcgi_set_param
 type FCGISetParam struct {
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test

@@ -17,26 +17,14 @@
 
 package models
 
-var NilSameAsEmpty = true
-var SkipIndex = true
-
-type Options struct {
-	NilSameAsEmpty bool
-	SkipIndex      bool
-}
+import (
+	"reflect"
+	"strings"
+	"unicode"
+)
 
 func Ptr[V any](v V) *V {
 	return &v
-}
-
-func getOptions(opts ...Options) Options {
-	if len(opts) == 0 {
-		return Options{
-			NilSameAsEmpty: NilSameAsEmpty,
-			SkipIndex:      SkipIndex,
-		}
-	}
-	return opts[0]
 }
 
 func equalPointers[T comparable](a, b *T) bool {
@@ -46,84 +34,6 @@ func equalPointers[T comparable](a, b *T) bool {
 	return *a == *b
 }
 
-func CheckSameNilAndLen[T any](s, t []T, opts ...Options) bool {
-	opt := getOptions(opts...)
-
-	if !opt.NilSameAsEmpty {
-		if s == nil && t != nil {
-			return false
-		}
-		if t == nil && s != nil {
-			return false
-		}
-	}
-	if len(s) != len(t) {
-		return false
-	}
-	return true
-}
-
-func CheckSameNilAndLenMap[S comparable, T any](s, t map[S]T, opts ...Options) bool {
-	opt := getOptions(opts...)
-
-	if !opt.NilSameAsEmpty {
-		if s == nil && t != nil {
-			return false
-		}
-		if t == nil && s != nil {
-			return false
-		}
-	}
-	if len(s) != len(t) {
-		return false
-	}
-	return true
-}
-
-func equalComparableSlice[T comparable](s1, s2 []T, opt Options) bool {
-	if !opt.NilSameAsEmpty {
-		if s1 == nil && s2 != nil {
-			return true
-		}
-		if s2 == nil && s1 != nil {
-			return true
-		}
-	}
-	if len(s1) != len(s2) {
-		return false
-	}
-	for i, v1 := range s1 {
-		if v1 != s2[i] {
-			return false
-		}
-	}
-	return true
-}
-
-func equalComparableMap[T comparable](m1, m2 map[string]T, opt Options) bool {
-	if !opt.NilSameAsEmpty {
-		if m1 == nil && m2 != nil {
-			return false
-		}
-		if m2 == nil && m1 != nil {
-			return false
-		}
-	}
-	if len(m1) != len(m2) {
-		return false
-	}
-	for k, v1 := range m1 {
-		v2, ok := m2[k]
-		if !ok {
-			return false
-		}
-		if v1 != v2 {
-			return false
-		}
-	}
-	return true
-}
-
 func ValueOrNil[T any](v *T) any {
 	if v == nil {
 		return nil
@@ -131,27 +41,66 @@ func ValueOrNil[T any](v *T) any {
 	return *v
 }
 
-func equalMapStringMapSting(m1, m2 map[string]map[string]string, opt Options) bool {
-	if !opt.NilSameAsEmpty {
-		if m1 == nil && m2 != nil {
-			return false
-		}
-		if m2 == nil && m1 != nil {
-			return false
-		}
+func GetListOfFields(typ reflect.Type) []string {
+	if typ.Kind() != reflect.Struct {
+		return nil
 	}
+	var fields []string
+	for i := 0; i < typ.NumField(); i++ {
+		fieldName := typ.Field(i).Name
+		if fieldName == "Metadata" {
+			continue
+		}
+		fields = append(fields, typ.Field(i).Name)
+	}
+	return fields
+}
 
-	if len(m1) != len(m2) {
-		return false
-	}
-	for k1, v1 := range m1 {
-		if v2, ok := m2[k1]; !ok {
-			return false
-		} else {
-			if !equalComparableMap(v1, v2, opt) {
-				return false
+func GetListOfDiffFields(diffs map[string][]interface{}) []string {
+	fields := make(map[string]struct{}, len(diffs))
+	for diff := range diffs {
+		var sb strings.Builder
+		for _, r := range diff {
+			if !(unicode.IsLetter(r) || unicode.IsNumber(r)) {
+				break
 			}
+			sb.WriteRune(r)
+		}
+		key := sb.String()
+		if key == "Metadata" {
+			continue
+		}
+		fields[key] = struct{}{}
+	}
+	result := make([]string, 0, len(fields))
+	for k := range fields {
+		result = append(result, k)
+	}
+	return result
+}
+
+func DiffFields(fields1, fields2 []string) ([]string, []string) {
+	var result1 []string
+	var result2 []string
+	for _, f1 := range fields1 {
+		if !contains(fields2, f1) {
+			result1 = append(result1, f1)
 		}
 	}
-	return true
+	for _, f2 := range fields2 {
+		if !contains(fields1, f2) {
+			result2 = append(result2, f2)
+		}
+	}
+	return result1, result2
+
+}
+
+func contains(slice []string, item string) bool {
+	for _, s := range slice {
+		if s == item {
+			return true
+		}
+	}
+	return false
 }

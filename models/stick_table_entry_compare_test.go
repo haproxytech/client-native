@@ -222,7 +222,8 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 30 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 30 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -384,7 +385,8 @@ func TestStickTableEntryGpcDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -546,7 +548,8 @@ func TestStickTableEntryGpcRateDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -708,7 +711,8 @@ func TestStickTableEntryGptDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

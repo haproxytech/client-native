@@ -1555,7 +1555,7 @@ func (s *SectionObject) CreateEditSection() error {
 	for i := range objValue.NumField() {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
-		if typeField.Name != "Name" && typeField.Name != "ID" {
+		if typeField.Name != "Name" {
 			if err := s.setFieldValue(typeField.Name, field); err != nil {
 				return err
 			}
@@ -1704,6 +1704,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.originalto(field)
 	case "LogSteps":
 		return true, s.logSteps(field)
+	case "UseFCGIApp":
+		return true, s.useFCGIApp(field)
 	default:
 		return false, nil
 	}
@@ -3022,7 +3024,21 @@ func (s *SectionObject) logSteps(field reflect.Value) error {
 	if len(d) == 0 {
 		return s.set("log-steps", nil)
 	}
-	return s.set("log-steps", d)
+	return s.set("log-steps", types.StringC{Value: d})
+}
+
+func (s *SectionObject) useFCGIApp(field reflect.Value) error {
+	if !(s.Section == parser.Backends) {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("use-fcgi-app", nil)
+	}
+	useFCGIApp := field.String()
+	if useFCGIApp == "" {
+		return nil
+	}
+	return s.set("use-fcgi-app", types.UseFcgiApp{Name: useFCGIApp})
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

@@ -35,7 +35,7 @@ import (
 //
 // # HAProxy FastCGI application configuration
 //
-// swagger:model fcgiAppBase
+// swagger:model fcgi_app_base
 type FCGIAppBase struct {
 
 	// Defines the document root on the remote host. The parameter serves to build the default value of FastCGI parameters SCRIPT_FILENAME and PATH_TRANSLATED. It is a mandatory setting.
@@ -43,16 +43,16 @@ type FCGIAppBase struct {
 	Docroot *string `json:"docroot"`
 
 	// Enables or disables the retrieval of variables related to connection management.
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	GetValues string `json:"get_values,omitempty"`
 
 	// Defines the script name to append after a URI that ends with a slash ("/") to set the default value for the FastCGI parameter SCRIPT_NAME. It is an optional setting.
 	Index string `json:"index,omitempty"`
 
 	// Tells the FastCGI application whether or not to keep the connection open after it sends a response. If disabled, the FastCGI application closes the connection after responding to this request.
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	KeepConn string `json:"keep_conn,omitempty"`
 
 	// log stderrs
@@ -68,8 +68,8 @@ type FCGIAppBase struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Enables or disables the support of connection multiplexing. If the FastCGI application retrieves the variable FCGI_MPXS_CONNS during connection establishment, it can override this option.
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	MpxsConns string `json:"mpxs_conns,omitempty"`
 
 	// Declares a FastCGI application
@@ -92,6 +92,10 @@ type FCGIAppBase struct {
 
 // Validate validates this fcgi app base
 func (m *FCGIAppBase) Validate(formats strfmt.Registry) error {
+	if swag.IsZero(m.MaxReqs) {
+		m.MaxReqs = 1
+	}
+
 	var res []error
 
 	if err := m.validateDocroot(formats); err != nil {
@@ -401,6 +405,11 @@ func (m *FCGIAppBase) contextValidateLogStderrs(ctx context.Context, formats str
 	for i := 0; i < len(m.LogStderrs); i++ {
 
 		if m.LogStderrs[i] != nil {
+
+			if swag.IsZero(m.LogStderrs[i]) { // not required
+				return nil
+			}
+
 			if err := m.LogStderrs[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("log_stderrs" + "." + strconv.Itoa(i))
@@ -421,6 +430,11 @@ func (m *FCGIAppBase) contextValidatePassHeaders(ctx context.Context, formats st
 	for i := 0; i < len(m.PassHeaders); i++ {
 
 		if m.PassHeaders[i] != nil {
+
+			if swag.IsZero(m.PassHeaders[i]) { // not required
+				return nil
+			}
+
 			if err := m.PassHeaders[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("pass_headers" + "." + strconv.Itoa(i))
@@ -441,6 +455,11 @@ func (m *FCGIAppBase) contextValidateSetParams(ctx context.Context, formats strf
 	for i := 0; i < len(m.SetParams); i++ {
 
 		if m.SetParams[i] != nil {
+
+			if swag.IsZero(m.SetParams[i]) { // not required
+				return nil
+			}
+
 			if err := m.SetParams[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("set_params" + "." + strconv.Itoa(i))

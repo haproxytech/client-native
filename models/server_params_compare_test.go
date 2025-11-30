@@ -220,7 +220,8 @@ func TestServerParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 104 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 105 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -230,7 +231,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ServerParams to be different in 104 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ServerParams to be different in 105 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
@@ -378,7 +379,8 @@ func TestServerParamsSetProxyV2TlvFmtDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

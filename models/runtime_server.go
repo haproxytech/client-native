@@ -44,8 +44,8 @@ type RuntimeServer struct {
 	Address string `json:"address,omitempty"`
 
 	// admin state
-	// Enum: [ready maint drain]
-	// +kubebuilder:validation:Enum=ready maint drain;
+	// Enum: ["ready","maint","drain"]
+	// +kubebuilder:validation:Enum=ready;maint;drain;
 	AdminState string `json:"admin_state,omitempty"`
 
 	// agent addr
@@ -129,8 +129,8 @@ type RuntimeServer struct {
 	Name string `json:"name,omitempty"`
 
 	// operational state
-	// Enum: [up down stopping]
-	// +kubebuilder:validation:Enum=up down stopping;
+	// Enum: ["up","down","stopping"]
+	// +kubebuilder:validation:Enum=up;down;stopping;
 	OperationalState string `json:"operational_state,omitempty"`
 
 	// port

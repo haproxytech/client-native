@@ -37,11 +37,11 @@ import (
 // Currently, the headers "Authorization", "Proxy-Authorization", and hop-by-hop headers are omitted.
 // Note that the headers "Content-type" and "Content-length" never pass to the FastCGI application because they are already converted into parameters.
 //
-// swagger:model fcgiPassHeader
+// swagger:model fcgi_pass_header
 type FCGIPassHeader struct {
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test

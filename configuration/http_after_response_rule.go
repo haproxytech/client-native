@@ -349,6 +349,8 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			Type:     "sc-add-gpc",
 			ScID:     ID,
 			ScIdx:    Idx,
+			ScExpr:   strings.Join(v.Expr.Expr, " "),
+			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 			Metadata: parseMetadata(v.Comment),
@@ -498,7 +500,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 	return nil, nil //nolint:nilnil
 }
 
-func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error) { //nolint:ireturn
+func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error) { //nolint:ireturn,maintidx
 	comment, err := serializeMetadata(f.Metadata)
 	if err != nil {
 		return nil, err
@@ -562,9 +564,17 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Comment:    comment,
 		}
 	case "sc-add-gpc":
+		if len(f.ScExpr) > 0 && f.ScInt != nil {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int and expr are exclusive")
+		}
+		if len(f.ScExpr) == 0 && f.ScInt == nil {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int or expr has to be set")
+		}
 		rule = &actions.ScAddGpc{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Int:      f.ScInt,
+			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,

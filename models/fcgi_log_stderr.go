@@ -32,7 +32,7 @@ import (
 // FCGILogStderr Enables logging of STDERR messages that the FastCGI application reports.
 // It is an optional setting. By default, HAProxy Enterprise ignores STDERR messages.
 //
-// swagger:model fcgiLogStderr
+// swagger:model fcgi_log_stderr
 type FCGILogStderr struct {
 
 	// address
@@ -110,6 +110,11 @@ func (m *FCGILogStderr) ContextValidate(ctx context.Context, formats strfmt.Regi
 func (m *FCGILogStderr) contextValidateSample(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Sample != nil {
+
+		if swag.IsZero(m.Sample) { // not required
+			return nil
+		}
+
 		if err := m.Sample.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("sample")

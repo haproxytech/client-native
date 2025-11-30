@@ -414,7 +414,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 					serverParams.ErrorLimit = c
 				}
 			case "fall":
-				serverParams.Fall = misc.ParseTimeout(v.Value)
+				f, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					serverParams.Fall = &f
+				}
 			case "guid":
 				serverParams.GUID = v.Value
 			case "idle-ping":
@@ -492,7 +495,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			case "redir":
 				serverParams.Redir = v.Value
 			case "rise":
-				serverParams.Rise = misc.ParseTimeout(v.Value)
+				r, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					serverParams.Rise = &r
+				}
 			case "resolve-opts":
 				serverParams.ResolveOpts = v.Value
 			case "resolve-prefer":
@@ -526,6 +532,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.SslMinVer = v.Value
 			case "socks4":
 				serverParams.Socks4 = v.Value
+			case "tcp-md5sig":
+				serverParams.TCPMd5sig = v.Value
 			case "tcp-ut":
 				serverParams.TCPUt = misc.ParseTimeout(v.Value)
 			case "track":
@@ -639,66 +647,40 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	} else if s.Renegotiate == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-renegotiate"})
 	}
-	if s.Sslv3 == "enabled" {
+	if s.Sslv3 == "enabled" || s.ForceSslv3 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
 	}
 	if s.Sslv3 == "disabled" ||
 		s.NoSslv3 == "enabled" { // deprecated, keeping the behavior, for backward compatibility. Can be removed when field is removed
 		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
 	}
-	if s.ForceSslv3 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
-	}
 	if s.ForceSslv3 == "disabled" ||
 		s.NoSslv3 == "enabled" { // deprecated, keeping the behavior, for backward compatibility. Can be removed when field is removed
 		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
 	}
-	if s.Tlsv10 == "enabled" {
+	if s.Tlsv10 == "enabled" || s.ForceTlsv10 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
 	}
-	if s.Tlsv10 == "disabled" {
+	if s.Tlsv10 == "disabled" || s.ForceTlsv10 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
 	}
-	if s.ForceTlsv10 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
-	}
-	if s.ForceTlsv10 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
-	}
-	if s.Tlsv11 == "enabled" {
+	if s.Tlsv11 == "enabled" || s.ForceTlsv11 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
 	}
-	if s.Tlsv11 == "disabled" {
+	if s.Tlsv11 == "disabled" || s.ForceTlsv11 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
 	}
-	if s.ForceTlsv11 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
-	}
-	if s.ForceTlsv11 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
-	}
-	if s.Tlsv12 == "enabled" {
+
+	if s.Tlsv12 == "enabled" || s.ForceTlsv12 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
 	}
-	if s.Tlsv12 == "disabled" {
+	if s.Tlsv12 == "disabled" || s.ForceTlsv12 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
 	}
-	if s.ForceTlsv12 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
-	}
-	if s.ForceTlsv12 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
-	}
-	if s.Tlsv13 == "enabled" {
+	if s.Tlsv13 == "enabled" || s.ForceTlsv13 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
 	}
-	if s.Tlsv13 == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
-	}
-	if s.ForceTlsv13 == "enabled" {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
-	}
-	if s.ForceTlsv13 == "disabled" {
+	if s.Tlsv13 == "disabled" || s.ForceTlsv13 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
 	}
 	if s.Maintenance == "enabled" {
@@ -967,6 +949,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.HashKey != "" {
 		options = append(options, &params.ServerOptionValue{Name: "hash-key", Value: s.HashKey})
+	}
+	if s.TCPMd5sig != "" {
+		options = append(options, &params.ServerOptionValue{Name: "tcp-md5sig", Value: s.TCPMd5sig})
 	}
 	return options
 }

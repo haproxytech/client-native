@@ -45,8 +45,8 @@ type Capture struct {
 
 	// type
 	// Required: true
-	// Enum: [request response]
-	// +kubebuilder:validation:Enum=request response;
+	// Enum: ["request","response"]
+	// +kubebuilder:validation:Enum=request;response;
 	Type string `json:"type"`
 }
 

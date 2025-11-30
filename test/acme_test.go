@@ -94,15 +94,21 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 	require := require.New(t)
 
 	a := &models.AcmeProvider{
-		Name:       "ninja",
-		AccountKey: "ninja-acme.key",
-		Bits:       misc.Int64P(2048),
-		Challenge:  "http-01",
-		Contact:    "me@example.com",
-		Curves:     "dem curves",
-		Directory:  "https://acme.ninja.com/directory",
-		Keytype:    "ECDSA",
-		Map:        "acme@virt",
+		Name:         "ninja",
+		AccountKey:   "ninja-acme.key",
+		AcmeProvider: "godaddy",
+		AcmeVars: map[string]string{
+			"ApiKey":   "foobar",
+			"WeirdKey": "\"__, +=\"",
+		},
+		Bits:      misc.Int64P(2048),
+		Challenge: "http-01",
+		Contact:   "me@example.com",
+		Curves:    "dem curves",
+		Directory: "https://acme.ninja.com/directory",
+		Keytype:   "ECDSA",
+		Map:       "acme@virt",
+		ReuseKey:  models.AcmeProviderReuseKeyEnabled,
 	}
 
 	err := clientTest.CreateAcmeProvider(a, "", version)
@@ -127,6 +133,7 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 	// Edit
 	a.Contact = "new@example.com"
 	a.Bits = misc.Int64P(4096)
+	a.ReuseKey = ""
 	err = clientTest.EditAcmeProvider(a.Name, a, "", version)
 	require.NoError(err)
 	version++

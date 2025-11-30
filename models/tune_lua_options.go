@@ -35,8 +35,8 @@ import (
 // swagger:model tune_lua_options
 type TuneLuaOptions struct {
 	// bool sample conversion
-	// Enum: [normal pre-3.1-bug]
-	// +kubebuilder:validation:Enum=normal pre-3.1-bug;
+	// Enum: ["normal","pre-3.1-bug"]
+	// +kubebuilder:validation:Enum=normal;pre-3.1-bug;
 	BoolSampleConversion string `json:"bool_sample_conversion,omitempty"`
 
 	// burst timeout
@@ -48,13 +48,13 @@ type TuneLuaOptions struct {
 	ForcedYield int64 `json:"forced_yield,omitempty"`
 
 	// log loggers
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	LogLoggers string `json:"log_loggers,omitempty"`
 
 	// log stderr
-	// Enum: [auto enabled disabled]
-	// +kubebuilder:validation:Enum=auto enabled disabled;
+	// Enum: ["auto","enabled","disabled"]
+	// +kubebuilder:validation:Enum=auto;enabled;disabled;
 	LogStderr string `json:"log_stderr,omitempty"`
 
 	// maxmem

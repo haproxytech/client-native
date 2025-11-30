@@ -100,12 +100,18 @@ func (f *SetBandwidthLimit) String() string {
 	result.WriteString("set-bandwidth-limit ")
 	result.WriteString(f.Name)
 	if len(f.Limit.Expr) != 0 {
-		result.WriteString(" limit ")
-		result.WriteString(f.Limit.String())
+		r := f.Limit.String()
+		if r != "" {
+			result.WriteString(" limit ")
+			result.WriteString(r)
+		}
 	}
 	if len(f.Period.Expr) != 0 {
-		result.WriteString(" period ")
-		result.WriteString(f.Period.String())
+		r := f.Period.String()
+		if r != "" {
+			result.WriteString(" period ")
+			result.WriteString(r)
+		}
 	}
 	if f.Cond != "" {
 		result.WriteString(" ")

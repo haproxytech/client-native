@@ -40,8 +40,8 @@ type SslOptions struct {
 	SslEngines []*SslEngine `json:"engines,omitempty"`
 
 	// acme scheduler
-	// Enum: [auto off]
-	// +kubebuilder:validation:Enum=auto off;
+	// Enum: ["auto","off"]
+	// +kubebuilder:validation:Enum=auto;off;
 	AcmeScheduler string `json:"acme_scheduler,omitempty"`
 
 	// ca base
@@ -102,8 +102,8 @@ type SslOptions struct {
 	Maxsslrate int64 `json:"maxsslrate,omitempty"`
 
 	// mode async
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	ModeAsync string `json:"mode_async,omitempty"`
 
 	// propquery
@@ -123,8 +123,8 @@ type SslOptions struct {
 	SecurityLevel *int64 `json:"security_level,omitempty"`
 
 	// server verify
-	// Enum: [none required]
-	// +kubebuilder:validation:Enum=none required;
+	// Enum: ["none","required"]
+	// +kubebuilder:validation:Enum=none;required;
 	ServerVerify string `json:"server_verify,omitempty"`
 
 	// skip self issued ca
@@ -348,6 +348,11 @@ func (m *SslOptions) contextValidateSslEngines(ctx context.Context, formats strf
 	for i := 0; i < len(m.SslEngines); i++ {
 
 		if m.SslEngines[i] != nil {
+
+			if swag.IsZero(m.SslEngines[i]) { // not required
+				return nil
+			}
+
 			if err := m.SslEngines[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("engines" + "." + strconv.Itoa(i))

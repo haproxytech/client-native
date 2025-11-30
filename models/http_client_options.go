@@ -35,16 +35,16 @@ import (
 // swagger:model http_client_options
 type HTTPClientOptions struct {
 	// resolvers disabled
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	ResolversDisabled string `json:"resolvers_disabled,omitempty"`
 
 	// resolvers id
 	ResolversID string `json:"resolvers_id,omitempty"`
 
 	// resolvers prefer
-	// Enum: [ipv4 ipv6]
-	// +kubebuilder:validation:Enum=ipv4 ipv6;
+	// Enum: ["ipv4","ipv6"]
+	// +kubebuilder:validation:Enum=ipv4;ipv6;
 	ResolversPrefer string `json:"resolvers_prefer,omitempty"`
 
 	// retries
@@ -54,8 +54,8 @@ type HTTPClientOptions struct {
 	SslCaFile string `json:"ssl_ca_file,omitempty"`
 
 	// ssl verify
-	// Enum: [ none required]
-	// +kubebuilder:validation:Enum= none required;
+	// Enum: ["","none","required"]
+	// +kubebuilder:validation:Enum="";none;required;
 	SslVerify *string `json:"ssl_verify,omitempty"`
 
 	// timeout connect

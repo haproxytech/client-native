@@ -30,6 +30,7 @@ func TestWholeConfigsSectionsPeers(t *testing.T) {
 	tests := []struct {
 		Name, Config string
 	}{
+		{"peers_defaultbindtcpmd5sigsecretpass", peers_defaultbindtcpmd5sigsecretpass},
 		{"peers_defaultbindtlsticketkeystmptlsti", peers_defaultbindtlsticketkeystmptlsti},
 		{"peers_defaultbinduserrootmode600accept", peers_defaultbinduserrootmode600accept},
 		{"peers_defaultbindv4v6sslcrtetchaproxys", peers_defaultbindv4v6sslcrtetchaproxys},
@@ -165,6 +166,7 @@ func TestWholeConfigsSectionsPeers(t *testing.T) {
 		{"peers_defaultserversslminverTLSv13", peers_defaultserversslminverTLSv13},
 		{"peers_defaultserversslreuse", peers_defaultserversslreuse},
 		{"peers_defaultserverstick", peers_defaultserverstick},
+		{"peers_defaultservertcpmd5sigsecretpass", peers_defaultservertcpmd5sigsecretpass},
 		{"peers_defaultservertcput20ms", peers_defaultservertcput20ms},
 		{"peers_defaultservertfo", peers_defaultservertfo},
 		{"peers_defaultservertlstickets", peers_defaultservertlstickets},

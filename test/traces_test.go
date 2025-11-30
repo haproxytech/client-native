@@ -50,7 +50,6 @@ func checkTraces(t *testing.T, traces *models.Traces) {
 }
 
 func TestCreateEditDeleteTraces(t *testing.T) {
-
 	// We cannot start by creating a new traces section, since there is
 	// already one present in $testConf, and this is a unique section.
 	// So let's delete first.

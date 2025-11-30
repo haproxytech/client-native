@@ -30,9 +30,11 @@ func TestDefaultBind(t *testing.T) {
 		"default-bind user root mode 600 accept-proxy":                     true,
 		"default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1": true,
 		"default-bind tls-ticket-keys /tmp/tls_ticket_keys":                true,
-		"default-bind": false,
-		"---":          false,
-		"--- ---":      false,
+		"default-bind tcp-md5sig secretpass":                               true,
+		"default-bind":                                                     false,
+		"default-bind tcp-md5sig":                                          false,
+		"---":                                                              false,
+		"--- ---":                                                          false,
 	}
 	parser := &parsers.DefaultBind{}
 	for command, shouldPass := range tests {

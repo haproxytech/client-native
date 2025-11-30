@@ -40,14 +40,20 @@ type AcmeProvider struct {
 	// Path where the the ACME account key is stored
 	AccountKey string `json:"account_key,omitempty"`
 
+	// DNS provider for the dns-01 challenge
+	AcmeProvider string `json:"acme_provider,omitempty"`
+
+	// List of variables passed to the dns-01 provider (typically API keys)
+	AcmeVars map[string]string `json:"acme_vars,omitempty"`
+
 	// Number of bits to generate an RSA certificate
 	// Minimum: 1024
 	// +kubebuilder:validation:Minimum=1024
 	Bits *int64 `json:"bits,omitempty"`
 
 	// ACME challenge type. Only http-01 and dns-01 are supported.
-	// Enum: [http-01 dns-01]
-	// +kubebuilder:validation:Enum=http-01 dns-01;
+	// Enum: ["http-01","dns-01"]
+	// +kubebuilder:validation:Enum=http-01;dns-01;
 	Challenge string `json:"challenge,omitempty"`
 
 	// Contact email for the ACME account
@@ -65,8 +71,8 @@ type AcmeProvider struct {
 	Directory string `json:"directory"`
 
 	// Type of key to generate
-	// Enum: [RSA ECDSA]
-	// +kubebuilder:validation:Enum=RSA ECDSA;
+	// Enum: ["RSA","ECDSA"]
+	// +kubebuilder:validation:Enum=RSA;ECDSA;
 	Keytype string `json:"keytype,omitempty"`
 
 	// The map which will be used to store the ACME token (key) and thumbprint
@@ -79,6 +85,11 @@ type AcmeProvider struct {
 	// ACME provider's name
 	// Required: true
 	Name string `json:"name"`
+
+	// Try to reuse the private key instead of generating a new one.
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	ReuseKey string `json:"reuse_key,omitempty"`
 }
 
 // Validate validates this acme provider
@@ -102,6 +113,10 @@ func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReuseKey(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -223,6 +238,48 @@ func (m *AcmeProvider) validateKeytype(formats strfmt.Registry) error {
 func (m *AcmeProvider) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var acmeProviderTypeReuseKeyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		acmeProviderTypeReuseKeyPropEnum = append(acmeProviderTypeReuseKeyPropEnum, v)
+	}
+}
+
+const (
+
+	// AcmeProviderReuseKeyEnabled captures enum value "enabled"
+	AcmeProviderReuseKeyEnabled string = "enabled"
+
+	// AcmeProviderReuseKeyDisabled captures enum value "disabled"
+	AcmeProviderReuseKeyDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *AcmeProvider) validateReuseKeyEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, acmeProviderTypeReuseKeyPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *AcmeProvider) validateReuseKey(formats strfmt.Registry) error {
+	if swag.IsZero(m.ReuseKey) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateReuseKeyEnum("reuse_key", "body", m.ReuseKey); err != nil {
 		return err
 	}
 

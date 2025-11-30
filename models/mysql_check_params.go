@@ -35,8 +35,8 @@ import (
 // swagger:model mysql_check_params
 type MysqlCheckParams struct {
 	// client version
-	// Enum: [pre-41 post-41]
-	// +kubebuilder:validation:Enum=pre-41 post-41;
+	// Enum: ["pre-41","post-41"]
+	// +kubebuilder:validation:Enum=pre-41;post-41;
 	ClientVersion string `json:"client_version,omitempty"`
 
 	// username

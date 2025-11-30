@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"github.com/haproxytech/client-native/v6/misc"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -48,13 +49,17 @@ type OcspUpdateOptions struct {
 	Mindelay *int64 `json:"mindelay,omitempty"`
 
 	// mode
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Mode string `json:"mode,omitempty"`
 }
 
 // Validate validates this ocsp update options
 func (m *OcspUpdateOptions) Validate(formats strfmt.Registry) error {
+	if swag.IsZero(m.Disable) {
+		m.Disable = misc.Ptr(false)
+	}
+
 	var res []error
 
 	if err := m.validateHttpproxy(formats); err != nil {
@@ -149,6 +154,11 @@ func (m *OcspUpdateOptions) ContextValidate(ctx context.Context, formats strfmt.
 func (m *OcspUpdateOptions) contextValidateHttpproxy(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Httpproxy != nil {
+
+		if swag.IsZero(m.Httpproxy) { // not required
+			return nil
+		}
+
 		if err := m.Httpproxy.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("httpproxy")

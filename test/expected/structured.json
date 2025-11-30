@@ -522,12 +522,12 @@
                 "type": "rewrite"
             },
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
                 "log-bufsize": 6,
                 "pool_low_conn": 128,
-                "rise": 4000,
+                "rise": 4,
                 "ws": "auto",
                 "sslv3": "enabled",
                 "force_sslv3": "enabled"
@@ -1098,7 +1098,8 @@
                     "init-state": "fully-up",
                     "idle_ping": 10000,
                     "check-reuse-pool": "enabled",
-                    "strict-maxconn": true
+                    "strict-maxconn": true,
+                    "tcp_md5sig" : "secretpass"
                 },
                 "webserv2": {
                     "cookie": "BLAH",
@@ -1145,10 +1146,10 @@
                 "type": "rewrite"
             },
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
-                "rise": 4000,
+                "rise": 4,
                 "slowstart": 6000,
                 "tlsv10": "disabled",
                 "force_tlsv10": "disabled"
@@ -1715,6 +1716,7 @@
                     "cond": "if",
                     "cond_test": "FALSE",
                     "sc_id": 1,
+                    "sc_int": 1,
                     "type": "sc-add-gpc"
                 },
                 {
@@ -2884,7 +2886,8 @@
                     "default_crt_list": [
                         "foobar.pem.rsa",
                         "foobar.pem.ecdsa"
-                    ]
+                    ],
+                    "tcp_md5sig": "secretpass"
                 },
                 "webserv2": {
                     "name": "webserv2",
@@ -3172,11 +3175,17 @@
     "acme_providers": {
         "test": {
             "contact": "me@example.com",
+            "acme_provider": "gandy",
+            "acme_vars": {
+                "ApiKey": "ple744587",
+                "Zone": "example.com"
+            },
             "bits": 4096,
             "challenge": "http-01",
             "directory": "https://acme.example.com/directory",
             "keytype": "ECDSA",
-            "map": "acme@t"
+            "map": "acme@t",
+            "reuse_key": "enabled"
         }
     },
     "crt_stores": {
@@ -3392,10 +3401,10 @@
             "connect_timeout": 5000,
             "default_backend": "test",
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
-                "rise": 4000
+                "rise": 4
             },
             "disable_h2_upgrade": "enabled",
             "dontlog_normal": "enabled",
@@ -3530,10 +3539,10 @@
                 "v4v6": true
             },
             "default_server": {
-                "fall": 2000,
+                "fall": 2,
                 "health_check_port": 8888,
                 "inter": 5000,
-                "rise": 4000,
+                "rise": 4,
                 "slowstart": 6000
             },
             "enabled": true,
