@@ -67,6 +67,7 @@ allowed:
   - failsafe
   - fbt
   - fcgi
+  - fmt
   - usefcgiapp
   - formatter
   - formatters

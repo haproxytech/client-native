@@ -472,6 +472,16 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			CondTest: v.CondTest,
 			Metadata: parseMetadata(v.Comment),
 		}, nil
+	case *actions.SetVarFmt:
+		return &models.HTTPAfterResponseRule{
+			Type:      "set-var-fmt",
+			VarName:   v.VarName,
+			VarFormat: strings.Join(v.Fmt.Expr, " "),
+			VarScope:  v.VarScope,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
+		}, nil
 	case *http_actions.StrictMode:
 		return &models.HTTPAfterResponseRule{
 			Type:       "strict-mode",
@@ -667,6 +677,15 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 	case "set-var":
 		rule = &actions.SetVar{
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
+			VarName:  f.VarName,
+			VarScope: f.VarScope,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "set-var-fmt":
+		rule = &actions.SetVarFmt{
+			Fmt:      common.Expression{Expr: strings.Split(f.VarFormat, " ")},
 			VarName:  f.VarName,
 			VarScope: f.VarScope,
 			Cond:     f.Cond,
