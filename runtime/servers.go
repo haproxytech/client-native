@@ -127,6 +127,12 @@ func (s *SingleRuntime) SetServerAgentSend(backend, server string, send string) 
 	return s.Execute(cmd)
 }
 
+// SetServerSSL set SSL for server
+func (s *SingleRuntime) SetServerSSL(backend, server string, ssl string) error {
+	cmd := fmt.Sprintf("set server %s/%s ssl %s", backend, server, ssl)
+	return s.Execute(cmd)
+}
+
 // GetServersState returns servers runtime state
 func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, error) {
 	cmd := "show servers state " + backend
@@ -182,17 +188,15 @@ func parseRuntimeServers(output string) (models.RuntimeServers, error) {
 func parseRuntimeServer(line string) *models.RuntimeServer {
 	fields := strings.Split(line, " ")
 
-	if len(fields) < 19 {
+	if len(fields) < 25 {
 		return nil
 	}
 
-	p, err := strconv.ParseInt(fields[18], 10, 64)
-	var port *int64
+	bID, err := strconv.ParseInt(fields[0], 10, 64)
+	var backendID *int64
 	if err == nil {
-		port = &p
+		backendID = &bID
 	}
-
-	admState, _ := misc.GetServerAdminState(fields[6])
 
 	var opState string
 	switch fields[5] {
@@ -204,12 +208,117 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 		opState = "up"
 	}
 
+	admState, _ := misc.GetServerAdminState(fields[6])
+
+	uW, err := strconv.ParseInt(fields[7], 10, 64)
+	var uWeight *int64
+	if err == nil {
+		uWeight = &uW
+	}
+
+	iW, err := strconv.ParseInt(fields[8], 10, 64)
+	var iWeight *int64
+	if err == nil {
+		iWeight = &iW
+	}
+
+	lTC, err := strconv.ParseInt(fields[9], 10, 64)
+	var lastTimeChange *int64
+	if err == nil {
+		lastTimeChange = &lTC
+	}
+
+	cStatus, err := strconv.ParseInt(fields[10], 10, 64)
+	var checkStatus *int64
+	if err == nil {
+		checkStatus = &cStatus
+	}
+
+	cResult, err := strconv.ParseInt(fields[11], 10, 64)
+	var checkResult *int64
+	if err == nil {
+		checkResult = &cResult
+	}
+
+	cHealth, err := strconv.ParseInt(fields[12], 10, 64)
+	var checkHealth *int64
+	if err == nil {
+		checkHealth = &cHealth
+	}
+
+	cState, err := strconv.ParseInt(fields[13], 10, 64)
+	var checkState *int64
+	if err == nil {
+		checkState = &cState
+	}
+
+	aState, err := strconv.ParseInt(fields[14], 10, 64)
+	var agentState *int64
+	if err == nil {
+		agentState = &aState
+	}
+
+	bFID, err := strconv.ParseInt(fields[15], 10, 64)
+	var backendForcedID *int64
+	if err == nil {
+		backendForcedID = &bFID
+	}
+
+	fID, err := strconv.ParseInt(fields[16], 10, 64)
+	var forcedID *int64
+	if err == nil {
+		forcedID = &fID
+	}
+
+	p, err := strconv.ParseInt(fields[18], 10, 64)
+	var port *int64
+	if err == nil {
+		port = &p
+	}
+
+	uSSL, err := strconv.ParseBool(fields[20])
+	var useSSL *bool
+	if err == nil {
+		useSSL = &uSSL
+	}
+
+	cPort, err := strconv.ParseInt(fields[21], 10, 64)
+	var checkPort *int64
+	if err == nil {
+		checkPort = &cPort
+	}
+
+	aPort, err := strconv.ParseInt(fields[24], 10, 64)
+	var agentPort *int64
+	if err == nil {
+		agentPort = &aPort
+	}
+
 	return &models.RuntimeServer{
+		BackendID:        backendID,
+		BackendName:      fields[1],
+		ID:               fields[2],
 		Name:             fields[3],
 		Address:          fields[4],
-		Port:             port,
-		ID:               fields[2],
 		AdminState:       admState,
 		OperationalState: opState,
+		Uweight:          uWeight,
+		Iweight:          iWeight,
+		LastTimeChange:   lastTimeChange,
+		CheckStatus:      checkStatus,
+		CheckResult:      checkResult,
+		CheckHealth:      checkHealth,
+		CheckState:       checkState,
+		AgentState:       agentState,
+		BackendForcedID:  backendForcedID,
+		ForecedID:        forcedID,
+		Fqdn:             fields[17],
+		Port:             port,
+		Srvrecord:        fields[19],
+		UseSsl:           useSSL,
+		CheckPort:        checkPort,
+		CheckAddr:        fields[22],
+		AgentAddr:        fields[23],
+		AgentPort:        agentPort,
 	}
 }
