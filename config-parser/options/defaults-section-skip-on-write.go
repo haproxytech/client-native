@@ -16,26 +16,22 @@ limitations under the License.
 
 package options
 
-import (
-	"io"
-
-	"github.com/haproxytech/go-logger"
-)
-
-type Parser struct {
-	Path                       string
-	Reader                     io.Reader
-	Logger                     logger.Format // we always will have p.Options.LogPrefix
-	UseV2HTTPCheck             bool
-	UseMd5Hash                 bool
-	UseListenSectionParsers    bool
-	DisableUnProcessed         bool
-	Log                        bool
-	LogPrefix                  string
-	NoNamedDefaultsFrom        bool
-	DefaultSectionsSkipOnWrite map[string]struct{}
+type defaultSectionsSkipOnWrite struct {
+	sectionNames map[string]struct{}
 }
 
-type ParserOption interface {
-	Set(p *Parser) error
+func (o defaultSectionsSkipOnWrite) Set(p *Parser) error {
+	p.DefaultSectionsSkipOnWrite = o.sectionNames
+	return nil
+}
+
+// sectionNames is a list of defaults section that the parser will not serialize even if existing in the configuration
+func DefaultSectionsSkipOnWrite(sectionNames []string) ParserOption {
+	names := make(map[string]struct{}, len(sectionNames))
+	for _, s := range sectionNames {
+		names[s] = struct{}{}
+	}
+	return defaultSectionsSkipOnWrite{
+		sectionNames: names,
+	}
 }

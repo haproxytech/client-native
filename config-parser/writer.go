@@ -81,10 +81,27 @@ func (p *configParser) String() string {
 			} else {
 				sName = string(section)
 			}
-			p.writeParsers(sName, p.Parsers[section][sectionName], &result, true)
+			serializeOk := p.shouldSerialize(section, sectionName)
+			if serializeOk {
+				p.writeParsers(sName, p.Parsers[section][sectionName], &result, true)
+			}
 		}
 	}
 	return result.String()
+}
+
+func (p *configParser) shouldSerialize(section Section, sectionName string) bool {
+	if section != Defaults {
+		return true
+	}
+
+	// For Defaults section, look if option DefaultSectionsSkipOnWrite is set
+	// if set, take it into into account to not serialize the defaults section with the option name
+	if len(p.Options.DefaultSectionsSkipOnWrite) == 0 {
+		return true
+	}
+	_, sectionToSkip := p.Options.DefaultSectionsSkipOnWrite[sectionName]
+	return !sectionToSkip
 }
 
 func (p *configParser) Save(filename string) error {

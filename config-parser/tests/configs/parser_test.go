@@ -153,3 +153,48 @@ func TestListenSectionParsers(t *testing.T) {
 		t.Fatalf("configurations does not match")
 	}
 }
+
+func TestDefaultSectionsSkipOnWriteParsers(t *testing.T) {
+	tests := []struct {
+		Name                  string
+		Config                string
+		Result                string
+		DefaultsSectionToSkip []string
+	}{
+		{
+			"with option DefaultSectionsSkipOnWrite and section present",
+			configDefaultSectionsSkipOnWrite_WithSectionName, configDefaultSectionsSkipOnWrite_WithoutSectionName,
+			[]string{"to_not_serialize"},
+		},
+		{
+			"with option DefaultSectionsSkipOnWrite and section present - multiple options",
+			configDefaultSectionsSkipOnWrite_WithSectionName, configDefaultSectionsSkipOnWrite_WithoutSectionName,
+			[]string{"to_not_serialize", "to_not_serialize2"},
+		},
+		{
+			"no option DefaultSectionsSkipOnWrite and section absent",
+			configDefaultSectionsSkipOnWrite_WithoutSectionName, configDefaultSectionsSkipOnWrite_WithoutSectionName,
+			[]string{"to_not_serialize"},
+		},
+		{
+			"with option DefaultSectionsSkipOnWrite and section present different option name",
+			configDefaultSectionsSkipOnWrite_WithSectionName, configDefaultSectionsSkipOnWrite_WithSectionName,
+			[]string{"other"},
+		},
+	}
+
+	for _, tt := range tests {
+		var buffer bytes.Buffer
+		buffer.WriteString(tt.Config)
+		p, err := parser.New(options.DefaultSectionsSkipOnWrite(tt.DefaultsSectionToSkip), options.Reader(&buffer))
+		if err != nil {
+			t.Fatal(err.Error())
+		}
+
+		result := p.String() //nolint:ifshort
+		if result != tt.Result {
+			compare(t, tt.Config, tt.Result)
+			t.Fatalf("configurations does not match")
+		}
+	}
+}
