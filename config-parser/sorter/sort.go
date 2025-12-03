@@ -33,6 +33,11 @@ type Section struct {
 //   - sort by Name
 //   - if there is a dependency, section is moved after the one it depends on
 func Sort(sections []Section) error {
+	// first sort by name
+	sort.SliceStable(sections, func(i, j int) bool {
+		return sections[i].Name < sections[j].Name
+	})
+
 	// first check that all dependencies exist
 	for _, section := range sections {
 		if section.From == "" {
@@ -56,10 +61,6 @@ func Sort(sections []Section) error {
 		}
 	}
 
-	// first sort by name
-	sort.SliceStable(sections, func(i, j int) bool {
-		return sections[i].Name < sections[j].Name
-	})
 	// then go through list and check for circular dependencies
 	sortByFrom(0, sections)
 	// done
