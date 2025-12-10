@@ -457,16 +457,15 @@ func SerializeBind(b models.Bind, opt *options.ConfigurationOptions) types.Bind 
 	if err == nil {
 		bind.Comment = comment
 	}
-	bind.Params = serializeBindParams(b.BindParams, bind.Path, opt)
-	if b.Name != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "name", Value: b.Name})
-	}
+	bind.Params = serializeBindParams(b.BindParams, b.Name, bind.Path, opt)
 	return bind
 }
 
-func serializeBindParams(b models.BindParams, path string, opt *options.ConfigurationOptions) []params.BindOption { //nolint:gocognit,gocyclo,cyclop,maintidx
+func serializeBindParams(b models.BindParams, name string, path string, opt *options.ConfigurationOptions) []params.BindOption { //nolint:gocognit,gocyclo,cyclop,maintidx
 	var options []params.BindOption
-	if path != "" {
+	if name != "" {
+		options = append(options, &params.BindOptionValue{Name: "name", Value: name})
+	} else if path != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: path})
 	}
 	if b.SslCertificate != "" {

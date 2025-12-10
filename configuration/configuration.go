@@ -2886,7 +2886,7 @@ func (s *SectionObject) defaultBind(field reflect.Value) error {
 		return misc.CreateTypeAssertError("default-bind")
 	}
 	dBind := &types.DefaultBind{
-		Params: serializeBindParams(db.BindParams, "", s.Options),
+		Params: serializeBindParams(db.BindParams, db.Name, "", s.Options),
 	}
 
 	return s.set("default-bind", dBind)
