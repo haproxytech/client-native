@@ -26,5 +26,8 @@ func (rec DefaultBind) Diff(obj DefaultBind, opts ...eqdiff.GoMethodGenOptions) 
 	for diffKey, diffValue := range rec.BindParams.Diff(obj.BindParams, opts...) {
 		diff["BindParams."+diffKey] = diffValue
 	}
+	if rec.Name != obj.Name {
+		diff["Name"] = []interface{}{rec.Name, obj.Name}
+	}
 	return diff
 }

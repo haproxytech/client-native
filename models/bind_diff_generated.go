@@ -29,6 +29,9 @@ func (rec Bind) Diff(obj Bind, opts ...eqdiff.GoMethodGenOptions) map[string][]i
 	if rec.Address != obj.Address {
 		diff["Address"] = []interface{}{rec.Address, obj.Address}
 	}
+	if rec.Name != obj.Name {
+		diff["Name"] = []interface{}{rec.Name, obj.Name}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}

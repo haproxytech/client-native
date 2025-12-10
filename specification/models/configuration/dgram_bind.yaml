@@ -3,6 +3,8 @@ dgram_bind:
   title: Dgram Bind
   description: HAProxy log forward dgram bind configuration
   type: object
+  required:
+    - name
   properties:
     name:
       type: string

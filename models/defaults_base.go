@@ -374,9 +374,10 @@ type DefaultsBase struct {
 	MysqlCheckParams *MysqlCheckParams `json:"mysql_check_params,omitempty"`
 
 	// name
+	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 
 	// nolinger
 	// Enum: ["enabled","disabled"]
@@ -2862,8 +2863,9 @@ func (m *DefaultsBase) validateMysqlCheckParams(formats strfmt.Registry) error {
 }
 
 func (m *DefaultsBase) validateName(formats strfmt.Registry) error {
-	if swag.IsZero(m.Name) { // not required
-		return nil
+
+	if err := validate.RequiredString("name", "body", m.Name); err != nil {
+		return err
 	}
 
 	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {

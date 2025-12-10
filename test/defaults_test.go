@@ -26,6 +26,7 @@ func TestPushDefaults(t *testing.T) {
 	statsRealm := "Haproxy Stats"
 	d := &models.Defaults{
 		DefaultsBase: models.DefaultsBase{
+			Name: "unnamed_defaults_1",
 			Metadata: map[string]interface{}{
 				"comment": "my_comment",
 			},

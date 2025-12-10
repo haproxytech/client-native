@@ -26,6 +26,7 @@ func TestPushStructuredDefaults(t *testing.T) {
 	statsRealm := "Haproxy Stats"
 	d := &models.Defaults{
 		DefaultsBase: models.DefaultsBase{
+			Name:           "unnamed_defaults1",
 			Clitcpka:       "disabled",
 			DefaultBackend: "test2",
 			ErrorFiles: []*models.Errorfile{

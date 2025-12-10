@@ -1376,8 +1376,10 @@ func (s *SectionParser) defaultBind() interface{} {
 	}
 
 	d := data.(*types.DefaultBind)
+	bindParams, name := parseBindParams(d.Params)
 	return &models.DefaultBind{
-		BindParams: parseBindParams(d.Params),
+		BindParams: bindParams,
+		Name:       name,
 	}
 }
 

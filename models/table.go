@@ -44,7 +44,8 @@ type Table struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// name
-	Name string `json:"name,omitempty"`
+	// Required: true
+	Name string `json:"name"`
 
 	// no purge
 	NoPurge bool `json:"no_purge,omitempty"`
@@ -80,6 +81,10 @@ func (m *Table) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSize(formats); err != nil {
 		res = append(res, err)
 	}
@@ -100,6 +105,15 @@ func (m *Table) validateExpire(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("expire", "body", *m.Expire, `^\d+(ms|s|m|h|d)?$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Table) validateName(formats strfmt.Registry) error {
+
+	if err := validate.RequiredString("name", "body", m.Name); err != nil {
 		return err
 	}
 

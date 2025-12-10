@@ -23,5 +23,6 @@ import (
 
 func (rec RuntimeAPI) Equal(obj RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BindParams.Equal(obj.BindParams, opts...) &&
-		EqualPointerString(rec.Address, obj.Address, opts...)
+		EqualPointerString(rec.Address, obj.Address, opts...) &&
+		rec.Name == obj.Name
 }

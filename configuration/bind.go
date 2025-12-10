@@ -214,15 +214,16 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 		}
 	}
 	b.Metadata = parseMetadata(ondiskBind.Comment)
-	b.BindParams = parseBindParams(ondiskBind.Params)
+	b.BindParams, b.Name = parseBindParams(ondiskBind.Params)
 	if b.Name == "" {
 		b.Name = ondiskBind.Path
 	}
 	return b
 }
 
-func parseBindParams(bindOptions []params.BindOption) models.BindParams { //nolint:gocyclo,cyclop,maintidx,gocognit
+func parseBindParams(bindOptions []params.BindOption) (models.BindParams, string) { //nolint:gocyclo,cyclop,maintidx,gocognit
 	var b models.BindParams
+	name := ""
 	for _, p := range bindOptions {
 		switch v := p.(type) {
 		case *params.BindOptionDoubleWord:
@@ -302,7 +303,7 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 		case *params.BindOptionValue:
 			switch v.Name {
 			case "name":
-				b.Name = v.Value
+				name = v.Value
 			case "tcp-ut":
 				b.TCPUserTimeout = misc.ParseTimeout(v.Value)
 			case "tcp-md5sig":
@@ -436,7 +437,7 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 			}
 		}
 	}
-	return b
+	return b, name
 }
 
 func SerializeBind(b models.Bind, opt *options.ConfigurationOptions) types.Bind {
@@ -457,14 +458,15 @@ func SerializeBind(b models.Bind, opt *options.ConfigurationOptions) types.Bind 
 		bind.Comment = comment
 	}
 	bind.Params = serializeBindParams(b.BindParams, bind.Path, opt)
+	if b.Name != "" {
+		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "name", Value: b.Name})
+	}
 	return bind
 }
 
 func serializeBindParams(b models.BindParams, path string, opt *options.ConfigurationOptions) []params.BindOption { //nolint:gocognit,gocyclo,cyclop,maintidx
 	var options []params.BindOption
-	if b.Name != "" {
-		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
-	} else if path != "" {
+	if path != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: path})
 	}
 	if b.SslCertificate != "" {

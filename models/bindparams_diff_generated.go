@@ -137,9 +137,6 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.Mss != obj.Mss {
 		diff["Mss"] = []interface{}{rec.Mss, obj.Mss}
 	}
-	if rec.Name != obj.Name {
-		diff["Name"] = []interface{}{rec.Name, obj.Name}
-	}
 	if rec.Namespace != obj.Namespace {
 		diff["Namespace"] = []interface{}{rec.Namespace, obj.Namespace}
 	}

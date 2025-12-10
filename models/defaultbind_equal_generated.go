@@ -23,5 +23,6 @@ import (
 
 func (rec DefaultBind) Equal(obj DefaultBind, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BindParams.Equal(obj.BindParams, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...)
+		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
+		rec.Name == obj.Name
 }

@@ -1,5 +1,7 @@
 ---
 table:
+  required:
+    - name
   type: object
   properties:
     expire:

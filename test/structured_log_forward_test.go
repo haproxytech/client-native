@@ -104,9 +104,9 @@ func TestCreateEditDeleteStructuredLogForward(t *testing.T) {
 		},
 		Binds: map[string]models.Bind{
 			"192.168.1.1:9200": {
-				BindParams: models.BindParams{Name: "192.168.1.1:9200"},
-				Address:    "192.168.1.1",
-				Port:       misc.Ptr[int64](9200),
+				Name:    "192.168.1.1:9200",
+				Address: "192.168.1.1",
+				Port:    misc.Ptr[int64](9200),
 			},
 		},
 		DgramBinds: map[string]models.DgramBind{

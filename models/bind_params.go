@@ -162,11 +162,6 @@ type BindParams struct {
 	// mss
 	Mss string `json:"mss,omitempty"`
 
-	// name
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	Name string `json:"name,omitempty"`
-
 	// namespace
 	// Example: app
 	Namespace string `json:"namespace,omitempty"`
@@ -370,10 +365,6 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLevel(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -584,18 +575,6 @@ func (m *BindParams) validateLevel(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateLevelEnum("level", "body", m.Level); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BindParams) validateName(formats strfmt.Registry) error {
-	if swag.IsZero(m.Name) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {
 		return err
 	}
 

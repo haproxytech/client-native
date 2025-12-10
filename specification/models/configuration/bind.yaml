@@ -5,6 +5,8 @@ bind:
   allOf:
     - $ref: '#/definitions/bind_params'
     - type: object
+      required:
+        - name
       properties:
         address:
           type: string
@@ -22,6 +24,10 @@ bind:
           type: integer
           x-nullable: true
           example: 81
+        name:
+          type: string
+          pattern: '^[^\s]+$'
+          x-nullable: false
         metadata:
           additionalProperties:
             type: object
@@ -33,6 +39,10 @@ default_bind:
     - $ref: '#/definitions/bind_params'
     - type: object
       properties:
+        name:
+          type: string
+          pattern: '^[^\s]+$'
+          x-nullable: false
         metadata:
           additionalProperties:
             type: object

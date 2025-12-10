@@ -47,6 +47,12 @@ type Bind struct {
 	// +kubebuilder:validation:Schemaless
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
+	// name
+	// Required: true
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	Name string `json:"name"`
+
 	// port
 	// Example: 80
 	// Maximum: 65535
@@ -79,6 +85,8 @@ func (m *Bind) UnmarshalJSON(raw []byte) error {
 
 		Metadata map[string]interface{} `json:"metadata,omitempty"`
 
+		Name string `json:"name"`
+
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
@@ -90,6 +98,8 @@ func (m *Bind) UnmarshalJSON(raw []byte) error {
 	m.Address = dataAO1.Address
 
 	m.Metadata = dataAO1.Metadata
+
+	m.Name = dataAO1.Name
 
 	m.Port = dataAO1.Port
 
@@ -112,6 +122,8 @@ func (m Bind) MarshalJSON() ([]byte, error) {
 
 		Metadata map[string]interface{} `json:"metadata,omitempty"`
 
+		Name string `json:"name"`
+
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
@@ -120,6 +132,8 @@ func (m Bind) MarshalJSON() ([]byte, error) {
 	dataAO1.Address = m.Address
 
 	dataAO1.Metadata = m.Metadata
+
+	dataAO1.Name = m.Name
 
 	dataAO1.Port = m.Port
 
@@ -146,6 +160,10 @@ func (m *Bind) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePort(formats); err != nil {
 		res = append(res, err)
 	}
@@ -167,6 +185,19 @@ func (m *Bind) validateAddress(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("address", "body", m.Address, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Bind) validateName(formats strfmt.Registry) error {
+
+	if err := validate.RequiredString("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {
 		return err
 	}
 

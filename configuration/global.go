@@ -170,7 +170,7 @@ func parseRuntimeAPIs(p parser.Parser) ([]*models.RuntimeAPI, error) {
 		for _, s := range sockets {
 			p := s.Path
 			rAPI := &models.RuntimeAPI{Address: &p}
-			rAPI.BindParams = parseBindParams(s.Params)
+			rAPI.BindParams, rAPI.Name = parseBindParams(s.Params)
 			rAPIs = append(rAPIs, rAPI)
 		}
 	}

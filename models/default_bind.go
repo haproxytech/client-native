@@ -26,6 +26,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // DefaultBind Default Bind
@@ -39,6 +40,11 @@ type DefaultBind struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
+	// name
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	Name string `json:"name,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -53,12 +59,16 @@ func (m *DefaultBind) UnmarshalJSON(raw []byte) error {
 	// AO1
 	var dataAO1 struct {
 		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
+		Name string `json:"name,omitempty"`
 	}
 	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
 	}
 
 	m.Metadata = dataAO1.Metadata
+
+	m.Name = dataAO1.Name
 
 	return nil
 }
@@ -74,9 +84,13 @@ func (m DefaultBind) MarshalJSON() ([]byte, error) {
 	_parts = append(_parts, aO0)
 	var dataAO1 struct {
 		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
+		Name string `json:"name,omitempty"`
 	}
 
 	dataAO1.Metadata = m.Metadata
+
+	dataAO1.Name = m.Name
 
 	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
 	if errAO1 != nil {
@@ -95,9 +109,26 @@ func (m *DefaultBind) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *DefaultBind) validateName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Name) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 

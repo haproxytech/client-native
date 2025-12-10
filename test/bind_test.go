@@ -110,8 +110,8 @@ func TestCreateEditDeleteBind(t *testing.T) {
 	l := &models.Bind{
 		Address: "192.168.2.1",
 		Port:    &port,
+		Name:    "created",
 		BindParams: models.BindParams{
-			Name:           "created",
 			Ssl:            true,
 			NoAlpn:         true,
 			SslCertificate: "dummy.crt:dummy2.crt",
@@ -168,8 +168,8 @@ func TestCreateEditDeleteBind(t *testing.T) {
 	l = &models.Bind{
 		Address: "192.168.3.1",
 		Port:    &port,
+		Name:    "created",
 		BindParams: models.BindParams{
-			Name:           "created",
 			NoAlpn:         false,
 			Transparent:    true,
 			TCPUserTimeout: &tOut,

@@ -236,6 +236,10 @@ global_base:
               address:
                 type: string
                 pattern: '^[^\s]+$'
+              name:
+                type: string
+                pattern: '^[^\s]+$'
+                x-nullable: false
     stats_timeout:
       type: integer
       minimum: 0

@@ -2894,6 +2894,11 @@ type RuntimeAPI struct {
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address *string `json:"address"`
+
+	// name
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	Name string `json:"name,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -2908,12 +2913,16 @@ func (m *RuntimeAPI) UnmarshalJSON(raw []byte) error {
 	// AO1
 	var dataAO1 struct {
 		Address *string `json:"address"`
+
+		Name string `json:"name,omitempty"`
 	}
 	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
 	}
 
 	m.Address = dataAO1.Address
+
+	m.Name = dataAO1.Name
 
 	return nil
 }
@@ -2929,9 +2938,13 @@ func (m RuntimeAPI) MarshalJSON() ([]byte, error) {
 	_parts = append(_parts, aO0)
 	var dataAO1 struct {
 		Address *string `json:"address"`
+
+		Name string `json:"name,omitempty"`
 	}
 
 	dataAO1.Address = m.Address
+
+	dataAO1.Name = m.Name
 
 	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
 	if errAO1 != nil {
@@ -2954,6 +2967,10 @@ func (m *RuntimeAPI) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -2967,6 +2984,19 @@ func (m *RuntimeAPI) validateAddress(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("address", "body", *m.Address, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeAPI) validateName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Name) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {
 		return err
 	}
 

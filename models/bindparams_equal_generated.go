@@ -60,7 +60,6 @@ func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) b
 		rec.Maxconn == obj.Maxconn &&
 		rec.Mode == obj.Mode &&
 		rec.Mss == obj.Mss &&
-		rec.Name == obj.Name &&
 		rec.Namespace == obj.Namespace &&
 		rec.Nbconn == obj.Nbconn &&
 		rec.Nice == obj.Nice &&

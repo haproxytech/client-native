@@ -48,9 +48,10 @@ type DgramBind struct {
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// name
+	// Required: true
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 
 	// namespace
 	Namespace string `json:"namespace,omitempty"`
@@ -112,8 +113,9 @@ func (m *DgramBind) validateAddress(formats strfmt.Registry) error {
 }
 
 func (m *DgramBind) validateName(formats strfmt.Registry) error {
-	if swag.IsZero(m.Name) { // not required
-		return nil
+
+	if err := validate.RequiredString("name", "body", m.Name); err != nil {
+		return err
 	}
 
 	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {

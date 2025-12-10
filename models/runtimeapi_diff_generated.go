@@ -29,5 +29,8 @@ func (rec RuntimeAPI) Diff(obj RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) ma
 	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address, opts...) {
 		diff["Address."+diffKey] = diffValue
 	}
+	if rec.Name != obj.Name {
+		diff["Name"] = []interface{}{rec.Name, obj.Name}
+	}
 	return diff
 }

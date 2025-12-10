@@ -384,10 +384,6 @@ definitions:
         type: string
       mss:
         type: string
-      name:
-        pattern: ^[^\s]+$
-        type: string
-        x-nullable: false
       namespace:
         example: app
         type: string
@@ -2490,6 +2486,10 @@ definitions:
                 address:
                   pattern: ^[^\s]+$
                   type: string
+                name:
+                  pattern: ^[^\s]+$
+                  type: string
+                  x-nullable: false
               required:
                 - address
               type: object
@@ -3052,6 +3052,7 @@ definitions:
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
+        x-nullable: false
       nolinger:
         enum:
           - enabled
@@ -3205,6 +3206,8 @@ definitions:
       unique_id_header:
         type: string
         x-display-name: Unique ID header
+    required:
+      - name
     title: Defaults Base
     type: object
   defaults_sections:
@@ -4345,6 +4348,8 @@ definitions:
         x-nullable: true
       transparent:
         type: boolean
+    required:
+      - name
     title: Dgram Bind
     type: object
   dgram_binds:
@@ -4704,6 +4709,10 @@ definitions:
           metadata:
             additionalProperties:
               type: object
+          name:
+            pattern: ^[^\s]+$
+            type: string
+            x-nullable: false
           port:
             example: 80
             maximum: 65535
@@ -4716,6 +4725,8 @@ definitions:
             minimum: 1
             type: integer
             x-nullable: true
+        required:
+          - name
         type: object
     description: HAProxy frontend bind configuration
     title: Bind
@@ -11570,6 +11581,10 @@ definitions:
           metadata:
             additionalProperties:
               type: object
+          name:
+            pattern: ^[^\s]+$
+            type: string
+            x-nullable: false
         type: object
     description: HAProxy default bind configuration
     title: Default Bind
@@ -11613,6 +11628,8 @@ definitions:
       write_to:
         type: string
         x-nullable: true
+    required:
+      - name
     type: object
   tables:
     title: Tables
