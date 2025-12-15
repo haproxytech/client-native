@@ -24,10 +24,34 @@ import (
 )
 
 func (x HTTPErrorsSections) Diff(y HTTPErrorsSections, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffHTTPErrorsSections(x, y, opts...)
+	return DiffSlicePointerHTTPErrorsSection(x, y, opts...)
 }
 
-func DiffHTTPErrorsSections(x, y HTTPErrorsSections, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerHTTPErrorsSection(x, y *HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*HTTPErrorsSection"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerHTTPErrorsSection(x, y []*HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffHTTPErrorsSections(x, y HTTPErrorsSections, opts ...eqdiff.GoMethodGenO
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerHTTPErrorsSection(x, y *HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*HTTPErrorsSection"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

@@ -22,10 +22,17 @@ import (
 )
 
 func (x Groups) Equal(y Groups, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualGroups(x, y, opts...)
+	return EqualSlicePointerGroup(x, y, opts...)
 }
 
-func EqualGroups(x, y Groups, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerGroup(x, y *Group, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerGroup(x, y []*Group, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualGroups(x, y Groups, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerGroup(x, y *Group, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

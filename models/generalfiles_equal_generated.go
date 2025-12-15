@@ -22,10 +22,17 @@ import (
 )
 
 func (x GeneralFiles) Equal(y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualGeneralFiles(x, y, opts...)
+	return EqualSlicePointerGeneralFile(x, y, opts...)
 }
 
-func EqualGeneralFiles(x, y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerGeneralFile(x, y *GeneralFile, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerGeneralFile(x, y []*GeneralFile, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualGeneralFiles(x, y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) boo
 	}
 
 	return true
-}
-
-func EqualPointerGeneralFile(x, y *GeneralFile, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

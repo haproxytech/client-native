@@ -22,7 +22,7 @@ import (
 )
 
 func (x Resolvers) Equal(y Resolvers, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualResolvers(x, y, opts...)
+	return EqualSlicePointerResolver(x, y, opts...)
 }
 
 func EqualPointerResolver(x, y *Resolver, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerResolver(x, y *Resolver, opts ...eqdiff.GoMethodGenOptions) boo
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualResolvers(x, y Resolvers, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerResolver(x, y []*Resolver, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

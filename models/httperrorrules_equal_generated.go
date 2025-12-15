@@ -22,10 +22,17 @@ import (
 )
 
 func (x HTTPErrorRules) Equal(y HTTPErrorRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualHTTPErrorRules(x, y, opts...)
+	return EqualSlicePointerHTTPErrorRule(x, y, opts...)
 }
 
-func EqualHTTPErrorRules(x, y HTTPErrorRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerHTTPErrorRule(x, y *HTTPErrorRule, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerHTTPErrorRule(x, y []*HTTPErrorRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualHTTPErrorRules(x, y HTTPErrorRules, opts ...eqdiff.GoMethodGenOptions)
 	}
 
 	return true
-}
-
-func EqualPointerHTTPErrorRule(x, y *HTTPErrorRule, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

@@ -22,7 +22,7 @@ import (
 )
 
 func (x Reloads) Equal(y Reloads, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualReloads(x, y, opts...)
+	return EqualSlicePointerReload(x, y, opts...)
 }
 
 func EqualPointerReload(x, y *Reload, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerReload(x, y *Reload, opts ...eqdiff.GoMethodGenOptions) bool {
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualReloads(x, y Reloads, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerReload(x, y []*Reload, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

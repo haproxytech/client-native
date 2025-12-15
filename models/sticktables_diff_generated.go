@@ -24,7 +24,7 @@ import (
 )
 
 func (x StickTables) Diff(y StickTables, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffStickTables(x, y, opts...)
+	return DiffSlicePointerStickTable(x, y, opts...)
 }
 
 func DiffPointerStickTable(x, y *StickTable, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerStickTable(x, y *StickTable, opts ...eqdiff.GoMethodGenOptions) 
 	return diff
 }
 
-func DiffStickTables(x, y StickTables, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerStickTable(x, y []*StickTable, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

@@ -22,7 +22,7 @@ import (
 )
 
 func (x Programs) Equal(y Programs, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualPrograms(x, y, opts...)
+	return EqualSlicePointerProgram(x, y, opts...)
 }
 
 func EqualPointerProgram(x, y *Program, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerProgram(x, y *Program, opts ...eqdiff.GoMethodGenOptions) bool 
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualPrograms(x, y Programs, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerProgram(x, y []*Program, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

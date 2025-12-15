@@ -22,10 +22,17 @@ import (
 )
 
 func (x Acls) Equal(y Acls, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualAcls(x, y, opts...)
+	return EqualSlicePointerACL(x, y, opts...)
 }
 
-func EqualAcls(x, y Acls, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerACL(x, y *ACL, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerACL(x, y []*ACL, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualAcls(x, y Acls, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerACL(x, y *ACL, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

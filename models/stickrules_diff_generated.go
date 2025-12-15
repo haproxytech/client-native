@@ -24,7 +24,7 @@ import (
 )
 
 func (x StickRules) Diff(y StickRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffStickRules(x, y, opts...)
+	return DiffSlicePointerStickRule(x, y, opts...)
 }
 
 func DiffPointerStickRule(x, y *StickRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerStickRule(x, y *StickRule, opts ...eqdiff.GoMethodGenOptions) ma
 	return diff
 }
 
-func DiffStickRules(x, y StickRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerStickRule(x, y []*StickRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

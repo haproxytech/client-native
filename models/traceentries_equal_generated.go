@@ -22,7 +22,7 @@ import (
 )
 
 func (x TraceEntries) Equal(y TraceEntries, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualTraceEntries(x, y, opts...)
+	return EqualSlicePointerTraceEntry(x, y, opts...)
 }
 
 func EqualPointerTraceEntry(x, y *TraceEntry, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerTraceEntry(x, y *TraceEntry, opts ...eqdiff.GoMethodGenOptions)
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualTraceEntries(x, y TraceEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerTraceEntry(x, y []*TraceEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

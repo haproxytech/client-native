@@ -24,10 +24,34 @@ import (
 )
 
 func (x Captures) Diff(y Captures, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffCaptures(x, y, opts...)
+	return DiffSlicePointerCapture(x, y, opts...)
 }
 
-func DiffCaptures(x, y Captures, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerCapture(x, y *Capture, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*Capture"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerCapture(x, y []*Capture, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffCaptures(x, y Captures, opts ...eqdiff.GoMethodGenOptions) map[string][
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerCapture(x, y *Capture, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*Capture"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

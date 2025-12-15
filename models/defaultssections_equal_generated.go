@@ -22,10 +22,17 @@ import (
 )
 
 func (x DefaultsSections) Equal(y DefaultsSections, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualDefaultsSections(x, y, opts...)
+	return EqualSlicePointerDefaults(x, y, opts...)
 }
 
-func EqualDefaultsSections(x, y DefaultsSections, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerDefaults(x, y *Defaults, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerDefaults(x, y []*Defaults, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualDefaultsSections(x, y DefaultsSections, opts ...eqdiff.GoMethodGenOpti
 	}
 
 	return true
-}
-
-func EqualPointerDefaults(x, y *Defaults, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

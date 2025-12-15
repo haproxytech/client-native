@@ -24,7 +24,7 @@ import (
 )
 
 func (x TCPRequestRules) Diff(y TCPRequestRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffTCPRequestRules(x, y, opts...)
+	return DiffSlicePointerTCPRequestRule(x, y, opts...)
 }
 
 func DiffPointerTCPRequestRule(x, y *TCPRequestRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerTCPRequestRule(x, y *TCPRequestRule, opts ...eqdiff.GoMethodGenO
 	return diff
 }
 
-func DiffTCPRequestRules(x, y TCPRequestRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerTCPRequestRule(x, y []*TCPRequestRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

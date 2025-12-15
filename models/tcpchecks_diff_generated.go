@@ -24,7 +24,7 @@ import (
 )
 
 func (x TCPChecks) Diff(y TCPChecks, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffTCPChecks(x, y, opts...)
+	return DiffSlicePointerTCPCheck(x, y, opts...)
 }
 
 func DiffPointerTCPCheck(x, y *TCPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerTCPCheck(x, y *TCPCheck, opts ...eqdiff.GoMethodGenOptions) map[
 	return diff
 }
 
-func DiffTCPChecks(x, y TCPChecks, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerTCPCheck(x, y []*TCPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

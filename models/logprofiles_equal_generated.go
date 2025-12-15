@@ -22,10 +22,17 @@ import (
 )
 
 func (x LogProfiles) Equal(y LogProfiles, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualLogProfiles(x, y, opts...)
+	return EqualSlicePointerLogProfile(x, y, opts...)
 }
 
-func EqualLogProfiles(x, y LogProfiles, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerLogProfile(x, y *LogProfile, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerLogProfile(x, y []*LogProfile, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualLogProfiles(x, y LogProfiles, opts ...eqdiff.GoMethodGenOptions) bool 
 	}
 
 	return true
-}
-
-func EqualPointerLogProfile(x, y *LogProfile, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

@@ -271,6 +271,7 @@ bind_params:
     ssl_certificate:  # crt command
       type: string
       pattern: '^[^\s]+$'
+      description: All of the certificates delimited by ':' as mentioned as a crt on the bind line.
       x-dependency:
         ssl:
           value: true

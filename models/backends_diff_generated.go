@@ -24,10 +24,34 @@ import (
 )
 
 func (x Backends) Diff(y Backends, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffBackends(x, y, opts...)
+	return DiffSlicePointerBackend(x, y, opts...)
 }
 
-func DiffBackends(x, y Backends, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerBackend(x, y *Backend, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*Backend"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerBackend(x, y []*Backend, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffBackends(x, y Backends, opts ...eqdiff.GoMethodGenOptions) map[string][
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerBackend(x, y *Backend, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*Backend"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

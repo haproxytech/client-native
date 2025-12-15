@@ -22,10 +22,17 @@ import (
 )
 
 func (x Captures) Equal(y Captures, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualCaptures(x, y, opts...)
+	return EqualSlicePointerCapture(x, y, opts...)
 }
 
-func EqualCaptures(x, y Captures, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerCapture(x, y *Capture, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerCapture(x, y []*Capture, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualCaptures(x, y Captures, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerCapture(x, y *Capture, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

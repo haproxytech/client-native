@@ -22,7 +22,7 @@ import (
 )
 
 func (x ServerTemplates) Equal(y ServerTemplates, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualServerTemplates(x, y, opts...)
+	return EqualSlicePointerServerTemplate(x, y, opts...)
 }
 
 func EqualPointerServerTemplate(x, y *ServerTemplate, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerServerTemplate(x, y *ServerTemplate, opts ...eqdiff.GoMethodGen
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualServerTemplates(x, y ServerTemplates, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerServerTemplate(x, y []*ServerTemplate, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

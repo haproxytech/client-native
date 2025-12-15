@@ -22,7 +22,7 @@ import (
 )
 
 func (x TCPResponseRules) Equal(y TCPResponseRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualTCPResponseRules(x, y, opts...)
+	return EqualSlicePointerTCPResponseRule(x, y, opts...)
 }
 
 func EqualPointerTCPResponseRule(x, y *TCPResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerTCPResponseRule(x, y *TCPResponseRule, opts ...eqdiff.GoMethodG
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualTCPResponseRules(x, y TCPResponseRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerTCPResponseRule(x, y []*TCPResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

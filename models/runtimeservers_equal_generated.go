@@ -22,7 +22,7 @@ import (
 )
 
 func (x RuntimeServers) Equal(y RuntimeServers, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualRuntimeServers(x, y, opts...)
+	return EqualSlicePointerRuntimeServer(x, y, opts...)
 }
 
 func EqualPointerRuntimeServer(x, y *RuntimeServer, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerRuntimeServer(x, y *RuntimeServer, opts ...eqdiff.GoMethodGenOp
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualRuntimeServers(x, y RuntimeServers, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerRuntimeServer(x, y []*RuntimeServer, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

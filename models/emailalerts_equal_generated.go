@@ -22,10 +22,10 @@ import (
 )
 
 func (x EmailAlerts) Equal(y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualEmailAlerts(x, y, opts...)
+	return EqualSlicePointerEmailAlert(x, y, opts...)
 }
 
-func EqualEmailAlerts(x, y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerEmailAlert(x, y []*EmailAlert, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

@@ -24,10 +24,34 @@ import (
 )
 
 func (x MailersSections) Diff(y MailersSections, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffMailersSections(x, y, opts...)
+	return DiffSlicePointerMailersSection(x, y, opts...)
 }
 
-func DiffMailersSections(x, y MailersSections, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerMailersSection(x, y *MailersSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*MailersSection"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerMailersSection(x, y []*MailersSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffMailersSections(x, y MailersSections, opts ...eqdiff.GoMethodGenOptions
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerMailersSection(x, y *MailersSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*MailersSection"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

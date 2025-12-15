@@ -24,7 +24,7 @@ import (
 )
 
 func (x Reloads) Diff(y Reloads, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffReloads(x, y, opts...)
+	return DiffSlicePointerReload(x, y, opts...)
 }
 
 func DiffPointerReload(x, y *Reload, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerReload(x, y *Reload, opts ...eqdiff.GoMethodGenOptions) map[stri
 	return diff
 }
 
-func DiffReloads(x, y Reloads, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerReload(x, y []*Reload, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

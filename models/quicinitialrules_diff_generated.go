@@ -24,7 +24,7 @@ import (
 )
 
 func (x QUICInitialRules) Diff(y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffQUICInitialRules(x, y, opts...)
+	return DiffSlicePointerQUICInitialRule(x, y, opts...)
 }
 
 func DiffPointerQUICInitialRule(x, y *QUICInitialRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerQUICInitialRule(x, y *QUICInitialRule, opts ...eqdiff.GoMethodGe
 	return diff
 }
 
-func DiffQUICInitialRules(x, y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerQUICInitialRule(x, y []*QUICInitialRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

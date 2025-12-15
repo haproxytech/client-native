@@ -24,10 +24,34 @@ import (
 )
 
 func (x LogProfileSteps) Diff(y LogProfileSteps, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffLogProfileSteps(x, y, opts...)
+	return DiffSlicePointerLogProfileStep(x, y, opts...)
 }
 
-func DiffLogProfileSteps(x, y LogProfileSteps, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerLogProfileStep(x, y *LogProfileStep, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*LogProfileStep"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerLogProfileStep(x, y []*LogProfileStep, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffLogProfileSteps(x, y LogProfileSteps, opts ...eqdiff.GoMethodGenOptions
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerLogProfileStep(x, y *LogProfileStep, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*LogProfileStep"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

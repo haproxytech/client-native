@@ -22,7 +22,7 @@ import (
 )
 
 func (x Users) Equal(y Users, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualUsers(x, y, opts...)
+	return EqualSlicePointerUser(x, y, opts...)
 }
 
 func EqualPointerUser(x, y *User, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerUser(x, y *User, opts ...eqdiff.GoMethodGenOptions) bool {
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualUsers(x, y Users, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerUser(x, y []*User, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

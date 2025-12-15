@@ -24,10 +24,10 @@ import (
 )
 
 func (x EmailAlerts) Diff(y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffEmailAlerts(x, y, opts...)
+	return DiffSlicePointerEmailAlert(x, y, opts...)
 }
 
-func DiffEmailAlerts(x, y EmailAlerts, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerEmailAlert(x, y []*EmailAlert, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

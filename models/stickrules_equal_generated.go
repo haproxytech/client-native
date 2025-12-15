@@ -22,7 +22,7 @@ import (
 )
 
 func (x StickRules) Equal(y StickRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualStickRules(x, y, opts...)
+	return EqualSlicePointerStickRule(x, y, opts...)
 }
 
 func EqualPointerStickRule(x, y *StickRule, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerStickRule(x, y *StickRule, opts ...eqdiff.GoMethodGenOptions) b
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualStickRules(x, y StickRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerStickRule(x, y []*StickRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

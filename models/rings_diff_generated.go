@@ -24,7 +24,7 @@ import (
 )
 
 func (x Rings) Diff(y Rings, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffRings(x, y, opts...)
+	return DiffSlicePointerRing(x, y, opts...)
 }
 
 func DiffPointerRing(x, y *Ring, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerRing(x, y *Ring, opts ...eqdiff.GoMethodGenOptions) map[string][
 	return diff
 }
 
-func DiffRings(x, y Rings, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerRing(x, y []*Ring, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

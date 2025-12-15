@@ -22,7 +22,7 @@ import (
 )
 
 func (x Transactions) Equal(y Transactions, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualTransactions(x, y, opts...)
+	return EqualSlicePointerTransaction(x, y, opts...)
 }
 
 func EqualPointerTransaction(x, y *Transaction, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerTransaction(x, y *Transaction, opts ...eqdiff.GoMethodGenOption
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualTransactions(x, y Transactions, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerTransaction(x, y []*Transaction, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

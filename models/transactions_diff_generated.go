@@ -24,7 +24,7 @@ import (
 )
 
 func (x Transactions) Diff(y Transactions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffTransactions(x, y, opts...)
+	return DiffSlicePointerTransaction(x, y, opts...)
 }
 
 func DiffPointerTransaction(x, y *Transaction, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerTransaction(x, y *Transaction, opts ...eqdiff.GoMethodGenOptions
 	return diff
 }
 
-func DiffTransactions(x, y Transactions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerTransaction(x, y []*Transaction, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

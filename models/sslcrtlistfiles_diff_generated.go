@@ -24,7 +24,7 @@ import (
 )
 
 func (x SslCrtListFiles) Diff(y SslCrtListFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSslCrtListFiles(x, y, opts...)
+	return DiffSlicePointerSslCrtListFile(x, y, opts...)
 }
 
 func DiffPointerSslCrtListFile(x, y *SslCrtListFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerSslCrtListFile(x, y *SslCrtListFile, opts ...eqdiff.GoMethodGenO
 	return diff
 }
 
-func DiffSslCrtListFiles(x, y SslCrtListFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerSslCrtListFile(x, y []*SslCrtListFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

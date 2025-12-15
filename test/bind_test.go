@@ -49,8 +49,8 @@ func TestGetBinds(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(binds) != 9 {
-		t.Errorf("%v binds returned, expected 6", len(binds))
+	if len(binds) != 10 {
+		t.Errorf("%v binds returned, expected 10", len(binds))
 	}
 
 	if v != version {
@@ -114,7 +114,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Name:           "created",
 			Ssl:            true,
 			NoAlpn:         true,
-			SslCertificate: "dummy.crt",
+			SslCertificate: "dummy.crt:dummy2.crt",
 			Interface:      "eth0",
 			Verify:         "optional",
 			SslMinVer:      "TLSv1.3",
@@ -180,6 +180,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Sigalgs:        "ECDSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256:RSA+SHA256",
 			IdlePing:       misc.Int64P(10000),
+			SslCertificate: "dummy.crt:dummy2.crt:dummy3.crt",
 		},
 	}
 

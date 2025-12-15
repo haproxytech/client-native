@@ -22,10 +22,17 @@ import (
 )
 
 func (x MailersSections) Equal(y MailersSections, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualMailersSections(x, y, opts...)
+	return EqualSlicePointerMailersSection(x, y, opts...)
 }
 
-func EqualMailersSections(x, y MailersSections, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerMailersSection(x, y *MailersSection, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerMailersSection(x, y []*MailersSection, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualMailersSections(x, y MailersSections, opts ...eqdiff.GoMethodGenOption
 	}
 
 	return true
-}
-
-func EqualPointerMailersSection(x, y *MailersSection, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

@@ -22,10 +22,17 @@ import (
 )
 
 func (x Binds) Equal(y Binds, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualBinds(x, y, opts...)
+	return EqualSlicePointerBind(x, y, opts...)
 }
 
-func EqualBinds(x, y Binds, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerBind(x, y *Bind, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerBind(x, y []*Bind, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualBinds(x, y Binds, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerBind(x, y *Bind, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

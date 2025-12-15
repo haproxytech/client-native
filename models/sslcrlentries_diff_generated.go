@@ -24,7 +24,7 @@ import (
 )
 
 func (x SslCrlEntries) Diff(y SslCrlEntries, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSslCrlEntries(x, y, opts...)
+	return DiffSlicePointerSslCrlEntry(x, y, opts...)
 }
 
 func DiffPointerSslCrlEntry(x, y *SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerSslCrlEntry(x, y *SslCrlEntry, opts ...eqdiff.GoMethodGenOptions
 	return diff
 }
 
-func DiffSslCrlEntries(x, y SslCrlEntries, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerSslCrlEntry(x, y []*SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

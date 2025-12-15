@@ -308,7 +308,11 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 			case "tcp-md5sig":
 				b.TCPMd5sig = v.Value
 			case "crt":
-				b.SslCertificate = v.Value
+				if b.SslCertificate == "" {
+					b.SslCertificate = v.Value
+				} else {
+					b.SslCertificate = fmt.Sprintf("%s:%s", b.SslCertificate, v.Value)
+				}
 			case "ca-file":
 				b.SslCafile = v.Value
 			case "ca-verify-file":
@@ -464,7 +468,10 @@ func serializeBindParams(b models.BindParams, path string, opt *options.Configur
 		options = append(options, &params.BindOptionValue{Name: "name", Value: path})
 	}
 	if b.SslCertificate != "" {
-		options = append(options, &params.BindOptionValue{Name: "crt", Value: b.SslCertificate})
+		certs := strings.Split(b.SslCertificate, ":")
+		for _, cert := range certs {
+			options = append(options, &params.BindOptionValue{Name: "crt", Value: cert})
+		}
 	}
 	if b.SslCafile != "" {
 		options = append(options, &params.BindOptionValue{Name: "ca-file", Value: b.SslCafile})

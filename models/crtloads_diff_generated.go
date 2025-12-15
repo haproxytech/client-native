@@ -24,10 +24,34 @@ import (
 )
 
 func (x CrtLoads) Diff(y CrtLoads, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffCrtLoads(x, y, opts...)
+	return DiffSlicePointerCrtLoad(x, y, opts...)
 }
 
-func DiffCrtLoads(x, y CrtLoads, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerCrtLoad(x, y *CrtLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*CrtLoad"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerCrtLoad(x, y []*CrtLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffCrtLoads(x, y CrtLoads, opts ...eqdiff.GoMethodGenOptions) map[string][
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerCrtLoad(x, y *CrtLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*CrtLoad"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

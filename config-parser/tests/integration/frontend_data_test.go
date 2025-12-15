@@ -597,6 +597,10 @@ const frontend_bind443sslnostrictsni = `
 frontend test
   bind :443 ssl no-strict-sni
 `
+const frontend_bind443sslcrtmycert1pemcrtmycert = `
+frontend test
+  bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem
+`
 const frontend_bind443tcpmd5sigsecretpass = `
 frontend test
   bind :443 tcp-md5sig secretpass

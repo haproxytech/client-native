@@ -22,7 +22,7 @@ import (
 )
 
 func (x SpoeAgents) Equal(y SpoeAgents, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualSpoeAgents(x, y, opts...)
+	return EqualSlicePointerSpoeAgent(x, y, opts...)
 }
 
 func EqualPointerSpoeAgent(x, y *SpoeAgent, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerSpoeAgent(x, y *SpoeAgent, opts ...eqdiff.GoMethodGenOptions) b
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualSpoeAgents(x, y SpoeAgents, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerSpoeAgent(x, y []*SpoeAgent, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

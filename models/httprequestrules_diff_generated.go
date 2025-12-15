@@ -24,10 +24,34 @@ import (
 )
 
 func (x HTTPRequestRules) Diff(y HTTPRequestRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffHTTPRequestRules(x, y, opts...)
+	return DiffSlicePointerHTTPRequestRule(x, y, opts...)
 }
 
-func DiffHTTPRequestRules(x, y HTTPRequestRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerHTTPRequestRule(x, y *HTTPRequestRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*HTTPRequestRule"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerHTTPRequestRule(x, y []*HTTPRequestRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffHTTPRequestRules(x, y HTTPRequestRules, opts ...eqdiff.GoMethodGenOptio
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerHTTPRequestRule(x, y *HTTPRequestRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*HTTPRequestRule"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

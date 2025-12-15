@@ -18,57 +18,9 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
 func (x SpoeFiles) Diff(y SpoeFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSpoeFiles(x, y, opts...)
-}
-
-func DiffSpoeFiles(x, y SpoeFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	diff := make(map[string][]interface{})
-	lenX := len(x)
-	lenY := len(y)
-
-	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
-		return diff
-	}
-	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
-		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
-			return diff
-		}
-	}
-
-	if y == nil {
-		return map[string][]interface{}{"": {x, nil}}
-	}
-
-	for i := 0; i < lenX && i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		vx, vy := x[i], y[i]
-
-		if vx != vy {
-			diff[key] = []interface{}{vx, vy}
-		}
-
-	}
-
-	for i := lenY; i < lenX; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{x[i], nil}
-	}
-
-	for i := lenX; i < lenY; i++ {
-		key := fmt.Sprintf("[%d]", i)
-		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
+	return DiffSliceString(x, y, opts...)
 }

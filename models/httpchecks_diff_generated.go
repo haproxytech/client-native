@@ -24,10 +24,34 @@ import (
 )
 
 func (x HTTPChecks) Diff(y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffHTTPChecks(x, y, opts...)
+	return DiffSlicePointerHTTPCheck(x, y, opts...)
 }
 
-func DiffHTTPChecks(x, y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerHTTPCheck(x, y *HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*HTTPCheck"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerHTTPCheck(x, y []*HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffHTTPChecks(x, y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) map[stri
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerHTTPCheck(x, y *HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*HTTPCheck"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

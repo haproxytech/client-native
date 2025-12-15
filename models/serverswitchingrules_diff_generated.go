@@ -24,7 +24,7 @@ import (
 )
 
 func (x ServerSwitchingRules) Diff(y ServerSwitchingRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffServerSwitchingRules(x, y, opts...)
+	return DiffSlicePointerServerSwitchingRule(x, y, opts...)
 }
 
 func DiffPointerServerSwitchingRule(x, y *ServerSwitchingRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerServerSwitchingRule(x, y *ServerSwitchingRule, opts ...eqdiff.Go
 	return diff
 }
 
-func DiffServerSwitchingRules(x, y ServerSwitchingRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerServerSwitchingRule(x, y []*ServerSwitchingRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

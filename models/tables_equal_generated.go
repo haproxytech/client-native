@@ -22,7 +22,7 @@ import (
 )
 
 func (x Tables) Equal(y Tables, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualTables(x, y, opts...)
+	return EqualSlicePointerTable(x, y, opts...)
 }
 
 func EqualPointerTable(x, y *Table, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerTable(x, y *Table, opts ...eqdiff.GoMethodGenOptions) bool {
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualTables(x, y Tables, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerTable(x, y []*Table, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

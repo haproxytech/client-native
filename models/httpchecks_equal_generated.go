@@ -22,10 +22,17 @@ import (
 )
 
 func (x HTTPChecks) Equal(y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualHTTPChecks(x, y, opts...)
+	return EqualSlicePointerHTTPCheck(x, y, opts...)
 }
 
-func EqualHTTPChecks(x, y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerHTTPCheck(x, y *HTTPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerHTTPCheck(x, y []*HTTPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualHTTPChecks(x, y HTTPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerHTTPCheck(x, y *HTTPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

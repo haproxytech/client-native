@@ -22,7 +22,7 @@ import (
 )
 
 func (x TCPRequestRules) Equal(y TCPRequestRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualTCPRequestRules(x, y, opts...)
+	return EqualSlicePointerTCPRequestRule(x, y, opts...)
 }
 
 func EqualPointerTCPRequestRule(x, y *TCPRequestRule, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerTCPRequestRule(x, y *TCPRequestRule, opts ...eqdiff.GoMethodGen
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualTCPRequestRules(x, y TCPRequestRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerTCPRequestRule(x, y []*TCPRequestRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

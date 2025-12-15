@@ -22,10 +22,10 @@ import (
 )
 
 func (x SpoeScopes) Equal(y SpoeScopes, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualSpoeScopes(x, y, opts...)
+	return EqualSliceSpoeScope(x, y, opts...)
 }
 
-func EqualSpoeScopes(x, y SpoeScopes, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSliceSpoeScope(x, y []SpoeScope, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

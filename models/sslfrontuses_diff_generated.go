@@ -24,7 +24,7 @@ import (
 )
 
 func (x SSLFrontUses) Diff(y SSLFrontUses, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSSLFrontUses(x, y, opts...)
+	return DiffSlicePointerSSLFrontUse(x, y, opts...)
 }
 
 func DiffPointerSSLFrontUse(x, y *SSLFrontUse, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerSSLFrontUse(x, y *SSLFrontUse, opts ...eqdiff.GoMethodGenOptions
 	return diff
 }
 
-func DiffSSLFrontUses(x, y SSLFrontUses, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerSSLFrontUse(x, y []*SSLFrontUse, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

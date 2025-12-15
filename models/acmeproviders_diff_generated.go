@@ -24,10 +24,34 @@ import (
 )
 
 func (x AcmeProviders) Diff(y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffAcmeProviders(x, y, opts...)
+	return DiffSlicePointerAcmeProvider(x, y, opts...)
 }
 
-func DiffAcmeProviders(x, y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerAcmeProvider(x, y *AcmeProvider, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*AcmeProvider"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerAcmeProvider(x, y []*AcmeProvider, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffAcmeProviders(x, y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) ma
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerAcmeProvider(x, y *AcmeProvider, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*AcmeProvider"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

@@ -22,10 +22,17 @@ import (
 )
 
 func (x AwsRegions) Equal(y AwsRegions, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualAwsRegions(x, y, opts...)
+	return EqualSlicePointerAwsRegion(x, y, opts...)
 }
 
-func EqualAwsRegions(x, y AwsRegions, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerAwsRegion(x, y *AwsRegion, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerAwsRegion(x, y []*AwsRegion, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualAwsRegions(x, y AwsRegions, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerAwsRegion(x, y *AwsRegion, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

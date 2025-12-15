@@ -134,6 +134,7 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_bind443ssl", frontend_bind443ssl},
 		{"frontend_bind443sslcrtetchaproxysitepem", frontend_bind443sslcrtetchaproxysitepem},
 		{"frontend_bind443sslcrtetchaproxysitepemal", frontend_bind443sslcrtetchaproxysitepemal},
+		{"frontend_bind443sslcrtmycert1pemcrtmycert", frontend_bind443sslcrtmycert1pemcrtmycert},
 		{"frontend_bind443sslmaxverSSLv3", frontend_bind443sslmaxverSSLv3},
 		{"frontend_bind443sslmaxverTLSv10", frontend_bind443sslmaxverTLSv10},
 		{"frontend_bind443sslmaxverTLSv11", frontend_bind443sslmaxverTLSv11},

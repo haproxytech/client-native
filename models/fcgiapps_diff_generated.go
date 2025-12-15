@@ -24,10 +24,34 @@ import (
 )
 
 func (x FCGIApps) Diff(y FCGIApps, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffFCGIApps(x, y, opts...)
+	return DiffSlicePointerFCGIApp(x, y, opts...)
 }
 
-func DiffFCGIApps(x, y FCGIApps, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerFCGIApp(x, y *FCGIApp, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*FCGIApp"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerFCGIApp(x, y []*FCGIApp, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffFCGIApps(x, y FCGIApps, opts ...eqdiff.GoMethodGenOptions) map[string][
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerFCGIApp(x, y *FCGIApp, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*FCGIApp"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

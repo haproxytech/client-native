@@ -22,10 +22,17 @@ import (
 )
 
 func (x PeerSections) Equal(y PeerSections, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualPeerSections(x, y, opts...)
+	return EqualSlicePointerPeerSection(x, y, opts...)
 }
 
-func EqualPeerSections(x, y PeerSections, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerPeerSection(x, y *PeerSection, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerPeerSection(x, y []*PeerSection, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualPeerSections(x, y PeerSections, opts ...eqdiff.GoMethodGenOptions) boo
 	}
 
 	return true
-}
-
-func EqualPointerPeerSection(x, y *PeerSection, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

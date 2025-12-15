@@ -24,10 +24,34 @@ import (
 )
 
 func (x DgramBinds) Diff(y DgramBinds, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffDgramBinds(x, y, opts...)
+	return DiffSlicePointerDgramBind(x, y, opts...)
 }
 
-func DiffDgramBinds(x, y DgramBinds, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerDgramBind(x, y *DgramBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*DgramBind"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerDgramBind(x, y []*DgramBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffDgramBinds(x, y DgramBinds, opts ...eqdiff.GoMethodGenOptions) map[stri
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerDgramBind(x, y *DgramBind, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*DgramBind"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

@@ -24,7 +24,7 @@ import (
 )
 
 func (x RuntimeServers) Diff(y RuntimeServers, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffRuntimeServers(x, y, opts...)
+	return DiffSlicePointerRuntimeServer(x, y, opts...)
 }
 
 func DiffPointerRuntimeServer(x, y *RuntimeServer, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerRuntimeServer(x, y *RuntimeServer, opts ...eqdiff.GoMethodGenOpt
 	return diff
 }
 
-func DiffRuntimeServers(x, y RuntimeServers, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerRuntimeServer(x, y []*RuntimeServer, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

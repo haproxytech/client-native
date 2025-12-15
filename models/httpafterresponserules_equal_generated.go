@@ -22,10 +22,17 @@ import (
 )
 
 func (x HTTPAfterResponseRules) Equal(y HTTPAfterResponseRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualHTTPAfterResponseRules(x, y, opts...)
+	return EqualSlicePointerHTTPAfterResponseRule(x, y, opts...)
 }
 
-func EqualHTTPAfterResponseRules(x, y HTTPAfterResponseRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerHTTPAfterResponseRule(x, y *HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerHTTPAfterResponseRule(x, y []*HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualHTTPAfterResponseRules(x, y HTTPAfterResponseRules, opts ...eqdiff.GoM
 	}
 
 	return true
-}
-
-func EqualPointerHTTPAfterResponseRule(x, y *HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

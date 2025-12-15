@@ -22,10 +22,17 @@ import (
 )
 
 func (x CrtLoads) Equal(y CrtLoads, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualCrtLoads(x, y, opts...)
+	return EqualSlicePointerCrtLoad(x, y, opts...)
 }
 
-func EqualCrtLoads(x, y CrtLoads, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerCrtLoad(x, y *CrtLoad, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerCrtLoad(x, y []*CrtLoad, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualCrtLoads(x, y CrtLoads, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerCrtLoad(x, y *CrtLoad, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

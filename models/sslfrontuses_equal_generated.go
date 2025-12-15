@@ -22,7 +22,7 @@ import (
 )
 
 func (x SSLFrontUses) Equal(y SSLFrontUses, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualSSLFrontUses(x, y, opts...)
+	return EqualSlicePointerSSLFrontUse(x, y, opts...)
 }
 
 func EqualPointerSSLFrontUse(x, y *SSLFrontUse, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerSSLFrontUse(x, y *SSLFrontUse, opts ...eqdiff.GoMethodGenOption
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualSSLFrontUses(x, y SSLFrontUses, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerSSLFrontUse(x, y []*SSLFrontUse, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

@@ -22,7 +22,7 @@ import (
 )
 
 func (x SslCrlEntries) Equal(y SslCrlEntries, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualSslCrlEntries(x, y, opts...)
+	return EqualSlicePointerSslCrlEntry(x, y, opts...)
 }
 
 func EqualPointerSslCrlEntry(x, y *SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerSslCrlEntry(x, y *SslCrlEntry, opts ...eqdiff.GoMethodGenOption
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualSslCrlEntries(x, y SslCrlEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerSslCrlEntry(x, y []*SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

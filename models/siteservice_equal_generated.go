@@ -27,32 +27,3 @@ func (rec SiteService) Equal(obj SiteService, opts ...eqdiff.GoMethodGenOptions)
 		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
 		rec.Mode == obj.Mode
 }
-
-func EqualSlicePointerBind(x, y []*Bind, opts ...eqdiff.GoMethodGenOptions) bool {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	if (x == nil) != (y == nil) {
-		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
-			if len(x) == 0 && len(y) == 0 {
-				return true
-			}
-		}
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if !EqualPointerBind(vx, vy, opts...) {
-			return false
-		}
-	}
-
-	return true
-}

@@ -24,7 +24,7 @@ import (
 )
 
 func (x ServerTemplates) Diff(y ServerTemplates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffServerTemplates(x, y, opts...)
+	return DiffSlicePointerServerTemplate(x, y, opts...)
 }
 
 func DiffPointerServerTemplate(x, y *ServerTemplate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerServerTemplate(x, y *ServerTemplate, opts ...eqdiff.GoMethodGenO
 	return diff
 }
 
-func DiffServerTemplates(x, y ServerTemplates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerServerTemplate(x, y []*ServerTemplate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

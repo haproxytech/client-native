@@ -432,6 +432,7 @@ frontend test
   bind 192.168.1.1:80 name test-quic-algo thread 1/1 quic-cc-algo newreno
   bind 192.168.1.1:80 name test-quic-algo2 thread 1/1 quic-cc-algo bbr(480k)
   bind 192.168.1.1:80 name test-quic-algo3 thread 1/1 quic-cc-algo nocc(,12) label quic3
+  bind 192.168.1.1:443 name ssl-test ssl crt dummy1.pem crt dummy2.pem crt dummy3.pem crt dummy4.pem
   option httplog
   option dontlognull
   option contstats

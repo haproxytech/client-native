@@ -22,10 +22,17 @@ import (
 )
 
 func (x Consuls) Equal(y Consuls, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualConsuls(x, y, opts...)
+	return EqualSlicePointerConsul(x, y, opts...)
 }
 
-func EqualConsuls(x, y Consuls, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerConsul(x, y *Consul, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerConsul(x, y []*Consul, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualConsuls(x, y Consuls, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerConsul(x, y *Consul, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

@@ -515,6 +515,7 @@ definitions:
             value: true
         x-display-name: SSL CA File
       ssl_certificate:
+        description: All of the certificates delimited by ':' as mentioned as a crt on the bind line.
         pattern: ^[^\s]+$
         type: string
         x-dependency:

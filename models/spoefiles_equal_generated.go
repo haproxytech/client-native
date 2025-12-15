@@ -22,34 +22,5 @@ import (
 )
 
 func (x SpoeFiles) Equal(y SpoeFiles, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualSpoeFiles(x, y, opts...)
-}
-
-func EqualSpoeFiles(x, y SpoeFiles, opts ...eqdiff.GoMethodGenOptions) bool {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	if (x == nil) != (y == nil) {
-		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
-			if len(x) == 0 && len(y) == 0 {
-				return true
-			}
-		}
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if vx != vy {
-			return false
-		}
-	}
-
-	return true
+	return EqualSliceString(x, y, opts...)
 }

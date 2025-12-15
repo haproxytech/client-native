@@ -22,10 +22,17 @@ import (
 )
 
 func (x Maps) Equal(y Maps, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualMaps(x, y, opts...)
+	return EqualSlicePointerMap(x, y, opts...)
 }
 
-func EqualMaps(x, y Maps, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerMap(x, y *Map, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerMap(x, y []*Map, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualMaps(x, y Maps, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerMap(x, y *Map, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

@@ -24,10 +24,34 @@ import (
 )
 
 func (x GeneralFiles) Diff(y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffGeneralFiles(x, y, opts...)
+	return DiffSlicePointerGeneralFile(x, y, opts...)
 }
 
-func DiffGeneralFiles(x, y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerGeneralFile(x, y *GeneralFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*GeneralFile"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerGeneralFile(x, y []*GeneralFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffGeneralFiles(x, y GeneralFiles, opts ...eqdiff.GoMethodGenOptions) map[
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerGeneralFile(x, y *GeneralFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*GeneralFile"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

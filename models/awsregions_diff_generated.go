@@ -24,10 +24,34 @@ import (
 )
 
 func (x AwsRegions) Diff(y AwsRegions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffAwsRegions(x, y, opts...)
+	return DiffSlicePointerAwsRegion(x, y, opts...)
 }
 
-func DiffAwsRegions(x, y AwsRegions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerAwsRegion(x, y *AwsRegion, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*AwsRegion"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerAwsRegion(x, y []*AwsRegion, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffAwsRegions(x, y AwsRegions, opts ...eqdiff.GoMethodGenOptions) map[stri
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerAwsRegion(x, y *AwsRegion, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*AwsRegion"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

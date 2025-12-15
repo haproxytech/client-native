@@ -24,7 +24,7 @@ import (
 )
 
 func (x SslCaFiles) Diff(y SslCaFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSslCaFiles(x, y, opts...)
+	return DiffSlicePointerSslCaFile(x, y, opts...)
 }
 
 func DiffPointerSslCaFile(x, y *SslCaFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerSslCaFile(x, y *SslCaFile, opts ...eqdiff.GoMethodGenOptions) ma
 	return diff
 }
 
-func DiffSslCaFiles(x, y SslCaFiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerSslCaFile(x, y []*SslCaFile, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

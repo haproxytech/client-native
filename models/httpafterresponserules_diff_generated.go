@@ -24,10 +24,34 @@ import (
 )
 
 func (x HTTPAfterResponseRules) Diff(y HTTPAfterResponseRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffHTTPAfterResponseRules(x, y, opts...)
+	return DiffSlicePointerHTTPAfterResponseRule(x, y, opts...)
 }
 
-func DiffHTTPAfterResponseRules(x, y HTTPAfterResponseRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerHTTPAfterResponseRule(x, y *HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*HTTPAfterResponseRule"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerHTTPAfterResponseRule(x, y []*HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffHTTPAfterResponseRules(x, y HTTPAfterResponseRules, opts ...eqdiff.GoMe
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerHTTPAfterResponseRule(x, y *HTTPAfterResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*HTTPAfterResponseRule"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

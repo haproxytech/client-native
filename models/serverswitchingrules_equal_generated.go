@@ -22,7 +22,7 @@ import (
 )
 
 func (x ServerSwitchingRules) Equal(y ServerSwitchingRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualServerSwitchingRules(x, y, opts...)
+	return EqualSlicePointerServerSwitchingRule(x, y, opts...)
 }
 
 func EqualPointerServerSwitchingRule(x, y *ServerSwitchingRule, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerServerSwitchingRule(x, y *ServerSwitchingRule, opts ...eqdiff.G
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualServerSwitchingRules(x, y ServerSwitchingRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerServerSwitchingRule(x, y []*ServerSwitchingRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

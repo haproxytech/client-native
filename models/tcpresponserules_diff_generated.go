@@ -24,7 +24,7 @@ import (
 )
 
 func (x TCPResponseRules) Diff(y TCPResponseRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffTCPResponseRules(x, y, opts...)
+	return DiffSlicePointerTCPResponseRule(x, y, opts...)
 }
 
 func DiffPointerTCPResponseRule(x, y *TCPResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerTCPResponseRule(x, y *TCPResponseRule, opts ...eqdiff.GoMethodGe
 	return diff
 }
 
-func DiffTCPResponseRules(x, y TCPResponseRules, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerTCPResponseRule(x, y []*TCPResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

@@ -22,10 +22,17 @@ import (
 )
 
 func (x FCGIApps) Equal(y FCGIApps, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualFCGIApps(x, y, opts...)
+	return EqualSlicePointerFCGIApp(x, y, opts...)
 }
 
-func EqualFCGIApps(x, y FCGIApps, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerFCGIApp(x, y *FCGIApp, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerFCGIApp(x, y []*FCGIApp, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualFCGIApps(x, y FCGIApps, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerFCGIApp(x, y *FCGIApp, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

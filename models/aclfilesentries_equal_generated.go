@@ -22,10 +22,17 @@ import (
 )
 
 func (x ACLFilesEntries) Equal(y ACLFilesEntries, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualACLFilesEntries(x, y, opts...)
+	return EqualSlicePointerACLFileEntry(x, y, opts...)
 }
 
-func EqualACLFilesEntries(x, y ACLFilesEntries, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerACLFileEntry(x, y *ACLFileEntry, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerACLFileEntry(x, y []*ACLFileEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualACLFilesEntries(x, y ACLFilesEntries, opts ...eqdiff.GoMethodGenOption
 	}
 
 	return true
-}
-
-func EqualPointerACLFileEntry(x, y *ACLFileEntry, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

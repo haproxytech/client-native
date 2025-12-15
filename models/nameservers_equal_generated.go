@@ -22,10 +22,17 @@ import (
 )
 
 func (x Nameservers) Equal(y Nameservers, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualNameservers(x, y, opts...)
+	return EqualSlicePointerNameserver(x, y, opts...)
 }
 
-func EqualNameservers(x, y Nameservers, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerNameserver(x, y *Nameserver, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerNameserver(x, y []*Nameserver, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualNameservers(x, y Nameservers, opts ...eqdiff.GoMethodGenOptions) bool 
 	}
 
 	return true
-}
-
-func EqualPointerNameserver(x, y *Nameserver, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

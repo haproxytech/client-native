@@ -22,7 +22,7 @@ import (
 )
 
 func (x SslCaFiles) Equal(y SslCaFiles, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualSslCaFiles(x, y, opts...)
+	return EqualSlicePointerSslCaFile(x, y, opts...)
 }
 
 func EqualPointerSslCaFile(x, y *SslCaFile, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerSslCaFile(x, y *SslCaFile, opts ...eqdiff.GoMethodGenOptions) b
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualSslCaFiles(x, y SslCaFiles, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerSslCaFile(x, y []*SslCaFile, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

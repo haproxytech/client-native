@@ -24,7 +24,7 @@ import (
 )
 
 func (x TraceEntries) Diff(y TraceEntries, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffTraceEntries(x, y, opts...)
+	return DiffSlicePointerTraceEntry(x, y, opts...)
 }
 
 func DiffPointerTraceEntry(x, y *TraceEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerTraceEntry(x, y *TraceEntry, opts ...eqdiff.GoMethodGenOptions) 
 	return diff
 }
 
-func DiffTraceEntries(x, y TraceEntries, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerTraceEntry(x, y []*TraceEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

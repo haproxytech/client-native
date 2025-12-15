@@ -22,7 +22,7 @@ import (
 )
 
 func (x Sites) Equal(y Sites, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualSites(x, y, opts...)
+	return EqualSlicePointerSite(x, y, opts...)
 }
 
 func EqualPointerSite(x, y *Site, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerSite(x, y *Site, opts ...eqdiff.GoMethodGenOptions) bool {
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualSites(x, y Sites, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerSite(x, y []*Site, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

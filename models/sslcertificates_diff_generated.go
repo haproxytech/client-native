@@ -24,7 +24,7 @@ import (
 )
 
 func (x SslCertificates) Diff(y SslCertificates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSslCertificates(x, y, opts...)
+	return DiffSlicePointerSslCertificate(x, y, opts...)
 }
 
 func DiffPointerSslCertificate(x, y *SslCertificate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerSslCertificate(x, y *SslCertificate, opts ...eqdiff.GoMethodGenO
 	return diff
 }
 
-func DiffSslCertificates(x, y SslCertificates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerSslCertificate(x, y []*SslCertificate, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

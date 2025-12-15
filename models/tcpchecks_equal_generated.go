@@ -22,7 +22,7 @@ import (
 )
 
 func (x TCPChecks) Equal(y TCPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualTCPChecks(x, y, opts...)
+	return EqualSlicePointerTCPCheck(x, y, opts...)
 }
 
 func EqualPointerTCPCheck(x, y *TCPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerTCPCheck(x, y *TCPCheck, opts ...eqdiff.GoMethodGenOptions) boo
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualTCPChecks(x, y TCPChecks, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerTCPCheck(x, y []*TCPCheck, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

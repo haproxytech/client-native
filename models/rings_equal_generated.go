@@ -22,7 +22,7 @@ import (
 )
 
 func (x Rings) Equal(y Rings, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualRings(x, y, opts...)
+	return EqualSlicePointerRing(x, y, opts...)
 }
 
 func EqualPointerRing(x, y *Ring, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerRing(x, y *Ring, opts ...eqdiff.GoMethodGenOptions) bool {
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualRings(x, y Rings, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerRing(x, y []*Ring, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

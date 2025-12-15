@@ -24,7 +24,7 @@ import (
 )
 
 func (x Userlists) Diff(y Userlists, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffUserlists(x, y, opts...)
+	return DiffSlicePointerUserlist(x, y, opts...)
 }
 
 func DiffPointerUserlist(x, y *Userlist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerUserlist(x, y *Userlist, opts ...eqdiff.GoMethodGenOptions) map[
 	return diff
 }
 
-func DiffUserlists(x, y Userlists, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerUserlist(x, y []*Userlist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

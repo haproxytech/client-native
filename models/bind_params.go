@@ -258,7 +258,7 @@ type BindParams struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCafile string `json:"ssl_cafile,omitempty"`
 
-	// ssl certificate
+	// All of the certificates delimited by ':' as mentioned as a crt on the bind line.
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCertificate string `json:"ssl_certificate,omitempty"`

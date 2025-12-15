@@ -22,10 +22,17 @@ import (
 )
 
 func (x BackendSwitchingRules) Equal(y BackendSwitchingRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualBackendSwitchingRules(x, y, opts...)
+	return EqualSlicePointerBackendSwitchingRule(x, y, opts...)
 }
 
-func EqualBackendSwitchingRules(x, y BackendSwitchingRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerBackendSwitchingRule(x, y *BackendSwitchingRule, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerBackendSwitchingRule(x, y []*BackendSwitchingRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualBackendSwitchingRules(x, y BackendSwitchingRules, opts ...eqdiff.GoMet
 	}
 
 	return true
-}
-
-func EqualPointerBackendSwitchingRule(x, y *BackendSwitchingRule, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

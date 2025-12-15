@@ -22,10 +22,17 @@ import (
 )
 
 func (x AcmeProviders) Equal(y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualAcmeProviders(x, y, opts...)
+	return EqualSlicePointerAcmeProvider(x, y, opts...)
 }
 
-func EqualAcmeProviders(x, y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerAcmeProvider(x, y *AcmeProvider, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerAcmeProvider(x, y []*AcmeProvider, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualAcmeProviders(x, y AcmeProviders, opts ...eqdiff.GoMethodGenOptions) b
 	}
 
 	return true
-}
-
-func EqualPointerAcmeProvider(x, y *AcmeProvider, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

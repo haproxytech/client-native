@@ -22,10 +22,17 @@ import (
 )
 
 func (x DgramBinds) Equal(y DgramBinds, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualDgramBinds(x, y, opts...)
+	return EqualSlicePointerDgramBind(x, y, opts...)
 }
 
-func EqualDgramBinds(x, y DgramBinds, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerDgramBind(x, y *DgramBind, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerDgramBind(x, y []*DgramBind, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualDgramBinds(x, y DgramBinds, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerDgramBind(x, y *DgramBind, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

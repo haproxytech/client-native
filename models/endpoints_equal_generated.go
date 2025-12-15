@@ -22,10 +22,17 @@ import (
 )
 
 func (x Endpoints) Equal(y Endpoints, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualEndpoints(x, y, opts...)
+	return EqualSlicePointerEndpoint(x, y, opts...)
 }
 
-func EqualEndpoints(x, y Endpoints, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerEndpoint(x, y *Endpoint, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerEndpoint(x, y []*Endpoint, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualEndpoints(x, y Endpoints, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerEndpoint(x, y *Endpoint, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

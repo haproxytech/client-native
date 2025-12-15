@@ -1099,7 +1099,7 @@
                     "idle_ping": 10000,
                     "check-reuse-pool": "enabled",
                     "strict-maxconn": true,
-                    "tcp_md5sig" : "secretpass",
+                    "tcp_md5sig": "secretpass",
                     "sni_auto": "enabled",
                     "check_sni_auto": "enabled"
                 },
@@ -2939,6 +2939,13 @@
                     "quic-cc-algo": "nocc",
                     "quic_cc_algo_burst_size": 12,
                     "label": "quic3"
+                },
+                "ssl-test": {
+                    "name": "ssl-test",
+                    "ssl": true,
+                    "address": "192.168.1.1",
+                    "port": 443,
+                    "ssl_certificate": "dummy1.pem:dummy2.pem:dummy3.pem:dummy4.pem"
                 }
             },
             "ssl_front_use_list": [
@@ -3357,12 +3364,12 @@
             },
             "name": "test_defaults",
             "default_server": {
-              "fall": 2000,
-              "health_check_port": 8888,
-              "inter": 5000,
-              "rise": 4000,
-              "sni_auto": "enabled",
-              "check_sni_auto": "enabled"
+                "fall": 2000,
+                "health_check_port": 8888,
+                "inter": 5000,
+                "rise": 4000,
+                "sni_auto": "enabled",
+                "check_sni_auto": "enabled"
             }
         },
         "test_defaults_2": {

@@ -22,10 +22,17 @@ import (
 )
 
 func (x LogTargets) Equal(y LogTargets, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualLogTargets(x, y, opts...)
+	return EqualSlicePointerLogTarget(x, y, opts...)
 }
 
-func EqualLogTargets(x, y LogTargets, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerLogTarget(x, y *LogTarget, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerLogTarget(x, y []*LogTarget, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualLogTargets(x, y LogTargets, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerLogTarget(x, y *LogTarget, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

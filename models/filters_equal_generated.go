@@ -22,10 +22,17 @@ import (
 )
 
 func (x Filters) Equal(y Filters, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualFilters(x, y, opts...)
+	return EqualSlicePointerFilter(x, y, opts...)
 }
 
-func EqualFilters(x, y Filters, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerFilter(x, y *Filter, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerFilter(x, y []*Filter, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualFilters(x, y Filters, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerFilter(x, y *Filter, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

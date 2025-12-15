@@ -265,6 +265,7 @@ type ACL struct{}
 //test:ok:bind :443 idle-ping 10
 //test:ok:bind :443 ssl tls-tickets
 //test:ok:bind :443 ssl no-strict-sni
+//test:ok:bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem
 //test:fail:bind :443 idle-ping
 //test:fail:bind :443 user
 //test:fail:bind :443 user mode 600

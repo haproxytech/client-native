@@ -22,7 +22,7 @@ import (
 )
 
 func (x QUICInitialRules) Equal(y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualQUICInitialRules(x, y, opts...)
+	return EqualSlicePointerQUICInitialRule(x, y, opts...)
 }
 
 func EqualPointerQUICInitialRule(x, y *QUICInitialRule, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -32,7 +32,7 @@ func EqualPointerQUICInitialRule(x, y *QUICInitialRule, opts ...eqdiff.GoMethodG
 	return (*x).Equal(*y, opts...)
 }
 
-func EqualQUICInitialRules(x, y QUICInitialRules, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualSlicePointerQUICInitialRule(x, y []*QUICInitialRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

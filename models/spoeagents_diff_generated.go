@@ -24,7 +24,7 @@ import (
 )
 
 func (x SpoeAgents) Diff(y SpoeAgents, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSpoeAgents(x, y, opts...)
+	return DiffSlicePointerSpoeAgent(x, y, opts...)
 }
 
 func DiffPointerSpoeAgent(x, y *SpoeAgent, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
@@ -51,7 +51,7 @@ func DiffPointerSpoeAgent(x, y *SpoeAgent, opts ...eqdiff.GoMethodGenOptions) ma
 	return diff
 }
 
-func DiffSpoeAgents(x, y SpoeAgents, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSlicePointerSpoeAgent(x, y []*SpoeAgent, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

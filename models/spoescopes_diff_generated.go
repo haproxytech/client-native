@@ -24,10 +24,10 @@ import (
 )
 
 func (x SpoeScopes) Diff(y SpoeScopes, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffSpoeScopes(x, y, opts...)
+	return DiffSliceSpoeScope(x, y, opts...)
 }
 
-func DiffSpoeScopes(x, y SpoeScopes, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffSliceSpoeScope(x, y []SpoeScope, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]

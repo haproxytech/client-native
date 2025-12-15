@@ -22,10 +22,17 @@ import (
 )
 
 func (x Caches) Equal(y Caches, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualCaches(x, y, opts...)
+	return EqualSlicePointerCache(x, y, opts...)
 }
 
-func EqualCaches(x, y Caches, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerCache(x, y *Cache, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerCache(x, y []*Cache, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualCaches(x, y Caches, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerCache(x, y *Cache, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }

@@ -24,10 +24,34 @@ import (
 )
 
 func (x CrtStores) Diff(y CrtStores, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	return DiffCrtStores(x, y, opts...)
+	return DiffSlicePointerCrtStore(x, y, opts...)
 }
 
-func DiffCrtStores(x, y CrtStores, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+func DiffPointerCrtStore(x, y *CrtStore, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	key := "*CrtStore"
+
+	switch {
+	case x == nil:
+		diff[key] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[key] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		diff[key+"."+diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffSlicePointerCrtStore(x, y []*CrtStore, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -68,30 +92,6 @@ func DiffCrtStores(x, y CrtStores, opts ...eqdiff.GoMethodGenOptions) map[string
 	for i := lenX; i < lenY; i++ {
 		key := fmt.Sprintf("[%d]", i)
 		diff[key] = []interface{}{nil, y[i]}
-	}
-
-	return diff
-}
-
-func DiffPointerCrtStore(x, y *CrtStore, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if x == nil && y == nil {
-		return diff
-	}
-
-	key := "*CrtStore"
-
-	switch {
-	case x == nil:
-		diff[key] = []interface{}{x, *y}
-		return diff
-	case y == nil:
-		diff[key] = []interface{}{*x, y}
-		return diff
-	}
-
-	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
 	}
 
 	return diff

@@ -22,10 +22,17 @@ import (
 )
 
 func (x CrtStores) Equal(y CrtStores, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualCrtStores(x, y, opts...)
+	return EqualSlicePointerCrtStore(x, y, opts...)
 }
 
-func EqualCrtStores(x, y CrtStores, opts ...eqdiff.GoMethodGenOptions) bool {
+func EqualPointerCrtStore(x, y *CrtStore, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualSlicePointerCrtStore(x, y []*CrtStore, opts ...eqdiff.GoMethodGenOptions) bool {
 	var opt *eqdiff.GoMethodGenOptions
 	if len(opts) > 0 {
 		opt = &opts[0]
@@ -52,11 +59,4 @@ func EqualCrtStores(x, y CrtStores, opts ...eqdiff.GoMethodGenOptions) bool {
 	}
 
 	return true
-}
-
-func EqualPointerCrtStore(x, y *CrtStore, opts ...eqdiff.GoMethodGenOptions) bool {
-	if x == nil || y == nil {
-		return x == y
-	}
-	return (*x).Equal(*y, opts...)
 }
