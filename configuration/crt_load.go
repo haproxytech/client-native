@@ -22,6 +22,7 @@ import (
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -163,7 +164,7 @@ func SerializeCrtLoad(load *models.CrtLoad) *types.LoadCert {
 		Ocsp:        load.Ocsp,
 		Sctl:        load.Sctl,
 	}
-	comment, err := serializeMetadata(load.Metadata)
+	comment, err := misc.SerializeMetadata(load.Metadata)
 	if err == nil {
 		t.Comment = comment
 	}

@@ -21,6 +21,7 @@ import (
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -35,11 +36,9 @@ func (h *ACL) parse(line string, parts []string, comment string) (*models.ACL, e
 			ACLName:   parts[1],
 			Criterion: parts[2],
 			Value:     strings.Join(parts[3:], " "),
-			Metadata:  map[string]interface{}{},
 		}
 		if comment != "" {
-			data.Metadata = map[string]interface{}{}
-			data.Metadata["comment"] = comment
+			data.Metadata = misc.ParseMetadata(comment)
 		}
 		return data, nil
 	}
@@ -59,9 +58,14 @@ func (h *ACL) Result() ([]common.ReturnResultLine, error) {
 		sb.WriteString(req.Criterion)
 		sb.WriteString(" ")
 		sb.WriteString(req.Value)
+
+		comment, err := misc.SerializeMetadata(req.Metadata)
+		if err != nil {
+			comment = ""
+		}
 		result[index] = common.ReturnResultLine{
 			Data:    sb.String(),
-			Comment: common.ExtractComment(req.Metadata),
+			Comment: comment,
 		}
 	}
 	return result, nil

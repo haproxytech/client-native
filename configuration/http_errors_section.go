@@ -22,6 +22,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -164,7 +165,7 @@ func SerializeHTTPErrorsSection(p parser.Parser, data *models.HTTPErrorsSection)
 	}
 
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}
@@ -191,7 +192,7 @@ func ParseHTTPErrorsSection(p parser.Parser, name string) (*models.HTTPErrorsSec
 	if data, err := p.SectionGet(parser.HTTPErrors, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			section.Metadata = parseMetadata(d.Comment)
+			section.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 

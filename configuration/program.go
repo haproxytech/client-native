@@ -154,7 +154,7 @@ func SerializeProgramSection(p parser.Parser, data *models.Program) error {
 	}
 
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}
@@ -197,7 +197,7 @@ func ParseProgram(p parser.Parser, name string) (*models.Program, error) {
 	if data, err := p.SectionGet(parser.Program, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			program.Metadata = parseMetadata(d.Comment)
+			program.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 

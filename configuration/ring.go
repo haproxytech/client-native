@@ -94,7 +94,7 @@ func ParseRingSection(p parser.Parser, ring *models.Ring) error { //nolint:gocog
 	if data, err := p.SectionGet(parser.Ring, ring.Name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			ring.Metadata = parseMetadata(d.Comment)
+			ring.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 	description, err := p.Get(parser.Ring, ring.Name, "description", false)
@@ -252,7 +252,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring, opt *options.Confi
 		return errors.New("empty ring")
 	}
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}

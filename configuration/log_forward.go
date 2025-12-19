@@ -96,7 +96,7 @@ func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
 	if data, err := p.SectionGet(parser.LogForward, lf.Name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			lf.Metadata = parseMetadata(d.Comment)
+			lf.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 
@@ -232,7 +232,7 @@ func SerializeLogForwardSection(p parser.Parser, data *models.LogForward, opt *o
 
 	var err error
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}

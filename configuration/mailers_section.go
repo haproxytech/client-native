@@ -155,7 +155,7 @@ func ParseMailersSection(p parser.Parser, ms *models.MailersSection) error {
 	if data, err := p.SectionGet(parser.Mailers, ms.Name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			ms.Metadata = parseMetadata(d.Comment)
+			ms.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 	// Get the optional "timeout mail" attribute
@@ -183,7 +183,7 @@ func SerializeMailersSection(p parser.Parser, data *models.MailersSection, opt *
 		return errors.New("empty mailers section")
 	}
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}

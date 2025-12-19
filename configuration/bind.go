@@ -213,7 +213,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 			}
 		}
 	}
-	b.Metadata = parseMetadata(ondiskBind.Comment)
+	b.Metadata = misc.ParseMetadata(ondiskBind.Comment)
 	b.BindParams, b.Name = parseBindParams(ondiskBind.Params)
 	if b.Name == "" {
 		b.Name = ondiskBind.Path
@@ -453,7 +453,7 @@ func SerializeBind(b models.Bind, opt *options.ConfigurationOptions) types.Bind 
 	} else {
 		bind.Path = b.Address
 	}
-	comment, err := serializeMetadata(b.Metadata)
+	comment, err := misc.SerializeMetadata(b.Metadata)
 	if err == nil {
 		bind.Comment = comment
 	}

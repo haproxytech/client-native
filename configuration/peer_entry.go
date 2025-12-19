@@ -183,7 +183,7 @@ func ParsePeerEntry(p types.Peer) *models.PeerEntry {
 		Address:  &p.IP,
 		Port:     &p.Port,
 		Name:     p.Name,
-		Metadata: parseMetadata(p.Comment),
+		Metadata: misc.ParseMetadata(p.Comment),
 	}
 	if p.Shard != "" {
 		shard, err := strconv.ParseInt(p.Shard, 10, 64)
@@ -195,7 +195,7 @@ func ParsePeerEntry(p types.Peer) *models.PeerEntry {
 }
 
 func SerializePeerEntry(pe models.PeerEntry) types.Peer {
-	comment, err := serializeMetadata(pe.Metadata)
+	comment, err := misc.SerializeMetadata(pe.Metadata)
 	if err != nil {
 		comment = ""
 	}

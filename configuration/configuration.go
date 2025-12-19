@@ -420,7 +420,7 @@ func (s *SectionParser) metadata() any {
 	}
 
 	d := sectionData.(types.Section)
-	return parseMetadata(d.Comment)
+	return misc.ParseMetadata(d.Comment)
 }
 
 func (s *SectionParser) checkTimeouts(fieldName string) (bool, interface{}) {
@@ -1731,7 +1731,7 @@ func (s *SectionObject) metadata(field reflect.Value) error {
 		metadata[key] = valueVal
 	}
 
-	comment, err := serializeMetadata(metadata)
+	comment, err := misc.SerializeMetadata(metadata)
 	if err != nil {
 		return err
 	}

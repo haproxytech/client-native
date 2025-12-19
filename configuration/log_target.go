@@ -248,12 +248,12 @@ func ParseLogTarget(l types.Log) *models.LogTarget {
 		Profile:     l.Profile,
 		SampleRange: l.SampleRange,
 		SampleSize:  l.SampleSize,
-		Metadata:    parseMetadata(l.Comment),
+		Metadata:    misc.ParseMetadata(l.Comment),
 	}
 }
 
 func SerializeLogTarget(l models.LogTarget) types.Log {
-	comment, err := serializeMetadata(l.Metadata)
+	comment, err := misc.SerializeMetadata(l.Metadata)
 	if err != nil {
 		comment = ""
 	}

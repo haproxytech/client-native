@@ -263,13 +263,13 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 		return &models.TCPRequestRule{
 			Type:     models.TCPRequestRuleTypeInspectDashDelay,
 			Timeout:  misc.ParseTimeout(v.Timeout),
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}, nil
 
 	case *tcp_types.Connection:
 		rule = &models.TCPRequestRule{
 			Type:     models.TCPRequestRuleTypeConnection,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 
 		switch a := v.Action.(type) {
@@ -426,7 +426,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 	case *tcp_types.Content:
 		rule = &models.TCPRequestRule{
 			Type:     models.TCPRequestRuleTypeContent,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 
 		switch a := v.Action.(type) {
@@ -643,7 +643,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 	case *tcp_types.Session:
 		rule = &models.TCPRequestRule{
 			Type:     models.TCPRequestRuleTypeSession,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 		switch a := v.Action.(type) {
 		case *actions.Accept:
@@ -786,7 +786,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 }
 
 func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.ConfigurationOptions) (types.TCPType, error) { //nolint:gocyclo,cyclop,maintidx
-	comment, err := serializeMetadata(f.Metadata)
+	comment, err := misc.SerializeMetadata(f.Metadata)
 	if err != nil {
 		comment = ""
 	}

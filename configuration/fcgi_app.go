@@ -164,7 +164,7 @@ func ParseFCGIApp(p parser.Parser, name string) (*models.FCGIApp, error) {
 	if data, err := p.SectionGet(parser.FCGIApp, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			app.Metadata = parseMetadata(d.Comment)
+			app.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 
@@ -346,7 +346,7 @@ func SerializeFCGIAppSection(p parser.Parser, data *models.FCGIApp) error {
 	}
 
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}

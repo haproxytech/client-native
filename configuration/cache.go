@@ -177,7 +177,7 @@ func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
 	if data, err := p.SectionGet(parser.Cache, name); err == nil {
 		d, ok := data.(*types.Section)
 		if ok && d != nil {
-			cache.Metadata = parseMetadata(d.Comment)
+			cache.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 
@@ -222,7 +222,7 @@ func SerializeCacheSection(p parser.Parser, data *models.Cache) error {
 	var err error
 
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}

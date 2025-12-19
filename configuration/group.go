@@ -24,6 +24,7 @@ import (
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -165,7 +166,7 @@ func ParseGroup(u types.Group) *models.Group {
 	return &models.Group{
 		Name:     u.Name,
 		Users:    strings.Join(u.Users, ","),
-		Metadata: parseMetadata(u.Comment),
+		Metadata: misc.ParseMetadata(u.Comment),
 	}
 }
 
@@ -175,7 +176,7 @@ func SerializeGroup(u models.Group) types.Group {
 		users = strings.Split(u.Users, ",")
 	}
 
-	comment, err := serializeMetadata(u.Metadata)
+	comment, err := misc.SerializeMetadata(u.Metadata)
 	if err != nil {
 		comment = ""
 	}

@@ -258,7 +258,7 @@ func ParseFilter(f types.Filter) *models.Filter {
 		filter := &models.Filter{
 			BandwidthLimitName: v.Name,
 			Type:               v.Attribute,
-			Metadata:           parseMetadata(v.Comment),
+			Metadata:           misc.ParseMetadata(v.Comment),
 		}
 		if len(v.Limit) > 0 && len(v.Key) > 0 {
 			filter.Key = v.Key
@@ -291,7 +291,7 @@ func ParseFilter(f types.Filter) *models.Filter {
 		return &models.Filter{
 			Type:     FCGIAppParentName,
 			AppName:  v.Name,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *filters.Trace:
 		return &models.Filter{
@@ -300,32 +300,32 @@ func ParseFilter(f types.Filter) *models.Filter {
 			TraceHexdump:       v.Hexdump,
 			TraceRndForwarding: v.RandomForwarding,
 			TraceRndParsing:    v.RandomParsing,
-			Metadata:           parseMetadata(v.Comment),
+			Metadata:           misc.ParseMetadata(v.Comment),
 		}
 	case *filters.Compression:
 		return &models.Filter{
 			Type:     "compression",
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *filters.Spoe:
 		return &models.Filter{
 			Type:       "spoe",
 			SpoeConfig: v.Config,
 			SpoeEngine: v.Engine,
-			Metadata:   parseMetadata(v.Comment),
+			Metadata:   misc.ParseMetadata(v.Comment),
 		}
 	case *filters.Cache:
 		return &models.Filter{
 			Type:      "cache",
 			CacheName: v.Name,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	}
 	return nil
 }
 
 func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.Filter {
-	comment, err := serializeMetadata(f.Metadata)
+	comment, err := misc.SerializeMetadata(f.Metadata)
 	if err != nil {
 		comment = ""
 	}

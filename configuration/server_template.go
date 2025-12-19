@@ -185,14 +185,14 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 		NumOrRange: ondiskServerTemplate.NumOrRange,
 		Fqdn:       ondiskServerTemplate.Fqdn,
 		Port:       &ondiskServerTemplate.Port,
-		Metadata:   parseMetadata(ondiskServerTemplate.Comment),
+		Metadata:   misc.ParseMetadata(ondiskServerTemplate.Comment),
 	}
 	parseServerParams(ondiskServerTemplate.Params, &template.ServerParams)
 	return template
 }
 
 func SerializeServerTemplate(s models.ServerTemplate, opt *options.ConfigurationOptions) types.ServerTemplate {
-	comment, err := serializeMetadata(s.Metadata)
+	comment, err := misc.SerializeMetadata(s.Metadata)
 	if err != nil {
 		comment = ""
 	}

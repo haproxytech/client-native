@@ -23,6 +23,7 @@ import (
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -187,12 +188,12 @@ func ParseDeclareCapture(f types.DeclareCapture) *models.Capture {
 	return &models.Capture{
 		Type:     f.Type,
 		Length:   f.Length,
-		Metadata: parseMetadata(f.Comment),
+		Metadata: misc.ParseMetadata(f.Comment),
 	}
 }
 
 func SerializeDeclareCapture(f models.Capture) types.DeclareCapture {
-	comment, err := serializeMetadata(f.Metadata)
+	comment, err := misc.SerializeMetadata(f.Metadata)
 	if err != nil {
 		comment = ""
 	}

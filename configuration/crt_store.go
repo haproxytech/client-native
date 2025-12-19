@@ -152,7 +152,7 @@ func ParseCrtStore(p parser.Parser, name string) (*models.CrtStore, error) {
 	if data, err := p.SectionGet(parser.CrtStore, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			store.Metadata = parseMetadata(d.Comment)
+			store.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 
@@ -211,7 +211,7 @@ func ParseCrtStore(p parser.Parser, name string) (*models.CrtStore, error) {
 			Key:         l.Key,
 			Ocsp:        l.Ocsp,
 			Sctl:        l.Sctl,
-			Metadata:    parseMetadata(l.Comment),
+			Metadata:    misc.ParseMetadata(l.Comment),
 		}
 		if l.OcspUpdate != nil {
 			if *l.OcspUpdate {
@@ -232,7 +232,7 @@ func SerializeCrtStore(p parser.Parser, store *models.CrtStore) error {
 	}
 
 	if store.Metadata != nil {
-		comment, err := serializeMetadata(store.Metadata)
+		comment, err := misc.SerializeMetadata(store.Metadata)
 		if err != nil {
 			return err
 		}

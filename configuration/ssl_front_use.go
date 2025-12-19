@@ -22,6 +22,7 @@ import (
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/params"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -215,13 +216,13 @@ func ParseSSLFrontUse(ondisk types.SSLFrontUse) *models.SSLFrontUse {
 		}
 	}
 
-	u.Metadata = parseMetadata(ondisk.Comment)
+	u.Metadata = misc.ParseMetadata(ondisk.Comment)
 	return &u
 }
 
 func SerializeSSLFrontUse(m models.SSLFrontUse) types.SSLFrontUse {
 	u := types.SSLFrontUse{}
-	comment, err := serializeMetadata(m.Metadata)
+	comment, err := misc.SerializeMetadata(m.Metadata)
 	if err != nil {
 		comment = ""
 	}

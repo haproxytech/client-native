@@ -258,35 +258,35 @@ func ParseQUICInitialRule(f types.Action) (*models.QUICInitialRule, error) {
 			Type:     "accept",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}, nil
 	case *actions.Reject:
 		return &models.QUICInitialRule{
 			Type:     "reject",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}, nil
 	case *quic_actions.DgramDrop:
 		return &models.QUICInitialRule{
 			Type:     "dgram-drop",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}, nil
 	case *quic_actions.SendRetry:
 		return &models.QUICInitialRule{
 			Type:     "send-retry",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}, nil
 	}
 	return nil, nil //nolint:nilnil
 }
 
 func SerializeQUICInitialRule(f models.QUICInitialRule) (types.Action, error) {
-	comment, err := serializeMetadata(f.Metadata)
+	comment, err := misc.SerializeMetadata(f.Metadata)
 	if err != nil {
 		return nil, err
 	}

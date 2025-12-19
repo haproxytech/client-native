@@ -287,7 +287,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 		check = &models.HTTPCheck{
 			Type:         models.HTTPCheckTypeComment,
 			CheckComment: v.LogMessage,
-			Metadata:     parseMetadata(v.Comment),
+			Metadata:     misc.ParseMetadata(v.Comment),
 		}
 	case *actions.CheckConnect:
 		check = &models.HTTPCheck{
@@ -302,7 +302,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			ViaSocks4:    v.ViaSOCKS4,
 			Ssl:          v.SSL,
 			Linger:       v.Linger,
-			Metadata:     parseMetadata(v.Comment),
+			Metadata:     misc.ParseMetadata(v.Comment),
 		}
 		if v.Port != "" {
 			portInt, err := strconv.ParseInt(v.Port, 10, 64)
@@ -325,7 +325,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			ExclamationMark: v.ExclamationMark,
 			Match:           v.Match,
 			Pattern:         v.Pattern,
-			Metadata:        parseMetadata(v.Comment),
+			Metadata:        misc.ParseMetadata(v.Comment),
 		}
 		if v.MinRecv != nil {
 			check.MinRecv = v.MinRecv
@@ -333,7 +333,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 	case *http_actions.CheckDisableOn404:
 		check = &models.HTTPCheck{
 			Type:     models.HTTPCheckTypeDisableDashOnDash404,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.CheckSend:
 		check = &models.HTTPCheck{
@@ -345,7 +345,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			Body:          v.Body,
 			BodyLogFormat: v.BodyLogFormat,
 			CheckComment:  v.CheckComment,
-			Metadata:      parseMetadata(v.Comment),
+			Metadata:      misc.ParseMetadata(v.Comment),
 		}
 		headers := []*models.ReturnHeader{}
 		for _, h := range v.Header {
@@ -361,7 +361,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 	case *http_actions.CheckSendState:
 		check = &models.HTTPCheck{
 			Type:     models.HTTPCheckTypeSendDashState,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetVarCheck:
 		check = &models.HTTPCheck{
@@ -369,7 +369,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetVarFmtCheck:
 		check = &models.HTTPCheck{
@@ -377,14 +377,14 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Format.Expr, " "),
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.UnsetVarCheck:
 		check = &models.HTTPCheck{
 			Type:     models.HTTPCheckTypeUnsetDashVar,
 			VarScope: v.Scope,
 			VarName:  v.Name,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	}
 
@@ -392,7 +392,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 }
 
 func SerializeHTTPCheck(f models.HTTPCheck) (types.Action, error) { //nolint:ireturn
-	comment, err := serializeMetadata(f.Metadata)
+	comment, err := misc.SerializeMetadata(f.Metadata)
 	if err != nil {
 		comment = ""
 	}

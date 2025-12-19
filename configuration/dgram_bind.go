@@ -26,6 +26,7 @@ import (
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/params"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -245,7 +246,7 @@ func ParseDgramBind(ondiskDgramBind types.DgramBind) *models.DgramBind {
 	if b.Name == "" {
 		b.Name = ondiskDgramBind.Path
 	}
-	b.Metadata = parseMetadata(ondiskDgramBind.Comment)
+	b.Metadata = misc.ParseMetadata(ondiskDgramBind.Comment)
 	return b
 }
 
@@ -281,7 +282,7 @@ func SerializeDgramBind(b models.DgramBind) types.DgramBind {
 		dBind.Params = append(dBind.Params, &params.BindOptionValue{Name: "namespace", Value: b.Namespace})
 	}
 
-	comment, err := serializeMetadata(b.Metadata)
+	comment, err := misc.SerializeMetadata(b.Metadata)
 	if err == nil {
 		dBind.Comment = comment
 	}

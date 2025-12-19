@@ -261,7 +261,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ACLKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.AddHeader:
 		return &models.HTTPResponseRule{
@@ -270,14 +270,14 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.Allow:
 		return &models.HTTPResponseRule{
 			Type:     "allow",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.CacheStore:
 		return &models.HTTPResponseRule{
@@ -285,7 +285,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			CacheName: v.Name,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.Capture:
 		return &models.HTTPResponseRule{
@@ -294,7 +294,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Cond:          v.Cond,
 			CondTest:      v.CondTest,
 			CaptureID:     v.SlotID,
-			Metadata:      parseMetadata(v.Comment),
+			Metadata:      misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.DelACL:
 		return &models.HTTPResponseRule{
@@ -303,7 +303,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ACLKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.DelHeader:
 		return &models.HTTPResponseRule{
@@ -312,7 +312,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 			HdrMethod: v.Method,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.DelMap:
 		return &models.HTTPResponseRule{
@@ -321,7 +321,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			MapKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.Deny:
 		return &models.HTTPResponseRule{
@@ -333,7 +333,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ReturnContentFormat: v.ContentFormat,
 			ReturnContentType:   &v.ContentType,
 			DenyStatus:          v.Status,
-			Metadata:            parseMetadata(v.Comment),
+			Metadata:            misc.ParseMetadata(v.Comment),
 		}
 	case *actions.Lua:
 		return &models.HTTPResponseRule{
@@ -342,7 +342,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			LuaParams: v.Params,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.Pause:
 		return &models.HTTPResponseRule{
@@ -350,7 +350,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Expr:     v.Pause.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.Redirect:
 		var codePtr *int64
@@ -365,7 +365,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 			RedirCode:   codePtr,
-			Metadata:    parseMetadata(v.Comment),
+			Metadata:    misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.ReplaceHeader:
 		return &models.HTTPResponseRule{
@@ -375,7 +375,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			HdrMatch:  v.MatchRegex,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.ReplaceValue:
 		return &models.HTTPResponseRule{
@@ -385,7 +385,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			HdrMatch:  v.MatchRegex,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.Return:
 		return &models.HTTPResponseRule{
@@ -397,7 +397,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ReturnContentFormat: v.ContentFormat,
 			ReturnContentType:   &v.ContentType,
 			ReturnStatusCode:    v.Status,
-			Metadata:            parseMetadata(v.Comment),
+			Metadata:            misc.ParseMetadata(v.Comment),
 		}
 	case *actions.ScAddGpc:
 		if (v.Int == nil && len(v.Expr.Expr) == 0) || (v.Int != nil && len(v.Expr.Expr) > 0) {
@@ -413,7 +413,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.ScIncGpc:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -424,7 +424,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ScIdx:    Idx,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.ScIncGpc0:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -433,7 +433,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ScID:     ID,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.ScIncGpc1:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -442,7 +442,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ScID:     ID,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.ScSetGpt:
 		if (v.Int == nil && len(v.Expr.Expr) == 0) || (v.Int != nil && len(v.Expr.Expr) > 0) {
@@ -460,7 +460,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.ScSetGpt0:
 		if (v.Int == nil && len(v.Expr.Expr) == 0) || (v.Int != nil && len(v.Expr.Expr) > 0) {
@@ -474,7 +474,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SendSpoeGroup:
 		return &models.HTTPResponseRule{
@@ -483,7 +483,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			SpoeGroup:  v.Group,
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
-			Metadata:   parseMetadata(v.Comment),
+			Metadata:   misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.SetHeader:
 		return &models.HTTPResponseRule{
@@ -492,7 +492,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetLogLevel:
 		return &models.HTTPResponseRule{
@@ -500,7 +500,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			LogLevel: v.Level,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.SetMap:
 		return &models.HTTPResponseRule{
@@ -510,7 +510,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			MapValuefmt: v.ValueFmt,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
-			Metadata:    parseMetadata(v.Comment),
+			Metadata:    misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetMark:
 		return &models.HTTPResponseRule{
@@ -518,7 +518,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			MarkValue: v.Value,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetNice:
 		nice, _ := strconv.ParseInt(v.Value, 10, 64)
@@ -527,7 +527,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			NiceValue: nice,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.SetStatus:
 		status, _ := strconv.ParseInt(v.Status, 10, 64)
@@ -536,7 +536,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			StatusReason: v.Reason,
 			Cond:         v.Cond,
 			CondTest:     v.CondTest,
-			Metadata:     parseMetadata(v.Comment),
+			Metadata:     misc.ParseMetadata(v.Comment),
 		}
 		if status != 0 {
 			r.Status = status
@@ -549,7 +549,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			TimeoutType: v.Type,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
-			Metadata:    parseMetadata(v.Comment),
+			Metadata:    misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetTos:
 		return &models.HTTPResponseRule{
@@ -557,7 +557,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			TosValue: v.Value,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetVar:
 		return &models.HTTPResponseRule{
@@ -567,7 +567,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			VarScope: v.VarScope,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetVarFmt:
 		return &models.HTTPResponseRule{
@@ -577,7 +577,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			VarScope:  v.VarScope,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
-			Metadata:  parseMetadata(v.Comment),
+			Metadata:  misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SilentDrop:
 		return &models.HTTPResponseRule{
@@ -585,7 +585,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Type:     "silent-drop",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.StrictMode:
 		return &models.HTTPResponseRule{
@@ -593,7 +593,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			StrictMode: v.Mode,
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
-			Metadata:   parseMetadata(v.Comment),
+			Metadata:   misc.ParseMetadata(v.Comment),
 		}
 	case *actions.TrackSc:
 		return &models.HTTPResponseRule{
@@ -603,7 +603,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Cond:                v.Cond,
 			CondTest:            v.CondTest,
 			TrackScStickCounter: &v.StickCounter,
-			Metadata:            parseMetadata(v.Comment),
+			Metadata:            misc.ParseMetadata(v.Comment),
 		}
 	case *actions.UnsetVar:
 		return &models.HTTPResponseRule{
@@ -612,7 +612,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			VarScope: v.Scope,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.WaitForBody:
 		return &models.HTTPResponseRule{
@@ -621,7 +621,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			WaitAtLeast: misc.ParseSize(v.AtLeast),
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
-			Metadata:    parseMetadata(v.Comment),
+			Metadata:    misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetBandwidthLimit:
 		return &models.HTTPResponseRule{
@@ -631,7 +631,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			BandwidthLimitPeriod: v.Period.String(),
 			Cond:                 v.Cond,
 			CondTest:             v.CondTest,
-			Metadata:             parseMetadata(v.Comment),
+			Metadata:             misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetFcMark:
 		return &models.HTTPResponseRule{
@@ -639,7 +639,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.SetFcTos:
 		return &models.HTTPResponseRule{
@@ -647,21 +647,21 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	case *actions.DoLog:
 		return &models.HTTPResponseRule{
 			Type:     models.HTTPResponseRuleTypeDoDashLog,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
-			Metadata: parseMetadata(v.Comment),
+			Metadata: misc.ParseMetadata(v.Comment),
 		}
 	}
 	return nil
 }
 
 func SerializeHTTPResponseRule(f models.HTTPResponseRule, opt *options.ConfigurationOptions) (types.Action, error) { //nolint:gocyclo,ireturn,cyclop,maintidx,gocognit
-	comment, err := serializeMetadata(f.Metadata)
+	comment, err := misc.SerializeMetadata(f.Metadata)
 	if err != nil {
 		return nil, err
 	}

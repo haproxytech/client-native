@@ -179,7 +179,7 @@ func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //
 	if data, err = p.SectionGet(parser.Resolvers, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			resolver.Metadata = parseMetadata(d.Comment)
+			resolver.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 	if data, err = p.Get(parser.Resolvers, name, "accepted_payload_size", false); err == nil {
@@ -288,7 +288,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver, opt *optio
 	var err error
 
 	if data.Metadata != nil {
-		comment, err := serializeMetadata(data.Metadata)
+		comment, err := misc.SerializeMetadata(data.Metadata)
 		if err != nil {
 			return err
 		}

@@ -118,6 +118,13 @@ func parseUserlistsSections(p parser.Parser) (models.Userlists, error) {
 }
 
 func parseUserlistsSection(name string, p parser.Parser) (*models.Userlist, error) {
+	u := &models.Userlist{
+		UserlistBase: models.UserlistBase{Name: name},
+	}
+	if err := ParseUserlistSection(p, u); err != nil {
+		return nil, err
+	}
+
 	userlist, err := ParseUsers(name, p)
 	if err != nil {
 		return nil, err
@@ -126,10 +133,7 @@ func parseUserlistsSection(name string, p parser.Parser) (*models.Userlist, erro
 	if errula != nil {
 		return nil, errula
 	}
-	u := &models.Userlist{
-		Users:        userlista,
-		UserlistBase: models.UserlistBase{Name: name},
-	}
+	u.Users = userlista
 
 	// groups
 	groups, err := ParseGroups(name, p)
@@ -153,6 +157,10 @@ func serializeUserlistSection(a StructuredToParserArgs, u *models.Userlist) erro
 	if err != nil {
 		return err
 	}
+	if err = SerializeUserlistSection(p, u, a.Options); err != nil {
+		return err
+	}
+
 	for _, user := range u.Users {
 		if err = p.Insert(parser.UserList, u.Name, "user", SerializeUser(user), -1); err != nil {
 			return a.HandleError(user.Username, "userlist", u.Name, a.TID, a.TID == "", err)

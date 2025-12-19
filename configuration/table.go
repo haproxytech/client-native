@@ -182,7 +182,7 @@ func ParseTable(t types.Table) *models.Table {
 		Name:     t.Name,
 		Type:     t.Type,
 		Size:     t.Size,
-		Metadata: parseMetadata(t.Comment),
+		Metadata: misc.ParseMetadata(t.Comment),
 	}
 	if t.Expire != "" {
 		table.Expire = &t.Expire
@@ -210,7 +210,7 @@ func ParseTable(t types.Table) *models.Table {
 }
 
 func SerializeTable(t models.Table) types.Table {
-	comment, err := serializeMetadata(t.Metadata)
+	comment, err := misc.SerializeMetadata(t.Metadata)
 	if err != nil {
 		comment = ""
 	}

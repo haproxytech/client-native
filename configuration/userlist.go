@@ -20,7 +20,10 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/configuration/options"
+	"github.com/haproxytech/client-native/v6/misc"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -53,7 +56,7 @@ func (c *client) GetUserLists(transactionID string) (int64, models.Userlists, er
 		if data, err := p.SectionGet(parser.Traces, parser.TracesSectionName); err == nil {
 			d, ok := data.(types.Section)
 			if ok {
-				userlist.Metadata = parseMetadata(d.Comment)
+				userlist.Metadata = misc.ParseMetadata(d.Comment)
 			}
 		}
 		userlists = append(userlists, userlist)
@@ -76,12 +79,8 @@ func (c *client) GetUserList(name string, transactionID string) (int64, *models.
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("userlist %s does not exist", name))
 	}
 	userlist := &models.Userlist{UserlistBase: models.UserlistBase{Name: name}}
-
-	if data, err := p.SectionGet(parser.Traces, parser.TracesSectionName); err == nil {
-		d, ok := data.(types.Section)
-		if ok {
-			userlist.Metadata = parseMetadata(d.Comment)
-		}
+	if err = ParseUserlistSection(p, userlist); err != nil {
+		return 0, nil, err
 	}
 	return v, userlist, nil
 }
@@ -101,5 +100,51 @@ func (c *client) CreateUserList(data *models.Userlist, transactionID string, ver
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.createSection(parser.UserList, data.Name, &data.UserlistBase, transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	if p.SectionExists(parser.UserList, data.Name) {
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.UserList, data.Name))
+		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
+	}
+
+	if err = p.SectionsCreate(parser.UserList, data.Name); err != nil {
+		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
+	}
+
+	if err = SerializeUserlistSection(p, data, &c.ConfigurationOptions); err != nil {
+		return err
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
+func ParseUserlistSection(p parser.Parser, userlist *models.Userlist) error {
+	var err error
+	var data common.ParserData
+	name := userlist.Name
+
+	if data, err = p.SectionGet(parser.UserList, name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			userlist.Metadata = misc.ParseMetadata(d.Comment)
+		}
+	}
+
+	return nil
+}
+
+func SerializeUserlistSection(p parser.Parser, data *models.Userlist, _ *options.ConfigurationOptions) error {
+	if data.Metadata != nil {
+		comment, err := misc.SerializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.Resolvers, data.Name, comment); err != nil {
+			return err
+		}
+	}
+	return nil
 }

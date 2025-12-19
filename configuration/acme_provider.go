@@ -157,7 +157,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 	if data, err := p.SectionGet(parser.Acme, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			acme.Metadata = parseMetadata(d.Comment)
+			acme.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 
@@ -219,7 +219,7 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 	}
 
 	if acme.Metadata != nil {
-		comment, err := serializeMetadata(acme.Metadata)
+		comment, err := misc.SerializeMetadata(acme.Metadata)
 		if err != nil {
 			return err
 		}

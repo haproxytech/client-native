@@ -170,7 +170,7 @@ func ParseUser(u types.User) *models.User {
 		Password:       u.Password,
 		SecurePassword: &securePassword,
 		Groups:         strings.Join(u.Groups, ","),
-		Metadata:       parseMetadata(u.Comment),
+		Metadata:       misc.ParseMetadata(u.Comment),
 	}
 }
 
@@ -183,7 +183,7 @@ func SerializeUser(u models.User) types.User {
 	if u.Groups != "" {
 		groups = strings.Split(u.Groups, ",")
 	}
-	comment, _ := serializeMetadata(u.Metadata)
+	comment, _ := misc.SerializeMetadata(u.Metadata)
 	return types.User{
 		Name:       u.Username,
 		Password:   u.Password,

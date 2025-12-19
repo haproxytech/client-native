@@ -455,7 +455,7 @@ frontend test
   option idle-close-on-response
   option http-restrict-req-hdr-names delete
   option http-drop-response-trailers
-  acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
+  acl invalid_src  src          0.0.0.0/7 224.0.0.0/3 # {"comment": "test"}
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost
   acl waf_wafTest_drop var(txn.wafTest.drop),bool
@@ -1091,7 +1091,7 @@ backend test_2 from test_defaults_2 # {"comment": "my comment"}
   email-alert myhostname prod01
   email-alert mailers localmailer1
 
-userlist first
+userlist first # {"comment": "my comment"}
 	group G1 users tiger,scott
 	group G2 users scott
 	user tiger password $6$k6y3o.eP$JlKBx9za9667qe4xHSwRv6J.C0/D7cV91

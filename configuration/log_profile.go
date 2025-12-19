@@ -152,7 +152,7 @@ func ParseLogProfile(p parser.Parser, name string) (*models.LogProfile, error) {
 	if data, err := p.SectionGet(parser.LogProfile, name); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			lp.Metadata = parseMetadata(d.Comment)
+			lp.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 	// get optional log-tag
@@ -190,7 +190,7 @@ func ParseLogProfile(p parser.Parser, name string) (*models.LogProfile, error) {
 			Drop:     models.LogProfileStepDropDisabled,
 			Format:   strings.Trim(s.Format, `"`),
 			Sd:       strings.Trim(s.Sd, `"`),
-			Metadata: parseMetadata(s.Comment),
+			Metadata: misc.ParseMetadata(s.Comment),
 		}
 		if s.Drop {
 			step.Drop = models.LogProfileStepDropEnabled
@@ -208,7 +208,7 @@ func SerializeLogProfile(p parser.Parser, lp *models.LogProfile) error {
 		return fmt.Errorf("empty %s section", LogProfileParentName)
 	}
 	if lp.Metadata != nil {
-		comment, err := serializeMetadata(lp.Metadata)
+		comment, err := misc.SerializeMetadata(lp.Metadata)
 		if err != nil {
 			return err
 		}
@@ -243,7 +243,7 @@ func SerializeLogProfileStep(step *models.LogProfileStep) *types.OnLogStep {
 		return s
 	}
 
-	comment, err := serializeMetadata(step.Metadata)
+	comment, err := misc.SerializeMetadata(step.Metadata)
 	if err != nil {
 		comment = ""
 	}

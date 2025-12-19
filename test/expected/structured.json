@@ -1622,7 +1622,10 @@
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src",
-                    "value": "0.0.0.0/7 224.0.0.0/3"
+                    "value": "0.0.0.0/7 224.0.0.0/3",
+                    "metadata": {
+                        "comment": "test"
+                    }
                 },
                 {
                     "acl_name": "invalid_src",
@@ -3679,6 +3682,9 @@
     "userlists": {
         "first": {
             "name": "first",
+            "metadata": {
+                "comment": "my comment"
+            },
             "groups": {
                 "G1": {
                     "name": "G1",

@@ -199,7 +199,7 @@ func ParseTraces(p parser.Parser) (*models.Traces, error) {
 	if data, err := p.SectionGet(parser.Traces, parser.TracesSectionName); err == nil {
 		d, ok := data.(types.Section)
 		if ok {
-			traces.Metadata = parseMetadata(d.Comment)
+			traces.Metadata = misc.ParseMetadata(d.Comment)
 		}
 	}
 
@@ -221,7 +221,7 @@ func ParseTraces(p parser.Parser) (*models.Traces, error) {
 
 	traces.Entries = make(models.TraceEntries, len(entries))
 	for i, t := range entries {
-		traces.Entries[i] = &models.TraceEntry{Trace: strings.Join(t.Params, " "), Metadata: parseMetadata(t.Comment)}
+		traces.Entries[i] = &models.TraceEntry{Trace: strings.Join(t.Params, " "), Metadata: misc.ParseMetadata(t.Comment)}
 	}
 
 	return traces, nil
@@ -233,7 +233,7 @@ func SerializeTraces(p parser.Parser, traces *models.Traces) error {
 	}
 
 	if traces.Metadata != nil {
-		comment, err := serializeMetadata(traces.Metadata)
+		comment, err := misc.SerializeMetadata(traces.Metadata)
 		if err != nil {
 			return err
 		}
@@ -256,7 +256,7 @@ func convertTraceEntry(entry *models.TraceEntry) types.Trace {
 	result := types.Trace{}
 	if entry != nil {
 		result.Params = common.StringSplitIgnoreEmpty(entry.Trace, ' ', '	')
-		result.Comment, _ = serializeMetadata(entry.Metadata)
+		result.Comment, _ = misc.SerializeMetadata(entry.Metadata)
 	}
 	return result
 }
