@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
@@ -161,7 +162,13 @@ func serializeUserlistSection(a StructuredToParserArgs, u *models.Userlist) erro
 		return err
 	}
 
-	for _, user := range u.Users {
+	userNames := make([]string, 0, len(u.Users))
+	for name := range u.Users {
+		userNames = append(userNames, name)
+	}
+	sort.Strings(userNames)
+	for _, username := range userNames {
+		user := u.Users[username]
 		if err = p.Insert(parser.UserList, u.Name, "user", SerializeUser(user), -1); err != nil {
 			return a.HandleError(user.Username, "userlist", u.Name, a.TID, a.TID == "", err)
 		}
