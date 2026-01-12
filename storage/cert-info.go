@@ -120,7 +120,9 @@ func (ci *certsInfo) parseCertificate(der []byte) error {
 	ci.Issuers[crt.Issuer.CommonName] = struct{}{}
 
 	if !crt.IsCA {
-		ci.DNS[crt.Subject.CommonName] = struct{}{}
+		if crt.Subject.CommonName != "" {
+			ci.DNS[crt.Subject.CommonName] = struct{}{}
+		}
 		// Alternate Subject Names
 		for _, name := range crt.DNSNames {
 			ci.DNS[name] = struct{}{}
@@ -160,7 +162,7 @@ func findLeafCertificate(certs []*x509.Certificate) (*x509.Certificate, error) {
 
 	// Find the starting certificate (a certificate whose issuer is not in the list)
 	for _, cert := range certs {
-		if !cert.IsCA && (cert.Subject.CommonName != "" || len(cert.DNSNames) != 0) && !isIssuer[cert.Subject.String()] {
+		if !cert.IsCA && (cert.Subject.CommonName != "" || len(cert.DNSNames) != 0 || len(cert.IPAddresses) != 0) && !isIssuer[cert.Subject.String()] {
 			return cert, nil
 		}
 	}
