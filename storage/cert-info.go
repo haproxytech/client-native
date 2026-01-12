@@ -81,7 +81,9 @@ func (ci *certsInfo) parseCertificate(der []byte) error {
 	ci.Issuers[crt.Issuer.CommonName] = struct{}{}
 
 	if !crt.IsCA {
-		ci.DNS[crt.Subject.CommonName] = struct{}{}
+		if crt.Subject.CommonName != "" {
+			ci.DNS[crt.Subject.CommonName] = struct{}{}
+		}
 		// Alternate Subject Names
 		for _, name := range crt.DNSNames {
 			ci.DNS[name] = struct{}{}
