@@ -73,6 +73,9 @@ type ServerParams struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	Backup string `json:"backup,omitempty"`
 
+	// cc
+	Cc string `json:"cc,omitempty"`
+
 	// check
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;

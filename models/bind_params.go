@@ -65,6 +65,9 @@ type BindParams struct {
 	// ca verify file
 	CaVerifyFile string `json:"ca_verify_file,omitempty"`
 
+	// cc
+	Cc string `json:"cc,omitempty"`
+
 	// ciphers
 	Ciphers string `json:"ciphers,omitempty"`
 

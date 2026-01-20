@@ -683,7 +683,6 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	if s.Tlsv11 == "disabled" || s.ForceTlsv11 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
 	}
-
 	if s.Tlsv12 == "enabled" || s.ForceTlsv12 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
 	}

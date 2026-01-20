@@ -265,6 +265,9 @@ definitions:
         x-dependency:
           ca_file:
             value: true
+      cc:
+        type: string
+        x-display-name: TCP Congestion Control Algorithm
       ciphers:
         type: string
         x-dependency:
@@ -666,6 +669,9 @@ definitions:
           - enabled
           - disabled
         type: string
+      cc:
+        type: string
+        x-display-name: TCP Congestion Control Algorithm
       check:
         enum:
           - enabled

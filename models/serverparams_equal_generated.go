@@ -30,6 +30,7 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		rec.Allow0rtt == obj.Allow0rtt &&
 		rec.Alpn == obj.Alpn &&
 		rec.Backup == obj.Backup &&
+		rec.Cc == obj.Cc &&
 		rec.Check == obj.Check &&
 		rec.CheckPoolConnName == obj.CheckPoolConnName &&
 		rec.CheckReusePool == obj.CheckReusePool &&

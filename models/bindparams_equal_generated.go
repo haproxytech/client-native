@@ -31,6 +31,7 @@ func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) b
 		rec.CaSignFile == obj.CaSignFile &&
 		rec.CaSignPass == obj.CaSignPass &&
 		rec.CaVerifyFile == obj.CaVerifyFile &&
+		rec.Cc == obj.Cc &&
 		rec.Ciphers == obj.Ciphers &&
 		rec.Ciphersuites == obj.Ciphersuites &&
 		rec.ClientSigalgs == obj.ClientSigalgs &&

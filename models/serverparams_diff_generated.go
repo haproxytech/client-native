@@ -47,6 +47,9 @@ func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions
 	if rec.Backup != obj.Backup {
 		diff["Backup"] = []interface{}{rec.Backup, obj.Backup}
 	}
+	if rec.Cc != obj.Cc {
+		diff["Cc"] = []interface{}{rec.Cc, obj.Cc}
+	}
 	if rec.Check != obj.Check {
 		diff["Check"] = []interface{}{rec.Check, obj.Check}
 	}

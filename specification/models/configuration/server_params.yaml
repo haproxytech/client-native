@@ -57,6 +57,9 @@ server_params:
       x-dependency:
         ssl:
           value: enabled
+    cc:
+      type: string
+      x-display-name: TCP Congestion Control Algorithm
     check:
       type: string
       enum: [enabled, disabled]

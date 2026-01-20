@@ -50,6 +50,9 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.CaVerifyFile != obj.CaVerifyFile {
 		diff["CaVerifyFile"] = []interface{}{rec.CaVerifyFile, obj.CaVerifyFile}
 	}
+	if rec.Cc != obj.Cc {
+		diff["Cc"] = []interface{}{rec.Cc, obj.Cc}
+	}
 	if rec.Ciphers != obj.Ciphers {
 		diff["Ciphers"] = []interface{}{rec.Ciphers, obj.Ciphers}
 	}
