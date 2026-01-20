@@ -339,6 +339,8 @@ func parseBindParams(bindOptions []params.BindOption) (models.BindParams, string
 				b.CaSignFile = v.Value
 			case "ca-sign-pass":
 				b.CaSignPass = v.Value
+			case "cc":
+				b.Cc = v.Value
 			case "ciphers":
 				b.Ciphers = v.Value
 			case "ciphersuites":
@@ -532,6 +534,9 @@ func serializeBindParams(b models.BindParams, name string, path string, opt *opt
 	}
 	if b.CaSignPass != "" {
 		options = append(options, &params.BindOptionValue{Name: "ca-sign-pass", Value: b.CaSignPass})
+	}
+	if b.Cc != "" {
+		options = append(options, &params.BindOptionValue{Name: "cc", Value: b.Cc})
 	}
 	if b.Ciphers != "" {
 		options = append(options, &params.BindOptionValue{Name: "ciphers", Value: b.Ciphers})

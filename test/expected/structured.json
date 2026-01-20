@@ -1131,7 +1131,8 @@
                     },
                     "check-reuse-pool": "disabled",
                     "check-pool-conn-name": "foo",
-                    "renegotiate": "enabled"
+                    "renegotiate": "enabled",
+                    "cc": "cubic"
                 }
             }
         },
@@ -2910,7 +2911,8 @@
                     "tlsv10": "enabled",
                     "no_strict_sni": true,
                     "force_strict_sni": "disabled",
-                    "tls_tickets": "enabled"
+                    "tls_tickets": "enabled",
+                    "cc": "reno"
                 },
                 "webserv3": {
                     "name": "webserv3",
@@ -2922,7 +2924,8 @@
                     "strict_sni": true,
                     "force_strict_sni": "enabled",
                     "no_tls_tickets": true,
-                    "tls_tickets": "disabled"
+                    "tls_tickets": "disabled",
+                    "cc": "bbr"
                 },
                 "test-quic-algo": {
                     "name": "test-quic-algo",

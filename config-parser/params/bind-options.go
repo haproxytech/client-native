@@ -276,6 +276,7 @@ var bindOptionFactoryMethods = map[string]func() BindOption{ //nolint:gochecknog
 	"ca-sign-file":         func() BindOption { return &BindOptionValue{Name: "ca-sign-file"} },
 	"ca-sign-pass":         func() BindOption { return &BindOptionValue{Name: "ca-sign-pass"} },
 	"ca-verify-file":       func() BindOption { return &BindOptionValue{Name: "ca-verify-file"} },
+	"cc":                   func() BindOption { return &BindOptionValue{Name: "cc"} },
 	"ciphers":              func() BindOption { return &BindOptionValue{Name: "ciphers"} },
 	"ciphersuites":         func() BindOption { return &BindOptionValue{Name: "ciphersuites"} },
 	"client-sigalgs":       func() BindOption { return &BindOptionValue{Name: "client-sigalgs"} },

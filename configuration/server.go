@@ -394,6 +394,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Alpn = v.Value
 			case "ca-file":
 				serverParams.SslCafile = v.Value
+			case "cc":
+				serverParams.Cc = v.Value
 			case "check-alpn":
 				serverParams.CheckAlpn = v.Value
 			case "check-pool-conn-name":
@@ -787,6 +789,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.SslCafile != "" { // ca-file
 		options = append(options, &params.ServerOptionValue{Name: "ca-file", Value: s.SslCafile})
+	}
+	if s.Cc != "" {
+		options = append(options, &params.ServerOptionValue{Name: "cc", Value: s.Cc})
 	}
 	if s.CheckAlpn != "" {
 		options = append(options, &params.ServerOptionValue{Name: "check-alpn", Value: s.CheckAlpn})

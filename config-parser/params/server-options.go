@@ -242,6 +242,7 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"agent-port":              func() ServerOption { return &ServerOptionValue{Name: "agent-port"} },
 	"alpn":                    func() ServerOption { return &ServerOptionValue{Name: "alpn"} },
 	"ca-file":                 func() ServerOption { return &ServerOptionValue{Name: "ca-file"} },
+	"cc":                      func() ServerOption { return &ServerOptionValue{Name: "cc"} },
 	"check-alpn":              func() ServerOption { return &ServerOptionValue{Name: "check-alpn"} },
 	"check-proto":             func() ServerOption { return &ServerOptionValue{Name: "check-proto"} },
 	"check-sni":               func() ServerOption { return &ServerOptionValue{Name: "check-sni"} },
