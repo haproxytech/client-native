@@ -572,8 +572,7 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				}
 			}
 		case *params.ServerOptionOnOff:
-			switch v.Name {
-			case "ktls":
+			if v.Name == "ktls" {
 				serverParams.Ktls = v.Value
 			}
 		}

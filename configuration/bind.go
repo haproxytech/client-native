@@ -438,8 +438,7 @@ func parseBindParams(bindOptions []params.BindOption) (models.BindParams, string
 				}
 			}
 		case *params.BindOptionOnOff:
-			switch v.Name {
-			case "ktls":
+			if v.Name == "ktls" {
 				b.Ktls = v.Value
 			}
 		}

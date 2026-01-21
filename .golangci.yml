@@ -39,7 +39,6 @@ linters:
     - goconst
     - recvcheck
     - tenv # deprecated
-    - gocritic
 
 issues:
   exclude-files:
