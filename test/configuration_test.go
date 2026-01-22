@@ -258,6 +258,7 @@ global
   ssl-propquery provider
   ssl-provider default
   ssl-provider-path test
+  ssl-passphrase-cmd test.sh -haproxy
   setcap cap_net_raw,cap_net_bind_service
   module-path /tmp/modules/path
   module-load modsecurity.so
@@ -456,6 +457,7 @@ frontend test
   option idle-close-on-response
   option http-restrict-req-hdr-names delete
   option http-drop-response-trailers
+  option abortonclose
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3 # {"comment": "test"}
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost
@@ -724,6 +726,7 @@ frontend test_2 from test_defaults
   no option splice-request
   no option splice-response
   no option idle-close-on-response
+  no option abortonclose
   log-tag bla
   option httpclose
   timeout http-request 2s

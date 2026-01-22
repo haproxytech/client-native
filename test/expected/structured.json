@@ -83,7 +83,8 @@
             "issuers_chain_path": "issuers-chain-path",
             "maxsslconn": 7,
             "maxsslrate": 8,
-            "security_level": 3
+            "security_level": 3,
+            "passphrase_cmd": "test.sh -haproxy"
         },
         "environment_options": {
             "presetenv": [
@@ -1621,6 +1622,7 @@
             "tcpka": "enabled",
             "unique_id_format": "%{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid",
             "unique_id_header": "X-Unique-ID",
+            "abortonclose": "enabled",
             "acl_list": [
                 {
                     "acl_name": "invalid_src",
@@ -3029,6 +3031,7 @@
             "tcpka": "enabled",
             "unique_id_format": "%{+X}o%ci:%cp_%fi:%fp_%Ts_%rt",
             "unique_id_header": "X-Unique-ID-test-2",
+            "abortonclose": "disabled",
             "http_request_rule_list": [
                 {
                     "capture_len": 10,
