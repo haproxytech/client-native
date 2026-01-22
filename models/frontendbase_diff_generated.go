@@ -32,6 +32,9 @@ func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions
 	for diffKey, diffValue := range DiffSliceString(rec.LogSteps, obj.LogSteps, opts...) {
 		diff["LogSteps"+diffKey] = diffValue
 	}
+	if rec.Abortonclose != obj.Abortonclose {
+		diff["Abortonclose"] = []interface{}{rec.Abortonclose, obj.Abortonclose}
+	}
 	if rec.AcceptInvalidHTTPRequest != obj.AcceptInvalidHTTPRequest {
 		diff["AcceptInvalidHTTPRequest"] = []interface{}{rec.AcceptInvalidHTTPRequest, obj.AcceptInvalidHTTPRequest}
 	}

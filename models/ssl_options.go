@@ -106,6 +106,9 @@ type SslOptions struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	ModeAsync string `json:"mode_async,omitempty"`
 
+	// passphrase cmd
+	PassphraseCmd string `json:"passphrase_cmd,omitempty"`
+
 	// propquery
 	Propquery string `json:"propquery,omitempty"`
 

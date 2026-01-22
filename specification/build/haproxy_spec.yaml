@@ -1522,6 +1522,8 @@ definitions:
           - disabled
         type: string
         x-display-name: Asynchronous TLS I/O operations
+      passphrase_cmd:
+        type: string
       propquery:
         type: string
         x-display-name: SSL Query String Property
@@ -3309,6 +3311,11 @@ definitions:
       mode: http
       name: test_frontend
     properties:
+      abortonclose:
+        enum:
+          - enabled
+          - disabled
+        type: string
       accept_invalid_http_request:
         enum:
           - enabled

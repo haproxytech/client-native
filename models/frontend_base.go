@@ -48,6 +48,11 @@ type FrontendBase struct {
 	// log steps
 	LogSteps []string `json:"log_steps,omitempty"`
 
+	// abortonclose
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	Abortonclose string `json:"abortonclose,omitempty"`
+
 	// accept invalid http request
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -346,6 +351,10 @@ func (m *FrontendBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAbortonclose(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAcceptInvalidHTTPRequest(formats); err != nil {
 		res = append(res, err)
 	}
@@ -631,6 +640,48 @@ func (m *FrontendBase) validateLogSteps(formats strfmt.Registry) error {
 			return err
 		}
 
+	}
+
+	return nil
+}
+
+var frontendBaseTypeAbortonclosePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendBaseTypeAbortonclosePropEnum = append(frontendBaseTypeAbortonclosePropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendBaseAbortoncloseEnabled captures enum value "enabled"
+	FrontendBaseAbortoncloseEnabled string = "enabled"
+
+	// FrontendBaseAbortoncloseDisabled captures enum value "disabled"
+	FrontendBaseAbortoncloseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *FrontendBase) validateAbortoncloseEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, frontendBaseTypeAbortonclosePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *FrontendBase) validateAbortonclose(formats strfmt.Registry) error {
+	if swag.IsZero(m.Abortonclose) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAbortoncloseEnum("abortonclose", "body", m.Abortonclose); err != nil {
+		return err
 	}
 
 	return nil

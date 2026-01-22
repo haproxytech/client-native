@@ -1021,6 +1021,8 @@ ssl_options:
       x-display-name: Asynchronous TLS I/O operations
     dh_param_file:
       type: string
+    passphrase_cmd:
+      type: string
     propquery:
       type: string
       x-display-name: SSL Query String Property

@@ -91,6 +91,9 @@ func (rec SslOptions) Diff(obj SslOptions, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.ModeAsync != obj.ModeAsync {
 		diff["ModeAsync"] = []interface{}{rec.ModeAsync, obj.ModeAsync}
 	}
+	if rec.PassphraseCmd != obj.PassphraseCmd {
+		diff["PassphraseCmd"] = []interface{}{rec.PassphraseCmd, obj.PassphraseCmd}
+	}
 	if rec.Propquery != obj.Propquery {
 		diff["Propquery"] = []interface{}{rec.Propquery, obj.Propquery}
 	}

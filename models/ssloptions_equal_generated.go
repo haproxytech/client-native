@@ -44,6 +44,7 @@ func (rec SslOptions) Equal(obj SslOptions, opts ...eqdiff.GoMethodGenOptions) b
 		rec.Maxsslconn == obj.Maxsslconn &&
 		rec.Maxsslrate == obj.Maxsslrate &&
 		rec.ModeAsync == obj.ModeAsync &&
+		rec.PassphraseCmd == obj.PassphraseCmd &&
 		rec.Propquery == obj.Propquery &&
 		rec.Provider == obj.Provider &&
 		rec.ProviderPath == obj.ProviderPath &&

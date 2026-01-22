@@ -207,6 +207,9 @@ frontend_base:
       x-dependency:
         mode:
           value: http
+    abortonclose:
+      type: string
+      enum: [enabled, disabled]
     unique_id_format:
       type: string
       x-display-name: Unique ID format
