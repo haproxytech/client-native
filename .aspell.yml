@@ -2,6 +2,7 @@
 mode: commit
 min_length: 3
 allowed:
+  - abortonclose
   - acl
   - acls
   - adfs
@@ -29,6 +30,7 @@ allowed:
   - chmigrate
   - cli
   - clickhouse
+  - cmd
   - cnt
   - codebase
   - composable
