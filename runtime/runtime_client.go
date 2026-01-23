@@ -119,7 +119,7 @@ func (c *client) GetVersion() (HAProxyVersion, error) {
 	if haproxyVersion != nil {
 		return *haproxyVersion, nil
 	}
-	_, err, _ = versionSfg.Do(versionKey, func() (interface{}, error) {
+	_, err, _ = versionSfg.Do(versionKey, func() (any, error) {
 		version := &HAProxyVersion{}
 		var response string
 		if !c.runtime.IsValid() {
@@ -129,9 +129,10 @@ func (c *client) GetVersion() (HAProxyVersion, error) {
 		if err != nil {
 			return HAProxyVersion{}, err
 		}
-		for _, line := range strings.Split(response, "\n") {
-			if strings.HasPrefix(line, "Version: ") {
-				err = version.ParseHAProxyVersion(strings.TrimPrefix(line, "Version: "))
+		for line := range strings.SplitSeq(response, "\n") {
+			versionStr, found := strings.CutPrefix(line, "Version: ")
+			if found {
+				err = version.ParseHAProxyVersion(versionStr)
 				if err != nil {
 					return HAProxyVersion{}, err
 				}

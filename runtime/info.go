@@ -40,7 +40,7 @@ func (s *SingleRuntime) GetInfo() models.ProcessInfo {
 func parseInfo(info string) *models.ProcessInfoItem { //nolint:gocognit,gocyclo,cyclop,maintidx
 	data := &models.ProcessInfoItem{}
 
-	for _, line := range strings.Split(info, "\n") {
+	for line := range strings.SplitSeq(info, "\n") {
 		fields := strings.Split(line, ":")
 		fID := strings.TrimSpace(strings.Split(fields[0], ".")[0])
 		switch fID {

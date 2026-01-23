@@ -110,7 +110,7 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 		return packageName, err
 	}
 
-	err = tmpl.Execute(file, map[string]interface{}{
+	err = tmpl.Execute(file, map[string]any{
 		"Package": node.Name.String(),
 		"License": args.License,
 	})
@@ -125,7 +125,7 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 		return packageName, err
 	}
 
-	err = tmpl2.Execute(fileTest, map[string]interface{}{
+	err = tmpl2.Execute(fileTest, map[string]any{
 		"Package": node.Name.String(),
 		"License": args.License,
 	})

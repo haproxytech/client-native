@@ -60,8 +60,8 @@ func (s *SingleRuntime) parseMaps(output string) models.Maps {
 	}
 	maps := models.Maps{}
 
-	lines := strings.Split(strings.TrimSpace(output), "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(strings.TrimSpace(output), "\n")
+	for line := range lines {
 		m := s.parseMap(line)
 		if m != nil {
 			maps = append(maps, m)
@@ -153,8 +153,8 @@ func ParseMapEntries(output string, hasID bool) models.MapEntries {
 	}
 	me := models.MapEntries{}
 
-	lines := strings.Split(strings.TrimSpace(output), "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(strings.TrimSpace(output), "\n")
+	for line := range lines {
 		e := parseMapEntry(line, hasID)
 		if e != nil {
 			me = append(me, e)
@@ -285,13 +285,13 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	}
 
 	m := &models.MapEntry{}
-	parts := strings.Split(response, ",")
-	for _, p := range parts {
+	parts := strings.SplitSeq(response, ",")
+	for p := range parts {
 		kv := strings.Split(p, "=")
-		switch key := strings.TrimSpace(kv[0]); {
-		case key == "key":
+		switch key := strings.TrimSpace(kv[0]); key {
+		case "key":
 			m.Key = strings.TrimPrefix(strings.TrimSuffix(kv[1], "\""), "\"")
-		case key == "value":
+		case "value":
 			m.Value = strings.TrimPrefix(strings.TrimSuffix(kv[1], "\""), "\"")
 		}
 	}

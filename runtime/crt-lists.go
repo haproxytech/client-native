@@ -45,8 +45,8 @@ func (s *SingleRuntime) parseCrtLists(output string) CrtLists {
 	}
 	crtLists := CrtLists{}
 
-	lines := strings.Split(output, "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(output, "\n")
+	for line := range lines {
 		c := s.parseCrtList(line)
 		if c != nil {
 			crtLists = append(crtLists, c)
@@ -103,8 +103,8 @@ func ParseCrtListEntries(output string) (CrtListEntries, error) {
 	}
 	ce := CrtListEntries{}
 
-	lines := strings.Split(strings.TrimSpace(output), "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(strings.TrimSpace(output), "\n")
+	for line := range lines {
 		entry := parseCrtListEntry(line)
 		if entry != nil {
 			ce = append(ce, entry)

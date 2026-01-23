@@ -39,11 +39,11 @@ func modelHdr2ActionHdr(hdrs []*models.ReturnHeader) []*actions.Hdr {
 	return headers
 }
 
-func parseMetadata(comment string) map[string]interface{} {
+func parseMetadata(comment string) map[string]any {
 	if comment == "" {
 		return nil
 	}
-	metadata := make(map[string]interface{})
+	metadata := make(map[string]any)
 	err := json.Unmarshal([]byte(comment), &metadata)
 	if err != nil {
 		metadata["comment"] = comment
@@ -52,7 +52,7 @@ func parseMetadata(comment string) map[string]interface{} {
 	return metadata
 }
 
-func serializeMetadata(metadata map[string]interface{}) (string, error) {
+func serializeMetadata(metadata map[string]any) (string, error) {
 	if metadata == nil {
 		return "", nil
 	}

@@ -250,6 +250,7 @@ func (s *Service) getLastNodeIndex(nodeCount int) (int, bool) {
 	}
 
 	currentNodeCount := s.serverCount()
+	//nolint: staticcheck
 	for {
 		if currentNodeCount/2 < s.scaling.BaseSlots {
 			break

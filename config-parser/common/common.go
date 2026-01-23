@@ -17,19 +17,14 @@ limitations under the License.
 package common
 
 import (
+	"slices"
 	"strings"
 )
 
 // StringSplitIgnoreEmpty while spliting, removes empty items
 func StringSplitIgnoreEmpty(s string, separators ...rune) []string {
 	f := func(c rune) bool {
-		willSplit := false
-		for _, sep := range separators {
-			if c == sep {
-				willSplit = true
-				break
-			}
-		}
+		willSplit := slices.Contains(separators, c)
 		return willSplit
 	}
 	return strings.FieldsFunc(s, f)

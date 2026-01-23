@@ -26,6 +26,7 @@ import (
 	shellquote "github.com/kballard/go-shellquote"
 )
 
+//nolint:noctx
 func checkHaproxyConfiguration(opt options.ConfigurationOptions, path string, transactionID ...string) error {
 	var name string
 	var args []string
@@ -71,7 +72,7 @@ func parseHAProxyCheckError(output string, transactionID ...string) string { //n
 		b.WriteString(fmt.Sprintf("err transactionId=%s \n", transactionID[0]))
 	}
 
-	for _, lineWhole := range strings.Split(output, "\n") {
+	for lineWhole := range strings.SplitSeq(output, "\n") {
 		line := strings.TrimSpace(lineWhole)
 		if strings.HasPrefix(line, "[ALERT]") {
 			if strings.HasSuffix(line, "fatal errors found in configuration.") {
@@ -111,7 +112,7 @@ func parseHAProxyCheckError(output string, transactionID ...string) string { //n
 }
 
 func addConfigFilesToArgs(args []string, clientParams options.ConfigurationOptions) []string {
-	result := []string{}
+	result := make([]string, 0) //nolint: prealloc
 	for _, file := range clientParams.ValidateConfigFilesBefore {
 		result = append(result, "-f", file)
 	}

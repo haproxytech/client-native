@@ -85,7 +85,7 @@ func (s *SingleRuntime) EnableServerHealth(backend, server string) error {
 
 // SetServerCheckPort set health heck port for server
 func (s *SingleRuntime) SetServerCheckPort(backend, server string, port int) error {
-	if !(port > 0 && port <= 65535) {
+	if port < 1 || port > 65535 {
 		return stderrors.New("bad request")
 	}
 	return s.Execute(fmt.Sprintf("set server %s/%s check-port %d", backend, server, port))

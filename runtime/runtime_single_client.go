@@ -78,6 +78,7 @@ func (s *SingleRuntime) Init(socketPath string, masterWorkerMode bool, opt ...op
 	return nil
 }
 
+//nolint:noctx
 func (s *SingleRuntime) readFromSocket(command string, socket socketType) (string, error) {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
