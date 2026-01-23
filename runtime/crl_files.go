@@ -245,7 +245,7 @@ func (s *SingleRuntime) CommitCrlFile(crlFile string) error {
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
-	if !(strings.Contains(response, "Committing") && strings.Contains(response, "Success!")) {
+	if !strings.Contains(response, "Committing") || !strings.Contains(response, "Success!") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
 	}
 	return nil
@@ -275,7 +275,7 @@ func (s *SingleRuntime) DeleteCrlFile(crlFile string) error {
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
-	if !(strings.Contains(response, "CRL file") && strings.Contains(response, "deleted!")) {
+	if !strings.Contains(response, "CRL file") || !strings.Contains(response, "deleted!") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
 	}
 	return nil

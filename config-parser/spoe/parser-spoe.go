@@ -78,11 +78,7 @@ func (p *Parser) Get(scope string, sectionType parser.Section, sectionName strin
 	if !ok {
 		return nil, errors.ErrSectionMissing
 	}
-	createNew := false
-	if len(createIfNotExist) > 0 && createIfNotExist[0] {
-		createNew = true
-	}
-	return section.Get(attribute, createNew)
+	return section.Get(attribute, len(createIfNotExist) > 0 && createIfNotExist[0])
 }
 
 // GetOne get attribute from defaults section
@@ -299,10 +295,7 @@ func (p *Parser) HasParser(scope string, sectionType parser.Section, attribute s
 }
 
 func (p *Parser) writeParsers(sectionName string, parsersData *parser.Parsers, result io.StringWriter, useIndentation bool) {
-	sectionNameWritten := false
-	if sectionName == "" {
-		sectionNameWritten = true
-	}
+	sectionNameWritten := sectionName == ""
 	for _, parserName := range parsersData.ParserSequence {
 		parser := parsersData.Parsers[string(parserName)]
 		lines, _, err := parser.ResultAll()
@@ -346,9 +339,11 @@ func (p *Parser) String() string {
 	defer p.unLock()
 	var result strings.Builder
 
-	scopes := []string{}
+	scopes := make([]string, len(p.Parsers))
+	i := 0
 	for scope := range p.Parsers {
-		scopes = append(scopes, scope)
+		scopes[i] = scope
+		i++
 	}
 	sort.Strings(scopes)
 	firstScope := true

@@ -1,6 +1,6 @@
 module github.com/haproxytech/client-native/v6
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/Masterminds/semver v1.5.0

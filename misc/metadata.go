@@ -2,11 +2,11 @@ package misc
 
 import "encoding/json"
 
-func ParseMetadata(comment string) map[string]interface{} {
+func ParseMetadata(comment string) map[string]any {
 	if comment == "" {
 		return nil
 	}
-	metadata := make(map[string]interface{})
+	metadata := make(map[string]any)
 	err := json.Unmarshal([]byte(comment), &metadata)
 	if err != nil {
 		metadata["comment"] = comment
@@ -15,7 +15,7 @@ func ParseMetadata(comment string) map[string]interface{} {
 	return metadata
 }
 
-func SerializeMetadata(metadata map[string]interface{}) (string, error) {
+func SerializeMetadata(metadata map[string]any) (string, error) {
 	if metadata == nil {
 		return "", nil
 	}

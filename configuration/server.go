@@ -656,9 +656,10 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	if s.CheckViaSocks4 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "check-via-socks4"})
 	}
-	if s.Renegotiate == "enabled" {
+	switch s.Renegotiate {
+	case "enabled":
 		options = append(options, &params.ServerOptionWord{Name: "renegotiate"})
-	} else if s.Renegotiate == "disabled" {
+	case "disabled":
 		options = append(options, &params.ServerOptionWord{Name: "no-renegotiate"})
 	}
 	if s.Sslv3 == "enabled" || s.ForceSslv3 == "enabled" {

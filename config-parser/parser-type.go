@@ -47,12 +47,8 @@ type Parsers struct {
 }
 
 func (p *Parsers) Get(attribute string, createIfNotExist ...bool) (common.ParserData, error) {
-	createNew := false
-	if len(createIfNotExist) > 0 && createIfNotExist[0] {
-		createNew = true
-	}
 	if parser, ok := p.Parsers[attribute]; ok {
-		return parser.Get(createNew)
+		return parser.Get(len(createIfNotExist) > 0 && createIfNotExist[0])
 	}
 
 	return nil, errors.ErrParserMissing

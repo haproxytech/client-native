@@ -75,9 +75,10 @@ func (c *client) GetFilter(id int64, parentType, parentName string, transactionI
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == FrontendParentName {
+	case FrontendParentName:
 		section = parser.Frontends
 	}
 
@@ -100,9 +101,10 @@ func (c *client) DeleteFilter(id int64, parentType string, parentName string, tr
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == FrontendParentName {
+	case FrontendParentName:
 		section = parser.Frontends
 	}
 
@@ -129,9 +131,10 @@ func (c *client) CreateFilter(id int64, parentType string, parentName string, da
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == FrontendParentName {
+	case FrontendParentName:
 		section = parser.Frontends
 	}
 

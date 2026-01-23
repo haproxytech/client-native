@@ -101,7 +101,7 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit
 		return packageName, err
 	}
 
-	err = tmpl2.Execute(fileTest, map[string]interface{}{
+	err = tmpl2.Execute(fileTest, map[string]any{
 		"Package": node.Name.String(),
 		"License": args.License,
 	})

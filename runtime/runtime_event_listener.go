@@ -68,6 +68,8 @@ type EventListener struct {
 // is used both as the default WriteTimeout and as the connect timeout.
 //
 // The caller must call Close to properly shutdown an EventListener.
+//
+//nolint:noctx
 func NewEventListener(network, address, sink string, timeout time.Duration, flags ...string) (*EventListener, error) {
 	var err error
 

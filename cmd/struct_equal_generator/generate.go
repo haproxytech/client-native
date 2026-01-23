@@ -39,7 +39,7 @@ func generateCompareTests(opt generateEqualAndDiffOptions) error {
 			break
 		}
 	}
-	err = tmpl.Execute(opt.FileTest, map[string]interface{}{
+	err = tmpl.Execute(opt.FileTest, map[string]any{
 		"TestType":    []string{"Equal", "Diff"},
 		"Name":        opt.Name,
 		"HasIndex":    hasIndex,

@@ -28,9 +28,9 @@ type Definition struct {
 
 // Property represents a property of a model in the OpenAPI specification
 type Property struct {
-	Default interface{} `yaml:"default"`
-	Type    string      `yaml:"type"`
-	GoType  string      `yaml:"x-go-name"` //nolint:tagliatelle
+	Default any    `yaml:"default"`
+	Type    string `yaml:"type"`
+	GoType  string `yaml:"x-go-name"` //nolint:tagliatelle
 }
 
 type FieldInfo struct {
@@ -288,7 +288,7 @@ func insertCode(filepath, structName string, assignments []string, hasPointers b
 			}
 		}
 
-		var newAssignments []string
+		var newAssignments []string //nolint: prealloc
 		newAssignments = append(newAssignments, assignments...)
 		newAssignments = append(newAssignments, "")
 

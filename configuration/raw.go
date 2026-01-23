@@ -175,7 +175,7 @@ func (c *client) PostRawConfiguration(config *string, version int64, skipVersion
 
 	w := bufio.NewWriter(tmp)
 	if !skipVersionCheck {
-		_, _ = w.WriteString(fmt.Sprintf("# _version=%d\n%s", version, c.dropVersionFromRaw(*config)))
+		_, _ = fmt.Fprintf(w, "# _version=%d\n%s", version, c.dropVersionFromRaw(*config))
 	} else {
 		_, _ = w.WriteString(*config)
 	}

@@ -37,11 +37,11 @@ func generateTypes(dir string, dataDir string) { //nolint:gocognit
 
 	for _, line := range lines {
 		parserData.DataDir = dataDir
-		if strings.HasPrefix(line, "// model:") {
-			parserData.Model = strings.TrimSpace(strings.TrimPrefix(line, "// model:"))
+		if after, ok := strings.CutPrefix(line, "// model:"); ok {
+			parserData.Model = strings.TrimSpace(after)
 		}
-		if strings.HasPrefix(line, "//doc:") {
-			parserData.Doc = strings.TrimSpace(strings.TrimPrefix(line, "//doc:"))
+		if after, ok := strings.CutPrefix(line, "//doc:"); ok {
+			parserData.Doc = strings.TrimSpace(after)
 		}
 		if strings.HasPrefix(line, "//deprecated:") {
 			parserData.Deprecated = true

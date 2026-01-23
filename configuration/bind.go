@@ -475,8 +475,8 @@ func serializeBindParams(b models.BindParams, name string, path string, opt *opt
 		options = append(options, &params.BindOptionValue{Name: "name", Value: path})
 	}
 	if b.SslCertificate != "" {
-		certs := strings.Split(b.SslCertificate, ":")
-		for _, cert := range certs {
+		certs := strings.SplitSeq(b.SslCertificate, ":")
+		for cert := range certs {
 			options = append(options, &params.BindOptionValue{Name: "crt", Value: cert})
 		}
 	}

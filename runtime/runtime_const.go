@@ -63,8 +63,8 @@ func ServerHealthValid(health string) bool {
 func ServerWeightValid(weight string) bool {
 	var n int64
 	var err error
-	if strings.HasSuffix(weight, "%") {
-		percent := strings.TrimSuffix(weight, "%")
+	percent, found := strings.CutSuffix(weight, "%")
+	if found {
 		if n, err = strconv.ParseInt(percent, 10, 64); err != nil {
 			return false
 		}

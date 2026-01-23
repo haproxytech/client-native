@@ -287,7 +287,7 @@ func serializeDefaultsSection(a StructuredToParserArgs, d *models.Defaults) erro
 
 	err = p.SectionsCreate(parser.Defaults, d.Name)
 	if err != nil {
-		if !(errors.Is(err, parserErrors.ErrSectionAlreadyExists) && parser.DefaultSectionName == d.Name) {
+		if !errors.Is(err, parserErrors.ErrSectionAlreadyExists) || parser.DefaultSectionName != d.Name {
 			return err
 		}
 	}

@@ -90,8 +90,9 @@ type MergeRequest struct {
 
 var baseURL string //nolint:gochecknoglobals
 
-const LABEL_COLOR = "#8fbc8f" //nolint:stylecheck,revive
+const LABEL_COLOR = "#8fbc8f" //nolint:revive
 
+//nolint:modernize,perfsprint
 func main() {
 	_ = godotenv.Overload()
 	fmt.Print(hello) //nolint:forbidigo
@@ -125,7 +126,7 @@ func main() {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
-	var versions []*semver.Version //nolint:prealloc
+	var versions []*semver.Version
 	for _, r := range docs {
 		v, err := semver.NewVersion(r)
 		if err != nil {
@@ -142,18 +143,18 @@ func main() {
 
 	gitlabToken := os.Getenv("GITLAB_TOKEN")
 
-	CI_MERGE_REQUEST_IID_STR := os.Getenv("CI_MERGE_REQUEST_IID") //nolint:stylecheck,revive
+	CI_MERGE_REQUEST_IID_STR := os.Getenv("CI_MERGE_REQUEST_IID") //nolint:revive
 	if CI_MERGE_REQUEST_IID_STR == "" {
 		slog.Error("CI_MERGE_REQUEST_IID not set")
 		os.Exit(1)
 	}
-	CI_MERGE_REQUEST_IID, err := strconv.Atoi(CI_MERGE_REQUEST_IID_STR) //nolint:stylecheck,revive
+	CI_MERGE_REQUEST_IID, err := strconv.Atoi(CI_MERGE_REQUEST_IID_STR) //nolint:revive
 	if err != nil {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
 
-	CI_PROJECT_ID := os.Getenv("CI_PROJECT_ID") //nolint:stylecheck,revive
+	CI_PROJECT_ID := os.Getenv("CI_PROJECT_ID") //nolint:revive
 	if CI_PROJECT_ID == "" {
 		slog.Error("CI_PROJECT_ID not set")
 		os.Exit(1)
@@ -204,7 +205,7 @@ func main() {
 
 func startThreadOnMergeRequest(baseURL, token, projectID string, mergeRequestIID int, threadBody string) {
 	client := &http.Client{}
-	threadData := map[string]interface{}{
+	threadData := map[string]any{
 		"body": threadBody,
 	}
 	threadDataBytes, err := json.Marshal(threadData)

@@ -8,10 +8,7 @@ import (
 func GlobalV2ToV3(v2g *v2.Global) (*v3.GlobalBase, error) { //nolint:maintidx
 	var v3g *v3.GlobalBase
 	// Global
-	daemon := false
-	if v2g.Daemon == "enabled" {
-		daemon = true
-	}
+	daemon := v2g.Daemon == "enabled"
 	v3t, err := V2Tov3[v2.Global, v3.GlobalBase](v2g, "daemon")
 	if err != nil {
 		return nil, err

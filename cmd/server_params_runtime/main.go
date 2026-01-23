@@ -64,7 +64,7 @@ func main() {
 		doNotSendDisabledFields := listEmptyDisabledFields(allEnumFields)
 		doNotSendEnabledFields := listEmtpyEnabledFields(allEnumFields)
 
-		errTmpl = tmpl.Execute(file, map[string]interface{}{
+		errTmpl = tmpl.Execute(file, map[string]any{
 			"PrepareFieldsForRuntimeAddServer": FuncPrepareFieldsForRuntimeAddServer,
 			"DoNotSendDisabledFields":          doNotSendDisabledFields,
 			"DoNotSendDisabledFieldsFunc":      FuncDoNotSendDisabledFields,

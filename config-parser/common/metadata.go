@@ -19,7 +19,7 @@ package common
 import "github.com/haproxytech/client-native/v6/config-parser/errors"
 
 // ExtractComment extracts the comment from the metadata map.
-func ExtractComment(metadata map[string]interface{}) string {
+func ExtractComment(metadata map[string]any) string {
 	var comment string
 	if metadata == nil {
 		return comment
@@ -31,7 +31,7 @@ func ExtractComment(metadata map[string]interface{}) string {
 }
 
 // ExtractCommentWithErr extracts the comment from the metadata map and returns an error if the comment is not a string.
-func ExtractCommentWithErr(metadata map[string]interface{}) (string, error) {
+func ExtractCommentWithErr(metadata map[string]any) (string, error) {
 	var comment string
 	if metadata == nil {
 		return comment, nil
