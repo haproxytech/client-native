@@ -24,8 +24,27 @@ import (
 func (rec RuntimeServer) Equal(obj RuntimeServer, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Address == obj.Address &&
 		rec.AdminState == obj.AdminState &&
+		rec.AgentAddr == obj.AgentAddr &&
+		EqualPointerInt64(rec.AgentPort, obj.AgentPort, opts...) &&
+		EqualPointerInt64(rec.AgentState, obj.AgentState, opts...) &&
+		EqualPointerInt64(rec.BackendForcedID, obj.BackendForcedID, opts...) &&
+		EqualPointerInt64(rec.BackendID, obj.BackendID, opts...) &&
+		rec.BackendName == obj.BackendName &&
+		rec.CheckAddr == obj.CheckAddr &&
+		EqualPointerInt64(rec.CheckHealth, obj.CheckHealth, opts...) &&
+		EqualPointerInt64(rec.CheckPort, obj.CheckPort, opts...) &&
+		EqualPointerInt64(rec.CheckResult, obj.CheckResult, opts...) &&
+		EqualPointerInt64(rec.CheckState, obj.CheckState, opts...) &&
+		EqualPointerInt64(rec.CheckStatus, obj.CheckStatus, opts...) &&
+		EqualPointerInt64(rec.ForecedID, obj.ForecedID, opts...) &&
+		rec.Fqdn == obj.Fqdn &&
 		rec.ID == obj.ID &&
+		EqualPointerInt64(rec.Iweight, obj.Iweight, opts...) &&
+		EqualPointerInt64(rec.LastTimeChange, obj.LastTimeChange, opts...) &&
 		rec.Name == obj.Name &&
 		rec.OperationalState == obj.OperationalState &&
-		EqualPointerInt64(rec.Port, obj.Port, opts...)
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
+		rec.Srvrecord == obj.Srvrecord &&
+		EqualPointerBool(rec.UseSsl, obj.UseSsl, opts...) &&
+		EqualPointerInt64(rec.Uweight, obj.Uweight, opts...)
 }
