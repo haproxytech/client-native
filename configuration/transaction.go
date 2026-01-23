@@ -55,8 +55,9 @@ type TransactionClient interface {
 type transactionCleanerHandler func(transactionId, configurationFile string)
 
 type Transaction struct {
-	TransactionClient TransactionClient
 	options.ConfigurationOptions
+
+	TransactionClient   TransactionClient
 	mu                  sync.Mutex
 	noNamedDefaultsFrom bool
 }
@@ -229,7 +230,7 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// such as if want to use different HAProxy (community, enterprise, aloha)
 	// where different options are supported.
 	// By disabling validation we can still use DPAPI
-	if t.ConfigurationOptions.SkipConfigurationFileValidation {
+	if t.SkipConfigurationFileValidation {
 		return nil
 	}
 
@@ -578,7 +579,7 @@ func moveFile(src, dest string) error {
 	return os.Rename(src, dest)
 }
 
-func (t *Transaction) SaveData(prsr interface{}, tID string, commitImplicit bool) error {
+func (t *Transaction) SaveData(prsr any, tID string, commitImplicit bool) error {
 	if t.PersistentTransactions {
 		tFile, err := t.GetTransactionFile(tID)
 		if err != nil {

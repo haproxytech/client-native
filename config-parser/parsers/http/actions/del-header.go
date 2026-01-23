@@ -65,7 +65,7 @@ func (f *DelHeader) String() string {
 		sb.WriteString(" -m " + f.Method)
 	}
 	if f.Cond != "" {
-		sb.WriteString(fmt.Sprintf(" %s %s", f.Cond, f.CondTest))
+		fmt.Fprintf(sb, " %s %s", f.Cond, f.CondTest)
 	}
 	return sb.String()
 }

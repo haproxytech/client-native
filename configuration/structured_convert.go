@@ -42,7 +42,7 @@ func namedResourceArrayToMap[T any](namedResource []*T) (map[string]T, error) {
 
 // getKey returns the value of the 'Name' field from any struct or pointer to struct using reflection.
 // Constraint: the struct must have an exportable 'Name' field
-func getKey(obj interface{}, keyName string) (string, error) {
+func getKey(obj any, keyName string) (string, error) {
 	value := reflect.ValueOf(obj)
 	// If Pointer, first get the pointed value
 	if value.Kind() == reflect.Ptr {

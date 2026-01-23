@@ -123,10 +123,7 @@ func getNiceName(str string) string {
 		}
 	}
 	strRes := res.String()
-	size := len(strRes)
-	if size > 32 {
-		size = 32
-	}
+	size := min(len(strRes), 32)
 	strRes = strRes[0:size]
 	return strRes
 }

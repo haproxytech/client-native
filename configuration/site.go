@@ -232,7 +232,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 			}
 		}
 	}
-	bcks := make([]interface{}, len(confS.Farms))
+	bcks := make([]any, len(confS.Farms))
 	for i := range confS.Farms {
 		bcks[i] = confS.Farms[i]
 	}
@@ -328,7 +328,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 				}
 			}
 		}
-		bcks = make([]interface{}, len(data.Farms))
+		bcks = make([]any, len(data.Farms))
 		for i := range data.Farms {
 			bcks[i] = data.Farms[i]
 		}

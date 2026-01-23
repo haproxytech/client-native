@@ -16,7 +16,7 @@ func (s *SingleRuntime) SetTableEntry(table, key string, dataType models.StickTa
 	if err != nil {
 		return err
 	}
-	var marshalDataType map[string]interface{}
+	var marshalDataType map[string]any
 	if err = json.Unmarshal(b, &marshalDataType); err != nil {
 		return err
 	}
@@ -51,8 +51,8 @@ func (s *SingleRuntime) ShowTable(name string) (*models.StickTable, error) {
 		return nil, err
 	}
 
-	lines := strings.Split(response, "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(response, "\n")
+	for line := range lines {
 		stkT := s.parseStickTable(line)
 		if stkT == nil || stkT.Name != name {
 			continue
@@ -119,9 +119,9 @@ func (s *SingleRuntime) parseStickTable(output string) *models.StickTable {
 	}
 	stkTable := &models.StickTable{}
 
-	stkStrings := strings.Split(output, ",")
+	stkStrings := strings.SplitSeq(output, ",")
 
-	for _, stkT := range stkStrings {
+	for stkT := range stkStrings {
 		switch {
 		case strings.HasPrefix(stkT, "# table:"):
 			stkTable.Name = strings.TrimSpace(stkT[len("# table:"):])

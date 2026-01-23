@@ -43,7 +43,7 @@ type TableTestData struct {
 	Table string
 }
 
-type Data struct { //nolint:maligned
+type Data struct {
 	ParserMultiple     bool
 	ParserSections     []string
 	ParserName         string
@@ -111,7 +111,7 @@ func (c *ConfigFile) AddParserData(parser Data) { //nolint:gocognit
 		// line = testOK[0]
 		if parser.ParserMultiple {
 			lines = testOK
-			//nolint:gosimple
+			//nolint:staticcheck
 			for _, line := range testOK {
 				c.Section[section] = append(c.Section[section], line)
 			}
@@ -130,7 +130,7 @@ func (c *ConfigFile) AddParserData(parser Data) { //nolint:gocognit
 		if section == "defaults" {
 			if parser.ParserMultiple {
 				linesDefaults = testOKDefaults
-				//nolint:gosimple
+				//nolint:staticcheck
 				for _, line := range testOKDefaults {
 					c.Section[section] = append(c.Section[section], line)
 				}
@@ -143,7 +143,7 @@ func (c *ConfigFile) AddParserData(parser Data) { //nolint:gocognit
 		if section == "frontend" {
 			if parser.ParserMultiple {
 				linesFrontend = testOKFrontend
-				//nolint:gosimple
+				//nolint:staticcheck
 				for _, line := range testOKFrontend {
 					c.Section[section] = append(c.Section[section], line)
 				}
@@ -156,7 +156,7 @@ func (c *ConfigFile) AddParserData(parser Data) { //nolint:gocognit
 		if section == "backend" {
 			if parser.ParserMultiple {
 				linesBackend = testOKBackend
-				//nolint:gosimple
+				//nolint:staticcheck
 				for _, line := range testOKBackend {
 					c.Section[section] = append(c.Section[section], line)
 				}
@@ -168,7 +168,7 @@ func (c *ConfigFile) AddParserData(parser Data) { //nolint:gocognit
 		}
 		if parser.ParserMultiple {
 			lines2 = TestOKEscaped
-			//nolint:gosimple
+			//nolint:staticcheck
 			for _, line := range TestOKEscaped {
 				c.Section[section] = append(c.Section[section], line)
 			}
@@ -256,7 +256,7 @@ func (c *ConfigFile) StringFiles(baseFolder string) {
 
 	header := license + "\npackage integration_test\n\n"
 
-	sectionTypes := make([]string, len(c.SectionAll)-1)
+	sectionTypes := make([]string, len(c.SectionAll)-1) //nolint: prealloc
 	index := 0
 	for sectionName := range c.SectionAll {
 		if sectionName == "global" {

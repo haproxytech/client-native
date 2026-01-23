@@ -78,10 +78,11 @@ type ClientParams struct {
 // transaction files on StartTransaction, and deletes on CommitTransaction. We save
 // data to file on every change for persistence.
 type client struct {
+	Transaction
+
 	parser   parser.Parser
 	parsers  map[string]parser.Parser
 	services map[string]*Service
-	Transaction
 	clientMu sync.Mutex
 }
 
@@ -89,8 +90,8 @@ type client struct {
 func (c *client) SetValidateConfigFiles(before, after []string) {
 	c.clientMu.Lock()
 	defer c.clientMu.Unlock()
-	c.Transaction.ValidateConfigFilesBefore = before
-	c.Transaction.ValidateConfigFilesAfter = after
+	c.ValidateConfigFilesBefore = before
+	c.ValidateConfigFilesAfter = after
 }
 
 // HasParser checks whether transaction exists in parser
@@ -128,7 +129,7 @@ func (c *client) AddParser(transactionID string) error {
 	}
 
 	parserOptions := []parser_options.ParserOption{}
-	if c.ConfigurationOptions.UseMd5Hash {
+	if c.UseMd5Hash {
 		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
 	}
 	if c.noNamedDefaultsFrom {
@@ -236,7 +237,7 @@ func (c *client) Save(transactionFile, transactionID string) error {
 }
 
 // ParseSection sets the fields of the section based on the provided parser
-func ParseSection(object interface{}, section parser.Section, pName string, p parser.Parser) error {
+func ParseSection(object any, section parser.Section, pName string, p parser.Parser) error {
 	sp := &SectionParser{
 		Object:  object,
 		Section: section,
@@ -256,7 +257,7 @@ func NewParseSection(section parser.Section, pName string, p parser.Parser) *Sec
 
 // SectionParser is used set fields of a section based on the provided parser
 type SectionParser struct {
-	Object  interface{}
+	Object  any
 	Parser  parser.Parser
 	Section parser.Section
 	Name    string
@@ -289,7 +290,7 @@ func (s *SectionParser) Parse() error {
 	return nil
 }
 
-func (s *SectionParser) parseField(fieldName string) interface{} {
+func (s *SectionParser) parseField(fieldName string) any {
 	if match, data := s.checkSpecialFields(fieldName); match {
 		return data
 	}
@@ -305,7 +306,7 @@ func (s *SectionParser) parseField(fieldName string) interface{} {
 	return nil
 }
 
-func (s *SectionParser) checkSpecialFields(fieldName string) (bool, interface{}) { //nolint:gocyclo,cyclop
+func (s *SectionParser) checkSpecialFields(fieldName string) (bool, any) { //nolint:gocyclo,cyclop
 	switch fieldName {
 	case "Shards":
 		return true, s.shards()
@@ -406,7 +407,7 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, interface{})
 	}
 }
 
-func (s *SectionParser) checkTimeouts(fieldName string) (bool, interface{}) {
+func (s *SectionParser) checkTimeouts(fieldName string) (bool, any) {
 	if strings.HasSuffix(fieldName, "Timeout") {
 		if pName := translateTimeout(fieldName); s.Parser.HasParser(s.Section, pName) {
 			data, err := s.get(pName, false)
@@ -420,7 +421,7 @@ func (s *SectionParser) checkTimeouts(fieldName string) (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) checkSingleLine(fieldName string) (bool, interface{}) {
+func (s *SectionParser) checkSingleLine(fieldName string) (bool, any) {
 	if pName := misc.DashCase(fieldName); s.Parser.HasParser(s.Section, pName) {
 		data, err := s.get(pName, false)
 		if err != nil {
@@ -431,7 +432,7 @@ func (s *SectionParser) checkSingleLine(fieldName string) (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) checkOptions(fieldName string) (bool, interface{}) {
+func (s *SectionParser) checkOptions(fieldName string) (bool, any) {
 	if pName := "option " + misc.DashCase(fieldName); s.Parser.HasParser(s.Section, pName) {
 		data, err := s.get(pName, false)
 		if err != nil {
@@ -446,7 +447,7 @@ func (s *SectionParser) get(attribute string, createIfNotExists ...bool) (common
 	return s.Parser.Get(s.Section, s.Name, attribute, createIfNotExists...)
 }
 
-func (s *SectionParser) from() interface{} {
+func (s *SectionParser) from() any {
 	from, err := s.Parser.SectionsDefaultsFromGet(s.Section, s.Name)
 	if err != nil {
 		return ""
@@ -454,7 +455,7 @@ func (s *SectionParser) from() interface{} {
 	return from
 }
 
-func (s *SectionParser) httpConnectionMode() interface{} {
+func (s *SectionParser) httpConnectionMode() any {
 	data, err := s.get("option http-tunnel", false)
 	if err == nil {
 		d := data.(*types.SimpleOption) //nolint:forcetypeassert
@@ -500,7 +501,7 @@ func (s *SectionParser) httpConnectionMode() interface{} {
 	return nil
 }
 
-func (s *SectionParser) uniqueIDHeader() interface{} {
+func (s *SectionParser) uniqueIDHeader() any {
 	_, e := s.get("unique-id-format")
 	if e != nil {
 		return nil
@@ -513,7 +514,7 @@ func (s *SectionParser) uniqueIDHeader() interface{} {
 	return nil
 }
 
-func (s *SectionParser) uniqueIDFormat() interface{} {
+func (s *SectionParser) uniqueIDFormat() any {
 	data, err := s.get("unique-id-format")
 	if err == nil {
 		d := data.(*types.UniqueIDFormat)
@@ -522,7 +523,7 @@ func (s *SectionParser) uniqueIDFormat() interface{} {
 	return nil
 }
 
-func (s *SectionParser) httpReuse() interface{} {
+func (s *SectionParser) httpReuse() any {
 	data, err := s.get("http-reuse", false)
 	if err == nil {
 		d := data.(*types.HTTPReuse)
@@ -531,7 +532,7 @@ func (s *SectionParser) httpReuse() interface{} {
 	return nil
 }
 
-func (s *SectionParser) httplog() interface{} {
+func (s *SectionParser) httplog() any {
 	data, err := s.get("option httplog", false)
 	if err == nil {
 		d := data.(*types.OptionHTTPLog)
@@ -542,7 +543,7 @@ func (s *SectionParser) httplog() interface{} {
 	return nil
 }
 
-func (s *SectionParser) clflog() interface{} {
+func (s *SectionParser) clflog() any {
 	data, err := s.get("option httplog", false)
 	if err == nil {
 		d := data.(*types.OptionHTTPLog)
@@ -553,7 +554,7 @@ func (s *SectionParser) clflog() interface{} {
 	return nil
 }
 
-func (s *SectionParser) defaultBackend() interface{} {
+func (s *SectionParser) defaultBackend() any {
 	data, err := s.get("default_backend", false)
 	if err != nil {
 		return nil
@@ -562,7 +563,7 @@ func (s *SectionParser) defaultBackend() interface{} {
 	return bck.Value
 }
 
-func (s *SectionParser) externalCheckCommand() interface{} {
+func (s *SectionParser) externalCheckCommand() any {
 	data, err := s.get("external-check command", false)
 	if err != nil {
 		return nil
@@ -571,7 +572,7 @@ func (s *SectionParser) externalCheckCommand() interface{} {
 	return d.Command
 }
 
-func (s *SectionParser) externalCheckPath() interface{} {
+func (s *SectionParser) externalCheckPath() any {
 	data, err := s.get("external-check path", false)
 	if err != nil {
 		return nil
@@ -580,7 +581,7 @@ func (s *SectionParser) externalCheckPath() interface{} {
 	return d.Path
 }
 
-func (s *SectionParser) externalCheck() interface{} {
+func (s *SectionParser) externalCheck() any {
 	data, err := s.get("option external-check", false)
 	if err != nil {
 		return nil
@@ -591,7 +592,7 @@ func (s *SectionParser) externalCheck() interface{} {
 	return "enabled"
 }
 
-func (s *SectionParser) allbackups() interface{} {
+func (s *SectionParser) allbackups() any {
 	data, err := s.get("option allbackups", false)
 	if err != nil {
 		return nil
@@ -602,7 +603,7 @@ func (s *SectionParser) allbackups() interface{} {
 	return "enabled"
 }
 
-func (s *SectionParser) logasap() interface{} {
+func (s *SectionParser) logasap() any {
 	data, err := s.get("option logasap", false)
 	if err != nil {
 		return nil
@@ -613,7 +614,7 @@ func (s *SectionParser) logasap() interface{} {
 	return "enabled"
 }
 
-func (s *SectionParser) useFcgiApp() interface{} {
+func (s *SectionParser) useFcgiApp() any {
 	_, e := s.get("use-fcgi-app")
 	if e != nil {
 		return nil
@@ -626,7 +627,7 @@ func (s *SectionParser) useFcgiApp() interface{} {
 	return nil
 }
 
-func (s *SectionParser) advCheck() interface{} {
+func (s *SectionParser) advCheck() any {
 	if found, data := s.getSslChkData(); found {
 		return data
 	}
@@ -662,7 +663,7 @@ func (s *SectionParser) advCheck() interface{} {
 	return nil
 }
 
-func (s *SectionParser) getSslChkData() (bool, interface{}) {
+func (s *SectionParser) getSslChkData() (bool, any) {
 	data, err := s.get("option ssl-hello-chk", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -673,7 +674,7 @@ func (s *SectionParser) getSslChkData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getSMTPChkData() (bool, interface{}) {
+func (s *SectionParser) getSMTPChkData() (bool, any) {
 	data, err := s.get("option smtpchk", false)
 	if err == nil {
 		d := data.(*types.OptionSmtpchk)
@@ -688,7 +689,7 @@ func (s *SectionParser) getSMTPChkData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getLdapCheckData() (bool, interface{}) {
+func (s *SectionParser) getLdapCheckData() (bool, any) {
 	data, err := s.get("option ldap-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -699,7 +700,7 @@ func (s *SectionParser) getLdapCheckData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getMysqlCheckData() (bool, interface{}) {
+func (s *SectionParser) getMysqlCheckData() (bool, any) {
 	data, err := s.get("option mysql-check", false)
 	if err == nil {
 		d := data.(*types.OptionMysqlCheck)
@@ -714,7 +715,7 @@ func (s *SectionParser) getMysqlCheckData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getPgsqlCheckData() (bool, interface{}) {
+func (s *SectionParser) getPgsqlCheckData() (bool, any) {
 	data, err := s.get("option pgsql-check", false)
 	if err == nil {
 		d := data.(*types.OptionPgsqlCheck)
@@ -728,7 +729,7 @@ func (s *SectionParser) getPgsqlCheckData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getTCPCheckData() (bool, interface{}) {
+func (s *SectionParser) getTCPCheckData() (bool, any) {
 	data, err := s.get("option tcp-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -739,7 +740,7 @@ func (s *SectionParser) getTCPCheckData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getRedisCheckData() (bool, interface{}) {
+func (s *SectionParser) getRedisCheckData() (bool, any) {
 	data, err := s.get("option redis-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -750,7 +751,7 @@ func (s *SectionParser) getRedisCheckData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getHttpchkData() (bool, interface{}) {
+func (s *SectionParser) getHttpchkData() (bool, any) {
 	data, err := s.get("option httpchk", false)
 	if err == nil {
 		d := data.(*types.OptionHttpchk)
@@ -766,13 +767,13 @@ func (s *SectionParser) getHttpchkData() (bool, interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) setField(fieldName string, data interface{}) {
+func (s *SectionParser) setField(fieldName string, data any) {
 	objValue := reflect.ValueOf(s.Object).Elem()
 	field := objValue.FieldByName(fieldName)
 	field.Set(reflect.ValueOf(data))
 }
 
-func (s *SectionParser) stickTable() interface{} {
+func (s *SectionParser) stickTable() any {
 	data, err := s.get("stick-table", false)
 	if err != nil {
 		return nil
@@ -805,7 +806,7 @@ func (s *SectionParser) stickTable() interface{} {
 	return bst
 }
 
-func (s *SectionParser) defaultServer() interface{} {
+func (s *SectionParser) defaultServer() any {
 	data, err := s.get("default-server", false)
 	if err != nil {
 		return nil
@@ -818,7 +819,7 @@ func (s *SectionParser) defaultServer() interface{} {
 	return dServer
 }
 
-func (s *SectionParser) loadServerStateFromFile() interface{} {
+func (s *SectionParser) loadServerStateFromFile() any {
 	data, err := s.get("load-server-state-from-file", false)
 	if err == nil {
 		d := data.(*types.LoadServerStateFromFile)
@@ -827,7 +828,7 @@ func (s *SectionParser) loadServerStateFromFile() interface{} {
 	return nil
 }
 
-func (s *SectionParser) errorFiles() interface{} {
+func (s *SectionParser) errorFiles() any {
 	data, err := s.get("errorfile", false)
 	if err != nil {
 		return nil
@@ -851,7 +852,7 @@ func (s *SectionParser) errorFiles() interface{} {
 	return dEFiles
 }
 
-func (s *SectionParser) errorfilesFromHTTPErrors() interface{} {
+func (s *SectionParser) errorfilesFromHTTPErrors() any {
 	data, err := s.get("errorfiles", false)
 	if err != nil {
 		return nil
@@ -871,7 +872,7 @@ func (s *SectionParser) errorfilesFromHTTPErrors() interface{} {
 	return dEFiles
 }
 
-func (s *SectionParser) hashType() interface{} {
+func (s *SectionParser) hashType() any {
 	data, err := s.get("hash-type", false)
 	if err != nil {
 		return nil
@@ -884,7 +885,7 @@ func (s *SectionParser) hashType() interface{} {
 	}
 }
 
-func (s *SectionParser) cookie() interface{} {
+func (s *SectionParser) cookie() any {
 	data, err := s.get("cookie", false)
 	if err != nil {
 		return nil
@@ -921,7 +922,7 @@ func (s *SectionParser) cookie() interface{} {
 	}
 }
 
-func (s *SectionParser) persistRule() interface{} {
+func (s *SectionParser) persistRule() any {
 	data, err := s.get("persist", false)
 	if err != nil {
 		return nil
@@ -938,7 +939,7 @@ func (s *SectionParser) persistRule() interface{} {
 	return p
 }
 
-func (s *SectionParser) balance() interface{} {
+func (s *SectionParser) balance() any {
 	data, err := s.get("balance", false)
 	if err != nil {
 		return nil
@@ -970,7 +971,7 @@ func (s *SectionParser) balance() interface{} {
 	return b
 }
 
-func (s *SectionParser) redispatch() interface{} {
+func (s *SectionParser) redispatch() any {
 	data, err := s.get("option redispatch", false)
 	if err != nil {
 		return nil
@@ -989,7 +990,7 @@ func (s *SectionParser) redispatch() interface{} {
 	return br
 }
 
-func (s *SectionParser) forwardfor() interface{} {
+func (s *SectionParser) forwardfor() any {
 	data, err := s.get("option forwardfor", false)
 	if err != nil {
 		return nil
@@ -1005,7 +1006,7 @@ func (s *SectionParser) forwardfor() interface{} {
 	return bff
 }
 
-func (s *SectionParser) emailAlert() interface{} {
+func (s *SectionParser) emailAlert() any {
 	data, err := s.get("email-alert", false)
 	if err != nil {
 		return nil
@@ -1030,7 +1031,7 @@ func (s *SectionParser) emailAlert() interface{} {
 	return ea
 }
 
-func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
+func (s *SectionParser) statsOptions() any { //nolint:gocognit
 	data, err := s.get("stats", false)
 	if err != nil {
 		return nil
@@ -1113,7 +1114,7 @@ func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 	return opt
 }
 
-func (s *SectionParser) monitorURI() interface{} {
+func (s *SectionParser) monitorURI() any {
 	data, err := s.get("monitor-uri", false)
 	if err != nil {
 		return nil
@@ -1122,7 +1123,7 @@ func (s *SectionParser) monitorURI() interface{} {
 	return models.MonitorURI(d.URI)
 }
 
-func (s *SectionParser) monitorFail() interface{} {
+func (s *SectionParser) monitorFail() any {
 	if s.Section == parser.Frontends {
 		data, err := s.get("monitor fail", false)
 		if err != nil {
@@ -1137,7 +1138,7 @@ func (s *SectionParser) monitorFail() interface{} {
 	return nil
 }
 
-func (s *SectionParser) compression() interface{} { //nolint:gocognit
+func (s *SectionParser) compression() any { //nolint:gocognit
 	compressionFound := false
 	compression := &models.Compression{}
 
@@ -1220,7 +1221,7 @@ func (s *SectionParser) compression() interface{} { //nolint:gocognit
 	return nil
 }
 
-func (s *SectionParser) clitcpkaIdle() interface{} {
+func (s *SectionParser) clitcpkaIdle() any {
 	data, err := s.get("clitcpka-idle", false)
 	if err != nil {
 		return nil
@@ -1229,7 +1230,7 @@ func (s *SectionParser) clitcpkaIdle() interface{} {
 	return misc.ParseTimeoutDefaultSeconds(d.Value)
 }
 
-func (s *SectionParser) clitcpkaIntvl() interface{} {
+func (s *SectionParser) clitcpkaIntvl() any {
 	data, err := s.get("clitcpka-intvl", false)
 	if err != nil {
 		return nil
@@ -1238,7 +1239,7 @@ func (s *SectionParser) clitcpkaIntvl() interface{} {
 	return misc.ParseTimeoutDefaultSeconds(d.Value)
 }
 
-func (s *SectionParser) srvtcpkaIdle() interface{} {
+func (s *SectionParser) srvtcpkaIdle() any {
 	data, err := s.get("srvtcpka-idle", false)
 	if err != nil {
 		return nil
@@ -1247,7 +1248,7 @@ func (s *SectionParser) srvtcpkaIdle() interface{} {
 	return misc.ParseTimeoutDefaultSeconds(d.Value)
 }
 
-func (s *SectionParser) srvtcpkaIntvl() interface{} {
+func (s *SectionParser) srvtcpkaIntvl() any {
 	data, err := s.get("srvtcpka-intvl", false)
 	if err != nil {
 		return nil
@@ -1256,7 +1257,7 @@ func (s *SectionParser) srvtcpkaIntvl() interface{} {
 	return misc.ParseTimeoutDefaultSeconds(d.Value)
 }
 
-func (s *SectionParser) serverStateFileName() interface{} {
+func (s *SectionParser) serverStateFileName() any {
 	data, err := s.get("server-state-file-name", false)
 	if err != nil {
 		return nil
@@ -1265,7 +1266,7 @@ func (s *SectionParser) serverStateFileName() interface{} {
 	return d.Value
 }
 
-func (s *SectionParser) description() interface{} {
+func (s *SectionParser) description() any {
 	data, err := s.get("description", false)
 	if err != nil {
 		return nil
@@ -1274,7 +1275,7 @@ func (s *SectionParser) description() interface{} {
 	return d.Value
 }
 
-func (s *SectionParser) errorloc302() interface{} {
+func (s *SectionParser) errorloc302() any {
 	data, err := s.get("errorloc302", false)
 	if err != nil {
 		return nil
@@ -1294,7 +1295,7 @@ func (s *SectionParser) errorloc302() interface{} {
 	return value
 }
 
-func (s *SectionParser) errorloc303() interface{} {
+func (s *SectionParser) errorloc303() any {
 	data, err := s.get("errorloc303", false)
 	if err != nil {
 		return nil
@@ -1314,7 +1315,7 @@ func (s *SectionParser) errorloc303() interface{} {
 	return value
 }
 
-func (s *SectionParser) httpRestirctReqHdrNames() interface{} {
+func (s *SectionParser) httpRestirctReqHdrNames() any {
 	data, err := s.get("option http-restrict-req-hdr-names", false)
 	if err != nil {
 		return nil
@@ -1326,7 +1327,7 @@ func (s *SectionParser) httpRestirctReqHdrNames() interface{} {
 	return d.Policy
 }
 
-func (s *SectionParser) defaultBind() interface{} {
+func (s *SectionParser) defaultBind() any {
 	data, err := s.get("default-bind", false)
 	if err != nil {
 		return nil
@@ -1338,7 +1339,7 @@ func (s *SectionParser) defaultBind() interface{} {
 	}
 }
 
-func (s *SectionParser) httpSendNameHeader() interface{} {
+func (s *SectionParser) httpSendNameHeader() any {
 	if s.Section == parser.Defaults || s.Section == parser.Backends {
 		data, err := s.get("http-send-name-header", false)
 		if err != nil {
@@ -1353,7 +1354,7 @@ func (s *SectionParser) httpSendNameHeader() interface{} {
 	return nil
 }
 
-func (s *SectionParser) forcePersistList() interface{} {
+func (s *SectionParser) forcePersistList() any {
 	if s.Section != parser.Backends {
 		return nil
 	}
@@ -1379,7 +1380,7 @@ func (s *SectionParser) forcePersistList() interface{} {
 	return items
 }
 
-func (s *SectionParser) ignorePersistList() interface{} {
+func (s *SectionParser) ignorePersistList() any {
 	if s.Section != parser.Backends {
 		return nil
 	}
@@ -1405,7 +1406,7 @@ func (s *SectionParser) ignorePersistList() interface{} {
 	return items
 }
 
-func (s *SectionParser) source() interface{} {
+func (s *SectionParser) source() any {
 	if s.Section == parser.Backends || s.Section == parser.Defaults {
 		data, err := s.get("source", false)
 		if err != nil {
@@ -1440,7 +1441,7 @@ func (s *SectionParser) source() interface{} {
 	return nil
 }
 
-func (s *SectionParser) shards() interface{} {
+func (s *SectionParser) shards() any {
 	if s.Section == parser.Peers {
 		data, err := s.get("shards", false)
 		if err != nil {
@@ -1455,7 +1456,7 @@ func (s *SectionParser) shards() interface{} {
 	return nil
 }
 
-func (s *SectionParser) originalto() interface{} {
+func (s *SectionParser) originalto() any {
 	data, err := s.get("option originalto", false)
 	if err != nil {
 		return nil
@@ -1472,7 +1473,7 @@ func (s *SectionParser) originalto() interface{} {
 
 // SectionObject represents a configuration section
 type SectionObject struct {
-	Object  interface{}
+	Object  any
 	Parser  parser.Parser
 	Section parser.Section
 	Name    string
@@ -1480,7 +1481,7 @@ type SectionObject struct {
 }
 
 // CreateEditSection creates or updates a section in the parser based on the provided object
-func CreateEditSection(object interface{}, section parser.Section, pName string, p parser.Parser, opt *options.ConfigurationOptions) error {
+func CreateEditSection(object any, section parser.Section, pName string, p parser.Parser, opt *options.ConfigurationOptions) error {
 	so := SectionObject{
 		Object:  object,
 		Section: section,
@@ -1712,7 +1713,7 @@ func (s *SectionObject) checkSingleLine(fieldName string, field reflect.Value) (
 	return false, nil
 }
 
-func (s *SectionObject) set(attribute string, data interface{}) error {
+func (s *SectionObject) set(attribute string, data any) error {
 	return s.Parser.Set(s.Section, s.Name, attribute, data)
 }
 
@@ -2079,7 +2080,7 @@ func (s *SectionObject) getHTTPChkData() (common.ParserData, error) {
 	}, nil
 }
 
-func (s *SectionObject) getFieldByName(fieldName string) interface{} {
+func (s *SectionObject) getFieldByName(fieldName string) any {
 	objValue := reflect.ValueOf(s.Object).Elem()
 	elem := objValue.FieldByName(fieldName)
 	if elem.IsNil() {
@@ -2884,7 +2885,7 @@ func (s *SectionObject) shard(field reflect.Value) error {
 }
 
 func (s *SectionObject) originalto(field reflect.Value) error {
-	if !(s.Section == parser.Defaults || s.Section == parser.Frontends || s.Section == parser.Backends) {
+	if s.Section != parser.Defaults && s.Section != parser.Frontends && s.Section != parser.Backends {
 		return nil
 	}
 	if valueIsNil(field) {
@@ -2919,7 +2920,7 @@ func (c *client) deleteSection(section parser.Section, name string, transactionI
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func (c *client) editSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
+func (c *client) editSection(section parser.Section, name string, data any, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -2937,7 +2938,7 @@ func (c *client) editSection(section parser.Section, name string, data interface
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func (c *client) createSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
+func (c *client) createSection(section parser.Section, name string, data any, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -3021,7 +3022,7 @@ func translateToParserData(field reflect.Value) common.ParserData {
 	}
 }
 
-func parseOption(d interface{}) interface{} {
+func parseOption(d any) any {
 	switch v := d.(type) {
 	case *types.StringC:
 		return v.Value

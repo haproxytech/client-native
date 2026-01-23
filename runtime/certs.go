@@ -33,8 +33,8 @@ func (s *SingleRuntime) parseCerts(output string) models.SslCertificates {
 	}
 	certs := models.SslCertificates{}
 
-	lines := strings.Split(output, "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(output, "\n")
+	for line := range lines {
 		c := s.parseCert(line)
 		if c != nil {
 			certs = append(certs, c)
@@ -107,41 +107,41 @@ func parseCertEntry(response string) (*models.SslCertEntry, error) {
 	}
 
 	c := &models.SslCertEntry{}
-	parts := strings.Split(response, "\n")
-	for _, p := range parts {
-		index := strings.Index(p, ":")
-		if index == -1 {
+	parts := strings.SplitSeq(response, "\n")
+	for p := range parts {
+		before, after, found := strings.Cut(p, ":")
+		if !found {
 			continue
 		}
-		keyString := strings.TrimSpace(p[0:index])
-		valueString := strings.TrimSpace(p[index+1:])
+		keyString := strings.TrimSpace(strings.TrimSpace(before))
+		valueString := strings.TrimSpace(strings.TrimSpace(after))
 
-		switch key := keyString; {
-		case key == "Filename":
+		switch keyString {
+		case "Filename":
 			c.StorageName = valueString
-		case key == "Status":
+		case "Status":
 			c.Status = valueString
-		case key == "Serial":
+		case "Serial":
 			c.Serial = valueString
-		case key == "notBefore":
+		case "notBefore":
 			notBefore, _ := time.Parse("Jan 2 15:04:05 2006 MST", valueString)
 			c.NotBefore = strfmt.Date(notBefore)
-		case key == "notAfter":
+		case "notAfter":
 			notAfter, _ := time.Parse("Jan 2 15:04:05 2006 MST", valueString)
 			c.NotAfter = strfmt.Date(notAfter)
-		case key == "Subject Alternative Name":
+		case "Subject Alternative Name":
 			c.SubjectAlternativeNames = strings.Split(valueString, ", ")
-		case key == "Algorithm":
+		case "Algorithm":
 			c.Algorithm = valueString
-		case key == "SHA1 FingerPrint":
+		case "SHA1 FingerPrint":
 			c.Sha1FingerPrint = valueString
-		case key == "Subject":
+		case "Subject":
 			c.Subject = valueString
-		case key == "Issuer":
+		case "Issuer":
 			c.Issuer = valueString
-		case key == "Chain Subject":
+		case "Chain Subject":
 			c.ChainSubject = valueString
-		case key == "Chain Issuer":
+		case "Chain Issuer":
 			c.ChainIssuer = valueString
 		}
 	}
@@ -191,7 +191,7 @@ func (s *SingleRuntime) CommitCertEntry(storageName string) error {
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
-	if !(strings.Contains(response, "Committing") && strings.Contains(response, "Success!")) {
+	if !strings.Contains(response, "Committing") || !strings.Contains(response, "Success!") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
 	}
 	return nil
@@ -223,7 +223,7 @@ func (s *SingleRuntime) DeleteCertEntry(storageName string) error {
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
-	if !(strings.Contains(response, "Certificate") && strings.Contains(response, "deleted!")) {
+	if !strings.Contains(response, "Certificate") || !strings.Contains(response, "deleted!") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
 	}
 	return nil

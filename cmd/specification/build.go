@@ -17,7 +17,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var cache map[string]interface{} //nolint:gochecknoglobals
+var cache map[string]any //nolint:gochecknoglobals
 
 func errorExit(msg string) {
 	fmt.Fprintf(os.Stderr, "ERROR: %v\n", msg)
@@ -39,7 +39,7 @@ func expandRef(refValue string, absPath string, prefix string) string {
 	filePath := path.Join(absPath, words[0])
 	keyPath := words[1]
 
-	m, ok := cache[filePath].(map[string]interface{})
+	m, ok := cache[filePath].(map[string]any)
 	if !ok {
 		fileHandle, err := os.Open(filePath)
 		if err != nil {
@@ -48,11 +48,12 @@ func expandRef(refValue string, absPath string, prefix string) string {
 		defer fileHandle.Close()
 
 		fileScanner := bufio.NewScanner(fileHandle)
-		value := ""
+		sb := strings.Builder{}
 		for fileScanner.Scan() {
-			value += fileScanner.Text() + "\n"
+			sb.WriteString(fileScanner.Text())
+			sb.WriteString("\n")
 		}
-
+		value := sb.String()
 		err = yaml.Unmarshal([]byte(value), &m)
 		if err != nil {
 			fmt.Println(refValue)         //nolint:forbidigo
@@ -61,9 +62,9 @@ func expandRef(refValue string, absPath string, prefix string) string {
 		}
 		cache[filePath] = m
 	}
-	retVal := make(map[string]interface{})
+	retVal := make(map[string]any)
 	if m[keyPath[1:]] != nil {
-		retVal = m[keyPath[1:]].(map[string]interface{})
+		retVal = m[keyPath[1:]].(map[string]any)
 	} else {
 		fmt.Println(refValue)       //nolint:forbidigo
 		fmt.Println(keyPath)        //nolint:forbidigo
@@ -83,17 +84,18 @@ func expandRef(refValue string, absPath string, prefix string) string {
 
 	var indentedRetValStr string
 	var indentedLine string
-	for _, line := range strings.Split(retValStr, "\n") {
+	for line := range strings.SplitSeq(retValStr, "\n") {
 		if strings.TrimSpace(line) != "" {
 			indentedLine = prefix + "" + line + "\n"
-			indentedRetValStr += indentedLine
+			indentedRetValStr += indentedLine //nolint: perfsprint
 		}
 	}
 
 	return indentedRetValStr[:len(indentedRetValStr)-1]
 }
 
-func main() { //nolint:gocognit
+//nolint:gocognit,modernize,perfsprint
+func main() {
 	inputFilePtr := flag.String("file", "", "Source file")
 
 	flag.Parse()
@@ -106,7 +108,7 @@ func main() { //nolint:gocognit
 		errorExit("File " + *inputFilePtr + " does not exist")
 	}
 
-	cache = make(map[string]interface{})
+	cache = make(map[string]any)
 
 	absPath := filepath.Dir(*inputFilePtr)
 	fileHandle, err := os.Open(*inputFilePtr)
@@ -166,7 +168,7 @@ func main() { //nolint:gocognit
 
 					b, _ := yaml.Marshal(&ts)
 
-					for _, line := range strings.Split(strings.TrimRight(string(b), "\n"), "\n") {
+					for line := range strings.SplitSeq(strings.TrimRight(string(b), "\n"), "\n") {
 						result.WriteString("  " + line + "\n")
 					}
 					result.WriteString("security:")

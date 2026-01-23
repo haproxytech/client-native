@@ -14,15 +14,17 @@ import (
 // HAProxyMock - Mock HAProxy Server for testing the socket communication
 type HAProxyMock struct {
 	net.Listener
+
 	responses map[string]string
 	t         *testing.T
-
-	mu      sync.RWMutex
-	running bool
+	mu        sync.RWMutex
+	running   bool
 }
 
 // NewHAProxyMock - create new haproxy mock
-func NewHAProxyMock(t *testing.T) *HAProxyMock { //nolint:thelper
+//
+//nolint:thelper,noctx
+func NewHAProxyMock(t *testing.T) *HAProxyMock {
 	haProxyMock := &HAProxyMock{}
 	haProxyMock.t = t
 	l, err := net.Listen("unix", socket())
