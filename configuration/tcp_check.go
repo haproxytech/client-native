@@ -75,9 +75,10 @@ func (c *client) GetTCPCheck(id int64, parentType string, parentName string, tra
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -105,9 +106,10 @@ func (c *client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -137,9 +139,10 @@ func (c *client) CreateTCPCheck(id int64, parentType string, parentName string, 
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -171,9 +174,10 @@ func (c *client) EditTCPCheck(id int64, parentType string, parentName string, da
 		return err
 	}
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -216,9 +220,10 @@ func (c *client) ReplaceTCPChecks(parentType string, parentName string, data mod
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName

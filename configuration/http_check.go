@@ -75,9 +75,10 @@ func (c *client) GetHTTPCheck(id int64, parentType string, parentName string, tr
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -105,9 +106,10 @@ func (c *client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -137,9 +139,10 @@ func (c *client) CreateHTTPCheck(id int64, parentType string, parentName string,
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -171,9 +174,10 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 		return err
 	}
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -216,9 +220,10 @@ func (c *client) ReplaceHTTPChecks(parentType string, parentName string, data mo
 	}
 
 	var section parser.Section
-	if parentType == BackendParentName {
+	switch parentType {
+	case BackendParentName:
 		section = parser.Backends
-	} else if parentType == DefaultsParentName {
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -347,15 +352,15 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			CheckComment:  v.CheckComment,
 			Metadata:      parseMetadata(v.Comment),
 		}
-		headers := []*models.ReturnHeader{}
-		for _, h := range v.Header {
+		headers := make([]*models.ReturnHeader, len(v.Header))
+		for i, h := range v.Header {
 			name := h.Name
 			value := h.Format
 			header := &models.ReturnHeader{
 				Name: &name,
 				Fmt:  &value,
 			}
-			headers = append(headers, header)
+			headers[i] = header
 		}
 		check.CheckHeaders = headers
 	case *http_actions.CheckSendState:

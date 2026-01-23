@@ -333,7 +333,7 @@ func (s storage) validatePEM(raw []byte) error {
 		}
 		raw = rest
 	}
-	if !(hasCertificate && hasPrivateKey) {
+	if !hasCertificate || !hasPrivateKey {
 		return errors.New("file should contain both certificate and private key")
 	}
 

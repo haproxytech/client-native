@@ -19,7 +19,7 @@ func generateEqualAndDiff(opt generateEqualAndDiffOptions) error {
 		return err
 	}
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"Mode":              opt.Mode,
 		"Name":              opt.Name,
 		"Type":              opt.Type,
@@ -32,13 +32,13 @@ func generateEqualAndDiff(opt generateEqualAndDiffOptions) error {
 		"IsPointer":         opt.IsPointer,
 	}
 
-	functions := map[string]interface{}{
-		"Functions": []interface{}{
-			map[string]interface{}{
+	functions := map[string]any{
+		"Functions": []any{
+			map[string]any{
 				"Name": "Equal",
 				"Data": data,
 			},
-			map[string]interface{}{
+			map[string]any{
 				"Name": "Diff",
 				"Data": data,
 			},
@@ -82,7 +82,7 @@ func generateCompareTests(opt generateEqualAndDiffOptions) error {
 			break
 		}
 	}
-	err = tmpl.Execute(opt.FileTest, map[string]interface{}{
+	err = tmpl.Execute(opt.FileTest, map[string]any{
 		"TestType":    []string{"Equal", "Diff"},
 		"Name":        opt.Name,
 		"HasIndex":    hasIndex,

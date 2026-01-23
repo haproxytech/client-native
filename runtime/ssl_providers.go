@@ -15,12 +15,11 @@ func parseSSLProviders(response string) (*models.SslProviders, error) {
 	sslProviders := &models.SslProviders{}
 	parts := strings.Split(response, "\n")
 	for _, p := range parts[1:] {
-		index := strings.Index(p, "-")
-		if index == -1 {
+		_, valueString, found := strings.Cut(p, "-")
+		if !found {
 			continue
 		}
-		valueString := strings.TrimSpace(p[index+1:])
-		sslProviders.Providers = append(sslProviders.Providers, valueString)
+		sslProviders.Providers = append(sslProviders.Providers, strings.TrimSpace(valueString))
 	}
 	return sslProviders, nil
 }

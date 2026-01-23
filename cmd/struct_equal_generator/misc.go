@@ -60,13 +60,12 @@ func toJSON(x any) string {
 
 func toCamelCase(s string) string {
 	caser := cases.Title(language.Und)
-	var result string
-	words := strings.Split(s, "_")
-
-	for _, word := range words {
-		result += caser.String(word)
+	words := strings.SplitSeq(s, "_")
+	sb := strings.Builder{}
+	for word := range words {
+		sb.WriteString(caser.String(word))
 	}
-
+	result := sb.String()
 	result = strings.ToLower(result[:1]) + result[1:]
 
 	return result
@@ -74,13 +73,13 @@ func toCamelCase(s string) string {
 
 func toLowerCase(s string) string {
 	caser := cases.Lower(language.Und)
-	var result string
-	words := strings.Split(s, "_")
+	words := strings.SplitSeq(s, "_")
 
-	for _, word := range words {
-		result += caser.String(word)
+	sb := strings.Builder{}
+	for word := range words {
+		sb.WriteString(caser.String(word))
 	}
-
+	result := sb.String()
 	result = strings.ToLower(result[:1]) + result[1:]
 
 	return result

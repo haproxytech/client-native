@@ -31,8 +31,8 @@ func (s *SingleRuntime) parseACLS(output string) models.ACLFiles {
 	}
 	acls := models.ACLFiles{}
 
-	lines := strings.Split(strings.TrimSpace(output), "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(strings.TrimSpace(output), "\n")
+	for line := range lines {
 		m := s.parseACL(line)
 		if m != nil {
 			acls = append(acls, m)
@@ -115,8 +115,8 @@ func ParseACLFileEntries(output string, hasID bool) (models.ACLFilesEntries, err
 	}
 	me := models.ACLFilesEntries{}
 
-	lines := strings.Split(strings.TrimSpace(output), "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(strings.TrimSpace(output), "\n")
+	for line := range lines {
 		e := parseACLFileEntry(line, hasID)
 		if e != nil {
 			me = append(me, e)
@@ -209,13 +209,13 @@ func (s *SingleRuntime) GetACLFileEntry(aclID, value string) (*models.ACLFileEnt
 
 	matched := false
 	m := &models.ACLFileEntry{}
-	parts := strings.Split(response, ",")
-	for _, p := range parts {
+	parts := strings.SplitSeq(response, ",")
+	for p := range parts {
 		kv := strings.Split(p, "=")
-		switch key := strings.TrimSpace(kv[0]); {
-		case key == "pattern":
+		switch key := strings.TrimSpace(kv[0]); key {
+		case "pattern":
 			m.Value = strings.Trim(strings.TrimSpace(kv[1]), "\"")
-		case key == "match":
+		case "match":
 			matched = true
 		}
 	}

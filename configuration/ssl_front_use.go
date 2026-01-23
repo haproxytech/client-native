@@ -206,9 +206,10 @@ func ParseSSLFrontUse(ondisk types.SSLFrontUse) *models.SSLFrontUse {
 			}
 		case *params.BindOptionOnOff:
 			if v.Name == "ocsp-update" {
-				if v.Value == "on" {
+				switch v.Value {
+				case "on":
 					u.OcspUpdate = "enabled"
-				} else if v.Value == "off" {
+				case "off":
 					u.OcspUpdate = "disabled"
 				}
 			}

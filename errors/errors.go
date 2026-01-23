@@ -1,5 +1,6 @@
 package errors
 
+//nolint:revive
 import "errors"
 
 var (

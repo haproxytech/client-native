@@ -204,7 +204,7 @@ func (s *SingleRuntime) CommitCertificate(storageName string) error {
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
-	if !(strings.Contains(response, "Committing") && strings.Contains(response, "Success!")) {
+	if !strings.Contains(response, "Committing") || !strings.Contains(response, "Success!") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
 	}
 	return nil
@@ -237,7 +237,7 @@ func (s *SingleRuntime) DeleteCertificate(storageName string) error {
 	if strings.Contains(response, "in use") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
 	}
-	if !(strings.Contains(response, "Certificate") && strings.Contains(response, "deleted!")) {
+	if !strings.Contains(response, "Certificate") || !strings.Contains(response, "deleted!") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
 	}
 	return nil

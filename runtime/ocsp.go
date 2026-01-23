@@ -28,22 +28,22 @@ func parseCertificateIDs(response string) ([]*models.SslCertificateID, error) {
 		CertificateID: &models.CertificateID{},
 	}
 	for _, p := range parts {
-		index := strings.Index(p, ":")
-		if index == -1 {
+		before, after, found := strings.Cut(p, ":")
+		if !found {
 			continue
 		}
-		keyString := strings.TrimSpace(p[0:index])
-		valueString := strings.TrimSpace(p[index+1:])
-		switch key := keyString; {
-		case key == "Certificate ID key":
+		keyString := strings.TrimSpace(before)
+		valueString := strings.TrimSpace(after)
+		switch key := keyString; key {
+		case "Certificate ID key":
 			certificateID.CertificateIDKey = valueString
-		case key == "Certificate path":
+		case "Certificate path":
 			certificateID.CertificatePath = valueString
-		case key == "Issuer Name Hash":
+		case "Issuer Name Hash":
 			certificateID.CertificateID.IssuerNameHash = valueString
-		case key == "Issuer Key Hash":
+		case "Issuer Key Hash":
 			certificateID.CertificateID.IssuerKeyHash = valueString
-		case key == "Serial Number":
+		case "Serial Number":
 			certificateID.CertificateID.SerialNumber = valueString
 			certificateIDs = append(certificateIDs, certificateID)
 			certificateID = &models.SslCertificateID{

@@ -2233,7 +2233,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	if err != nil {
 		return nil, err
 	}
-	global.GlobalBase.CPUSets = cpuSets
+	global.CPUSets = cpuSets
 
 	h1CaseAdjusts, err := parseH1CaseAdjusts(p)
 	if err != nil {
@@ -3105,13 +3105,13 @@ func serializeLuaOptions(p parser.Parser, options *models.LuaOptions) error {
 }
 
 func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
-	cpuMaps := []types.CPUMap{}
-	for _, cpuMap := range data.CPUMaps {
+	cpuMaps := make([]types.CPUMap, len(data.CPUMaps))
+	for i, cpuMap := range data.CPUMaps {
 		cm := types.CPUMap{
 			Process: *cpuMap.Process,
 			CPUSet:  *cpuMap.CPUSet,
 		}
-		cpuMaps = append(cpuMaps, cm)
+		cpuMaps[i] = cm
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps); err != nil {
 		return err
@@ -3392,9 +3392,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	numaCPUMapping := &types.NumaCPUMapping{}
-	if data.NumaCPUMapping == "" {
+	switch data.NumaCPUMapping {
+	case "":
 		numaCPUMapping = nil
-	} else if data.NumaCPUMapping == "disabled" {
+	case "disabled":
 		numaCPUMapping.NoOption = true
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping", numaCPUMapping); err != nil {

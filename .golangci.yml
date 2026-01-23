@@ -1,51 +1,66 @@
----
-linters-settings:
-  golint:
-    min-confidence: 0
-  gocyclo:
-    min-complexity: 42
-  cyclop:
-    max-complexity: 42
-  maligned:
-    suggest-new: true
-  dupl:
-    threshold: 200
-  goconst:
-    min-len: 2
-    min-occurrences: 3
-  gci:
-    prefix: github.com/haproxytech/client-native/v6
-
+version: "2"
 linters:
-  enable-all: true
+  settings:
+    cyclop:
+      max-complexity: 42
+    gocyclo:
+      min-complexity: 42
+  default: all
   disable:
-    - mnd
-    - err113
-    - wsl
-    - wrapcheck
-    - godot
-    - varnamelen
-    - nlreturn
-    - ireturn
-    - interfacebloat
-    - forcetypeassert
-    - exhaustruct
-    - dupword
-    - nestif
-    - lll
     - depguard
+    - dupword
+    - dupl
+    - err113
+    - exhaustruct
+    - forcetypeassert
+    - funcorder
     - funlen
-    - gci
     - goconst
+    - godoclint
+    - godot
+    - interfacebloat
+    - ireturn
+    - lll
+    - mnd
+    - nestif
+    - nlreturn
+    - noinlineerr
     - recvcheck
-    - tenv  # deprecated
-
-issues:
-  exclude-files:
-    - ".*_test\\.go$"
-  exclude-dirs:
-    - test
-  exclude:
-    - "unused-parameter: parameter 'comment' seems to be unused"
-    - "unused-parameter: parameter 'parts' seems to be unused"
-    - "unused-parameter: parameter 'parserType' seems to be unused"
+    - revive
+    - varnamelen
+    - wrapcheck
+    - wsl
+    - wsl_v5
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: (.+)\.go$
+        text: 'unused-parameter: parameter ''comment'' seems to be unused'
+      - path: (.+)\.go$
+        text: 'unused-parameter: parameter ''parts'' seems to be unused'
+      - path: (.+)\.go$
+        text: 'unused-parameter: parameter ''parserType'' seems to be unused'
+    paths:
+      - .*_test\.go$
+      - test
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - .*_test\.go$
+      - test
+      - third_party$
+      - builtin$
+      - examples$

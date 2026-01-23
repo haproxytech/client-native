@@ -45,11 +45,7 @@ func (p *configParser) Get(sectionType Section, sectionName string, attribute st
 	if !ok {
 		return nil, errors.ErrSectionMissing
 	}
-	createNew := false
-	if len(createIfNotExist) > 0 && createIfNotExist[0] {
-		createNew = true
-	}
-	return section.Get(attribute, createNew)
+	return section.Get(attribute, len(createIfNotExist) > 0 && createIfNotExist[0])
 }
 
 // GetResult get attribute lines from section
@@ -244,7 +240,8 @@ func (p *configParser) SectionsDefaultsFromSet(sectionType Section, sectionName,
 		// for defaults we need to check for circular dependencies
 		// and whether that section exists or not due to sorting method
 		sections := p.Parsers[Defaults]
-		listDefaults := []sorter.Section{}
+		listDefaults := make([]sorter.Section, len(sections))
+		i := 0
 		for k, v := range sections {
 			s := sorter.Section{
 				Name: k,
@@ -253,7 +250,8 @@ func (p *configParser) SectionsDefaultsFromSet(sectionType Section, sectionName,
 			if s.Name == sectionName {
 				s.From = defaultsSection
 			}
-			listDefaults = append(listDefaults, s)
+			listDefaults[i] = s
+			i++
 		}
 		err := sorter.Sort(listDefaults)
 		if err != nil {

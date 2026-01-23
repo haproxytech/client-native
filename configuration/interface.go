@@ -135,7 +135,7 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 	}
 
 	parserOptions := []parser_options.ParserOption{}
-	if c.ConfigurationOptions.UseMd5Hash {
+	if c.UseMd5Hash {
 		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
 	}
 
@@ -161,6 +161,7 @@ func (c *client) Parser() parser.Parser {
 	return c.parser
 }
 
+//nolint:noctx
 func (c *client) fetchVersion(haproxy string) (string, error) {
 	versionString, err := exec.Command(haproxy, "-v").Output()
 	if err != nil {

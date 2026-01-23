@@ -20,6 +20,7 @@ import (
 	"math/rand"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -29,31 +30,26 @@ var chars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 
 // StringInSlice checks if a string is in a list of strings
 func StringInSlice(a string, list []string) bool {
-	for _, b := range list {
-		if b == a {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(list, a)
 }
 
 // CamelCase turns snake case to camel case string
 func CamelCase(fieldName string, initCase bool) string {
 	s := strings.Trim(fieldName, " ")
-	n := ""
 	capNext := initCase
+	sb := strings.Builder{}
 	for _, v := range s {
 		if v >= 'A' && v <= 'Z' {
-			n += string(v)
+			sb.WriteRune(v)
 		}
 		if v >= '0' && v <= '9' {
-			n += string(v)
+			sb.WriteRune(v)
 		}
 		if v >= 'a' && v <= 'z' {
 			if capNext {
-				n += strings.ToUpper(string(v))
+				sb.WriteString(strings.ToUpper(string(v)))
 			} else {
-				n += string(v)
+				sb.WriteRune(v)
 			}
 		}
 		if v == '_' || v == ' ' || v == '-' {
@@ -62,6 +58,7 @@ func CamelCase(fieldName string, initCase bool) string {
 			capNext = false
 		}
 	}
+	n := sb.String()
 	// special cases
 	n = strings.ReplaceAll(n, "Http", "HTTP")
 	n = strings.ReplaceAll(n, "Uri", "URI")
@@ -123,7 +120,7 @@ func DashCase(input string) string {
 			// 2. the previous character is not capital.
 			// 3. the next character is not capital.
 			// To understand the rules take "JSONData" -> "json-data" as an example
-			if i > 0 && !(input[i-1] >= 'A' && input[i-1] <= 'Z' && (i+1 == n || i+1 < n && input[i+1] >= 'A' && input[i+1] <= 'Z')) {
+			if i > 0 && !(input[i-1] >= 'A' && input[i-1] <= 'Z' && (i+1 == n || i+1 < n && input[i+1] >= 'A' && input[i+1] <= 'Z')) { //nolint: staticcheck
 				result.WriteByte('-')
 			}
 			// Lower the case of the character

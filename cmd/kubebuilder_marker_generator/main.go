@@ -58,12 +58,12 @@ func generate(fileName string) error { //nolint:gocognit
 									// We must keep empty strings:
 									// For example in Globals HttpclientSslVerify: // Enum: [ none required]
 									// from swagger: enum: ["", "none", "required"]
-									for _, enum := range strings.Split(comment, ",") {
+									for enum := range strings.SplitSeq(comment, ",") {
 										enum = strings.Trim(enum, "\"")
 										if enum == "" {
 											newComment += `""`
 										}
-										newComment += enum
+										newComment += enum //nolint: perfsprint
 										newComment += ";"
 									}
 									field.Decorations().Start.Append(newComment)
