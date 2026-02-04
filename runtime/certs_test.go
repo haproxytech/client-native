@@ -189,7 +189,7 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 			name:   "Simple show certs, should return a cert",
 			fields: fields{socketPath: haProxy.Addr().String()},
 			args: args{
-				storageName: "/etc/ssl/cert-0.pem",
+				storageName: "cert-0",
 			},
 			want: &models.SslCertificate{
 				StorageName:             "/etc/ssl/cert-0.pem",
@@ -206,7 +206,7 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 				ChainIssuer:             "/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA",
 			},
 			socketResponse: map[string]string{
-				"show ssl cert /etc/ssl/cert-0.pem\n": ` Filename: /etc/ssl/cert-0.pem
+				"show ssl cert cert-0\n": ` Filename: cert-0
 					Status: Used
 					Serial: 0D933C1B1089BF660AE5253A245BB388
 					notBefore: Sep  9 00:00:00 2020 GMT
@@ -218,6 +218,70 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 					Issuer: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
 					Chain Subject: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
 					Chain Issuer: /C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
+					Crt filename: /etc/ssl/cert-0.pem
+					Key filename: /etc/ssl/cert-0.pem
+				`,
+			},
+		},
+		{
+			name:   "A certificate without a 'Crt filename'",
+			fields: fields{socketPath: haProxy.Addr().String()},
+			args: args{
+				storageName: "cert-1",
+			},
+			want: &models.SslCertificate{
+				StorageName:             "cert-1",
+				Status:                  "Used",
+				Serial:                  "0D933C1B1089BF660AE5253A245BB388",
+				NotBefore:               (*strfmt.DateTime)(&notBefore),
+				NotAfter:                (*strfmt.DateTime)(&notAfter),
+				SubjectAlternativeNames: "DNS:*.platform.domain.com, DNS:uaa.platform.domain.com",
+				Algorithm:               "RSA4096",
+				Sha1FingerPrint:         "59242F1838BDEF3E7DAFC83FFE4DD6C03B88805C",
+				Subject:                 "/C=DE/ST=Baden-Württemberg/L=Walldorf/O=ORG SE/CN=*.platform.domain.com",
+				Issuers:                 "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",
+				ChainSubject:            "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",
+				ChainIssuer:             "/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA",
+			},
+			socketResponse: map[string]string{
+				"show ssl cert cert-1\n": ` Filename: cert-1
+					Status: Used
+					Serial: 0D933C1B1089BF660AE5253A245BB388
+					notBefore: Sep  9 00:00:00 2020 GMT
+					notAfter: Sep 14 12:00:00 2021 GMT
+					Subject Alternative Name: DNS:*.platform.domain.com, DNS:uaa.platform.domain.com
+					Algorithm: RSA4096
+					SHA1 FingerPrint: 59242F1838BDEF3E7DAFC83FFE4DD6C03B88805C
+					Subject: /C=DE/ST=Baden-Württemberg/L=Walldorf/O=ORG SE/CN=*.platform.domain.com
+					Issuer: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+					Chain Subject: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+					Chain Issuer: /C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
+				`,
+			},
+		},
+		{
+			name:   "A certificate with a separate key file",
+			fields: fields{socketPath: haProxy.Addr().String()},
+			args: args{
+				storageName: "cert-2",
+			},
+			want:    nil,
+			wantErr: true,
+			socketResponse: map[string]string{
+				"show ssl cert cert-2\n": ` Filename: cert-2
+					Status: Used
+					Serial: 0D933C1B1089BF660AE5253A245BB388
+					notBefore: Sep  9 00:00:00 2020 GMT
+					notAfter: Sep 14 12:00:00 2021 GMT
+					Subject Alternative Name: DNS:*.platform.domain.com, DNS:uaa.platform.domain.com
+					Algorithm: RSA4096
+					SHA1 FingerPrint: 59242F1838BDEF3E7DAFC83FFE4DD6C03B88805C
+					Subject: /C=DE/ST=Baden-Württemberg/L=Walldorf/O=ORG SE/CN=*.platform.domain.com
+					Issuer: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+					Chain Subject: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+					Chain Issuer: /C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
+					Crt filename: /etc/ssl/cert-2.crt
+					Key filename: /etc/ssl/cert-2.key
 				`,
 			},
 		},
