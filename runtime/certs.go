@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -87,9 +88,9 @@ func (s *SingleRuntime) ShowCertEntry(storageName string) (*models.SslCertEntry,
 	return parseCertEntry(response)
 }
 
-// parseCertEntry parses one entry in one CrtList file/runtime and returns it structured
+// parseCertEntry parses one entry in one CrtList file and returns it structured
 // example:
-// Filename: /etc/ssl/cert-2.pem
+// Filename: /etc/ssl/cert-2.pem    <= this is just the same name you gave as certificate name, could be an alias
 // Status: Used
 // Serial: 0D933C1B1089BF660AE5253A245BB388
 // notBefore: Sep  9 00:00:00 2020 GMT
@@ -101,12 +102,18 @@ func (s *SingleRuntime) ShowCertEntry(storageName string) (*models.SslCertEntry,
 // Issuer: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
 // Chain Subject: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
 // Chain Issuer: /C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
+// *** undocumented, only in recent versions, "Key filename" is optional ***
+// Crt filename: /etc/ssl/cert-2.pem
+// Key filename: /etc/ssl/cert-2.key
 func parseCertEntry(response string) (*models.SslCertEntry, error) {
 	if response == "" || strings.HasPrefix(strings.TrimSpace(response), "#") {
 		return nil, native_errors.ErrNotFound
 	}
 
 	c := &models.SslCertEntry{}
+	var crtFilename string
+	var keyFilename string
+
 	parts := strings.SplitSeq(response, "\n")
 	for p := range parts {
 		before, after, found := strings.Cut(p, ":")
@@ -143,7 +150,25 @@ func parseCertEntry(response string) (*models.SslCertEntry, error) {
 			c.ChainSubject = valueString
 		case "Chain Issuer":
 			c.ChainIssuer = valueString
+		case "Crt filename":
+			crtFilename = valueString
+		case "Key filename":
+			keyFilename = valueString
 		}
+	}
+
+	if crtFilename != "" {
+		c.StorageName = crtFilename
+	}
+
+	// We currently do not support storing the key in a separate file.
+	if keyFilename != "" && keyFilename != crtFilename {
+		return nil, fmt.Errorf("failed to parse certificate info for %s: storing the private key in a separate file is not supported", c.StorageName)
+	}
+
+	// This should be impossible.
+	if c.StorageName == "" {
+		return nil, errors.New("failed to parse certificate info: empty filename")
 	}
 
 	return c, nil
