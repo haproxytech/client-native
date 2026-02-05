@@ -171,7 +171,8 @@ func (p *LuaLoadPerThread) Result() ([]common.ReturnResultLine, error) {
 }
 
 func (p *LuaLoadPerThread) ResultAll() ([]common.ReturnResultLine, []string, error) {
-	return p.Result()
+	res, err := p.Result()
+	return res, p.preComments, err
 }
 
 func (p *LuaLoadPerThread) parse(line string, parts []string, comment string) (*types.LuaLoad, error) {
