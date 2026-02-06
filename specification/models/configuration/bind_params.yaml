@@ -308,6 +308,10 @@ bind_params:
     tcp_md5sig:
       type: string
       pattern: '^[^\s]+$'
+    tcp_ss:
+      type: integer
+      enum: [1, 2, 3]
+      description: Sets the TCP Save SYN option for all incoming connections instantiated from this listening socket
     tcp_user_timeout:
       type: integer
       x-nullable: true

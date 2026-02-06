@@ -151,6 +151,7 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_bind443ssltlstickets", frontend_bind443ssltlstickets},
 		{"frontend_bind443strictsni", frontend_bind443strictsni},
 		{"frontend_bind443tcpmd5sigsecretpass", frontend_bind443tcpmd5sigsecretpass},
+		{"frontend_bind443tcpss1", frontend_bind443tcpss1},
 		{"frontend_bind443tcput30s", frontend_bind443tcput30s},
 		{"frontend_bind443tfo", frontend_bind443tfo},
 		{"frontend_bind443thread1", frontend_bind443thread1},

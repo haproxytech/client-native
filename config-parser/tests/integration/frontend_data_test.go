@@ -613,6 +613,10 @@ const frontend_bind443ktlsoff = `
 frontend test
   bind :443 ktls off
 `
+const frontend_bind443tcpss1 = `
+frontend test
+  bind :443 tcp-ss 1
+`
 const frontend_bindprocessall = `
 frontend test
   bind-process all

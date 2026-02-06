@@ -2187,6 +2187,7 @@ frontend test
   bind :443 tcp-md5sig secretpass
   bind :443 ktls on
   bind :443 ktls off
+  bind :443 tcp-ss 1
   bind-process all
   email-alert from admin@example.com
   email-alert to a@z,x@y
@@ -3376,6 +3377,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  bind :443 ktls on
 `, 1},
 	{`  bind :443 ktls off
+`, 1},
+	{`  bind :443 tcp-ss 1
 `, 1},
 	{`  dgram-bind :80,:443
 `, 1},

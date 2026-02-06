@@ -117,6 +117,7 @@ func TestBindParamsEqualFalse(t *testing.T) {
 		result.QuicCcAlgoMaxWindow = Ptr(*sample.QuicCcAlgoMaxWindow + 1)
 		result.Ssl = !sample.Ssl
 		result.StrictSni = !sample.StrictSni
+		result.TCPSs = sample.TCPSs + 1
 		result.TCPUserTimeout = Ptr(*sample.TCPUserTimeout + 1)
 		result.Tfo = !sample.Tfo
 		result.Transparent = !sample.Transparent
@@ -232,6 +233,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 		result.QuicCcAlgoMaxWindow = Ptr(*sample.QuicCcAlgoMaxWindow + 1)
 		result.Ssl = !sample.Ssl
 		result.StrictSni = !sample.StrictSni
+		result.TCPSs = sample.TCPSs + 1
 		result.TCPUserTimeout = Ptr(*sample.TCPUserTimeout + 1)
 		result.Tfo = !sample.Tfo
 		result.Transparent = !sample.Transparent
@@ -245,7 +247,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 85 {
+		if len(listDiffFields) != 86 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -255,7 +257,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected BindParams to be different in 85 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BindParams to be different in 86 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

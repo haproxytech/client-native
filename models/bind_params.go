@@ -289,6 +289,11 @@ type BindParams struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TCPMd5sig string `json:"tcp_md5sig,omitempty"`
 
+	// Sets the TCP Save SYN option for all incoming connections instantiated from this listening socket
+	// Enum: [1,2,3]
+	// +kubebuilder:validation:Enum=1;2;3;
+	TCPSs int64 `json:"tcp_ss,omitempty"`
+
 	// tcp user timeout
 	TCPUserTimeout *int64 `json:"tcp_user_timeout,omitempty"`
 
@@ -421,6 +426,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTCPMd5sig(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPSs(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -976,6 +985,39 @@ func (m *BindParams) validateTCPMd5sig(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("tcp_md5sig", "body", m.TCPMd5sig, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var bindParamsTypeTCPSsPropEnum []interface{}
+
+func init() {
+	var res []int64
+	if err := json.Unmarshal([]byte(`[1,2,3]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bindParamsTypeTCPSsPropEnum = append(bindParamsTypeTCPSsPropEnum, v)
+	}
+}
+
+// prop value enum
+func (m *BindParams) validateTCPSsEnum(path, location string, value int64) error {
+	if err := validate.EnumCase(path, location, value, bindParamsTypeTCPSsPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BindParams) validateTCPSs(formats strfmt.Registry) error {
+	if swag.IsZero(m.TCPSs) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTCPSsEnum("tcp_ss", "body", m.TCPSs); err != nil {
 		return err
 	}
 

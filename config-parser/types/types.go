@@ -276,6 +276,8 @@ type ACL struct{}
 //test:ok:bind :443 ktls off
 //test:fail:bind :443 ktls
 //test:fail:bind :443 ktls something
+//test:ok:bind :443 tcp-ss 1
+//test:fail:bind :443 tcp-ss
 type Bind struct {
 	Path    string // can be address:port or socket path
 	Params  []params.BindOption

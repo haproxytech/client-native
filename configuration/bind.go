@@ -306,6 +306,11 @@ func parseBindParams(bindOptions []params.BindOption) (models.BindParams, string
 				name = v.Value
 			case "tcp-ut":
 				b.TCPUserTimeout = misc.ParseTimeout(v.Value)
+			case "tcp-ss":
+				tcpss, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					b.TCPSs = tcpss
+				}
 			case "tcp-md5sig":
 				b.TCPMd5sig = v.Value
 			case "crt":
@@ -485,6 +490,9 @@ func serializeBindParams(b models.BindParams, name string, path string, opt *opt
 	}
 	if b.CaVerifyFile != "" {
 		options = append(options, &params.BindOptionValue{Name: "ca-verify-file", Value: b.CaVerifyFile})
+	}
+	if b.TCPSs != 0 {
+		options = append(options, &params.BindOptionValue{Name: "tcp-ss", Value: strconv.FormatInt(b.TCPSs, 10)})
 	}
 	if b.TCPUserTimeout != nil {
 		options = append(options, &params.BindOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*b.TCPUserTimeout, 10)})

@@ -2958,7 +2958,8 @@
                     "ssl": true,
                     "address": "192.168.1.1",
                     "port": 443,
-                    "ssl_certificate": "dummy1.pem:dummy2.pem:dummy3.pem:dummy4.pem"
+                    "ssl_certificate": "dummy1.pem:dummy2.pem:dummy3.pem:dummy4.pem",
+                    "tcp_ss": 1
                 }
             },
             "ssl_front_use_list": [

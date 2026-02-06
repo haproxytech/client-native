@@ -161,6 +161,7 @@ func TestBind(t *testing.T) {
 		"bind :443 tcp-md5sig secretpass":                               true,
 		"bind :443 ktls on":                                             true,
 		"bind :443 ktls off":                                            true,
+		"bind :443 tcp-ss 1":                                            true,
 		"bind":                                                          false,
 		"bind :443 quic-cc-algo something":                              false,
 		"bind :443 quic-cc-algo nocc()":                                 false,
@@ -172,6 +173,7 @@ func TestBind(t *testing.T) {
 		"bind :443 tcp-md5sig":                                          false,
 		"bind :443 ktls":                                                false,
 		"bind :443 ktls something":                                      false,
+		"bind :443 tcp-ss":                                              false,
 		"---":                                                           false,
 		"--- ---":                                                       false,
 	}

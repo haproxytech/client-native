@@ -233,6 +233,9 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.TCPMd5sig != obj.TCPMd5sig {
 		diff["TCPMd5sig"] = []interface{}{rec.TCPMd5sig, obj.TCPMd5sig}
 	}
+	if rec.TCPSs != obj.TCPSs {
+		diff["TCPSs"] = []interface{}{rec.TCPSs, obj.TCPSs}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TCPUserTimeout, obj.TCPUserTimeout, opts...) {
 		diff["TCPUserTimeout."+diffKey] = diffValue
 	}

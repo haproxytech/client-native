@@ -562,6 +562,13 @@ definitions:
       tcp_md5sig:
         pattern: ^[^\s]+$
         type: string
+      tcp_ss:
+        description: Sets the TCP Save SYN option for all incoming connections instantiated from this listening socket
+        enum:
+          - 1
+          - 2
+          - 3
+        type: integer
       tcp_user_timeout:
         type: integer
         x-nullable: true
