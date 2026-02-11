@@ -1214,8 +1214,8 @@ type UseFcgiApp struct {
 //name:use-server
 //is:multiple
 //no:parse
-//test:ok:use-server www if { req_ssl_sni -i www.example.com }
-//test:ok:use-server www if { req_ssl_sni -i www.example.com } # comment
+//test:ok:use-server www if { req.ssl_sni -i www.example.com }
+//test:ok:use-server www if { req.ssl_sni -i www.example.com } # comment
 //test:fail:use-server
 type UseServer struct {
 	Name     string
