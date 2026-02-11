@@ -33,7 +33,7 @@ import (
 // BackendSwitchingRule Backend Switching Rule
 //
 // HAProxy backend switching rule configuration (corresponds to use_backend directive)
-// Example: {"cond":"if","cond_test":"{ req_ssl_sni -i www.example.com }","index":0,"name":"test_backend"}
+// Example: {"cond":"if","cond_test":"{ req.ssl_sni -i www.example.com }","index":0,"name":"test_backend"}
 //
 // swagger:model backend_switching_rule
 type BackendSwitchingRule struct {
