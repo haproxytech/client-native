@@ -454,8 +454,8 @@ backend test
   stick match src table pop if !localhost
   stick store-request src table pop if !localhost
   use-fcgi-app application
-  use-server www if { req_ssl_sni -i www.example.com }
-  use-server www if { req_ssl_sni -i www.example.com } # comment
+  use-server www if { req.ssl_sni -i www.example.com }
+  use-server www if { req.ssl_sni -i www.example.com } # comment
   load-server-state-from-file global
   server-template srv 1-3 google.com:80 check
   server-template srv 3 google.com:80 check
@@ -4163,9 +4163,9 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 2},
 	{`  use-fcgi-app application
 `, 1},
-	{`  use-server www if { req_ssl_sni -i www.example.com }
+	{`  use-server www if { req.ssl_sni -i www.example.com }
 `, 1},
-	{`  use-server www if { req_ssl_sni -i www.example.com } # comment
+	{`  use-server www if { req.ssl_sni -i www.example.com } # comment
 `, 1},
 	{`  lua-prepend-path /usr/share/haproxy-lua/?/init.lua
 `, 1},

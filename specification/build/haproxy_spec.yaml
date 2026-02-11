@@ -7835,7 +7835,7 @@ definitions:
     description: HAProxy backend switching rule configuration (corresponds to use_backend directive)
     example:
       cond: if
-      cond_test: '{ req_ssl_sni -i www.example.com }'
+      cond_test: '{ req.ssl_sni -i www.example.com }'
       index: 0
       name: test_backend
     properties:
@@ -7881,7 +7881,7 @@ definitions:
     description: HAProxy server switching rule configuration (corresponds to use-server directive)
     example:
       cond: if
-      cond_test: '{ req_ssl_sni -i www.example.com }'
+      cond_test: '{ req.ssl_sni -i www.example.com }'
       target_server: www
     properties:
       cond:
