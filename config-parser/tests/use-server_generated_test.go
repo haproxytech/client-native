@@ -27,8 +27,8 @@ import (
 
 func TestUseServer(t *testing.T) {
 	tests := map[string]bool{
-		"use-server www if { req_ssl_sni -i www.example.com }":           true,
-		"use-server www if { req_ssl_sni -i www.example.com } # comment": true,
+		"use-server www if { req.ssl_sni -i www.example.com }":           true,
+		"use-server www if { req.ssl_sni -i www.example.com } # comment": true,
 		"use-server": false,
 		"---":        false,
 		"--- ---":    false,

@@ -33,7 +33,7 @@ import (
 // ServerSwitchingRule Server Switching Rule
 //
 // HAProxy server switching rule configuration (corresponds to use-server directive)
-// Example: {"cond":"if","cond_test":"{ req_ssl_sni -i www.example.com }","index":0,"target_server":"www"}
+// Example: {"cond":"if","cond_test":"{ req.ssl_sni -i www.example.com }","index":0,"target_server":"www"}
 //
 // swagger:model server_switching_rule
 type ServerSwitchingRule struct {
