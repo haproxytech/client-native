@@ -36,7 +36,7 @@ backend_switching_rule:
     index: 0
     name: test_backend
     cond: if
-    cond_test: "{ req_ssl_sni -i www.example.com }"
+    cond_test: "{ req.ssl_sni -i www.example.com }"
 server_switching_rule:
   title: Server Switching Rule
   description: HAProxy server switching rule configuration (corresponds to use-server directive)
@@ -72,4 +72,4 @@ server_switching_rule:
   example:
     target_server: www
     cond: if
-    cond_test: "{ req_ssl_sni -i www.example.com }"
+    cond_test: "{ req.ssl_sni -i www.example.com }"
