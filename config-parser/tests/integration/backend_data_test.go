@@ -1863,11 +1863,11 @@ backend test
 `
 const backend_useserverwwwifreqsslsniiwwwexamp = `
 backend test
-  use-server www if { req_ssl_sni -i www.example.com }
+  use-server www if { req.ssl_sni -i www.example.com }
 `
 const backend_useserverwwwifreqsslsniiwwwexamp_ = `
 backend test
-  use-server www if { req_ssl_sni -i www.example.com } # comment
+  use-server www if { req.ssl_sni -i www.example.com } # comment
 `
 const backend_loadserverstatefromfileglobal = `
 backend test
