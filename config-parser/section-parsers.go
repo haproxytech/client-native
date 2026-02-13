@@ -437,7 +437,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Enabled{Name: "insecure-setuid-wanted"})
 	addParser(parser, &sequence, &simple.String{Name: "issuers-chain-path"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "h2-workaround-bogus-websocket-clients"})
-	addParser(parser, &sequence, &simple.String{Name: "lua-load-per-thread"})
+	addParser(parser, &sequence, &parsers.LuaLoadPerThread{})
 	addParser(parser, &sequence, &simple.Number{Name: "mworker-max-reloads"})
 	addParser(parser, &sequence, &simple.String{Name: "node"})
 	addParser(parser, &sequence, &parsers.NumaCPUMapping{})

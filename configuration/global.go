@@ -260,13 +260,26 @@ func parseLuaOptions(p parser.Parser) (*models.LuaOptions, error) {
 	options := &models.LuaOptions{}
 	isEmpty := true
 
-	luaLoadPerThread, err := parseStringOption(p, "lua-load-per-thread")
-	if err != nil {
-		return nil, err
-	}
-	if luaLoadPerThread != "" {
-		isEmpty = false
-		options.LoadPerThread = luaLoadPerThread
+	// lua-load-per-thread can appear multiple times, so we need to handle it as an array
+	// For backward compatibility with the spec (which defines it as string), we'll take the last one
+	// TODO: Update spec to support array and change model accordingly
+	var luaLoadPerThreads []*models.LuaLoad
+	cpLuaLoadPerThreads, err := p.Get(parser.Global, parser.GlobalSectionName, "lua-load-per-thread")
+	if err == nil {
+		luas, ok := cpLuaLoadPerThreads.([]types.LuaLoad)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("lua-load-per-thread")
+		}
+		for _, l := range luas {
+			file := l.File
+			luaLoadPerThreads = append(luaLoadPerThreads, &models.LuaLoad{File: &file})
+		}
+		// For now, keep the last one in LoadPerThread for backward compatibility
+		// Once spec is updated to array, this can be removed
+		if len(luas) > 0 {
+			isEmpty = false
+			options.LoadPerThread = luas[len(luas)-1].File
+		}
 	}
 
 	var luaPrependPath []*models.LuaPrependPath
@@ -3114,10 +3127,63 @@ func serializePerformanceOptions(p parser.Parser, options *models.PerformanceOpt
 func serializeLuaOptions(p parser.Parser, options *models.LuaOptions) error {
 	if options == nil {
 		options = &models.LuaOptions{}
+		// If LuaOptions is nil, try to preserve existing lua-load-per-thread from parser
+		// This is important for PostRawConfiguration to preserve all instances
+		cpLuaLoadPerThreads, err := p.Get(parser.Global, parser.GlobalSectionName, "lua-load-per-thread")
+		if err == nil {
+			luas, ok := cpLuaLoadPerThreads.([]types.LuaLoad)
+			if ok && len(luas) > 0 {
+				// Parser already has all instances, just preserve them by not overwriting
+				// The parser will write them back correctly
+				// For backward compatibility with spec (string), set last one
+				options.LoadPerThread = luas[len(luas)-1].File
+				// Continue to serialize other lua options
+			} else {
+				// Fallback: try as single string for backward compatibility
+				existingLoadPerThread, err := parseStringOption(p, "lua-load-per-thread")
+				if err == nil && existingLoadPerThread != "" {
+					options.LoadPerThread = existingLoadPerThread
+				}
+			}
+		}
 	}
 
-	if err := serializeStringOption(p, "lua-load-per-thread", options.LoadPerThread); err != nil {
-		return err
+	// Serialize lua-load-per-thread as array to support multiple instances
+	// First check if parser already has multiple instances (from PostRawConfiguration)
+	cpLuaLoadPerThreads, err := p.Get(parser.Global, parser.GlobalSectionName, "lua-load-per-thread")
+	if err == nil {
+		existingLuas, ok := cpLuaLoadPerThreads.([]types.LuaLoad)
+		if ok && len(existingLuas) > 0 {
+			// Parser has multiple instances, preserve them all
+			// Only update if LoadPerThread is explicitly set and different
+			if options.LoadPerThread != "" && (len(existingLuas) == 0 || existingLuas[len(existingLuas)-1].File != options.LoadPerThread) {
+				// Replace with new value (single instance for now until spec is updated)
+				luaLoadPerThreads := []types.LuaLoad{
+					{File: options.LoadPerThread},
+				}
+				if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load-per-thread", luaLoadPerThreads); err != nil {
+					return err
+				}
+			}
+			// Otherwise, keep existing instances - don't overwrite
+		} else if options.LoadPerThread != "" {
+			// No existing instances, create new one
+			luaLoadPerThreads := []types.LuaLoad{
+				{File: options.LoadPerThread},
+			}
+			if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load-per-thread", luaLoadPerThreads); err != nil {
+				return err
+			}
+		}
+		// If options.LoadPerThread is empty and no existing instances, don't clear - might be intentional
+	} else if options.LoadPerThread != "" {
+		// Parser doesn't have it, create new one
+		luaLoadPerThreads := []types.LuaLoad{
+			{File: options.LoadPerThread},
+		}
+		if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load-per-thread", luaLoadPerThreads); err != nil {
+			return err
+		}
 	}
 
 	luaLoads := []types.LuaLoad{}
