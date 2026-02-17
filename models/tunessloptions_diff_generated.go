@@ -29,6 +29,9 @@ func (rec TuneSslOptions) Diff(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOpt
 	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureBufferSize, obj.CaptureBufferSize, opts...) {
 		diff["CaptureBufferSize."+diffKey] = diffValue
 	}
+	if rec.CertificateCompression != obj.CertificateCompression {
+		diff["CertificateCompression"] = []interface{}{rec.CertificateCompression, obj.CertificateCompression}
+	}
 	if rec.CtxCacheSize != obj.CtxCacheSize {
 		diff["CtxCacheSize"] = []interface{}{rec.CtxCacheSize, obj.CtxCacheSize}
 	}

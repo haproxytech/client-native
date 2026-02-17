@@ -43,6 +43,9 @@ type TuneOptions struct {
 	// comp maxlevel
 	CompMaxlevel int64 `json:"comp_maxlevel,omitempty"`
 
+	// defaults purge
+	DefaultsPurge bool `json:"defaults_purge,omitempty"`
+
 	// disable fast forward
 	DisableFastForward bool `json:"disable_fast_forward,omitempty"`
 
@@ -73,6 +76,16 @@ type TuneOptions struct {
 	// +kubebuilder:validation:Maximum=100
 	// +kubebuilder:validation:Minimum=0
 	GlitchesKillCPUUsage *int64 `json:"glitches_kill_cpu_usage,omitempty"`
+
+	// h1 be glitches threshold
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	H1BeGlitchesThreshold *int64 `json:"h1_be_glitches_threshold,omitempty"`
+
+	// h1 fe glitches threshold
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	H1FeGlitchesThreshold *int64 `json:"h1_fe_glitches_threshold,omitempty"`
 
 	// enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
 	// Enum: ["enabled","disabled"]
@@ -263,6 +276,14 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateGlitchesKillCPUUsage(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateH1BeGlitchesThreshold(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateH1FeGlitchesThreshold(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -478,6 +499,30 @@ func (m *TuneOptions) validateGlitchesKillCPUUsage(formats strfmt.Registry) erro
 	}
 
 	if err := validate.MaximumInt("glitches_kill_cpu_usage", "body", *m.GlitchesKillCPUUsage, 100, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneOptions) validateH1BeGlitchesThreshold(formats strfmt.Registry) error {
+	if swag.IsZero(m.H1BeGlitchesThreshold) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("h1_be_glitches_threshold", "body", *m.H1BeGlitchesThreshold, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneOptions) validateH1FeGlitchesThreshold(formats strfmt.Registry) error {
+	if swag.IsZero(m.H1FeGlitchesThreshold) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("h1_fe_glitches_threshold", "body", *m.H1FeGlitchesThreshold, 0, false); err != nil {
 		return err
 	}
 

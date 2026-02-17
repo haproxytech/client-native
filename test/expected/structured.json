@@ -281,6 +281,7 @@
         "tune_options": {
             "applet_zero_copy_forwarding": "disabled",
             "comp_maxlevel": 14,
+            "defaults_purge": true,
             "disable_fast_forward": true,
             "disable_zero_copy_forwarding": true,
             "epoll_mask_events": [
@@ -292,6 +293,8 @@
             "fail_alloc": true,
             "glitches_kill_cpu_usage": 75,
             "fd_edge_triggered": "enabled",
+            "h1_be_glitches_threshold": 2,
+            "h1_fe_glitches_threshold": 15,
             "h1_zero_copy_fwd_recv": "enabled",
             "h1_zero_copy_fwd_send": "enabled",
             "h2_be_glitches_threshold": 16,
@@ -434,6 +437,7 @@
         },
         "tune_ssl_options": {
             "cachesize": 41,
+            "certificate_compression": "disabled",
             "capture_buffer_size": 47,
             "ctx_cache_size": 46,
             "default_dh_param": 45,

@@ -29,6 +29,9 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 	if rec.CompMaxlevel != obj.CompMaxlevel {
 		diff["CompMaxlevel"] = []interface{}{rec.CompMaxlevel, obj.CompMaxlevel}
 	}
+	if rec.DefaultsPurge != obj.DefaultsPurge {
+		diff["DefaultsPurge"] = []interface{}{rec.DefaultsPurge, obj.DefaultsPurge}
+	}
 	if rec.DisableFastForward != obj.DisableFastForward {
 		diff["DisableFastForward"] = []interface{}{rec.DisableFastForward, obj.DisableFastForward}
 	}
@@ -49,6 +52,12 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.GlitchesKillCPUUsage, obj.GlitchesKillCPUUsage, opts...) {
 		diff["GlitchesKillCPUUsage."+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.H1BeGlitchesThreshold, obj.H1BeGlitchesThreshold, opts...) {
+		diff["H1BeGlitchesThreshold."+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.H1FeGlitchesThreshold, obj.H1FeGlitchesThreshold, opts...) {
+		diff["H1FeGlitchesThreshold."+diffKey] = diffValue
 	}
 	if rec.H1ZeroCopyFwdRecv != obj.H1ZeroCopyFwdRecv {
 		diff["H1ZeroCopyFwdRecv"] = []interface{}{rec.H1ZeroCopyFwdRecv, obj.H1ZeroCopyFwdRecv}

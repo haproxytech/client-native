@@ -1285,6 +1285,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.CompMaxlevel = intOption
 	}
 
+	boolOption, err = parseBoolOption(p, "tune.defaults.purge")
+	if err != nil {
+		return nil, err
+	}
+	if boolOption {
+		isEmpty = false
+		options.DefaultsPurge = boolOption
+	}
+
 	boolOption, err = parseBoolOption(p, "tune.disable-fast-forward")
 	if err != nil {
 		return nil, err
@@ -1339,6 +1348,24 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 	if intOption != 0 {
 		isEmpty = false
 		options.GlitchesKillCPUUsage = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.h1.be.glitches-threshold")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H1BeGlitchesThreshold = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.h1.fe.glitches-threshold")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H1FeGlitchesThreshold = intPOption
 	}
 
 	intOption, err = parseInt64Option(p, "tune.h2.header-table-size")
@@ -2080,6 +2107,15 @@ func parseTuneSSLOptions(p parser.Parser) (*models.TuneSslOptions, error) {
 		options.Cachesize = intPOption
 	}
 
+	strOption, err := parseAutoOnOffOption(p, "tune.ssl.certificate-compression")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.CertificateCompression = strOption
+	}
+
 	boolOption, err := parseBoolOption(p, "tune.ssl.force-private-cache")
 	if err != nil {
 		return nil, err
@@ -2089,7 +2125,7 @@ func parseTuneSSLOptions(p parser.Parser) (*models.TuneSslOptions, error) {
 		options.ForcePrivateCache = boolOption
 	}
 
-	strOption, err := parseOnOffOption(p, "tune.ssl.keylog")
+	strOption, err = parseOnOffOption(p, "tune.ssl.keylog")
 	if err != nil {
 		return nil, err
 	}
@@ -3770,6 +3806,9 @@ func serializeTuneSSLOptions(p parser.Parser, options *models.TuneSslOptions, co
 	if err := serializeInt64POption(p, "tune.ssl.capture-buffer-size", options.CaptureBufferSize); err != nil {
 		return err
 	}
+	if err := serializeAutoOnOffOption(p, "tune.ssl.certificate-compression", options.CertificateCompression); err != nil {
+		return err
+	}
 	if err := serializeInt64Option(p, "tune.ssl.ssl-ctx-cache-size", options.CtxCacheSize); err != nil {
 		return err
 	}
@@ -3833,6 +3872,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 	if err := serializeInt64Option(p, "tune.comp.maxlevel", options.CompMaxlevel); err != nil {
 		return err
 	}
+	if err := serializeBoolOption(p, "tune.defaults.purge", options.DefaultsPurge); err != nil {
+		return err
+	}
 	if err := serializeBoolOption(p, "tune.disable-fast-forward", options.DisableFastForward); err != nil {
 		return err
 	}
@@ -3849,6 +3891,12 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.glitches.kill.cpu-usage", options.GlitchesKillCPUUsage); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.h1.be.glitches-threshold", options.H1BeGlitchesThreshold); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.h1.fe.glitches-threshold", options.H1FeGlitchesThreshold); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.h2.header-table-size", options.H2HeaderTableSize); err != nil {

@@ -24,6 +24,7 @@ import (
 func (rec TuneOptions) Equal(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AppletZeroCopyForwarding == obj.AppletZeroCopyForwarding &&
 		rec.CompMaxlevel == obj.CompMaxlevel &&
+		rec.DefaultsPurge == obj.DefaultsPurge &&
 		rec.DisableFastForward == obj.DisableFastForward &&
 		rec.DisableZeroCopyForwarding == obj.DisableZeroCopyForwarding &&
 		EqualSliceString(rec.EpollMaskEvents, obj.EpollMaskEvents, opts...) &&
@@ -31,6 +32,8 @@ func (rec TuneOptions) Equal(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions)
 		rec.FailAlloc == obj.FailAlloc &&
 		rec.FdEdgeTriggered == obj.FdEdgeTriggered &&
 		EqualPointerInt64(rec.GlitchesKillCPUUsage, obj.GlitchesKillCPUUsage, opts...) &&
+		EqualPointerInt64(rec.H1BeGlitchesThreshold, obj.H1BeGlitchesThreshold, opts...) &&
+		EqualPointerInt64(rec.H1FeGlitchesThreshold, obj.H1FeGlitchesThreshold, opts...) &&
 		rec.H1ZeroCopyFwdRecv == obj.H1ZeroCopyFwdRecv &&
 		rec.H1ZeroCopyFwdSend == obj.H1ZeroCopyFwdSend &&
 		EqualPointerInt64(rec.H2BeGlitchesThreshold, obj.H2BeGlitchesThreshold, opts...) &&

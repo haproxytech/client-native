@@ -1569,6 +1569,9 @@ definitions:
       comp_maxlevel:
         type: integer
         x-display-name: Maximum Compression Level
+      defaults_purge:
+        type: boolean
+        x-display-name: Force deletion of defaults section after parsing to save memory
       disable_fast_forward:
         type: boolean
         x-display-name: Disable fast-forwarding
@@ -1603,6 +1606,14 @@ definitions:
         type: integer
         x-display-name: CPU Usage Kill glitched Connections
         x-nullable: true
+      h1_be_glitches_threshold:
+        minimum: 0
+        type: integer
+        x-display-name: Number of connection glitches before killing the connection with the backend
+      h1_fe_glitches_threshold:
+        minimum: 0
+        type: integer
+        x-display-name: Number of connection glitches before killing the connection with the frontend
       h1_zero_copy_fwd_recv:
         description: enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
         enum:
@@ -1895,6 +1906,12 @@ definitions:
         type: integer
         x-display-name: SSL Maximum Size of Cipherlist Buffer
         x-nullable: true
+      certificate_compression:
+        enum:
+          - auto
+          - disabled
+        type: string
+        x-display-name: Force SSL compression off, or let the SSL library decide
       ctx_cache_size:
         type: integer
         x-display-name: SSL Number of Certificates in Cache

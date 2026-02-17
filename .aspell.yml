@@ -197,6 +197,7 @@ allowed:
   - tls
   - tooltip
   - tsconfig
+  - tunable
   - typings
   - ubuntu
   - uniq

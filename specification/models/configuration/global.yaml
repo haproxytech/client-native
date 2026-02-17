@@ -505,6 +505,9 @@ tune_options:
     comp_maxlevel:
       type: integer
       x-display-name: Maximum Compression Level
+    defaults_purge:
+      type: boolean
+      x-display-name: Force deletion of defaults section after parsing to save memory
     disable_fast_forward:
       type: boolean
       x-display-name: Disable fast-forwarding
@@ -530,6 +533,14 @@ tune_options:
       maximum: 100
       x-nullable: true
       x-display-name: CPU Usage Kill glitched Connections
+    h1_be_glitches_threshold:
+      type: integer
+      minimum: 0
+      x-display-name: Number of connection glitches before killing the connection with the backend
+    h1_fe_glitches_threshold:
+      type: integer
+      minimum: 0
+      x-display-name: Number of connection glitches before killing the connection with the frontend
     h1_zero_copy_fwd_recv:
       type: string
       enum: [enabled, disabled]
@@ -798,6 +809,10 @@ tune_ssl_options:
       type: integer
       x-display-name: SSL Cache Size
       x-nullable: true
+    certificate_compression:
+      type: string
+      enum: [auto, disabled]
+      x-display-name: Force SSL compression off, or let the SSL library decide
     force_private_cache:
       type: boolean
       x-display-name: SSL Force Private Cache

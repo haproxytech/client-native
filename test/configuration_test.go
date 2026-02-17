@@ -56,12 +56,15 @@ global
   tune.bufsize 13
   tune.bufsize.small 8k
   tune.comp.maxlevel 14
+  tune.defaults.purge
   tune.disable-fast-forward
   tune.disable-zero-copy-forwarding
   tune.events.max-events-at-once 10
   tune.fail-alloc
   tune.glitches.kill.cpu-usage 75
   tune.fd.edge-triggered on
+  tune.h1.be.glitches-threshold 2
+  tune.h1.fe.glitches-threshold 15
   tune.h1.zero-copy-fwd-recv on
   tune.h1.zero-copy-fwd-send on
   tune.h2.header-table-size 15
@@ -106,6 +109,7 @@ global
   tune.sndbuf.frontend 2048
   tune.sndbuf.server 40
   tune.ssl.cachesize 41
+  tune.ssl.certificate-compression off
   tune.ssl.force-private-cache
   tune.ssl.keylog on
   tune.ssl.lifetime 43

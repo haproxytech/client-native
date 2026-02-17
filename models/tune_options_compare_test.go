@@ -87,11 +87,14 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 			t.Error(err)
 		}
 		result.CompMaxlevel = sample.CompMaxlevel + 1
+		result.DefaultsPurge = !sample.DefaultsPurge
 		result.DisableFastForward = !sample.DisableFastForward
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.GlitchesKillCPUUsage = Ptr(*sample.GlitchesKillCPUUsage + 1)
+		result.H1BeGlitchesThreshold = Ptr(*sample.H1BeGlitchesThreshold + 1)
+		result.H1FeGlitchesThreshold = Ptr(*sample.H1FeGlitchesThreshold + 1)
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
@@ -206,11 +209,14 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			t.Error(err)
 		}
 		result.CompMaxlevel = sample.CompMaxlevel + 1
+		result.DefaultsPurge = !sample.DefaultsPurge
 		result.DisableFastForward = !sample.DisableFastForward
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.GlitchesKillCPUUsage = Ptr(*sample.GlitchesKillCPUUsage + 1)
+		result.H1BeGlitchesThreshold = Ptr(*sample.H1BeGlitchesThreshold + 1)
+		result.H1FeGlitchesThreshold = Ptr(*sample.H1FeGlitchesThreshold + 1)
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
@@ -253,7 +259,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 52 {
+		if len(listDiffFields) != 55 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -263,7 +269,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneOptions to be different in 52 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 55 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

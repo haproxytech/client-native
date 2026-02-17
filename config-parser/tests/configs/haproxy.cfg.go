@@ -44,9 +44,12 @@ global
   tune.buffers.reserve 3
   tune.bufsize 32768
   tune.bufsize.small 16k
+  tune.defaults.purge
   tune.disable-zero-copy-forwarding
   tune.disable-fast-forward
   tune.events.max-events-at-once 150
+  tune.h1.be.glitches-threshold 2
+  tune.h1.fe.glitches-threshold 16
   tune.h1.zero-copy-fwd-recv on
   tune.h1.zero-copy-fwd-send on
   tune.h2.be.glitches-threshold 16
@@ -62,6 +65,7 @@ global
   tune.renice.runtime -10
   tune.renice.startup 8
   tune.ring.queues 8
+  tune.ssl.certificate-compression off
   tune.ssl.default-dh-param 2048
   tune.quic.reorder-ratio 75
   tune.quic.zero-copy-fwd-send on
