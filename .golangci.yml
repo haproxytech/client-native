@@ -1,79 +1,102 @@
----
-linters-settings:
-  govet:
-    check-shadowing: true
-  golint:
-    min-confidence: 0
-  gocyclo:
-    min-complexity: 42
-  cyclop:
-    max-complexity: 42
-  maligned:
-    suggest-new: true
-  dupl:
-    threshold: 200
-  goconst:
-    min-len: 2
-    min-occurrences: 3
-  gci:
-    prefix: github.com/haproxytech/client-native/v5
+version: "2"
 
 linters:
-  enable-all: true
+  default: all
   disable:
-    - golint # deprecated, replaced with revive
-    - interfacer # deprecated
-    - maligned # deprecated
     - wrapcheck
     - nlreturn
-    - gomnd
-    - goerr113
-    - exhaustivestruct
+    - mnd
+    - err113
     - wsl
+    - wsl_v5
     - whitespace
     - lll
-    - scopelint
     - nestif
     - funlen
     - paralleltest
     - godot
     - varnamelen
     - ireturn
-    - ifshort
     - thelper
     - wastedassign
     - goconst
-    - gci
     - exhaustruct
     - nonamedreturns
     - interfacebloat
     - dupword
-    - forcetypeassert #tmp needs to be on
-    - ifshort # deprecated
-    - structcheck # deprecated
-    - deadcode # deprecated
-    - nosnakecase # deprecated
-    - varcheck # deprecated
-    - rowserrcheck # deprecated
-    - sqlclosecheck # deprecated
-    - wastedassign # deprecated
-    - golint # deprecated
-    - interfacer # deprecated
-    - maligned # deprecated
+    - forcetypeassert
     - depguard
-
-issues:
-  exclude:
-    # bugs of typecheck linter
-    - "undeclared name: `shellquote`"
-    - "github.com/kballard/go-shellquote\" imported but not used"
-    - "github.com/haproxytech/client-native/v5/config-parser/types\" imported but not used"
-    - "unused-parameter: parameter 'comment' seems to be unused"
-    - "unused-parameter: parameter 'parts' seems to be unused"
-    - "unused-parameter: parameter 'parserType' seems to be unused"
+    - noinlineerr
+    - perfsprint
+    - modernize
+    - funcorder
+    - intrange
+    - iface
+    - embeddedstructfieldcheck
+    - recvcheck
+    - godoclint
+    - errcheck
+    - nolintlint
+    - prealloc
+    - noctx
+  settings:
+    govet:
+      enable:
+        - shadow
+    gocyclo:
+      min-complexity: 42
+    cyclop:
+      max-complexity: 42
+    dupl:
+      threshold: 200
+    goconst:
+      min-len: 2
+      min-occurrences: 3
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+        - name: package-comments
+          disabled: true
+    staticcheck:
+      checks:
+        - "all"
+        - "-QF*"
+        - "-ST*"
+        - "-S1009"
+        - "-S1011"
+        - "-SA1006"
+    gosec:
+      excludes:
+        - G104
+        - G115
+        - G117
+        - G301
+        - G302
+        - G304
+        - G702
+        - G703
+        - G704
+        - G706
+  exclusions:
+    rules:
+      - text: 'undeclared name: `shellquote`'
+        linters: [typecheck]
+      - text: 'github.com/kballard/go-shellquote" imported but not used'
+        linters: [typecheck]
+      - text: 'github.com/haproxytech/client-native/v5/config-parser/types" imported but not used'
+        linters: [typecheck]
+      - text: "unused-parameter: parameter 'comment' seems to be unused"
+        linters: [revive]
+      - text: "unused-parameter: parameter 'parts' seems to be unused"
+        linters: [revive]
+      - text: "unused-parameter: parameter 'parserType' seems to be unused"
+        linters: [revive]
+      - text: "non-constant format string in call to fmt.Errorf"
+        linters: [govet]
+    paths:
+      - test
+      - '.*_test\.go$'
 
 run:
-  skip-dirs:
-    - test
-  skip-files:
-    - ".*_test\\.go$"
+  timeout: 5m

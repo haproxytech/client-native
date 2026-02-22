@@ -1,5 +1,5 @@
 PROJECT_PATH=$(shell pwd)
-GOLANGCI_LINT_VERSION=1.54.1
+GOLANGCI_LINT_VERSION=2.10.1
 
 .PHONY: generate
 generate:
