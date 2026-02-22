@@ -2,7 +2,7 @@
 variables:
   DOCKER_HOST: tcp://docker:2375
   GO_VERSION: "1.25"
-  DOCKER_VERSION: "26.0"
+  DOCKER_VERSION: "29.1"
 stages:
   - bots
   - check-commit
@@ -15,7 +15,7 @@ pipelines-check:
   stage: bots
   needs: []
   image:
-    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-go$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:latest-alpine
     entrypoint: [""]
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
@@ -27,7 +27,7 @@ mr-backport-question:
   stage: bots
   needs: []
   image:
-    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-go$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:latest-alpine
     entrypoint: [""]
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
@@ -39,7 +39,7 @@ build-specification:
   stage: build
   needs: []
   image:
-    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:latest-alpine
     entrypoint: [""]
   tags:
     - go
@@ -70,7 +70,7 @@ yaml-lint:
 generate:
   stage: generate
   image:
-    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-go$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:latest-alpine
     entrypoint: [""]
   services:
     - name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-dind
@@ -96,6 +96,9 @@ generate:
 
 build:
   stage: build
+  image:
+    name: $CI_REGISTRY_GO/golang:latest-alpine
+    entrypoint: [""]
   needs: []
   tags:
     - go
@@ -111,7 +114,7 @@ tidy:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   tags:
     - go
@@ -126,7 +129,7 @@ lint:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   tags:
     - go
@@ -140,12 +143,11 @@ license-check:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:latest-alpine
     entrypoint: [""]
   tags:
     - go
   script:
-    - go install github.com/google/go-licenses@latest
     - PROJECT="$(go list -m)"
     - ALLOWED_LICENSES="$(<.allowed_license_types)"
     - go-licenses report --ignore "$PROJECT" .
@@ -158,7 +160,7 @@ lint-commit-msg:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/commit-check:5.2.0
+    name: $CI_REGISTRY_GO/commit-check:latest
     entrypoint: [""]
   tags:
     - go
@@ -171,7 +173,7 @@ test:
   stage: test
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:latest-alpine
     entrypoint: [""]
   tags:
     - go
@@ -185,7 +187,7 @@ test-equal:
   stage: test
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    name: $CI_REGISTRY_GO/golang:latest-alpine
     entrypoint: [""]
   tags:
     - go
@@ -209,7 +211,7 @@ test-equal:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY_GO
+    - docker login -u='$app' -p $CI_REGISTRY_TOKEN $CI_REGISTRY_GO
     - docker pull -q $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     - docker image tag $CI_REGISTRY_GO/golang:$GO_VERSION-alpine golang:$GO_VERSION-alpine
     - docker pull -q $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION
