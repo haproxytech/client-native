@@ -4,6 +4,13 @@ server:
   description: Runtime transient server properties
   type: object
   properties:
+    backend_id:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    backend_name:
+      type: string
+      readOnly: true
     id:
       type: string
       readOnly: true
@@ -15,25 +22,111 @@ server:
       pattern: '^[^\s]+$'
       x-nullable: false
       readOnly: true
-    port:
-      type: integer
-      x-nullable: true
-      minimum: 1
-      maximum: 65535
-      readOnly: true
     operational_state:
       type: string
       enum: [up, down, stopping]
     admin_state:
       type: string
       enum: [ready, maint, drain]
+    uweight:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    iweight:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    last_time_change:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    check_status:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    check_result:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    check_health:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    check_state:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    agent_state:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    backend_forced_id:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    foreced_id:
+      type: integer
+      x-nullable: true
+      readOnly: true
+    fqdn:
+      type: string
+      readOnly: true
+    port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+      readOnly: true
+    srvrecord:
+      type: string
+      readOnly: true
+    use_ssl:
+      type: boolean
+      readOnly: true
+    check_port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+      readOnly: true
+    check_addr:
+      type: string
+      readOnly: true
+    agent_addr:
+      type: string
+      readOnly: true
+    agent_port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+      readOnly: true
   example:
-    server_id: 1
-    server_name: web_server
-    address: 127.0.0.5
-    port: 80
+    backend_id: 2
+    backend_name: myservers
+    id: 1
+    name: server1
+    address: 142.250.191.142
     operational_state: up
     admin_state: ready
+    uweight: 1
+    iweight: 1
+    last_time_change: 123
+    check_status: 17
+    check_result: 2
+    check_health: 0
+    check_state: 6
+    agent_state: 0
+    backend_forced_id: 0
+    forced_id: 0
+    fqdn: server.com
+    port: 80
+    srvrecord: _myservice._tcp.example.local
+    use_ssl: false
+    check_port: 80
+    check_addr: 142.250.191.143
+    agent_addr: 127.0.0.1
+    agent_port: 80
 add_server:
   title: Runtime Add Server
   description: Settable properties when adding a new server using HAProxy's runtime.
