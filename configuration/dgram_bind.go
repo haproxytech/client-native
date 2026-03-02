@@ -26,6 +26,7 @@ import (
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/params"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -187,42 +188,27 @@ func ParseDgramBinds(logForward string, p parser.Parser) (models.DgramBinds, err
 
 func ParseDgramBind(ondiskDgramBind types.DgramBind) *models.DgramBind {
 	b := &models.DgramBind{}
-	if strings.HasPrefix(ondiskDgramBind.Path, "/") {
-		b.Address = ondiskDgramBind.Path
-	} else {
-		addSlice := strings.Split(ondiskDgramBind.Path, ":")
-		switch n := len(addSlice); {
-		case n == 0:
-			return nil
-		case n == 4: // :::443
-			b.Address = "::"
-			if addSlice[3] != "" {
-				p, err := strconv.ParseInt(addSlice[3], 10, 64)
-				if err == nil {
-					b.Port = &p
-				}
+	address, port, err := misc.ParseBindAddress(ondiskDgramBind.Path)
+	if err != nil {
+		return nil
+	}
+	b.Address = address
+	if port != "" {
+		ports := strings.Split(port, "-")
+		// *:<port>
+		if ports[0] != "" {
+			p, err := strconv.ParseInt(ports[0], 10, 64)
+			if err == nil {
+				b.Port = &p
 			}
-		case n > 1:
-			b.Address = addSlice[0]
-			ports := strings.Split(addSlice[1], "-")
-
-			// *:<port>
-			if ports[0] != "" {
-				port, err := strconv.ParseInt(ports[0], 10, 64)
-				if err == nil {
-					b.Port = &port
-				}
+		}
+		// *:<port-first>-<port-last>
+		if b.Port != nil && len(ports) == 2 {
+			portRangeEnd, err := strconv.ParseInt(ports[1], 10, 64)
+			// Deny inverted interval.
+			if err == nil && (*b.Port < portRangeEnd) {
+				b.PortRangeEnd = &portRangeEnd
 			}
-			// *:<port-first>-<port-last>
-			if b.Port != nil && len(ports) == 2 {
-				portRangeEnd, err := strconv.ParseInt(ports[1], 10, 64)
-				// Deny inverted interval.
-				if err == nil && (*b.Port < portRangeEnd) {
-					b.PortRangeEnd = &portRangeEnd
-				}
-			}
-		case n > 0:
-			b.Address = addSlice[0]
 		}
 	}
 	for _, p := range ondiskDgramBind.Params {
@@ -254,7 +240,7 @@ func SerializeDgramBind(b models.DgramBind) types.DgramBind {
 		Params: []params.DgramBindOption{},
 	}
 	if b.Port != nil {
-		dBind.Path = b.Address + ":" + strconv.FormatInt(*b.Port, 10)
+		dBind.Path = misc.SanitizeIPv6Address(b.Address) + ":" + strconv.FormatInt(*b.Port, 10)
 		if b.PortRangeEnd != nil {
 			dBind.Path = dBind.Path + "-" + strconv.FormatInt(*b.PortRangeEnd, 10)
 		}
