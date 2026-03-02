@@ -51,6 +51,7 @@ allowed:
   - dataplanes
   - datepicker
   - dereference
+  - dgram
   - discoverability
   - durations
   - dns
