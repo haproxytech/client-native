@@ -35,15 +35,15 @@ func TestSpoeMessageEqual(t *testing.T) {
 		var result SpoeMessage
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -57,11 +57,11 @@ func TestSpoeMessageEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessage to be equal, but it is not %s %s", a, b)
 		}
@@ -77,11 +77,11 @@ func TestSpoeMessageEqualFalse(t *testing.T) {
 		var result SpoeMessage
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SpoeMessage
@@ -94,11 +94,11 @@ func TestSpoeMessageEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessage to be different, but it is not %s %s", a, b)
 		}
@@ -114,15 +114,15 @@ func TestSpoeMessageDiff(t *testing.T) {
 		var result SpoeMessage
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -136,11 +136,11 @@ func TestSpoeMessageDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessage to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -156,11 +156,11 @@ func TestSpoeMessageDiffFalse(t *testing.T) {
 		var result SpoeMessage
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SpoeMessage
@@ -173,11 +173,11 @@ func TestSpoeMessageDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessage to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -193,15 +193,15 @@ func TestSpoeMessageEventEqual(t *testing.T) {
 		var result SpoeMessageEvent
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -215,11 +215,11 @@ func TestSpoeMessageEventEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessageEvent to be equal, but it is not %s %s", a, b)
 		}
@@ -235,11 +235,11 @@ func TestSpoeMessageEventEqualFalse(t *testing.T) {
 		var result SpoeMessageEvent
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SpoeMessageEvent
@@ -252,11 +252,11 @@ func TestSpoeMessageEventEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessageEvent to be different, but it is not %s %s", a, b)
 		}
@@ -272,15 +272,15 @@ func TestSpoeMessageEventDiff(t *testing.T) {
 		var result SpoeMessageEvent
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -294,11 +294,11 @@ func TestSpoeMessageEventDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessageEvent to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -314,11 +314,11 @@ func TestSpoeMessageEventDiffFalse(t *testing.T) {
 		var result SpoeMessageEvent
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SpoeMessageEvent
@@ -331,11 +331,11 @@ func TestSpoeMessageEventDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeMessageEvent to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

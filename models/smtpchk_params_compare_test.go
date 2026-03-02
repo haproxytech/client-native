@@ -35,15 +35,15 @@ func TestSmtpchkParamsEqual(t *testing.T) {
 		var result SmtpchkParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -57,11 +57,11 @@ func TestSmtpchkParamsEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SmtpchkParams to be equal, but it is not %s %s", a, b)
 		}
@@ -77,11 +77,11 @@ func TestSmtpchkParamsEqualFalse(t *testing.T) {
 		var result SmtpchkParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SmtpchkParams
@@ -94,11 +94,11 @@ func TestSmtpchkParamsEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SmtpchkParams to be different, but it is not %s %s", a, b)
 		}
@@ -114,15 +114,15 @@ func TestSmtpchkParamsDiff(t *testing.T) {
 		var result SmtpchkParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -136,11 +136,11 @@ func TestSmtpchkParamsDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SmtpchkParams to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -156,11 +156,11 @@ func TestSmtpchkParamsDiffFalse(t *testing.T) {
 		var result SmtpchkParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SmtpchkParams
@@ -173,11 +173,11 @@ func TestSmtpchkParamsDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SmtpchkParams to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

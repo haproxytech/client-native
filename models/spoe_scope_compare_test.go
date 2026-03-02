@@ -35,15 +35,15 @@ func TestSpoeScopeEqual(t *testing.T) {
 		var result SpoeScope
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -57,11 +57,11 @@ func TestSpoeScopeEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeScope to be equal, but it is not %s %s", a, b)
 		}
@@ -77,11 +77,11 @@ func TestSpoeScopeEqualFalse(t *testing.T) {
 		var result SpoeScope
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SpoeScope
@@ -94,11 +94,11 @@ func TestSpoeScopeEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeScope to be different, but it is not %s %s", a, b)
 		}
@@ -114,15 +114,15 @@ func TestSpoeScopeDiff(t *testing.T) {
 		var result SpoeScope
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -136,11 +136,11 @@ func TestSpoeScopeDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeScope to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -156,11 +156,11 @@ func TestSpoeScopeDiffFalse(t *testing.T) {
 		var result SpoeScope
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b SpoeScope
@@ -173,11 +173,11 @@ func TestSpoeScopeDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SpoeScope to be different in 0 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

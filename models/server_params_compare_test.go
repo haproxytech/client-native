@@ -35,15 +35,15 @@ func TestServerParamsEqual(t *testing.T) {
 		var result ServerParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -57,11 +57,11 @@ func TestServerParamsEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParams to be equal, but it is not %s %s", a, b)
 		}
@@ -77,11 +77,11 @@ func TestServerParamsEqualFalse(t *testing.T) {
 		var result ServerParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		result.AgentInter = Ptr(*sample.AgentInter + 1)
 		result.AgentPort = Ptr(*sample.AgentPort + 1)
@@ -116,11 +116,11 @@ func TestServerParamsEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParams to be different, but it is not %s %s", a, b)
 		}
@@ -136,15 +136,15 @@ func TestServerParamsDiff(t *testing.T) {
 		var result ServerParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -158,11 +158,11 @@ func TestServerParamsDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParams to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -178,11 +178,11 @@ func TestServerParamsDiffFalse(t *testing.T) {
 		var result ServerParams
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		result.AgentInter = Ptr(*sample.AgentInter + 1)
 		result.AgentPort = Ptr(*sample.AgentPort + 1)
@@ -217,11 +217,11 @@ func TestServerParamsDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParams to be different in 90 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -237,15 +237,15 @@ func TestServerParamsSetProxyV2TlvFmtEqual(t *testing.T) {
 		var result ServerParamsSetProxyV2TlvFmt
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -259,11 +259,11 @@ func TestServerParamsSetProxyV2TlvFmtEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be equal, but it is not %s %s", a, b)
 		}
@@ -279,11 +279,11 @@ func TestServerParamsSetProxyV2TlvFmtEqualFalse(t *testing.T) {
 		var result ServerParamsSetProxyV2TlvFmt
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b ServerParamsSetProxyV2TlvFmt
@@ -296,11 +296,11 @@ func TestServerParamsSetProxyV2TlvFmtEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be different, but it is not %s %s", a, b)
 		}
@@ -316,15 +316,15 @@ func TestServerParamsSetProxyV2TlvFmtDiff(t *testing.T) {
 		var result ServerParamsSetProxyV2TlvFmt
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -338,11 +338,11 @@ func TestServerParamsSetProxyV2TlvFmtDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -358,11 +358,11 @@ func TestServerParamsSetProxyV2TlvFmtDiffFalse(t *testing.T) {
 		var result ServerParamsSetProxyV2TlvFmt
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		samples = append(samples, struct {
 			a, b ServerParamsSetProxyV2TlvFmt
@@ -375,11 +375,11 @@ func TestServerParamsSetProxyV2TlvFmtDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

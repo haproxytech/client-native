@@ -35,15 +35,15 @@ func TestCaptureEqual(t *testing.T) {
 		var result Capture
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -57,11 +57,11 @@ func TestCaptureEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected Capture to be equal, but it is not %s %s", a, b)
 		}
@@ -77,11 +77,11 @@ func TestCaptureEqualFalse(t *testing.T) {
 		var result Capture
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		result.Index = Ptr(*sample.Index + 1)
 		result.Length = sample.Length + 1
@@ -96,11 +96,11 @@ func TestCaptureEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected Capture to be different, but it is not %s %s", a, b)
 		}
@@ -116,15 +116,15 @@ func TestCaptureDiff(t *testing.T) {
 		var result Capture
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -138,11 +138,11 @@ func TestCaptureDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected Capture to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -158,11 +158,11 @@ func TestCaptureDiffFalse(t *testing.T) {
 		var result Capture
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		result.Index = Ptr(*sample.Index + 1)
 		result.Length = sample.Length + 1
@@ -177,11 +177,11 @@ func TestCaptureDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected Capture to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

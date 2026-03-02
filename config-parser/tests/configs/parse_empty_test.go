@@ -32,16 +32,16 @@ func TestEmpty(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New()
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			err = p.Process(strings.NewReader(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}

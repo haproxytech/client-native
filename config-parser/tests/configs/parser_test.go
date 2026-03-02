@@ -39,12 +39,12 @@ func TestWholeConfigs(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}
@@ -65,12 +65,12 @@ func TestWholeConfigsFail(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result == config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}
@@ -95,7 +95,7 @@ func TestGeneratedConfig(t *testing.T) {
 	buffer.WriteString(generatedConfig)
 	p, err := parser.New(options.DisableUnProcessed, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatalf("%v", err)
 	}
 	result := p.String()
 	for _, configLine := range configTests {
@@ -111,15 +111,15 @@ func TestHashConfig(t *testing.T) {
 	buffer.WriteString(configBasicHash)
 	p, err := parser.New(options.UseMd5Hash, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatalf("%v", err)
 	}
 	result, err := p.StringWithHash()
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatalf("%v", err)
 	}
 	if result != configBasicHash {
 		compare(t, configBasicHash, result)
-		t.Fatalf("configurations does not match")
+		t.Fatalf("%v", "configurations does not match")
 	}
 }
 
@@ -128,12 +128,12 @@ func TestConfigUseV2HTTPCheck(t *testing.T) {
 	buffer.WriteString(configBasicUseV2HTTPCheck)
 	p, err := parser.New(options.UseV2HTTPCheck, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatalf("%v", err)
 	}
 	result := p.String() //nolint:ifshort
 	if result != configBasicUseV2HTTPCheck {
 		compare(t, configBasicUseV2HTTPCheck, result)
-		t.Fatalf("configurations does not match")
+		t.Fatalf("%v", "configurations does not match")
 	}
 }
 
@@ -142,12 +142,12 @@ func TestListenSectionParsers(t *testing.T) {
 	buffer.WriteString(configFull)
 	p, err := parser.New(options.UseListenSectionParsers, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatalf("%v", err)
 	}
 
 	result := p.String() //nolint:ifshort
 	if result != configFull {
 		compare(t, configFull, result)
-		t.Fatalf("configurations does not match")
+		t.Fatalf("%v", "configurations does not match")
 	}
 }

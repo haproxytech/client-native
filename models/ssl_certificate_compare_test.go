@@ -38,15 +38,15 @@ func TestSslCertificateEqual(t *testing.T) {
 		var result SslCertificate
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -60,11 +60,11 @@ func TestSslCertificateEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SslCertificate to be equal, but it is not %s %s", a, b)
 		}
@@ -80,11 +80,11 @@ func TestSslCertificateEqualFalse(t *testing.T) {
 		var result SslCertificate
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		result.NotAfter = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
 		result.NotBefore = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
@@ -100,11 +100,11 @@ func TestSslCertificateEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SslCertificate to be different, but it is not %s %s", a, b)
 		}
@@ -120,15 +120,15 @@ func TestSslCertificateDiff(t *testing.T) {
 		var result SslCertificate
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 
 		samples = append(samples, struct {
@@ -142,11 +142,11 @@ func TestSslCertificateDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SslCertificate to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -162,11 +162,11 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 		var result SslCertificate
 		err := faker.FakeData(&sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		err = faker.FakeData(&result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err.Error())
 		}
 		result.NotAfter = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
 		result.NotBefore = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
@@ -182,11 +182,11 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err.Error())
 			}
 			t.Errorf("Expected SslCertificate to be different in 20 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

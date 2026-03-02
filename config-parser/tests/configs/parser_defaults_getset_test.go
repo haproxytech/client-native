@@ -35,7 +35,7 @@ func TestDefaultsConfigsGet(t *testing.T) { //nolint:gocognit
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			name, err := p.SectionsDefaultsFromGet(parser.Defaults, "A")
 			if err != nil {
@@ -88,7 +88,7 @@ func TestDefaultsConfigsGet(t *testing.T) { //nolint:gocognit
 			result := p.String()
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}
@@ -106,7 +106,7 @@ func TestDefaultsConfigsSet(t *testing.T) { //nolint:gocognit
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 
 			err = p.SectionsDefaultsFromSet(parser.Frontends, "http1", "B")
@@ -135,13 +135,13 @@ func TestDefaultsConfigsSet(t *testing.T) { //nolint:gocognit
 
 			err = p.SectionsDefaultsFromSet(parser.Global, parser.GlobalSectionName, "B")
 			if err == nil {
-				t.Fatalf("no error!")
+				t.Fatalf("%v", "no error!")
 			}
 
 			result := p.String()
 			if result != config.Result {
 				compare(t, config.Result, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}

@@ -32,12 +32,12 @@ func TestParseString(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}

@@ -33,12 +33,12 @@ func TestParseFecthCommentLines(t *testing.T) { //nolint:gocognit
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 
 			data, err := p.GetPreComments(parser.Defaults, "A", "log")
@@ -87,14 +87,14 @@ func TestParseFecthCommentLinesWrite(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			// fmt.Println(config.Config)
 			// fmt.Println(result)
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 
 			err = p.SetPreComments(parser.Defaults, "A", "log", []string{"line comment 1"})
@@ -115,7 +115,7 @@ func TestParseFecthCommentLinesWrite(t *testing.T) {
 			// fmt.Println(result)
 			if result != config.EndConfig {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}
@@ -131,17 +131,17 @@ func TestParseFetchCommentInline(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 
 			rawData, err := p.Get(parser.Frontends, "http", "mode")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			mode, ok := rawData.(*types.StringC)
 			if !ok {
@@ -153,7 +153,7 @@ func TestParseFetchCommentInline(t *testing.T) {
 
 			rawData, err = p.Get(parser.Frontends, "http", "bind")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			bindList, ok := rawData.([]types.Bind)
 			if !ok {
@@ -180,17 +180,17 @@ func TestParseFirstComments(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result != config.Config {
 				compare(t, config.Config, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 
 			comments, err := p.Get(parser.Comments, parser.CommentsSectionName, "#")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			data, ok := comments.([]types.Comments)
 			if !ok {

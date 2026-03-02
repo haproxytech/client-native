@@ -645,7 +645,7 @@ func (c *client) ClearMap(name string, forceDelete bool) error {
 			if os.IsNotExist(err) {
 				return native_errors.ErrNotFound
 			}
-			return fmt.Errorf(strings.Join([]string{err.Error(), native_errors.ErrNotFound.Error()}, " "))
+			return fmt.Errorf("%s %s", err.Error(), native_errors.ErrNotFound.Error())
 		}
 	}
 
@@ -676,7 +676,7 @@ func (c *client) ClearMapVersioned(name, version string, forceDelete bool) error
 			if os.IsNotExist(err) {
 				return native_errors.ErrNotFound
 			}
-			return fmt.Errorf(strings.Join([]string{err.Error(), native_errors.ErrNotFound.Error()}, " "))
+			return fmt.Errorf("%s %s", err.Error(), native_errors.ErrNotFound.Error())
 		}
 	}
 

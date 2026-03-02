@@ -36,12 +36,12 @@ func TestDefaultsConfigsNoFromFlag(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer), options.NoNamedDefaultsFrom)
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatalf("%v", err)
 			}
 			result := p.String()
 			if result != config.Result {
 				compare(t, config.Result, result)
-				t.Fatalf("configurations does not match")
+				t.Fatalf("%v", "configurations does not match")
 			}
 		})
 	}
