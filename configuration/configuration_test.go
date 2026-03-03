@@ -135,6 +135,7 @@ global
   maxsslconn 7
   maxsslrate 8
   maxzlibmem 9
+  fd-hard-limit 4096
   no-quic
   noepoll
   nokqueue

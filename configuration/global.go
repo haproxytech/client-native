@@ -824,6 +824,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		maxzlibmem = maxzlibmemParser.Value
 	}
 
+	fdHardLimit, err := parseInt64POption(p, "fd-hard-limit")
+	if err != nil {
+		return nil, err
+	}
+
 	var noQuic bool
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "no-quic")
 	if !errors.Is(err, parser_errors.ErrFetch) {
@@ -1229,6 +1234,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		Maxsslconn:                             maxsslconn,
 		Maxsslrate:                             maxsslrate,
 		Maxzlibmem:                             maxzlibmem,
+		FdHardLimit:                            fdHardLimit,
 		NoQuic:                                 noQuic,
 		Noepoll:                                noepoll,
 		Nokqueue:                               nokqueue,
@@ -1852,6 +1858,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		maxzlibmem = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxzlibmem", maxzlibmem); err != nil {
+		return err
+	}
+
+	if err := serializeInt64POption(p, "fd-hard-limit", data.FdHardLimit); err != nil {
 		return err
 	}
 

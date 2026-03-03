@@ -1122,6 +1122,9 @@ definitions:
           external_check:
               type: boolean
               x-display-name: External Check
+          fd_hard_limit:
+              type: integer
+              x-nullable: true
           fifty_one_degrees_options:
               properties:
                   cache_size:

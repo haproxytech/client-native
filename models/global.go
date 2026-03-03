@@ -112,6 +112,9 @@ type Global struct {
 	// external check
 	ExternalCheck bool `json:"external_check,omitempty"`
 
+	// fd hard limit
+	FdHardLimit *int64 `json:"fd_hard_limit,omitempty"`
+
 	// fifty one degrees options
 	FiftyOneDegreesOptions *GlobalFiftyOneDegreesOptions `json:"fifty_one_degrees_options,omitempty"`
 

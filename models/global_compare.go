@@ -215,6 +215,10 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.FdHardLimit, t.FdHardLimit) {
+		return false
+	}
+
 	if s.FiftyOneDegreesOptions == nil || t.FiftyOneDegreesOptions == nil {
 		if s.FiftyOneDegreesOptions != nil || t.FiftyOneDegreesOptions != nil {
 			if opt.NilSameAsEmpty {
@@ -930,6 +934,10 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if s.ExternalCheck != t.ExternalCheck {
 		diff["ExternalCheck"] = []interface{}{s.ExternalCheck, t.ExternalCheck}
+	}
+
+	if !equalPointers(s.FdHardLimit, t.FdHardLimit) {
+		diff["FdHardLimit"] = []interface{}{ValueOrNil(s.FdHardLimit), ValueOrNil(t.FdHardLimit)}
 	}
 
 	if s.FiftyOneDegreesOptions == nil || t.FiftyOneDegreesOptions == nil {

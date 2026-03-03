@@ -88,6 +88,7 @@ func TestGlobalEqualFalse(t *testing.T) {
 		result.CloseSpreadTime = Ptr(*sample.CloseSpreadTime + 1)
 		result.ExposeExperimentalDirectives = !sample.ExposeExperimentalDirectives
 		result.ExternalCheck = !sample.ExternalCheck
+		result.FdHardLimit = Ptr(*sample.FdHardLimit + 1)
 		result.Gid = sample.Gid + 1
 		result.Grace = Ptr(*sample.Grace + 1)
 		result.H1AcceptPayloadWithAnyMethod = !sample.H1AcceptPayloadWithAnyMethod
@@ -219,6 +220,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 		result.CloseSpreadTime = Ptr(*sample.CloseSpreadTime + 1)
 		result.ExposeExperimentalDirectives = !sample.ExposeExperimentalDirectives
 		result.ExternalCheck = !sample.ExternalCheck
+		result.FdHardLimit = Ptr(*sample.FdHardLimit + 1)
 		result.Gid = sample.Gid + 1
 		result.Grace = Ptr(*sample.Grace + 1)
 		result.H1AcceptPayloadWithAnyMethod = !sample.H1AcceptPayloadWithAnyMethod
@@ -273,7 +275,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 115 {
+		if len(result) != 116 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -283,7 +285,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err.Error())
 			}
-			t.Errorf("Expected Global to be different in 115 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Global to be different in 116 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

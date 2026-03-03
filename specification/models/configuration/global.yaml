@@ -144,6 +144,9 @@ global:
     maxzlibmem:
       type: integer
       x-display-name: Maximum amount of RAM in megabytes per process usable by the zlib
+    fd_hard_limit:
+      type: integer
+      x-nullable: true
     no-quic:
       type: boolean
       x-display-name: Disable the use of the QUIC protocol
