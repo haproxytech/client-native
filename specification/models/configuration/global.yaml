@@ -1014,6 +1014,9 @@ performance_options:
       x-nullable: true
       x-duration: true
       x-default-unit: ms
+    fd_hard_limit:
+      type: integer
+      x-nullable: true
     maxconn:
       type: integer
       x-display-name: Max Connections

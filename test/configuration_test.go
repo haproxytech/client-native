@@ -265,6 +265,7 @@ global
   log 127.0.0.1:10002 sample 2:4 local0
   harden.reject-privileged-ports.tcp on
   profiling.tasks enabled
+  fd-hard-limit 4096
   thread-hard-limit 77
   ssl-security-level 3
   http-err-codes 400,402-444,446-480,490 -450 +500

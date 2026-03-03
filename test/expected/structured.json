@@ -40,6 +40,7 @@
             "server_state_base": "/path",
             "server_state_file": "serverstatefile",
             "spread_checks": 10,
+            "fd_hard_limit": 4096,
             "thread_hard_limit": 77
         },
         "ssl_options": {
