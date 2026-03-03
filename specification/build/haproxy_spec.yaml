@@ -1363,6 +1363,9 @@ definitions:
     properties:
       busy_polling:
         type: boolean
+      fd_hard_limit:
+        type: integer
+        x-nullable: true
       max_spread_checks:
         minimum: 0
         type: integer
