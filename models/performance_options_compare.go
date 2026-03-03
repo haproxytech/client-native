@@ -28,6 +28,10 @@ func (s PerformanceOptions) Equal(t PerformanceOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.FdHardLimit, t.FdHardLimit) {
+		return false
+	}
+
 	if !equalPointers(s.MaxSpreadChecks, t.MaxSpreadChecks) {
 		return false
 	}
@@ -125,6 +129,10 @@ func (s PerformanceOptions) Diff(t PerformanceOptions, opts ...Options) map[stri
 	diff := make(map[string][]interface{})
 	if s.BusyPolling != t.BusyPolling {
 		diff["BusyPolling"] = []interface{}{s.BusyPolling, t.BusyPolling}
+	}
+
+	if !equalPointers(s.FdHardLimit, t.FdHardLimit) {
+		diff["FdHardLimit"] = []interface{}{ValueOrNil(s.FdHardLimit), ValueOrNil(t.FdHardLimit)}
 	}
 
 	if !equalPointers(s.MaxSpreadChecks, t.MaxSpreadChecks) {
