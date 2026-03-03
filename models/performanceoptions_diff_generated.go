@@ -26,6 +26,9 @@ func (rec PerformanceOptions) Diff(obj PerformanceOptions, opts ...eqdiff.GoMeth
 	if rec.BusyPolling != obj.BusyPolling {
 		diff["BusyPolling"] = []interface{}{rec.BusyPolling, obj.BusyPolling}
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.FdHardLimit, obj.FdHardLimit, opts...) {
+		diff["FdHardLimit."+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSpreadChecks, obj.MaxSpreadChecks, opts...) {
 		diff["MaxSpreadChecks."+diffKey] = diffValue
 	}

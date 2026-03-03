@@ -38,6 +38,9 @@ type PerformanceOptions struct {
 	// busy polling
 	BusyPolling bool `json:"busy_polling,omitempty"`
 
+	// fd hard limit
+	FdHardLimit *int64 `json:"fd_hard_limit,omitempty"`
+
 	// max spread checks
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0

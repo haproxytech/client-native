@@ -23,6 +23,7 @@ import (
 
 func (rec PerformanceOptions) Equal(obj PerformanceOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BusyPolling == obj.BusyPolling &&
+		EqualPointerInt64(rec.FdHardLimit, obj.FdHardLimit, opts...) &&
 		EqualPointerInt64(rec.MaxSpreadChecks, obj.MaxSpreadChecks, opts...) &&
 		rec.Maxcompcpuusage == obj.Maxcompcpuusage &&
 		rec.Maxcomprate == obj.Maxcomprate &&
