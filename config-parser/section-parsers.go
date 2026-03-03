@@ -249,6 +249,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Number{Name: "maxsslconn"})
 	addParser(parser, &sequence, &simple.Number{Name: "maxsslrate"})
 	addParser(parser, &sequence, &simple.Number{Name: "maxzlibmem"})
+	addParser(parser, &sequence, &simple.Number{Name: "fd-hard-limit"})
 	addParser(parser, &sequence, &simple.String{Name: "pidfile"})
 	addParser(parser, &sequence, &parsers.Socket{})
 	addParser(parser, &sequence, &parsers.StatsTimeout{})

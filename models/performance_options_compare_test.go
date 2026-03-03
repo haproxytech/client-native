@@ -87,6 +87,7 @@ func TestPerformanceOptionsEqualFalse(t *testing.T) {
 			t.Error(err)
 		}
 		result.BusyPolling = !sample.BusyPolling
+		result.FdHardLimit = Ptr(*sample.FdHardLimit + 1)
 		result.MaxSpreadChecks = Ptr(*sample.MaxSpreadChecks + 1)
 		result.Maxcompcpuusage = sample.Maxcompcpuusage + 1
 		result.Maxcomprate = sample.Maxcomprate + 1
@@ -184,6 +185,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 			t.Error(err)
 		}
 		result.BusyPolling = !sample.BusyPolling
+		result.FdHardLimit = Ptr(*sample.FdHardLimit + 1)
 		result.MaxSpreadChecks = Ptr(*sample.MaxSpreadChecks + 1)
 		result.Maxcompcpuusage = sample.Maxcompcpuusage + 1
 		result.Maxcomprate = sample.Maxcomprate + 1
@@ -208,7 +210,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 22 {
+		if len(result) != 23 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -218,7 +220,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected PerformanceOptions to be different in 22 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected PerformanceOptions to be different in 23 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

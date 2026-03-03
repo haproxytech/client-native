@@ -414,6 +414,15 @@ func parsePerformanceOptions(p parser.Parser) (*models.PerformanceOptions, error
 		options.Maxzlibmem = maxzlibmem
 	}
 
+	fdHardLimit, err := parseInt64POption(p, "fd-hard-limit")
+	if err != nil {
+		return nil, err
+	}
+	if fdHardLimit != nil {
+		isEmpty = false
+		options.FdHardLimit = fdHardLimit
+	}
+
 	noepoll, err := parseBoolOption(p, "noepoll")
 	if err != nil {
 		return nil, err
@@ -2787,6 +2796,10 @@ func serializePerformanceOptions(p parser.Parser, options *models.PerformanceOpt
 	}
 
 	if err := serializeInt64Option(p, "maxzlibmem", options.Maxzlibmem); err != nil {
+		return err
+	}
+
+	if err := serializeInt64POption(p, "fd-hard-limit", options.FdHardLimit); err != nil {
 		return err
 	}
 
