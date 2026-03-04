@@ -36,7 +36,7 @@ func checkHaproxyConfiguration(opt options.ConfigurationOptions, path string, tr
 		"HAPROXY_MWORKER_WAIT_ONLY", "HAPROXY_PROCESSES")
 
 	switch {
-	case len(transactionID) > 0 && len(opt.ValidateCmd) > 0:
+	case len(opt.ValidateCmd) > 0:
 		w, _ := shellquote.Split(opt.ValidateCmd)
 		name = w[0]
 		args = w[1:]
