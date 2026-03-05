@@ -14,19 +14,20 @@ server:
       type: string
       pattern: '^[^\s]+$'
       x-nullable: false
-      readOnly: true
     port:
       type: integer
       x-nullable: true
       minimum: 1
       maximum: 65535
-      readOnly: true
     operational_state:
       type: string
       enum: [up, down, stopping]
     admin_state:
       type: string
       enum: [ready, maint, drain]
+    weight:
+      type: integer
+      x-nullable: true
   example:
     server_id: 1
     server_name: web_server

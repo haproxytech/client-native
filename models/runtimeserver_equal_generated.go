@@ -27,5 +27,6 @@ func (rec RuntimeServer) Equal(obj RuntimeServer, opts ...eqdiff.GoMethodGenOpti
 		rec.ID == obj.ID &&
 		rec.Name == obj.Name &&
 		rec.OperationalState == obj.OperationalState &&
-		EqualPointerInt64(rec.Port, obj.Port, opts...)
+		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
+		EqualPointerInt64(rec.Weight, obj.Weight, opts...)
 }

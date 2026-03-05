@@ -192,6 +192,12 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 		port = &p
 	}
 
+	w, err := strconv.ParseInt(fields[7], 10, 64)
+	var weight *int64
+	if err == nil {
+		weight = &w
+	}
+
 	admState, _ := misc.GetServerAdminState(fields[6])
 
 	var opState string
@@ -211,5 +217,6 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 		ID:               fields[2],
 		AdminState:       admState,
 		OperationalState: opState,
+		Weight:           weight,
 	}
 }

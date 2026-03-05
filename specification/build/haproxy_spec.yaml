@@ -9807,7 +9807,6 @@ definitions:
     properties:
       address:
         pattern: ^[^\s]+$
-        readOnly: true
         type: string
         x-nullable: false
       admin_state:
@@ -9831,7 +9830,9 @@ definitions:
       port:
         maximum: 65535
         minimum: 1
-        readOnly: true
+        type: integer
+        x-nullable: true
+      weight:
         type: integer
         x-nullable: true
     title: Runtime Server
