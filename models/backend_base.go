@@ -231,7 +231,7 @@ type BackendBase struct {
 	// +kubebuilder:validation:Enum=aggressive;always;never;safe;
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
-	// http send name header
+	// The header string to use to send the server name
 	HTTPSendNameHeader *string `json:"http_send_name_header,omitempty"`
 
 	// httpchk params

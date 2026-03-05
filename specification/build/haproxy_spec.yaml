@@ -1335,8 +1335,8 @@ definitions:
         x-go-name: PresetEnvs
         x-omitempty: true
       resetenv:
+        description: Remove all environment variables except the ones specified
         type: string
-        x-display-name: Remove all environment variables except the ones specified
       setenv:
         items:
           properties:
@@ -1356,8 +1356,8 @@ definitions:
         x-go-name: SetEnvs
         x-omitempty: true
       unsetenv:
+        description: Removes environment variables specified in arguments
         type: string
-        x-display-name: Removes environment variables specified in arguments
     type: object
   performance_options:
     properties:
@@ -1376,60 +1376,60 @@ definitions:
         type: integer
         x-display-name: Maximum HAProxy CPU usage
       maxcomprate:
+        description: Maximum per-process input compression rate
         type: integer
-        x-display-name: Maximum per-process input compression rate
       maxconn:
         type: integer
         x-display-name: Max Connections
       maxconnrate:
+        description: Maximum per-process number of concurrent connections
         type: integer
-        x-display-name: Maximum per-process number of concurrent connections
       maxpipes:
         type: integer
         x-display-name: Maximum per-process number of pipes
       maxsessrate:
+        description: Maximum per-process number of sessions per second
         type: integer
-        x-display-name: Maximum per-process number of sessions per second
       maxzlibmem:
+        description: Maximum amount of RAM in megabytes per process usable by the zlib
         type: integer
-        x-display-name: Maximum amount of RAM in megabytes per process usable by the zlib
       noepoll:
+        description: Disable the use of the "epoll" event polling system on Linux
         type: boolean
-        x-display-name: Disable the use of the "epoll" event polling system on Linux
       noevports:
+        description: Disable the use of the event ports event polling system on SunOS system derived from Solaris 10 and later
         type: boolean
-        x-display-name: Disable the use of the event ports event polling system on SunOS system derived from Solaris 10 and later
       nogetaddrinfo:
+        description: Disable the use of getaddrinfo for name resolving
         type: boolean
-        x-display-name: Disable the use of getaddrinfo for name resolving
       nokqueue:
+        description: Disable the use of the "kqueue" event polling system on BSD
         type: boolean
-        x-display-name: Disable the use of the "kqueue" event polling system on BSD
       noktls:
+        description: Disables the use of ktls. It is equivalent to the command line argument "-dT"
         type: boolean
-        x-display-name: Disables the use of ktls. It is equivalent to the command line argument "-dT"
       nopoll:
+        description: Disable the use of the "poll" event polling system
         type: boolean
-        x-display-name: Disable the use of the "poll" event polling system
       noreuseport:
         type: boolean
         x-display-name: Disable the use of SO_REUSEPORT
       nosplice:
+        description: Disable the use of kernel tcp splicing between sockets on Linux
         type: boolean
-        x-display-name: Disable the use of kernel tcp splicing between sockets on Linux
       profiling_memory:
+        description: Enable or disables per-function memory profiling
         enum:
           - enabled
           - disabled
         type: string
-        x-display-name: Enable or disables per-function memory profiling
       profiling_tasks:
+        description: Enable or disables per-task CPU profiling
         enum:
           - auto
           - enabled
           - disabled
         type: string
-        x-display-name: Enable or disables per-task CPU profiling
       server_state_base:
         pattern: ^[^\s]+$
         type: string
@@ -1439,8 +1439,8 @@ definitions:
         type: string
         x-display-name: Server State File
       spread_checks:
+        description: Add some randomness in the check interval
         type: integer
-        x-display-name: Add some randomness in the check interval
       thread_hard_limit:
         type: integer
         x-nullable: true
@@ -1521,11 +1521,11 @@ definitions:
         type: string
         x-display-name: SSL Load Extra Files
       maxsslconn:
+        description: Maximum per-process number of concurrent SSL connections
         type: integer
-        x-display-name: Maximum per-process number of concurrent SSL connections
       maxsslrate:
+        description: Maximum per-process number of SSL sessions per second
         type: integer
-        x-display-name: Maximum per-process number of SSL sessions per second
       mode_async:
         enum:
           - enabled
@@ -1561,11 +1561,11 @@ definitions:
   tune_options:
     properties:
       applet_zero_copy_forwarding:
+        description: Enables of disabled the zero-copy forwarding of data for the applets
         enum:
           - enabled
           - disabled
         type: string
-        x-display-name: Enables of disabled the zero-copy forwarding of data for the applets
       comp_maxlevel:
         type: integer
         x-display-name: Maximum Compression Level
@@ -1604,49 +1604,49 @@ definitions:
         x-display-name: CPU Usage Kill glitched Connections
         x-nullable: true
       h1_zero_copy_fwd_recv:
+        description: enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
         enum:
           - enabled
           - disabled
         type: string
-        x-display-name: enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
       h1_zero_copy_fwd_send:
+        description: enable or disable the zero-copy sends of data for the HTTP/1 multiplexer
         enum:
           - enabled
           - disabled
         type: string
-        x-display-name: enable or disable the zero-copy sends of data for the HTTP/1 multiplexer
       h2_be_glitches_threshold:
+        description: Automatically kill a backend connection past a number of glitches
         type: integer
-        x-display-name: Automatically kill a backend connection past a number of glitches
         x-nullable: true
       h2_be_initial_window_size:
+        description: Initial window size for outgoing connections
         type: integer
-        x-display-name: Initial window size for outgoing connections
       h2_be_max_concurrent_streams:
+        description: Maximum number of concurrent streams per outgoing connection
         type: integer
-        x-display-name: Maximum number of concurrent streams per outgoing connection
       h2_be_rxbuf:
+        description: HTTP/2 receive buffer size for outgoing connections
         type: integer
-        x-display-name: HTTP/2 receive buffer size for outgoing connections
         x-nullable: true
         x-size: true
       h2_fe_glitches_threshold:
+        description: Automatically kill a frontend connection past a number of glitches
         type: integer
-        x-display-name: Automatically kill a frontend connection past a number of glitches
         x-nullable: true
       h2_fe_initial_window_size:
+        description: Initial window size for incoming connections
         type: integer
-        x-display-name: Initial window size for incoming connections
       h2_fe_max_concurrent_streams:
+        description: Maximum number of concurrent streams per incoming connection
         type: integer
-        x-display-name: Maximum number of concurrent streams per incoming connection
       h2_fe_max_total_streams:
+        description: Maximum number of total streams processed per incoming HTTP/2 connection
         type: integer
-        x-display-name: Maximum number of total streams processed per incoming HTTP/2 connection
         x-nullable: true
       h2_fe_rxbuf:
+        description: HTTP/2 receive buffer size for incoming connections
         type: integer
-        x-display-name: HTTP/2 receive buffer size for incoming connections
         x-nullable: true
         x-size: true
       h2_header_table_size:
@@ -1664,11 +1664,11 @@ definitions:
         type: integer
         x-display-name: HTTP/2 Maximum Frame Size
       h2_zero_copy_fwd_send:
+        description: enable or disable the zero-copy sends of data for the HTTP/2 multiplexer
         enum:
           - enabled
           - disabled
         type: string
-        x-display-name: enable or disable the zero-copy sends of data for the HTTP/2 multiplexer
       http_cookielen:
         type: integer
         x-display-name: Maximum Cookie Length
@@ -1744,8 +1744,8 @@ definitions:
         x-display-name: Pattern Lookup Cache Size
         x-nullable: true
       peers_max_updates_at_once:
+        description: Maximum number of stick-table updates at once
         type: integer
-        x-display-name: Maximum number of stick-table updates at once
       pool_high_fd_ratio:
         type: integer
         x-display-name: Max Used High FD Ratio
@@ -1753,26 +1753,26 @@ definitions:
         type: integer
         x-display-name: Max Used Low FD Ratio
       pt_zero_copy_forwarding:
+        description: enable or disable the zero-copy forwarding of data for the pass-through multiplexer
         enum:
           - enabled
           - disabled
         type: string
-        x-display-name: enable or disable the zero-copy forwarding of data for the pass-through multiplexer
       renice_runtime:
+        description: Scheduling priority applied after the configuration parsing
         maximum: 19
         minimum: -20
         type: integer
-        x-display-name: Scheduling priority applied after the configuration parsing
         x-nullable: true
       renice_startup:
+        description: Scheduling priority applied before the rest of the configuration
         maximum: 19
         minimum: -20
         type: integer
-        x-display-name: Scheduling priority applied before the rest of the configuration
         x-nullable: true
       ring_queues:
+        description: Number of write queues in front of ring buffers
         type: integer
-        x-display-name: Number of write queues in front of ring buffers
         x-nullable: true
       runqueue_depth:
         type: integer
@@ -1822,10 +1822,10 @@ definitions:
         x-display-name: QUIC Max Limit for Frame Loss
         x-nullable: true
       reorder_ratio:
+        description: Ratio applied to the packet reordering threshold
         maximum: 100
         minimum: 0
         type: integer
-        x-display-name: Ratio applied to the packet reordering threshold
         x-nullable: true
       retry_threshold:
         type: integer
@@ -1838,11 +1838,11 @@ definitions:
         type: string
         x-display-name: QUIC Socket Owner
       zero_copy_fwd_send:
+        description: Enables or disables the zero-copy sends for the QUIC multiplexer
         enum:
           - enabled
           - disabled
         type: string
-        x-display-name: Enables or disables the zero-copy sends for the QUIC multiplexer
     type: object
   tune_vars_options:
     properties:
@@ -1923,12 +1923,12 @@ definitions:
         x-nullable: true
         x-size: false
       ocsp_update_max_delay:
+        description: SSL Maximum Interval Between Two Automatic Updates of the same OCSP Response
         type: integer
-        x-display-name: SSL Maximum Interval Between Two Automatic Updates of the same OCSP Response
         x-nullable: true
       ocsp_update_min_delay:
+        description: SSL Minimum Interval Between Two Automatic Updates of the same OCSP Response
         type: integer
-        x-display-name: SSL Minimum Interval Between Two Automatic Updates of the same OCSP Response
         x-nullable: true
     type: object
   tune_lua_options:
@@ -2002,9 +2002,9 @@ definitions:
         x-display-name: Buffer Size
         x-size: true
       bufsize_small:
+        description: Size of small buffers (for memory-restrained situations)
         minimum: 1
         type: integer
-        x-display-name: Size of small buffers (for memory-restrained situations)
         x-nullable: true
         x-size: true
       pipesize:
@@ -2192,20 +2192,20 @@ definitions:
   wurfl_options:
     properties:
       cache_size:
+        description: Sets the WURFL Useragent cache size
         type: integer
-        x-display-name: Sets the WURFL Useragent cache size
       data_file:
+        description: The path of the WURFL data file
         type: string
-        x-display-name: The path of the WURFL data file
       information_list:
+        description: A space-delimited list of WURFL capabilities
         type: string
-        x-display-name: A space-delimited list of WURFL capabilities
       information_list_separator:
+        description: A char that will be used to separate values in a response header containing WURFL results
         type: string
-        x-display-name: A char that will be used to separate values in a response header containing WURFL results
       patch_file:
+        description: A list of WURFL patch file paths
         type: string
-        x-display-name: A list of WURFL patch file paths
     type: object
   device_atlas_options:
     properties:
@@ -2352,8 +2352,8 @@ definitions:
         type: object
         x-go-name: GlobalDefaultPath
       description:
+        description: Text that describes the instance
         type: string
-        x-display-name: Text that describes the instance
       device_atlas_options:
         $ref: '#/definitions/device_atlas_options'
       dns_accept_family:
@@ -2372,20 +2372,20 @@ definitions:
       fifty_one_degrees_options:
         $ref: '#/definitions/fifty_one_degrees_options'
       force_cfg_parser_pause:
+        description: Pause the configuration parser to simulate long reloads
         minimum: 0
         type: integer
         x-default-unit: ms
-        x-display-name: Pause the configuration parser to simulate long reloads
         x-duration: true
         x-nullable: true
       gid:
         type: integer
         x-display-name: GID
       grace:
+        description: Defines a delay between SIGUSR1 and real soft-stop
         minimum: 0
         type: integer
         x-default-unit: ms
-        x-display-name: Defines a delay between SIGUSR1 and real soft-stop
         x-duration: true
         x-nullable: true
       group:
@@ -2443,16 +2443,16 @@ definitions:
       http_client_options:
         $ref: '#/definitions/http_client_options'
       http_err_codes:
+        description: Replace, reduce or extend the list of status codes that define an error
         items:
           $ref: '#/definitions/http_codes'
         type: array
-        x-display-name: Replace, reduce or extend the list of status codes that define an error
         x-omitempty: true
       http_fail_codes:
+        description: Replace, reduce or extend the list of status codes that define a failure
         items:
           $ref: '#/definitions/http_codes'
         type: array
-        x-display-name: Replace, reduce or extend the list of status codes that define a failure
         x-omitempty: true
       insecure_fork_wanted:
         type: boolean
@@ -2488,16 +2488,17 @@ definitions:
         additionalProperties:
           type: object
       mworker_max_reloads:
+        description: The number of times a worker can survive a reload
         minimum: 0
         type: integer
-        x-display-name: The number of times a worker can survive a reload
         x-nullable: true
       nbthread:
         type: integer
         x-display-name: Number of Threads
       no_quic:
+        description: Disable the use of the QUIC protocol
         type: boolean
-        x-display-name: Disable the use of the QUIC protocol
+        x-display-name: Disable QUIC
       node:
         type: string
       numa_cpu_mapping:
@@ -2581,13 +2582,13 @@ definitions:
         x-display-name: OS Capabilities
         x-omitempty: true
       shm_stats_file:
+        description: Shared Memory Statistics File (EXPERIMENTAL)
         pattern: ^[^\s]+$
         type: string
-        x-display-name: Shared Memory Statistics File (EXPERIMENTAL)
       shm_stats_file_max_objects:
+        description: Maximum number of objects the shared memory used for shared counters will be able to store per thread group. (EXPERIMENTAL)
         minimum: 0
         type: integer
-        x-display-name: Maximum number of objects the shared memory used for shared counters will be able to store per thread group. (EXPERIMENTAL)
         x-nullable: true
       ssl_options:
         $ref: '#/definitions/ssl_options'
@@ -2650,10 +2651,10 @@ definitions:
         type: string
         x-display-name: User
       warn_blocked_traffic_after:
+        description: Delay after which a stuck task triggers a warning
         minimum: 1
         type: integer
         x-default-unit: ms
-        x-display-name: Delay after which a stuck task triggers a warning
         x-duration: true
         x-nullable: true
       wurfl_options:
@@ -2993,8 +2994,8 @@ definitions:
           - safe
         type: string
       http_send_name_header:
+        description: Add the server name to a request
         type: string
-        x-display-name: Add the server name to a request
         x-nullable: true
       http_use_proxy_header:
         enum:
@@ -3074,8 +3075,8 @@ definitions:
         type: string
         x-display-name: Log ASAP
       max_keep_alive_queue:
+        description: Maximum server queue size for maintaining keep-alive connections
         type: integer
-        x-display-name: Maximum server queue size for maintaining keep-alive connections
         x-nullable: true
       maxconn:
         type: integer
@@ -3140,8 +3141,8 @@ definitions:
         type: integer
         x-nullable: true
       retry_on:
+        description: Specify when to attempt to automatically retry a failed request
         type: string
-        x-display-name: Specify when to attempt to automatically retry a failed request
       server_fin_timeout:
         minimum: 0
         type: integer
@@ -4041,8 +4042,8 @@ definitions:
           mode:
             value: http
       http_send_name_header:
+        description: The header string to use to send the server name
         type: string
-        x-display-name: The header string to use to send the server name
         x-nullable: true
       httpchk_params:
         $ref: '#/definitions/httpchk_params'
@@ -4319,9 +4320,10 @@ definitions:
     description: HAProxy ring configuration
     properties:
       description:
+        description: The description is an optional description string of the ring
         type: string
-        x-display-name: The description is an optional description string of the ring
       format:
+        description: Format used to store events into the ring buffer
         enum:
           - iso
           - local
@@ -4332,10 +4334,9 @@ definitions:
           - priority
           - timed
         type: string
-        x-display-name: Format used to store events into the ring buffer
       maxlen:
+        description: The maximum length of an event message stored into the ring
         type: integer
-        x-display-name: The maximum length of an event message stored into the ring
         x-nullable: true
       metadata:
         additionalProperties:
@@ -4345,9 +4346,9 @@ definitions:
         type: string
         x-nullable: false
       size:
+        description: Optional size in bytes for the ring-buffer
         minimum: 0
         type: integer
-        x-display-name: Optional size in bytes for the ring-buffer
         x-nullable: true
         x-size: true
       timeout_connect:
@@ -4578,10 +4579,10 @@ definitions:
         type: string
         x-nullable: false
       timeout:
+        description: Timeout to send an email in milliseconds
         minimum: 0
         type: integer
         x-default-unit: ms
-        x-display-name: Timeout to send an email in milliseconds
         x-duration: true
         x-nullable: true
     required:

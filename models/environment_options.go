@@ -41,10 +41,10 @@ type EnvironmentOptions struct {
 	// set envs
 	SetEnvs []*SetEnv `json:"setenv,omitempty"`
 
-	// resetenv
+	// Remove all environment variables except the ones specified
 	Resetenv string `json:"resetenv,omitempty"`
 
-	// unsetenv
+	// Removes environment variables specified in arguments
 	Unsetenv string `json:"unsetenv,omitempty"`
 }
 

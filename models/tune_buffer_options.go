@@ -45,7 +45,7 @@ type TuneBufferOptions struct {
 	// bufsize
 	Bufsize int64 `json:"bufsize,omitempty"`
 
-	// bufsize small
+	// Size of small buffers (for memory-restrained situations)
 	// Minimum: 1
 	// +kubebuilder:validation:Minimum=1
 	BufsizeSmall *int64 `json:"bufsize_small,omitempty"`

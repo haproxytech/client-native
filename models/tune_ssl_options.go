@@ -63,10 +63,10 @@ type TuneSslOptions struct {
 	// maxrecord
 	Maxrecord *int64 `json:"maxrecord,omitempty"`
 
-	// ocsp update max delay
+	// SSL Maximum Interval Between Two Automatic Updates of the same OCSP Response
 	OcspUpdateMaxDelay *int64 `json:"ocsp_update_max_delay,omitempty"`
 
-	// ocsp update min delay
+	// SSL Minimum Interval Between Two Automatic Updates of the same OCSP Response
 	OcspUpdateMinDelay *int64 `json:"ocsp_update_min_delay,omitempty"`
 }
 

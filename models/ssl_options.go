@@ -95,10 +95,10 @@ type SslOptions struct {
 	// load extra files
 	LoadExtraFiles string `json:"load_extra_files,omitempty"`
 
-	// maxsslconn
+	// Maximum per-process number of concurrent SSL connections
 	Maxsslconn int64 `json:"maxsslconn,omitempty"`
 
-	// maxsslrate
+	// Maximum per-process number of SSL sessions per second
 	Maxsslrate int64 `json:"maxsslrate,omitempty"`
 
 	// mode async
