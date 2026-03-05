@@ -49,54 +49,54 @@ type PerformanceOptions struct {
 	// maxcompcpuusage
 	Maxcompcpuusage int64 `json:"maxcompcpuusage,omitempty"`
 
-	// maxcomprate
+	// Maximum per-process input compression rate
 	Maxcomprate int64 `json:"maxcomprate,omitempty"`
 
 	// maxconn
 	Maxconn int64 `json:"maxconn,omitempty"`
 
-	// maxconnrate
+	// Maximum per-process number of concurrent connections
 	Maxconnrate int64 `json:"maxconnrate,omitempty"`
 
 	// maxpipes
 	Maxpipes int64 `json:"maxpipes,omitempty"`
 
-	// maxsessrate
+	// Maximum per-process number of sessions per second
 	Maxsessrate int64 `json:"maxsessrate,omitempty"`
 
-	// maxzlibmem
+	// Maximum amount of RAM in megabytes per process usable by the zlib
 	Maxzlibmem int64 `json:"maxzlibmem,omitempty"`
 
-	// noepoll
+	// Disable the use of the "epoll" event polling system on Linux
 	Noepoll bool `json:"noepoll,omitempty"`
 
-	// noevports
+	// Disable the use of the event ports event polling system on SunOS system derived from Solaris 10 and later
 	Noevports bool `json:"noevports,omitempty"`
 
-	// nogetaddrinfo
+	// Disable the use of getaddrinfo for name resolving
 	Nogetaddrinfo bool `json:"nogetaddrinfo,omitempty"`
 
-	// nokqueue
+	// Disable the use of the "kqueue" event polling system on BSD
 	Nokqueue bool `json:"nokqueue,omitempty"`
 
-	// noktls
+	// Disables the use of ktls. It is equivalent to the command line argument "-dT"
 	Noktls bool `json:"noktls,omitempty"`
 
-	// nopoll
+	// Disable the use of the "poll" event polling system
 	Nopoll bool `json:"nopoll,omitempty"`
 
 	// noreuseport
 	Noreuseport bool `json:"noreuseport,omitempty"`
 
-	// nosplice
+	// Disable the use of kernel tcp splicing between sockets on Linux
 	Nosplice bool `json:"nosplice,omitempty"`
 
-	// profiling memory
+	// Enable or disables per-function memory profiling
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	ProfilingMemory string `json:"profiling_memory,omitempty"`
 
-	// profiling tasks
+	// Enable or disables per-task CPU profiling
 	// Enum: ["auto","enabled","disabled"]
 	// +kubebuilder:validation:Enum=auto;enabled;disabled;
 	ProfilingTasks string `json:"profiling_tasks,omitempty"`
@@ -111,7 +111,7 @@ type PerformanceOptions struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ServerStateFile string `json:"server_state_file,omitempty"`
 
-	// spread checks
+	// Add some randomness in the check interval
 	SpreadChecks int64 `json:"spread_checks,omitempty"`
 
 	// thread hard limit

@@ -35,7 +35,7 @@ import (
 //
 // swagger:model tune_options
 type TuneOptions struct {
-	// applet zero copy forwarding
+	// Enables of disabled the zero-copy forwarding of data for the applets
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	AppletZeroCopyForwarding string `json:"applet_zero_copy_forwarding,omitempty"`
@@ -74,41 +74,41 @@ type TuneOptions struct {
 	// +kubebuilder:validation:Minimum=0
 	GlitchesKillCPUUsage *int64 `json:"glitches_kill_cpu_usage,omitempty"`
 
-	// h1 zero copy fwd recv
+	// enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1ZeroCopyFwdRecv string `json:"h1_zero_copy_fwd_recv,omitempty"`
 
-	// h1 zero copy fwd send
+	// enable or disable the zero-copy sends of data for the HTTP/1 multiplexer
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
 
-	// h2 be glitches threshold
+	// Automatically kill a backend connection past a number of glitches
 	H2BeGlitchesThreshold *int64 `json:"h2_be_glitches_threshold,omitempty"`
 
-	// h2 be initial window size
+	// Initial window size for outgoing connections
 	H2BeInitialWindowSize int64 `json:"h2_be_initial_window_size,omitempty"`
 
-	// h2 be max concurrent streams
+	// Maximum number of concurrent streams per outgoing connection
 	H2BeMaxConcurrentStreams int64 `json:"h2_be_max_concurrent_streams,omitempty"`
 
-	// h2 be rxbuf
+	// HTTP/2 receive buffer size for outgoing connections
 	H2BeRxbuf *int64 `json:"h2_be_rxbuf,omitempty"`
 
-	// h2 fe glitches threshold
+	// Automatically kill a frontend connection past a number of glitches
 	H2FeGlitchesThreshold *int64 `json:"h2_fe_glitches_threshold,omitempty"`
 
-	// h2 fe initial window size
+	// Initial window size for incoming connections
 	H2FeInitialWindowSize int64 `json:"h2_fe_initial_window_size,omitempty"`
 
-	// h2 fe max concurrent streams
+	// Maximum number of concurrent streams per incoming connection
 	H2FeMaxConcurrentStreams int64 `json:"h2_fe_max_concurrent_streams,omitempty"`
 
-	// h2 fe max total streams
+	// Maximum number of total streams processed per incoming HTTP/2 connection
 	H2FeMaxTotalStreams *int64 `json:"h2_fe_max_total_streams,omitempty"`
 
-	// h2 fe rxbuf
+	// HTTP/2 receive buffer size for incoming connections
 	H2FeRxbuf *int64 `json:"h2_fe_rxbuf,omitempty"`
 
 	// h2 header table size
@@ -125,7 +125,7 @@ type TuneOptions struct {
 	// h2 max frame size
 	H2MaxFrameSize int64 `json:"h2_max_frame_size,omitempty"`
 
-	// h2 zero copy fwd send
+	// enable or disable the zero-copy sends of data for the HTTP/2 multiplexer
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	H2ZeroCopyFwdSend string `json:"h2_zero_copy_fwd_send,omitempty"`
@@ -194,7 +194,7 @@ type TuneOptions struct {
 	// pattern cache size
 	PatternCacheSize *int64 `json:"pattern_cache_size,omitempty"`
 
-	// peers max updates at once
+	// Maximum number of stick-table updates at once
 	PeersMaxUpdatesAtOnce int64 `json:"peers_max_updates_at_once,omitempty"`
 
 	// pool high fd ratio
@@ -203,26 +203,26 @@ type TuneOptions struct {
 	// pool low fd ratio
 	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
 
-	// pt zero copy forwarding
+	// enable or disable the zero-copy forwarding of data for the pass-through multiplexer
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
 
-	// renice runtime
+	// Scheduling priority applied after the configuration parsing
 	// Maximum: 19
 	// Minimum: -20
 	// +kubebuilder:validation:Maximum=19
 	// +kubebuilder:validation:Minimum=-20
 	ReniceRuntime *int64 `json:"renice_runtime,omitempty"`
 
-	// renice startup
+	// Scheduling priority applied before the rest of the configuration
 	// Maximum: 19
 	// Minimum: -20
 	// +kubebuilder:validation:Maximum=19
 	// +kubebuilder:validation:Minimum=-20
 	ReniceStartup *int64 `json:"renice_startup,omitempty"`
 
-	// ring queues
+	// Number of write queues in front of ring buffers
 	RingQueues *int64 `json:"ring_queues,omitempty"`
 
 	// runqueue depth

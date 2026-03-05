@@ -23,20 +23,20 @@ ring_base:
       x-nullable: false
     description:
       type: string
-      x-display-name: The description is an optional description string of the ring
+      description: The description is an optional description string of the ring
     format:
       type: string
-      x-display-name: Format used to store events into the ring buffer
+      description: Format used to store events into the ring buffer
       enum: [iso, local, raw, rfc3164, rfc5424, short, priority, timed]
     maxlen:
       type: integer
       x-nullable: true
-      x-display-name: The maximum length of an event message stored into the ring
+      description: The maximum length of an event message stored into the ring
     size:
       type: integer
       minimum: 0
       x-nullable: true
-      x-display-name: Optional size in bytes for the ring-buffer
+      description: Optional size in bytes for the ring-buffer
       x-size: true
     timeout_connect:
       type: integer

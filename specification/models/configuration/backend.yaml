@@ -500,7 +500,7 @@ backend_base:
     http_send_name_header:
       type: string
       x-nullable: true
-      x-display-name: The header string to use to send the server name
+      description: The header string to use to send the server name
     max_keep_alive_queue:
       type: integer
       x-nullable: true

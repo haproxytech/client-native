@@ -32,19 +32,19 @@ import (
 // swagger:model wurfl_options
 type WurflOptions struct {
 
-	// cache size
+	// Sets the WURFL Useragent cache size
 	CacheSize int64 `json:"cache_size,omitempty"`
 
-	// data file
+	// The path of the WURFL data file
 	DataFile string `json:"data_file,omitempty"`
 
-	// information list
+	// A space-delimited list of WURFL capabilities
 	InformationList string `json:"information_list,omitempty"`
 
-	// information list separator
+	// A char that will be used to separate values in a response header containing WURFL results
 	InformationListSeparator string `json:"information_list_separator,omitempty"`
 
-	// patch file
+	// A list of WURFL patch file paths
 	PatchFile string `json:"patch_file,omitempty"`
 }
 

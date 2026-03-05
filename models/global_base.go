@@ -86,7 +86,7 @@ type GlobalBase struct {
 	// default path
 	DefaultPath *GlobalDefaultPath `json:"default_path,omitempty"`
 
-	// description
+	// Text that describes the instance
 	Description string `json:"description,omitempty"`
 
 	// device atlas options
@@ -112,7 +112,7 @@ type GlobalBase struct {
 	// fifty one degrees options
 	FiftyOneDegreesOptions *FiftyOneDegreesOptions `json:"fifty_one_degrees_options,omitempty"`
 
-	// force cfg parser pause
+	// Pause the configuration parser to simulate long reloads
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
 	ForceCfgParserPause *int64 `json:"force_cfg_parser_pause,omitempty"`
@@ -120,7 +120,7 @@ type GlobalBase struct {
 	// gid
 	Gid int64 `json:"gid,omitempty"`
 
-	// grace
+	// Defines a delay between SIGUSR1 and real soft-stop
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
 	Grace *int64 `json:"grace,omitempty"`
@@ -153,10 +153,10 @@ type GlobalBase struct {
 	// http client options
 	HTTPClientOptions *HTTPClientOptions `json:"http_client_options,omitempty"`
 
-	// http err codes
+	// Replace, reduce or extend the list of status codes that define an error
 	HTTPErrCodes []*HTTPCodes `json:"http_err_codes,omitempty"`
 
-	// http fail codes
+	// Replace, reduce or extend the list of status codes that define a failure
 	HTTPFailCodes []*HTTPCodes `json:"http_fail_codes,omitempty"`
 
 	// insecure fork wanted
@@ -186,7 +186,7 @@ type GlobalBase struct {
 	// +kubebuilder:validation:Schemaless
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
-	// mworker max reloads
+	// The number of times a worker can survive a reload
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
 	MworkerMaxReloads *int64 `json:"mworker_max_reloads,omitempty"`
@@ -194,7 +194,7 @@ type GlobalBase struct {
 	// nbthread
 	Nbthread int64 `json:"nbthread,omitempty"`
 
-	// no quic
+	// Disable the use of the QUIC protocol
 	NoQuic bool `json:"no_quic,omitempty"`
 
 	// node
@@ -228,12 +228,12 @@ type GlobalBase struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Setcap string `json:"setcap,omitempty"`
 
-	// shm stats file
+	// Shared Memory Statistics File (EXPERIMENTAL)
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ShmStatsFile string `json:"shm_stats_file,omitempty"`
 
-	// shm stats file max objects
+	// Maximum number of objects the shared memory used for shared counters will be able to store per thread group. (EXPERIMENTAL)
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
 	ShmStatsFileMaxObjects *int64 `json:"shm_stats_file_max_objects,omitempty"`
@@ -290,7 +290,7 @@ type GlobalBase struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	User string `json:"user,omitempty"`
 
-	// warn blocked traffic after
+	// Delay after which a stuck task triggers a warning
 	// Minimum: 1
 	// +kubebuilder:validation:Minimum=1
 	WarnBlockedTrafficAfter *int64 `json:"warn_blocked_traffic_after,omitempty"`

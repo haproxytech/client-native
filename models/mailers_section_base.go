@@ -45,7 +45,7 @@ type MailersSectionBase struct {
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_]+$`
 	Name string `json:"name"`
 
-	// timeout
+	// Timeout to send an email in milliseconds
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
 	Timeout *int64 `json:"timeout,omitempty"`

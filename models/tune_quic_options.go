@@ -52,7 +52,7 @@ type TuneQuicOptions struct {
 	// max frame loss
 	MaxFrameLoss *int64 `json:"max_frame_loss,omitempty"`
 
-	// reorder ratio
+	// Ratio applied to the packet reordering threshold
 	// Maximum: 100
 	// Minimum: 0
 	// +kubebuilder:validation:Maximum=100
@@ -67,7 +67,7 @@ type TuneQuicOptions struct {
 	// +kubebuilder:validation:Enum=listener;connection;
 	SocketOwner string `json:"socket_owner,omitempty"`
 
-	// zero copy fwd send
+	// Enables or disables the zero-copy sends for the QUIC multiplexer
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	ZeroCopyFwdSend string `json:"zero_copy_fwd_send,omitempty"`
