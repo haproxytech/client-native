@@ -87,6 +87,7 @@ func TestRuntimeServerEqualFalse(t *testing.T) {
 			t.Error(err)
 		}
 		result.Port = Ptr(*sample.Port + 1)
+		result.Weight = Ptr(*sample.Weight + 1)
 		samples = append(samples, struct {
 			a, b RuntimeServer
 		}{sample, result})
@@ -167,6 +168,7 @@ func TestRuntimeServerDiffFalse(t *testing.T) {
 			t.Error(err)
 		}
 		result.Port = Ptr(*sample.Port + 1)
+		result.Weight = Ptr(*sample.Weight + 1)
 		samples = append(samples, struct {
 			a, b RuntimeServer
 		}{sample, result})
@@ -175,7 +177,7 @@ func TestRuntimeServerDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 6 {
+		if len(listDiffFields) != 7 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -185,7 +187,7 @@ func TestRuntimeServerDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected RuntimeServer to be different in 6 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected RuntimeServer to be different in 7 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

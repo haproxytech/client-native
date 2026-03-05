@@ -41,5 +41,8 @@ func (rec RuntimeServer) Diff(obj RuntimeServer, opts ...eqdiff.GoMethodGenOptio
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
 		diff["Port."+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.Weight, obj.Weight, opts...) {
+		diff["Weight."+diffKey] = diffValue
+	}
 	return diff
 }

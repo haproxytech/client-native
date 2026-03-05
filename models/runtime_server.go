@@ -38,7 +38,6 @@ import (
 // swagger:model runtime_server
 type RuntimeServer struct {
 	// address
-	// Read Only: true
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address string `json:"address,omitempty"`
@@ -62,12 +61,14 @@ type RuntimeServer struct {
 	OperationalState string `json:"operational_state,omitempty"`
 
 	// port
-	// Read Only: true
 	// Maximum: 65535
 	// Minimum: 1
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port,omitempty"`
+
+	// weight
+	Weight *int64 `json:"weight,omitempty"`
 }
 
 // Validate validates this runtime server
@@ -218,10 +219,6 @@ func (m *RuntimeServer) validatePort(formats strfmt.Registry) error {
 func (m *RuntimeServer) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateAddress(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateID(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -230,22 +227,9 @@ func (m *RuntimeServer) ContextValidate(ctx context.Context, formats strfmt.Regi
 		res = append(res, err)
 	}
 
-	if err := m.contextValidatePort(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *RuntimeServer) contextValidateAddress(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "address", "body", string(m.Address)); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -261,15 +245,6 @@ func (m *RuntimeServer) contextValidateID(ctx context.Context, formats strfmt.Re
 func (m *RuntimeServer) contextValidateName(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "name", "body", string(m.Name)); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *RuntimeServer) contextValidatePort(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "port", "body", m.Port); err != nil {
 		return err
 	}
 
