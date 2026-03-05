@@ -37,15 +37,15 @@ import (
 // swagger:model ring_base
 type RingBase struct {
 
-	// description
+	// The description is an optional description string of the ring
 	Description string `json:"description,omitempty"`
 
-	// format
+	// Format used to store events into the ring buffer
 	// Enum: ["iso","local","raw","rfc3164","rfc5424","short","priority","timed"]
 	// +kubebuilder:validation:Enum=iso;local;raw;rfc3164;rfc5424;short;priority;timed;
 	Format string `json:"format,omitempty"`
 
-	// maxlen
+	// The maximum length of an event message stored into the ring
 	Maxlen *int64 `json:"maxlen,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -58,7 +58,7 @@ type RingBase struct {
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name"`
 
-	// size
+	// Optional size in bytes for the ring-buffer
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
 	Size *int64 `json:"size,omitempty"`

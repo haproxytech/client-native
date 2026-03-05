@@ -2923,8 +2923,8 @@ definitions:
           - safe
         type: string
       http_send_name_header:
+        description: Add the server name to a request
         type: string
-        x-display-name: Add the server name to a request
         x-nullable: true
       http_use_proxy_header:
         enum:
@@ -3004,8 +3004,8 @@ definitions:
         type: string
         x-display-name: Log ASAP
       max_keep_alive_queue:
+        description: Maximum server queue size for maintaining keep-alive connections
         type: integer
-        x-display-name: Maximum server queue size for maintaining keep-alive connections
         x-nullable: true
       maxconn:
         type: integer
@@ -3069,8 +3069,8 @@ definitions:
         type: integer
         x-nullable: true
       retry_on:
+        description: Specify when to attempt to automatically retry a failed request
         type: string
-        x-display-name: Specify when to attempt to automatically retry a failed request
       server_fin_timeout:
         minimum: 0
         type: integer
@@ -3963,8 +3963,8 @@ definitions:
           mode:
             value: http
       http_send_name_header:
+        description: The header string to use to send the server name
         type: string
-        x-display-name: The header string to use to send the server name
         x-nullable: true
       httpchk_params:
         $ref: '#/definitions/httpchk_params'
@@ -4241,9 +4241,10 @@ definitions:
     description: HAProxy ring configuration
     properties:
       description:
+        description: The description is an optional description string of the ring
         type: string
-        x-display-name: The description is an optional description string of the ring
       format:
+        description: Format used to store events into the ring buffer
         enum:
           - iso
           - local
@@ -4254,10 +4255,9 @@ definitions:
           - priority
           - timed
         type: string
-        x-display-name: Format used to store events into the ring buffer
       maxlen:
+        description: The maximum length of an event message stored into the ring
         type: integer
-        x-display-name: The maximum length of an event message stored into the ring
         x-nullable: true
       metadata:
         additionalProperties:
@@ -4267,9 +4267,9 @@ definitions:
         type: string
         x-nullable: false
       size:
+        description: Optional size in bytes for the ring-buffer
         minimum: 0
         type: integer
-        x-display-name: Optional size in bytes for the ring-buffer
         x-nullable: true
         x-size: true
       timeout_connect:
@@ -4498,10 +4498,10 @@ definitions:
         type: string
         x-nullable: false
       timeout:
+        description: Timeout to send an email in milliseconds
         minimum: 0
         type: integer
         x-default-unit: ms
-        x-display-name: Timeout to send an email in milliseconds
         x-duration: true
         x-nullable: true
     required:

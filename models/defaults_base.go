@@ -292,7 +292,7 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Enum=aggressive;always;never;safe;
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
-	// http send name header
+	// Add the server name to a request
 	HTTPSendNameHeader *string `json:"http_send_name_header,omitempty"`
 
 	// http use proxy header
@@ -352,7 +352,7 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	Logasap string `json:"logasap,omitempty"`
 
-	// max keep alive queue
+	// Maximum server queue size for maintaining keep-alive connections
 	MaxKeepAliveQueue *int64 `json:"max_keep_alive_queue,omitempty"`
 
 	// maxconn
@@ -413,7 +413,7 @@ type DefaultsBase struct {
 	// retries
 	Retries *int64 `json:"retries,omitempty"`
 
-	// retry on
+	// Specify when to attempt to automatically retry a failed request
 	RetryOn string `json:"retry_on,omitempty"`
 
 	// server fin timeout
