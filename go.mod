@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/go-faker/faker/v4 v4.7.0
-	github.com/go-openapi/errors v0.22.6
+	github.com/go-openapi/errors v0.22.7
 	github.com/go-openapi/strfmt v0.25.0
 	github.com/go-openapi/swag v0.25.5
 	github.com/go-openapi/swag/mangling v0.25.5
