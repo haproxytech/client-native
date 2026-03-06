@@ -71,7 +71,7 @@ server:
       type: integer
       readOnly: true
       x-nullable: true
-    foreced_id:
+    forced_id:
       type: integer
       readOnly: true
       x-nullable: true

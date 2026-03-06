@@ -65,8 +65,8 @@ func (rec RuntimeServer) Diff(obj RuntimeServer, opts ...eqdiff.GoMethodGenOptio
 	for diffKey, diffValue := range DiffPointerInt64(rec.CheckStatus, obj.CheckStatus, opts...) {
 		diff["CheckStatus."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range DiffPointerInt64(rec.ForecedID, obj.ForecedID, opts...) {
-		diff["ForecedID."+diffKey] = diffValue
+	for diffKey, diffValue := range DiffPointerInt64(rec.ForcedID, obj.ForcedID, opts...) {
+		diff["ForcedID."+diffKey] = diffValue
 	}
 	if rec.Fqdn != obj.Fqdn {
 		diff["Fqdn"] = []interface{}{rec.Fqdn, obj.Fqdn}

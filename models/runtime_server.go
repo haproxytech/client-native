@@ -103,9 +103,9 @@ type RuntimeServer struct {
 	// Read Only: true
 	CheckStatus *int64 `json:"check_status,omitempty"`
 
-	// foreced id
+	// forced id
 	// Read Only: true
-	ForecedID *int64 `json:"foreced_id,omitempty"`
+	ForcedID *int64 `json:"forced_id,omitempty"`
 
 	// fqdn
 	// Read Only: true
@@ -391,7 +391,7 @@ func (m *RuntimeServer) ContextValidate(ctx context.Context, formats strfmt.Regi
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateForecedID(ctx, formats); err != nil {
+	if err := m.contextValidateForcedID(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -541,9 +541,9 @@ func (m *RuntimeServer) contextValidateCheckStatus(ctx context.Context, formats 
 	return nil
 }
 
-func (m *RuntimeServer) contextValidateForecedID(ctx context.Context, formats strfmt.Registry) error {
+func (m *RuntimeServer) contextValidateForcedID(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "foreced_id", "body", m.ForecedID); err != nil {
+	if err := validate.ReadOnly(ctx, "forced_id", "body", m.ForcedID); err != nil {
 		return err
 	}
 
