@@ -9871,7 +9871,7 @@ definitions:
         readOnly: true
         type: integer
         x-nullable: true
-      foreced_id:
+      forced_id:
         readOnly: true
         type: integer
         x-nullable: true

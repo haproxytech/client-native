@@ -223,11 +223,12 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 	checkState := parseInt64P(fields[13])
 	agentState := parseInt64P(fields[14])
 	backendForcedID := parseInt64P(fields[15])
-	forecedID := parseInt64P(fields[16])
+	forcedID := parseInt64P(fields[16])
 	checkPort := parseInt64P(fields[21])
 	agentPort := parseInt64P(fields[24])
 
-	useSsl := fields[20] == "1"
+	useSslVal := fields[20] == "1"
+	useSsl := &useSslVal
 
 	admState, _ := misc.GetServerAdminState(fields[6])
 
@@ -260,7 +261,7 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 		CheckState:       checkState,
 		AgentState:       agentState,
 		BackendForcedID:  backendForcedID,
-		ForecedID:        forecedID,
+		ForcedID:         forcedID,
 		Fqdn:             fields[17],
 		Srvrecord:        fields[19],
 		UseSsl:           useSsl,
