@@ -47,9 +47,81 @@ type RuntimeServer struct {
 	// +kubebuilder:validation:Enum=ready;maint;drain;
 	AdminState string `json:"admin_state,omitempty"`
 
+	// agent addr
+	// Read Only: true
+	AgentAddr string `json:"agent_addr,omitempty"`
+
+	// agent port
+	// Read Only: true
+	// Maximum: 65535
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=0
+	AgentPort *int64 `json:"agent_port,omitempty"`
+
+	// agent state
+	// Read Only: true
+	AgentState *int64 `json:"agent_state,omitempty"`
+
+	// backend forced id
+	// Read Only: true
+	BackendForcedID *int64 `json:"backend_forced_id,omitempty"`
+
+	// backend id
+	// Read Only: true
+	BackendID *int64 `json:"backend_id,omitempty"`
+
+	// backend name
+	// Read Only: true
+	BackendName string `json:"backend_name,omitempty"`
+
+	// check addr
+	// Read Only: true
+	CheckAddr string `json:"check_addr,omitempty"`
+
+	// check health
+	// Read Only: true
+	CheckHealth *int64 `json:"check_health,omitempty"`
+
+	// check port
+	// Read Only: true
+	// Maximum: 65535
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=0
+	CheckPort *int64 `json:"check_port,omitempty"`
+
+	// check result
+	// Read Only: true
+	CheckResult *int64 `json:"check_result,omitempty"`
+
+	// check state
+	// Read Only: true
+	CheckState *int64 `json:"check_state,omitempty"`
+
+	// check status
+	// Read Only: true
+	CheckStatus *int64 `json:"check_status,omitempty"`
+
+	// foreced id
+	// Read Only: true
+	ForecedID *int64 `json:"foreced_id,omitempty"`
+
+	// fqdn
+	// Read Only: true
+	Fqdn string `json:"fqdn,omitempty"`
+
 	// id
 	// Read Only: true
 	ID string `json:"id,omitempty"`
+
+	// iweight
+	// Read Only: true
+	Iweight *int64 `json:"iweight,omitempty"`
+
+	// last time change
+	// Read Only: true
+	LastTimeChange *int64 `json:"last_time_change,omitempty"`
 
 	// name
 	// Read Only: true
@@ -67,6 +139,18 @@ type RuntimeServer struct {
 	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port,omitempty"`
 
+	// srvrecord
+	// Read Only: true
+	Srvrecord string `json:"srvrecord,omitempty"`
+
+	// use ssl
+	// Read Only: true
+	UseSsl *bool `json:"use_ssl,omitempty"`
+
+	// uweight
+	// Read Only: true
+	Uweight *int64 `json:"uweight,omitempty"`
+
 	// weight
 	Weight *int64 `json:"weight,omitempty"`
 }
@@ -80,6 +164,14 @@ func (m *RuntimeServer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAdminState(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAgentPort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckPort(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -154,6 +246,38 @@ func (m *RuntimeServer) validateAdminState(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *RuntimeServer) validateAgentPort(formats strfmt.Registry) error {
+	if swag.IsZero(m.AgentPort) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("agent_port", "body", *m.AgentPort, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("agent_port", "body", *m.AgentPort, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) validateCheckPort(formats strfmt.Registry) error {
+	if swag.IsZero(m.CheckPort) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("check_port", "body", *m.CheckPort, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("check_port", "body", *m.CheckPort, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var runtimeServerTypeOperationalStatePropEnum []interface{}
 
 func init() {
@@ -219,7 +343,71 @@ func (m *RuntimeServer) validatePort(formats strfmt.Registry) error {
 func (m *RuntimeServer) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateAgentAddr(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAgentPort(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAgentState(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateBackendForcedID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateBackendID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateBackendName(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCheckAddr(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCheckHealth(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCheckPort(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCheckResult(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCheckState(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCheckStatus(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateForecedID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateFqdn(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateIweight(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateLastTimeChange(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -227,9 +415,147 @@ func (m *RuntimeServer) ContextValidate(ctx context.Context, formats strfmt.Regi
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateSrvrecord(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateUseSsl(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateUweight(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateAgentAddr(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "agent_addr", "body", string(m.AgentAddr)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateAgentPort(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "agent_port", "body", m.AgentPort); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateAgentState(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "agent_state", "body", m.AgentState); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateBackendForcedID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "backend_forced_id", "body", m.BackendForcedID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateBackendID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "backend_id", "body", m.BackendID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateBackendName(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "backend_name", "body", string(m.BackendName)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateCheckAddr(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "check_addr", "body", string(m.CheckAddr)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateCheckHealth(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "check_health", "body", m.CheckHealth); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateCheckPort(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "check_port", "body", m.CheckPort); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateCheckResult(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "check_result", "body", m.CheckResult); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateCheckState(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "check_state", "body", m.CheckState); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateCheckStatus(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "check_status", "body", m.CheckStatus); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateForecedID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "foreced_id", "body", m.ForecedID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateFqdn(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "fqdn", "body", string(m.Fqdn)); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -242,9 +568,54 @@ func (m *RuntimeServer) contextValidateID(ctx context.Context, formats strfmt.Re
 	return nil
 }
 
+func (m *RuntimeServer) contextValidateIweight(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "iweight", "body", m.Iweight); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateLastTimeChange(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "last_time_change", "body", m.LastTimeChange); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *RuntimeServer) contextValidateName(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateSrvrecord(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "srvrecord", "body", string(m.Srvrecord)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateUseSsl(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "use_ssl", "body", m.UseSsl); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateUweight(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "uweight", "body", m.Uweight); err != nil {
 		return err
 	}
 
