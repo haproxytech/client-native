@@ -412,6 +412,19 @@ func (c *client) SetServerAgentSend(backend, server string, send string) error {
 	return nil
 }
 
+// SetServerSSL set ssl for server
+func (c *client) SetServerSSL(backend, server string, ssl string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	err := c.runtime.SetServerSSL(backend, server, ssl)
+	if err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
+
 // GetServerState returns server runtime state
 func (c *client) GetServersState(backend string) (models.RuntimeServers, error) {
 	if !c.runtime.IsValid() {

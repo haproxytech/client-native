@@ -127,6 +127,12 @@ func (s *SingleRuntime) SetServerAgentSend(backend, server string, send string) 
 	return s.Execute(cmd)
 }
 
+// SetServerSSL set ssl for server
+func (s *SingleRuntime) SetServerSSL(backend, server string, ssl string) error {
+	cmd := fmt.Sprintf("set server %s/%s ssl %s", backend, server, ssl)
+	return s.Execute(cmd)
+}
+
 // GetServersState returns servers runtime state
 func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, error) {
 	cmd := "show servers state " + backend
@@ -179,12 +185,22 @@ func parseRuntimeServers(output string) (models.RuntimeServers, error) {
 	return result, nil
 }
 
+func parseInt64P(s string) *int64 {
+	v, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		return nil
+	}
+	return &v
+}
+
 func parseRuntimeServer(line string) *models.RuntimeServer {
 	fields := strings.Split(line, " ")
 
-	if len(fields) < 19 {
+	if len(fields) < 25 {
 		return nil
 	}
+
+	backendID := parseInt64P(fields[0])
 
 	p, err := strconv.ParseInt(fields[18], 10, 64)
 	var port *int64
@@ -197,6 +213,21 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 	if err == nil {
 		weight = &w
 	}
+
+	uweight := parseInt64P(fields[7])
+	iweight := parseInt64P(fields[8])
+	lastTimeChange := parseInt64P(fields[9])
+	checkStatus := parseInt64P(fields[10])
+	checkResult := parseInt64P(fields[11])
+	checkHealth := parseInt64P(fields[12])
+	checkState := parseInt64P(fields[13])
+	agentState := parseInt64P(fields[14])
+	backendForcedID := parseInt64P(fields[15])
+	forecedID := parseInt64P(fields[16])
+	checkPort := parseInt64P(fields[21])
+	agentPort := parseInt64P(fields[24])
+
+	useSsl := fields[20] == "1"
 
 	admState, _ := misc.GetServerAdminState(fields[6])
 
@@ -211,6 +242,8 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 	}
 
 	return &models.RuntimeServer{
+		BackendID:        backendID,
+		BackendName:      fields[1],
 		Name:             fields[3],
 		Address:          fields[4],
 		Port:             port,
@@ -218,5 +251,22 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 		AdminState:       admState,
 		OperationalState: opState,
 		Weight:           weight,
+		Uweight:          uweight,
+		Iweight:          iweight,
+		LastTimeChange:   lastTimeChange,
+		CheckStatus:      checkStatus,
+		CheckResult:      checkResult,
+		CheckHealth:      checkHealth,
+		CheckState:       checkState,
+		AgentState:       agentState,
+		BackendForcedID:  backendForcedID,
+		ForecedID:        forecedID,
+		Fqdn:             fields[17],
+		Srvrecord:        fields[19],
+		UseSsl:           useSsl,
+		CheckPort:        checkPort,
+		CheckAddr:        fields[22],
+		AgentAddr:        fields[23],
+		AgentPort:        agentPort,
 	}
 }

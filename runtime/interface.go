@@ -85,6 +85,8 @@ type Servers interface {
 	SetServerAgentAddr(backend, server string, addr string) error
 	// SetServerAgentSend set agent-send for server
 	SetServerAgentSend(backend, server string, send string) error
+	// SetServerSSL set ssl for server
+	SetServerSSL(backend, server string, ssl string) error
 	// GetServerState returns server runtime state
 	GetServersState(backend string) (models.RuntimeServers, error)
 	// GetServerState returns server runtime state

@@ -28,6 +28,80 @@ server:
     weight:
       type: integer
       x-nullable: true
+    backend_id:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    backend_name:
+      type: string
+      readOnly: true
+    uweight:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    iweight:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    last_time_change:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    check_status:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    check_result:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    check_health:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    check_state:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    agent_state:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    backend_forced_id:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    foreced_id:
+      type: integer
+      readOnly: true
+      x-nullable: true
+    fqdn:
+      type: string
+      readOnly: true
+    srvrecord:
+      type: string
+      readOnly: true
+    use_ssl:
+      type: boolean
+      readOnly: true
+    check_port:
+      type: integer
+      readOnly: true
+      x-nullable: true
+      minimum: 0
+      maximum: 65535
+    check_addr:
+      type: string
+      readOnly: true
+    agent_addr:
+      type: string
+      readOnly: true
+    agent_port:
+      type: integer
+      readOnly: true
+      x-nullable: true
+      minimum: 0
+      maximum: 65535
   example:
     server_id: 1
     server_name: web_server
