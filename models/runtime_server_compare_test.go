@@ -86,7 +86,21 @@ func TestRuntimeServerEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.AgentPort = Ptr(*sample.AgentPort + 1)
+		result.AgentState = Ptr(*sample.AgentState + 1)
+		result.BackendForcedID = Ptr(*sample.BackendForcedID + 1)
+		result.BackendID = Ptr(*sample.BackendID + 1)
+		result.CheckHealth = Ptr(*sample.CheckHealth + 1)
+		result.CheckPort = Ptr(*sample.CheckPort + 1)
+		result.CheckResult = Ptr(*sample.CheckResult + 1)
+		result.CheckState = Ptr(*sample.CheckState + 1)
+		result.CheckStatus = Ptr(*sample.CheckStatus + 1)
+		result.ForecedID = Ptr(*sample.ForecedID + 1)
+		result.Iweight = Ptr(*sample.Iweight + 1)
+		result.LastTimeChange = Ptr(*sample.LastTimeChange + 1)
 		result.Port = Ptr(*sample.Port + 1)
+		result.UseSsl = Ptr(!*sample.UseSsl)
+		result.Uweight = Ptr(*sample.Uweight + 1)
 		result.Weight = Ptr(*sample.Weight + 1)
 		samples = append(samples, struct {
 			a, b RuntimeServer
@@ -167,7 +181,21 @@ func TestRuntimeServerDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.AgentPort = Ptr(*sample.AgentPort + 1)
+		result.AgentState = Ptr(*sample.AgentState + 1)
+		result.BackendForcedID = Ptr(*sample.BackendForcedID + 1)
+		result.BackendID = Ptr(*sample.BackendID + 1)
+		result.CheckHealth = Ptr(*sample.CheckHealth + 1)
+		result.CheckPort = Ptr(*sample.CheckPort + 1)
+		result.CheckResult = Ptr(*sample.CheckResult + 1)
+		result.CheckState = Ptr(*sample.CheckState + 1)
+		result.CheckStatus = Ptr(*sample.CheckStatus + 1)
+		result.ForecedID = Ptr(*sample.ForecedID + 1)
+		result.Iweight = Ptr(*sample.Iweight + 1)
+		result.LastTimeChange = Ptr(*sample.LastTimeChange + 1)
 		result.Port = Ptr(*sample.Port + 1)
+		result.UseSsl = Ptr(!*sample.UseSsl)
+		result.Uweight = Ptr(*sample.Uweight + 1)
 		result.Weight = Ptr(*sample.Weight + 1)
 		samples = append(samples, struct {
 			a, b RuntimeServer
@@ -177,7 +205,7 @@ func TestRuntimeServerDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 7 {
+		if len(listDiffFields) != 26 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -187,7 +215,7 @@ func TestRuntimeServerDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected RuntimeServer to be different in 7 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected RuntimeServer to be different in 26 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
