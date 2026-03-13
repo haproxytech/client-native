@@ -94,24 +94,33 @@ func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo
 					if b.Mode != "http" {
 						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
 					}
-					if len(b.Servers) != 2 {
-						t.Errorf("%v: %v: Got %v servers, expected 2", s.Name, b.Name, len(b.Servers))
+					if len(b.Servers) != 3 {
+						t.Errorf("%v: %v: Got %v servers, expected 3", s.Name, b.Name, len(b.Servers))
 					}
 					for _, srv := range b.Servers {
-						if srv.Name != "webserv" && srv.Name != "webserv2" {
-							t.Errorf("Expected only webserv or webserv2 servers, %v found", srv.Name)
+						if srv.Name != "webserv" && srv.Name != "webserv2" && srv.Name != "webserv_noport" {
+							t.Errorf("Expected only webserv, webserv2, or webserv_noport servers, %v found", srv.Name)
 						}
-						if srv.Address != "192.168.1.1" {
-							t.Errorf("%v: %v: %v: Address not 192.168.1.1: %v", s.Name, b.Name, srv.Name, srv.Address)
-						}
-						if *srv.Port != 9300 && *srv.Port != 9200 {
-							t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
-						}
-						if srv.Ssl != "enabled" {
-							t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
-						}
-						if *srv.Weight != 10 {
-							t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
+						if srv.Name == "webserv_noport" {
+							if srv.Address != "192.168.1.2" {
+								t.Errorf("%v: %v: %v: Address not 192.168.1.2: %v", s.Name, b.Name, srv.Name, srv.Address)
+							}
+							if srv.Port != nil {
+								t.Errorf("%v: %v: %v: Port should be nil but got: %v", s.Name, b.Name, srv.Name, *srv.Port)
+							}
+						} else {
+							if srv.Address != "192.168.1.1" {
+								t.Errorf("%v: %v: %v: Address not 192.168.1.1: %v", s.Name, b.Name, srv.Name, srv.Address)
+							}
+							if *srv.Port != 9300 && *srv.Port != 9200 {
+								t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
+							}
+							if srv.Ssl != "enabled" {
+								t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
+							}
+							if *srv.Weight != 10 {
+								t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
+							}
 						}
 					}
 				case "test_2":
@@ -243,24 +252,33 @@ func TestGetSite(t *testing.T) { //nolint:gocognit,gocyclo
 			if b.Mode != "http" {
 				t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
 			}
-			if len(b.Servers) != 2 {
-				t.Errorf("%v: %v: Got %v servers, expected 2", s.Name, b.Name, len(b.Servers))
+			if len(b.Servers) != 3 {
+				t.Errorf("%v: %v: Got %v servers, expected 3", s.Name, b.Name, len(b.Servers))
 			}
 			for _, srv := range b.Servers {
-				if srv.Name != "webserv" && srv.Name != "webserv2" {
-					t.Errorf("Expected only webserv or webserv2 servers, %v found", srv.Name)
+				if srv.Name != "webserv" && srv.Name != "webserv2" && srv.Name != "webserv_noport" {
+					t.Errorf("Expected only webserv, webserv2, or webserv_noport servers, %v found", srv.Name)
 				}
-				if srv.Address != "192.168.1.1" {
-					t.Errorf("%v: %v: %v: Address not 192.168.1.1: %v", s.Name, b.Name, srv.Name, srv.Address)
-				}
-				if *srv.Port != 9300 && *srv.Port != 9200 {
-					t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
-				}
-				if srv.Ssl != "enabled" {
-					t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
-				}
-				if *srv.Weight != 10 {
-					t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
+				if srv.Name == "webserv_noport" {
+					if srv.Address != "192.168.1.2" {
+						t.Errorf("%v: %v: %v: Address not 192.168.1.2: %v", s.Name, b.Name, srv.Name, srv.Address)
+					}
+					if srv.Port != nil {
+						t.Errorf("%v: %v: %v: Port should be nil but got: %v", s.Name, b.Name, srv.Name, *srv.Port)
+					}
+				} else {
+					if srv.Address != "192.168.1.1" {
+						t.Errorf("%v: %v: %v: Address not 192.168.1.1: %v", s.Name, b.Name, srv.Name, srv.Address)
+					}
+					if *srv.Port != 9300 && *srv.Port != 9200 {
+						t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
+					}
+					if srv.Ssl != "enabled" {
+						t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
+					}
+					if *srv.Weight != 10 {
+						t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
+					}
 				}
 			}
 		} else if b.Name == "test_2" {

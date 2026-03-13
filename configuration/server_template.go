@@ -184,8 +184,10 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 		Prefix:     ondiskServerTemplate.Prefix,
 		NumOrRange: ondiskServerTemplate.NumOrRange,
 		Fqdn:       ondiskServerTemplate.Fqdn,
-		Port:       &ondiskServerTemplate.Port,
 		Metadata:   misc.ParseMetadata(ondiskServerTemplate.Comment),
+	}
+	if ondiskServerTemplate.Port != 0 {
+		template.Port = &ondiskServerTemplate.Port
 	}
 	parseServerParams(ondiskServerTemplate.Params, &template.ServerParams)
 	return template
@@ -203,7 +205,7 @@ func SerializeServerTemplate(s models.ServerTemplate, opt *options.Configuration
 		Params:     []params.ServerOption{},
 		Comment:    comment,
 	}
-	if s.Port != nil {
+	if s.Port != nil && *s.Port > 0 {
 		template.Port = *s.Port
 	}
 	template.Params = SerializeServerParams(s.ServerParams, opt)
