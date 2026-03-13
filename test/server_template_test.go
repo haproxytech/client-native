@@ -129,6 +129,48 @@ func TestGetServerTemplateFourth(t *testing.T) {
 	checkServerTemplates(t, m)
 }
 
+func TestCreateServerTemplateNilPort(t *testing.T) {
+	template := &models.ServerTemplate{
+		Prefix:     "noport",
+		NumOrRange: "1-5",
+		Fqdn:       "noport.example.com",
+		ServerParams: models.ServerParams{
+			Check: "enabled",
+		},
+	}
+
+	err := clientTest.CreateServerTemplate("test", template, "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	v, st, err := clientTest.GetServerTemplate("noport", "test", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	if st.Port != nil {
+		t.Errorf("Expected Port to be nil, got %v", *st.Port)
+	}
+	if st.Fqdn != "noport.example.com" {
+		t.Errorf("Expected Fqdn to be noport.example.com, got %v", st.Fqdn)
+	}
+
+	// Cleanup
+	err = clientTest.DeleteServerTemplate("noport", "test", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+}
+
 func TestCreateEditDeleteServerTemplate(t *testing.T) {
 	port := int64(80)
 

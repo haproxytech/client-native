@@ -1056,7 +1056,6 @@
                     "check": "enabled",
                     "fqdn": "test.com",
                     "num_or_range": "5",
-                    "port": 0,
                     "prefix": "test"
                 },
                 "website": {
@@ -1135,6 +1134,11 @@
                     "check-pool-conn-name": "foo",
                     "renegotiate": "enabled",
                     "cc": "cubic"
+                },
+                "webserv_noport": {
+                    "check": "enabled",
+                    "address": "192.168.1.2",
+                    "name": "webserv_noport"
                 }
             }
         },

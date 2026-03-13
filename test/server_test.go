@@ -133,6 +133,47 @@ func TestGetRingServer(t *testing.T) {
 	}
 }
 
+func TestCreateServerNilPort(t *testing.T) {
+	s := &models.Server{
+		Name:    "noport",
+		Address: "192.168.2.1",
+		ServerParams: models.ServerParams{
+			Check: "enabled",
+		},
+	}
+
+	err := clientTest.CreateServer(configuration.BackendParentName, "test", s, "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	v, server, err := clientTest.GetServer("noport", configuration.BackendParentName, "test", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	if server.Port != nil {
+		t.Errorf("Expected Port to be nil, got %v", *server.Port)
+	}
+	if server.Address != "192.168.2.1" {
+		t.Errorf("Expected Address to be 192.168.2.1, got %v", server.Address)
+	}
+
+	// Cleanup
+	err = clientTest.DeleteServer("noport", configuration.BackendParentName, "test", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+}
+
 func TestCreateEditDeleteServer(t *testing.T) {
 	// TestCreateServer
 	port := int64(4300)
