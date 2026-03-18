@@ -59,6 +59,7 @@ type EventListener struct {
 	// Message delimiter. Either \n or 0 (zero).
 	delim     byte
 	events    chan Event
+	done      chan struct{}
 	lastError error
 	closed    atomic.Bool
 }
@@ -82,6 +83,7 @@ func NewEventListener(network, address, sink string, timeout time.Duration, flag
 		WriteTimeout: timeout,
 		delim:        '\n',
 		events:       make(chan Event),
+		done:         make(chan struct{}),
 	}
 
 	if slices.Contains(flags, "-0") {
@@ -121,10 +123,11 @@ func (l *EventListener) Listen(ctx context.Context) (Event, error) {
 	}
 }
 
-// Close the EventListener cleanly.
+// Close the EventListener cleanly. The events channel will be closed
+// asynchronously by the internal listen goroutine after it exits.
 func (l *EventListener) Close() error {
 	if l.closed.CompareAndSwap(false, true) {
-		defer close(l.events)
+		close(l.done)
 		if err := l.conn.Close(); err != nil {
 			return l.errorf("%w", err)
 		}
@@ -133,8 +136,11 @@ func (l *EventListener) Close() error {
 	return nil
 }
 
-// Listen for events and push them on the events channel.
+// listen reads events from the connection and pushes them on the events channel.
+// It is the sole owner of the events channel and closes it on exit.
 func (l *EventListener) listen() {
+	defer close(l.events)
+
 	if l.WriteTimeout > 0 {
 		_ = l.conn.SetWriteDeadline(time.Now().Add(l.WriteTimeout))
 	}
@@ -161,7 +167,11 @@ func (l *EventListener) listen() {
 			return
 		}
 
-		l.events <- event
+		select {
+		case l.events <- event:
+		case <-l.done:
+			return
+		}
 	}
 }
 
