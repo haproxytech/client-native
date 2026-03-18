@@ -20,9 +20,11 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"net"
 	"slices"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -57,11 +59,12 @@ type EventListener struct {
 	// Write timeout. Can be set before calling Listen.
 	WriteTimeout time.Duration
 	// Message delimiter. Either \n or 0 (zero).
-	delim     byte
-	events    chan Event
-	done      chan struct{}
-	lastError error
-	closed    atomic.Bool
+	delim   byte
+	events  chan Event
+	done    chan struct{}
+	errMu   sync.Mutex
+	lastErr error
+	closed  atomic.Bool
 }
 
 // NewEventListener connects to HAProxy's master socket and returns a new
@@ -115,12 +118,27 @@ func (l *EventListener) Listen(ctx context.Context) (Event, error) {
 	select {
 	case event, ok := <-l.events:
 		if !ok {
-			return Event{}, l.lastError
+			if err := l.getLastError(); err != nil {
+				return Event{}, err
+			}
+			return Event{}, io.EOF
 		}
 		return event, nil
 	case <-ctx.Done():
 		return Event{}, l.Close()
 	}
+}
+
+func (l *EventListener) setLastError(err error) {
+	l.errMu.Lock()
+	l.lastErr = err
+	l.errMu.Unlock()
+}
+
+func (l *EventListener) getLastError() error {
+	l.errMu.Lock()
+	defer l.errMu.Unlock()
+	return l.lastErr
 }
 
 // Close the EventListener cleanly. The events channel will be closed
@@ -147,7 +165,7 @@ func (l *EventListener) listen() {
 
 	_, err := fmt.Fprintf(l.conn, "@@1 set severity-output number;%s\n", l.listenCmd)
 	if err != nil {
-		l.lastError = l.errorf("%w", err)
+		l.setLastError(l.errorf("%w", err))
 		_ = l.Close()
 		return
 	}
@@ -155,14 +173,14 @@ func (l *EventListener) listen() {
 	for {
 		data, err := l.reader.ReadBytes(l.delim)
 		if err != nil {
-			l.lastError = l.errorf("%w", err)
+			l.setLastError(l.errorf("%w", err))
 			_ = l.Close()
 			return
 		}
 
 		event, err := l.parseEvent(data)
 		if err != nil {
-			l.lastError = err
+			l.setLastError(err)
 			_ = l.Close()
 			return
 		}
