@@ -3,6 +3,7 @@ mode: commit
 min_length: 3
 allowed:
   - abortonclose
+  - accessors
   - acl
   - acls
   - adfs
@@ -64,6 +65,7 @@ allowed:
   - entrypoint
   - enum
   - env
+  - EOF
   - eol
   - epoll
   - escaper
@@ -90,6 +92,7 @@ allowed:
   - golangci
   - gorm
   - goroutines
+  - goroutine
   - govulncheck
   - gotoolchain
   - gpc
@@ -214,6 +217,7 @@ allowed:
   - wafadvanced
   - workdir
   - yaml
+  - yml
   - async
   - rehaul
   - rebase
