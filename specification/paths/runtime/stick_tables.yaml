@@ -26,6 +26,7 @@ stick_tables_one:
         description: Stick table name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Successful operation

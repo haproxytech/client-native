@@ -54,6 +54,7 @@ ssl_certs_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     produces:
       - application/json
     responses:
@@ -77,6 +78,7 @@ ssl_certs_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - in: formData
         name: file_upload
         required: true
@@ -101,6 +103,7 @@ ssl_certs_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       "204":
         description: File deleted
