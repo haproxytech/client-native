@@ -830,6 +830,7 @@ parameters:
     description: Parent name
     required: true
     type: string
+    pattern: '^[^\r\n<>*;$#&{}"]+$'
   full_section:
     name: full_section
     in: query

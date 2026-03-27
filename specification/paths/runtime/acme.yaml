@@ -26,6 +26,7 @@ acme:
         description: Certificate file name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Operation started

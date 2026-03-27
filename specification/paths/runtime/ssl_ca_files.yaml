@@ -54,6 +54,7 @@ ssl_ca_files_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     produces:
       - application/json
     responses:
@@ -79,6 +80,7 @@ ssl_ca_files_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - in: formData
         name: file_upload
         required: true
@@ -103,6 +105,7 @@ ssl_ca_files_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       "204":
         description: SSL CA deleted
@@ -125,6 +128,7 @@ ssl_ca_files_entries:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - description: Payload of the cert entry
         in: formData
         name: file_upload
@@ -155,6 +159,7 @@ ssl_ca_files_entries_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - description: SSL CA file index
         in: path
         name: index

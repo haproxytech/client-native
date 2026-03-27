@@ -54,6 +54,7 @@ ssl_crl_files_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - description: Entry index to return. Starts at 1. If not provided, all entries are returned.
         in: query
         name: index
@@ -85,6 +86,7 @@ ssl_crl_files_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - description: CRL file contents
         in: formData
         name: file_upload
@@ -110,6 +112,7 @@ ssl_crl_files_one:
         name: name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       "204":
         description: File deleted
