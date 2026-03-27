@@ -12,6 +12,7 @@ servers:
         description: Parent backend name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Successful operation
@@ -31,6 +32,7 @@ servers:
         description: Parent backend name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: data
         in: body
         required: true
@@ -62,11 +64,13 @@ servers_one:
         description: Server name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: backend
         in: query
         description: Parent backend name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Successful operation
@@ -88,11 +92,13 @@ servers_one:
         description: Server name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: backend
         in: query
         description: Parent backend name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: data
         in: body
         required: true
@@ -121,11 +127,13 @@ servers_one:
         description: Server name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: backend
         in: query
         description: Parent backend name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '204':
         description: Server deleted

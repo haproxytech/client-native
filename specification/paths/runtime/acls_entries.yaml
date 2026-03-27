@@ -13,11 +13,13 @@ acls_entries_one:
         description: ACL ID
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: id
         in: path
         description: File entry ID
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Successful operation
@@ -42,11 +44,13 @@ acls_entries_one:
         description: ACL ID
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: id
         in: path
         description: File entry ID
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '204':
         description: Successful operation
@@ -70,6 +74,7 @@ acls_entries:
         description: ACL ID
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: data
         in: body
         required: true
@@ -99,6 +104,7 @@ acls_entries:
         description: ACL ID
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Successful operation
@@ -120,6 +126,7 @@ acls_entries:
         description: ACL ID
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: data
         required: true
         in: body

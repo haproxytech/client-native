@@ -31,6 +31,7 @@ stick_tables_one:
         description: Stick table name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: process
         in: query
         description: Process number if master-worker mode, if not only first process is returned

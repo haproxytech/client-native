@@ -18685,6 +18685,7 @@ paths:
               - description: ACL file entry ID
                 in: path
                 name: id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           produces:
@@ -18708,6 +18709,7 @@ paths:
               - description: ACL ID
                 in: query
                 name: acl_id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           produces:
@@ -18732,6 +18734,7 @@ paths:
               - description: ACL ID
                 in: query
                 name: acl_id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - in: body
@@ -18762,6 +18765,7 @@ paths:
               - description: ACL ID
                 in: query
                 name: acl_id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - in: body
@@ -18788,11 +18792,13 @@ paths:
               - description: ACL ID
                 in: query
                 name: acl_id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: File entry ID
                 in: path
                 name: id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           produces:
@@ -18815,11 +18821,13 @@ paths:
               - description: ACL ID
                 in: query
                 name: acl_id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: File entry ID
                 in: path
                 name: id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           produces:
@@ -18862,6 +18870,7 @@ paths:
               - description: Parent backend name
                 in: query
                 name: backend
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           responses:
@@ -18881,6 +18890,7 @@ paths:
               - description: Parent backend name
                 in: query
                 name: backend
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - in: body
@@ -18912,11 +18922,13 @@ paths:
               - description: Server name
                 in: path
                 name: name
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Parent backend name
                 in: query
                 name: backend
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           responses:
@@ -18938,11 +18950,13 @@ paths:
               - description: Server name
                 in: path
                 name: name
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Parent backend name
                 in: query
                 name: backend
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           responses:
@@ -18964,11 +18978,13 @@ paths:
               - description: Server name
                 in: path
                 name: name
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Parent backend name
                 in: query
                 name: backend
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - in: body
@@ -19017,6 +19033,7 @@ paths:
               - description: Stick table name
                 in: path
                 name: name
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Process number if master-worker mode, if not only first process is returned
@@ -19044,6 +19061,7 @@ paths:
               - description: Stick table name
                 in: query
                 name: stick_table
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Process number if master-worker mode, if not only first process is returned
@@ -19054,10 +19072,12 @@ paths:
               - description: A list of filters in format data.<type> <operator> <value> separated by comma
                 in: query
                 name: filter
+                pattern: ^[^\r\n;#]+$
                 type: string
               - description: Key which we want the entries for
                 in: query
                 name: key
+                pattern: ^[^\r\n;#]+$
                 type: string
               - description: Max number of entries to be returned for pagination
                 in: query
@@ -19084,6 +19104,7 @@ paths:
               - description: Stick table name
                 in: query
                 name: stick_table
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Process number if master-worker mode, if not only first process is returned
@@ -19099,6 +19120,7 @@ paths:
                       data_type:
                           $ref: '#/definitions/stick_table_entry'
                       key:
+                          pattern: ^[^\r\n;#]+$
                           type: string
                   required:
                       - key
@@ -19143,6 +19165,7 @@ paths:
               - description: Map file name
                 in: path
                 name: name
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: If true, deletes file from disk
@@ -19171,6 +19194,7 @@ paths:
               - description: Map file name
                 in: path
                 name: name
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           responses:
@@ -19192,6 +19216,7 @@ paths:
               - description: Map file name
                 in: path
                 name: name
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - default: false
@@ -19224,6 +19249,7 @@ paths:
               - description: Mapfile attribute storage_name
                 in: query
                 name: map
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           responses:
@@ -19245,6 +19271,7 @@ paths:
               - description: Mapfile attribute storage_name
                 in: query
                 name: map
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - default: false
@@ -19279,11 +19306,13 @@ paths:
               - description: Map id
                 in: path
                 name: id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Mapfile attribute storage_name
                 in: query
                 name: map
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - default: false
@@ -19308,11 +19337,13 @@ paths:
               - description: Map id
                 in: path
                 name: id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Mapfile attribute storage_name
                 in: query
                 name: map
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
           responses:
@@ -19334,11 +19365,13 @@ paths:
               - description: Map id
                 in: path
                 name: id
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - description: Mapfile attribute storage_name
                 in: query
                 name: map
+                pattern: ^[^\r\n<>*;$#&{}"]+$
                 required: true
                 type: string
               - default: false

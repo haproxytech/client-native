@@ -16,6 +16,7 @@
 package runtime
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"strings"
@@ -31,6 +32,8 @@ const (
 	statsSocket  socketType = "stats"
 	masterSocket socketType = "master"
 )
+
+var ErrRuntimeInvalidChar = errors.New("invalid character found in runtime command")
 
 type socketType string
 
@@ -174,6 +177,10 @@ func (s *SingleRuntime) ExecuteMaster(command string) (string, error) {
 }
 
 func (s *SingleRuntime) executeRaw(command string, retry int, socket socketType) (string, error) {
+	// Make sure to only execute a single command.
+	if strings.ContainsAny(command, ";") {
+		return "", ErrRuntimeInvalidChar
+	}
 	result, err := s.readFromSocket(command, socket)
 	if err != nil && retry > 0 {
 		retry--

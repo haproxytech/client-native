@@ -12,6 +12,7 @@ maps_entries:
         description: Mapfile attribute storage_name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Successful operation
@@ -31,6 +32,7 @@ maps_entries:
         description: Mapfile attribute storage_name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: force_sync
         in: query
         description: If true, immediately syncs changes to disk
@@ -67,11 +69,13 @@ maps_entries_one:
         description: Map id
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: map
         in: query
         description: Mapfile attribute storage_name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
     responses:
       '200':
         description: Successful operation
@@ -93,11 +97,13 @@ maps_entries_one:
         description: Map id
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: map
         in: query
         description: Mapfile attribute storage_name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: force_sync
         in: query
         description: If true, immediately syncs changes to disk
@@ -137,11 +143,13 @@ maps_entries_one:
         description: Map id
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: map
         in: query
         description: Mapfile attribute storage_name
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - name: force_sync
         in: query
         description: If true, immediately syncs changes to disk
