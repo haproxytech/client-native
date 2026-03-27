@@ -10848,6 +10848,7 @@ parameters:
     description: Parent name
     required: true
     type: string
+    pattern: '^[^\r\n&lt;>*;$#&{}"]+$'
   full_section:
     name: full_section
     in: query
@@ -22324,6 +22325,7 @@ paths:
         - description: ACL file entry ID
           in: path
           name: id
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -22416,6 +22418,7 @@ paths:
         - description: File entry ID
           in: path
           name: id
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -22439,6 +22442,7 @@ paths:
         - description: File entry ID
           in: path
           name: id
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -22523,6 +22527,7 @@ paths:
         - description: Server name
           in: path
           name: name
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -22545,6 +22550,7 @@ paths:
         - description: Server name
           in: path
           name: name
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -22567,6 +22573,7 @@ paths:
         - description: Server name
           in: path
           name: name
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -22611,6 +22618,7 @@ paths:
         - description: Stick table name
           in: path
           name: name
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
       responses:
@@ -22634,10 +22642,12 @@ paths:
         - description: A list of filters in format data.<type> <operator> <value> separated by comma
           in: query
           name: filter
+          pattern: ^[^\r\n;#]+$
           type: string
         - description: Key which we want the entries for
           in: query
           name: key
+          pattern: ^[^\r\n;#]+$
           type: string
         - description: Max number of entries to be returned for pagination
           in: query
@@ -22670,6 +22680,7 @@ paths:
               data_type:
                 $ref: '#/definitions/stick_table_entry'
               key:
+                pattern: ^[^\r\n;#]+$
                 type: string
             required:
               - key
@@ -22714,6 +22725,7 @@ paths:
         - description: Map file name
           in: path
           name: name
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - description: If true, deletes file from disk
@@ -22742,6 +22754,7 @@ paths:
         - description: Map file name
           in: path
           name: name
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
       responses:
@@ -22763,6 +22776,7 @@ paths:
         - description: Map file name
           in: path
           name: name
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - default: false
@@ -22842,6 +22856,7 @@ paths:
         - description: Map id
           in: path
           name: id
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -22867,6 +22882,7 @@ paths:
         - description: Map id
           in: path
           name: id
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -22889,6 +22905,7 @@ paths:
         - description: Map id
           in: path
           name: id
+          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
