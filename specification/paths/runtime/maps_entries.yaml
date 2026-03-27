@@ -59,6 +59,7 @@ maps_entries_one:
         description: Map id
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - $ref: "#/parameters/parent_name"
     responses:
       '200':
@@ -81,6 +82,7 @@ maps_entries_one:
         description: Map id
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - $ref: "#/parameters/parent_name"
       - name: force_sync
         in: query
@@ -121,6 +123,7 @@ maps_entries_one:
         description: Map id
         required: true
         type: string
+        pattern: '^[^\r\n<>*;$#&{}"]+$'
       - $ref: "#/parameters/parent_name"
       - name: force_sync
         in: query

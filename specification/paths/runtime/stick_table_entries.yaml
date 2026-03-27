@@ -19,6 +19,7 @@ stick_table_entries:
           properties:
             key:
               type: string
+              pattern: '^[^\r\n;#]+$'
             data_type:
               $ref: "#/definitions/stick_table_entry"
     responses:
@@ -38,10 +39,12 @@ stick_table_entries:
         in: query
         description: A list of filters in format data.<type> <operator> <value> separated by comma
         type: string
+        pattern: '^[^\r\n;#]+$'
       - name: key
         in: query
         description: Key which we want the entries for
         type: string
+        pattern: '^[^\r\n;#]+$'
       - name: count
         in: query
         description: Max number of entries to be returned for pagination
