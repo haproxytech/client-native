@@ -3204,6 +3204,7 @@
     },
     "acme_providers": {
         "test": {
+            "name": "test",
             "contact": "me@example.com",
             "acme_provider": "gandy",
             "acme_vars": {
@@ -3212,7 +3213,10 @@
             },
             "bits": 4096,
             "challenge": "http-01",
+            "challenge_ready": ["cli", "dns"],
             "directory": "https://acme.example.com/directory",
+            "dns_delay": 30000,
+            "dns_timeout": 600000,
             "keytype": "ECDSA",
             "map": "acme@t",
             "reuse_key": "enabled"

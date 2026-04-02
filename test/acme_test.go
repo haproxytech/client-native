@@ -101,14 +101,16 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 			"ApiKey":   "foobar",
 			"WeirdKey": "\"__, +=\"",
 		},
-		Bits:      misc.Int64P(2048),
-		Challenge: "http-01",
-		Contact:   "me@example.com",
-		Curves:    "dem curves",
-		Directory: "https://acme.ninja.com/directory",
-		Keytype:   "ECDSA",
-		Map:       "acme@virt",
-		ReuseKey:  models.AcmeProviderReuseKeyEnabled,
+		Bits:           misc.Int64P(2048),
+		Challenge:      "http-01",
+		ChallengeReady: []string{"cli", "dns"},
+		Contact:        "me@example.com",
+		Curves:         "dem curves",
+		Directory:      "https://acme.ninja.com/directory",
+		DNSDelay:       misc.Int64P(30000),
+		Keytype:        "ECDSA",
+		Map:            "acme@virt",
+		ReuseKey:       models.AcmeProviderReuseKeyEnabled,
 	}
 
 	err := clientTest.CreateAcmeProvider(a, "", version)
@@ -122,6 +124,7 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 	require.Equal(acme.Name, a.Name)
 	require.Equal(acme.Contact, a.Contact)
 	require.Equal(acme.Bits, a.Bits)
+	require.Len(acme.ChallengeReady, 2)
 	require.Equal(acme, a)
 
 	err = clientTest.CreateAcmeProvider(a, "", version)
@@ -133,6 +136,7 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 	// Edit
 	a.Contact = "new@example.com"
 	a.Bits = misc.Int64P(4096)
+	a.DNSDelay = misc.Int64P(40000)
 	a.ReuseKey = ""
 	err = clientTest.EditAcmeProvider(a.Name, a, "", version)
 	require.NoError(err)

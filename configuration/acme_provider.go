@@ -18,6 +18,7 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 
@@ -25,6 +26,7 @@ import (
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -115,7 +117,7 @@ func (c *client) CreateAcmeProvider(data *models.AcmeProvider, transactionID str
 		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
-	if err = SerializeAcmeProvider(p, data); err != nil {
+	if err = SerializeAcmeProvider(p, data, &c.ConfigurationOptions); err != nil {
 		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
@@ -144,7 +146,7 @@ func (c *client) EditAcmeProvider(name string, data *models.AcmeProvider, transa
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
-	if err = SerializeAcmeProvider(p, data); err != nil {
+	if err = SerializeAcmeProvider(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
@@ -161,19 +163,27 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		}
 	}
 
-	var varsStr string
+	var (
+		challReadyStr string
+		dnsDelayStr   string
+		dnsTimeoutStr string
+		varsStr       string
+	)
 
 	stringAttr := map[string]*string{
-		"account-key":   &acme.AccountKey,
-		"acme-provider": &acme.AcmeProvider,
-		"acme-vars":     &varsStr,
-		"challenge":     &acme.Challenge,
-		"contact":       &acme.Contact,
-		"curves":        &acme.Curves,
-		"directory":     &acme.Directory,
-		"keytype":       &acme.Keytype,
-		"map":           &acme.Map,
-		"reuse-key":     &acme.ReuseKey,
+		"account-key":     &acme.AccountKey,
+		"acme-provider":   &acme.AcmeProvider,
+		"acme-vars":       &varsStr,
+		"challenge":       &acme.Challenge,
+		"challenge-ready": &challReadyStr,
+		"contact":         &acme.Contact,
+		"curves":          &acme.Curves,
+		"dns-delay":       &dnsDelayStr,
+		"dns-timeout":     &dnsTimeoutStr,
+		"directory":       &acme.Directory,
+		"keytype":         &acme.Keytype,
+		"map":             &acme.Map,
+		"reuse-key":       &acme.ReuseKey,
 	}
 
 	for kw, dest := range stringAttr {
@@ -210,10 +220,23 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 	// acme-vars
 	acme.AcmeVars = ParseAcmeVars(varsStr)
 
+	// challenge-ready
+	if len(challReadyStr) > 0 {
+		for elem := range strings.SplitSeq(challReadyStr, ",") {
+			if len(elem) > 0 {
+				acme.ChallengeReady = append(acme.ChallengeReady, elem)
+			}
+		}
+	}
+
+	// durations
+	acme.DNSDelay = misc.ParseTimeoutDefaultSeconds(dnsDelayStr)
+	acme.DNSTimeout = misc.ParseTimeoutDefaultSeconds(dnsTimeoutStr)
+
 	return acme, nil
 }
 
-func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
+func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider, opt *options.ConfigurationOptions) error {
 	if acme == nil {
 		return fmt.Errorf("empty %s section", AcmeParentName)
 	}
@@ -233,17 +256,35 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 		return fmt.Errorf("acme %s: %w", acme.Name, err)
 	}
 
+	// In challenge-ready, "none" cannot be combined with other values.
+	if len(acme.ChallengeReady) > 1 && slices.Contains(acme.ChallengeReady, "none") {
+		return fmt.Errorf("acme %s: challenge-ready: %w", acme.Name, ErrValidationError)
+	}
+
+	var dnsDelay string
+	if acme.DNSDelay != nil {
+		dnsDelay = misc.SerializeTime(*acme.DNSDelay, opt.PreferredTimeSuffix)
+	}
+
+	var dnsTimeout string
+	if acme.DNSTimeout != nil {
+		dnsTimeout = misc.SerializeTime(*acme.DNSTimeout, opt.PreferredTimeSuffix)
+	}
+
 	stringAttr := map[string]string{
-		"account-key":   acme.AccountKey,
-		"acme-provider": acme.AcmeProvider,
-		"acme-vars":     acmeVars,
-		"challenge":     acme.Challenge,
-		"contact":       acme.Contact,
-		"curves":        acme.Curves,
-		"directory":     acme.Directory,
-		"keytype":       acme.Keytype,
-		"map":           acme.Map,
-		"reuse-key":     onOff(acme.ReuseKey),
+		"account-key":     acme.AccountKey,
+		"acme-provider":   acme.AcmeProvider,
+		"acme-vars":       acmeVars,
+		"challenge":       acme.Challenge,
+		"challenge-ready": strings.Join(acme.ChallengeReady, ","),
+		"contact":         acme.Contact,
+		"curves":          acme.Curves,
+		"dns-delay":       dnsDelay,
+		"dns-timeout":     dnsTimeout,
+		"directory":       acme.Directory,
+		"keytype":         acme.Keytype,
+		"map":             acme.Map,
+		"reuse-key":       onOff(acme.ReuseKey),
 	}
 
 	for kw, val := range stringAttr {

@@ -29,9 +29,12 @@ func (rec AcmeProvider) Equal(obj AcmeProvider, opts ...eqdiff.GoMethodGenOption
 		EqualMapStringString(rec.AcmeVars, obj.AcmeVars, opts...) &&
 		EqualPointerInt64(rec.Bits, obj.Bits, opts...) &&
 		rec.Challenge == obj.Challenge &&
+		EqualSliceString(rec.ChallengeReady, obj.ChallengeReady, opts...) &&
 		rec.Contact == obj.Contact &&
 		rec.Curves == obj.Curves &&
 		rec.Directory == obj.Directory &&
+		EqualPointerInt64(rec.DNSDelay, obj.DNSDelay, opts...) &&
+		EqualPointerInt64(rec.DNSTimeout, obj.DNSTimeout, opts...) &&
 		rec.Keytype == obj.Keytype &&
 		rec.Map == obj.Map &&
 		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
@@ -120,4 +123,33 @@ func EqualPointerInt64(x, y *int64, opts ...eqdiff.GoMethodGenOptions) bool {
 		return x == y
 	}
 	return *x == *y
+}
+
+func EqualSliceString(x, y []string, opts ...eqdiff.GoMethodGenOptions) bool {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	if (x == nil) != (y == nil) {
+		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+			if len(x) == 0 && len(y) == 0 {
+				return true
+			}
+		}
+		return false
+	}
+
+	if len(x) != len(y) {
+		return false
+	}
+
+	for i, vx := range x {
+		vy := y[i]
+		if vx != vy {
+			return false
+		}
+	}
+
+	return true
 }

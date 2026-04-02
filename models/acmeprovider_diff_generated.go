@@ -40,6 +40,9 @@ func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions
 	if rec.Challenge != obj.Challenge {
 		diff["Challenge"] = []interface{}{rec.Challenge, obj.Challenge}
 	}
+	for diffKey, diffValue := range DiffSliceString(rec.ChallengeReady, obj.ChallengeReady, opts...) {
+		diff["ChallengeReady"+diffKey] = diffValue
+	}
 	if rec.Contact != obj.Contact {
 		diff["Contact"] = []interface{}{rec.Contact, obj.Contact}
 	}
@@ -48,6 +51,12 @@ func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions
 	}
 	if rec.Directory != obj.Directory {
 		diff["Directory"] = []interface{}{rec.Directory, obj.Directory}
+	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.DNSDelay, obj.DNSDelay, opts...) {
+		diff["DNSDelay."+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.DNSTimeout, obj.DNSTimeout, opts...) {
+		diff["DNSTimeout."+diffKey] = diffValue
 	}
 	if rec.Keytype != obj.Keytype {
 		diff["Keytype"] = []interface{}{rec.Keytype, obj.Keytype}
@@ -120,7 +129,7 @@ func DiffPointerInt64(x, y *int64, opts ...eqdiff.GoMethodGenOptions) map[string
 		return diff
 	}
 
-	key := "Bits"
+	key := "DNSTimeout"
 
 	switch {
 	case x == nil:
@@ -133,6 +142,52 @@ func DiffPointerInt64(x, y *int64, opts ...eqdiff.GoMethodGenOptions) map[string
 
 	if *x != *y {
 		diff[key] = []interface{}{x, y}
+	}
+
+	return diff
+}
+
+func DiffSliceString(x, y []string, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	var opt *eqdiff.GoMethodGenOptions
+	if len(opts) > 0 {
+		opt = &opts[0]
+	}
+
+	diff := make(map[string][]interface{})
+	lenX := len(x)
+	lenY := len(y)
+
+	if (x == nil && y == nil) || (lenX == 0 && lenY == 0) {
+		return diff
+	}
+	if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
+		if (x == nil && lenY == 0) || (y == nil && lenX == 0) {
+			return diff
+		}
+	}
+
+	if y == nil {
+		return map[string][]interface{}{"": {x, nil}}
+	}
+
+	for i := 0; i < lenX && i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		vx, vy := x[i], y[i]
+
+		if vx != vy {
+			diff[key] = []interface{}{vx, vy}
+		}
+
+	}
+
+	for i := lenY; i < lenX; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{x[i], nil}
+	}
+
+	for i := lenX; i < lenY; i++ {
+		key := fmt.Sprintf("[%d]", i)
+		diff[key] = []interface{}{nil, y[i]}
 	}
 
 	return diff

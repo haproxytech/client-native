@@ -155,7 +155,7 @@ func serializeStructuredAcmeProvider(a StructuredToParserArgs, ap *models.AcmePr
 		return a.HandleError(ap.Name, "", "", a.TID, a.TID == "", err)
 	}
 
-	err = SerializeAcmeProvider(p, ap)
+	err = SerializeAcmeProvider(p, ap, a.Options)
 	if err != nil {
 		return a.HandleError(ap.Name, "", "", a.TID, a.TID == "", err)
 	}

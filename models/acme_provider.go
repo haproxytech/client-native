@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -56,6 +57,16 @@ type AcmeProvider struct {
 	// +kubebuilder:validation:Enum=http-01;dns-01;
 	Challenge string `json:"challenge,omitempty"`
 
+	// How to wait for the DNS propagation: either wait for a CLI event on
+	// the runtime socket (useful with dataplaneapi), or let HAProxy query
+	// the DNS TXT record by itself using the default resolvers, or both,
+	// or none at all.
+	//
+	// Max Items: 2
+	// Min Items: 1
+	// Unique: true
+	ChallengeReady []string `json:"challenge_ready,omitempty"`
+
 	// Contact email for the ACME account
 	Contact string `json:"contact,omitempty"`
 
@@ -69,6 +80,12 @@ type AcmeProvider struct {
 	// Pattern: ^https://[^\s]+$
 	// +kubebuilder:validation:Pattern=`^https://[^\s]+$`
 	Directory string `json:"directory"`
+
+	// Delay before the first DNS resolution attempt and between retries.
+	DNSDelay *int64 `json:"dns_delay,omitempty"`
+
+	// Timeout before DNS propagation check fails when using 'dns' in 'challenge_ready'.
+	DNSTimeout *int64 `json:"dns_timeout,omitempty"`
 
 	// Type of key to generate
 	// Enum: ["RSA","ECDSA"]
@@ -101,6 +118,10 @@ func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateChallenge(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateChallengeReady(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -175,6 +196,56 @@ func (m *AcmeProvider) validateChallenge(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateChallengeEnum("challenge", "body", m.Challenge); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+var acmeProviderChallengeReadyItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["cli","dns","none"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		acmeProviderChallengeReadyItemsEnum = append(acmeProviderChallengeReadyItemsEnum, v)
+	}
+}
+
+func (m *AcmeProvider) validateChallengeReadyItemsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, acmeProviderChallengeReadyItemsEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *AcmeProvider) validateChallengeReady(formats strfmt.Registry) error {
+	if swag.IsZero(m.ChallengeReady) { // not required
+		return nil
+	}
+
+	iChallengeReadySize := int64(len(m.ChallengeReady))
+
+	if err := validate.MinItems("challenge_ready", "body", iChallengeReadySize, 1); err != nil {
+		return err
+	}
+
+	if err := validate.MaxItems("challenge_ready", "body", iChallengeReadySize, 2); err != nil {
+		return err
+	}
+
+	if err := validate.UniqueItems("challenge_ready", "body", m.ChallengeReady); err != nil {
+		return err
+	}
+
+	for i := 0; i < len(m.ChallengeReady); i++ {
+
+		// value enum
+		if err := m.validateChallengeReadyItemsEnum("challenge_ready"+"."+strconv.Itoa(i), "body", m.ChallengeReady[i]); err != nil {
+			return err
+		}
+
 	}
 
 	return nil

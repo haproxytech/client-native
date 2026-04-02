@@ -31,12 +31,38 @@ acme:
       type: string
       enum: ['http-01', 'dns-01']
       description: ACME challenge type. Only http-01 and dns-01 are supported.
+    challenge_ready:
+      type: array
+      minItems: 1
+      maxItems: 2
+      uniqueItems: true
+      x-omitempty: true
+      items:
+        type: string
+        enum: [cli, dns, none]
+      description: |
+        How to wait for the DNS propagation: either wait for a CLI event on
+        the runtime socket (useful with dataplaneapi), or let HAProxy query
+        the DNS TXT record by itself using the default resolvers, or both,
+        or none at all.
     contact:
       type: string
       description: Contact email for the ACME account
     curves:
       type: string
       description: Curves used with the ECDSA key type
+    dns_delay:
+      type: integer
+      x-nullable: true
+      x-duration: true
+      x-default-unit: s
+      description: Delay before the first DNS resolution attempt and between retries.
+    dns_timeout:
+      type: integer
+      x-nullable: true
+      x-duration: true
+      x-default-unit: s
+      description: Timeout before DNS propagation check fails when using 'dns' in 'challenge_ready'.
     directory:
       type: string
       pattern: '^https://[^\s]+$'

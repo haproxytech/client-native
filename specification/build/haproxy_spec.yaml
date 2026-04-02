@@ -12082,6 +12082,23 @@ definitions:
           - http-01
           - dns-01
         type: string
+      challenge_ready:
+        description: |
+          How to wait for the DNS propagation: either wait for a CLI event on
+          the runtime socket (useful with dataplaneapi), or let HAProxy query
+          the DNS TXT record by itself using the default resolvers, or both,
+          or none at all.
+        items:
+          enum:
+            - cli
+            - dns
+            - none
+          type: string
+        maxItems: 2
+        minItems: 1
+        type: array
+        uniqueItems: true
+        x-omitempty: true
       contact:
         description: Contact email for the ACME account
         type: string
@@ -12095,6 +12112,18 @@ definitions:
         pattern: ^https://[^\s]+$
         type: string
         x-nullable: false
+      dns_delay:
+        description: Delay before the first DNS resolution attempt and between retries.
+        type: integer
+        x-default-unit: s
+        x-duration: true
+        x-nullable: true
+      dns_timeout:
+        description: Timeout before DNS propagation check fails when using 'dns' in 'challenge_ready'.
+        type: integer
+        x-default-unit: s
+        x-duration: true
+        x-nullable: true
       keytype:
         description: Type of key to generate
         enum:

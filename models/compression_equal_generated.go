@@ -33,32 +33,3 @@ func (rec Compression) Equal(obj Compression, opts ...eqdiff.GoMethodGenOptions)
 		EqualSliceString(rec.TypesReq, obj.TypesReq, opts...) &&
 		EqualSliceString(rec.TypesRes, obj.TypesRes, opts...)
 }
-
-func EqualSliceString(x, y []string, opts ...eqdiff.GoMethodGenOptions) bool {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	if (x == nil) != (y == nil) {
-		if opt == nil || (opt != nil && !opt.TreatNilNotAsEmpty) {
-			if len(x) == 0 && len(y) == 0 {
-				return true
-			}
-		}
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	for i, vx := range x {
-		vy := y[i]
-		if vx != vy {
-			return false
-		}
-	}
-
-	return true
-}

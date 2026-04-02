@@ -1027,7 +1027,10 @@ acme test
   acme-vars "ApiKey=ple744587,Zone=example.com"
   bits 4096
   challenge http-01
+  challenge-ready cli,dns
   directory https://acme.example.com/directory
+  dns-delay 30s
+  dns-timeout 10m
   keytype ECDSA
   map acme@t
   reuse-key on
