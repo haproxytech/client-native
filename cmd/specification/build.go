@@ -5,12 +5,12 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"html/template"
 	"os"
 	"path"
 	"path/filepath"
 	"sort"
 	"strings"
+	"text/template"
 
 	"github.com/go-openapi/swag/mangling"
 	"github.com/haproxytech/client-native/v6/configuration/parents"

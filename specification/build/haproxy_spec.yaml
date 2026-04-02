@@ -12197,7 +12197,7 @@ parameters:
     description: Parent name
     required: true
     type: string
-    pattern: '^[^\r\n&lt;>*;$#&{}"]+$'
+    pattern: '^[^\r\n<>*;$#&{}"]+$'
   full_section:
     name: full_section
     in: query
@@ -25591,7 +25591,7 @@ paths:
         - description: ACL file entry ID
           in: path
           name: id
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -25684,7 +25684,7 @@ paths:
         - description: File entry ID
           in: path
           name: id
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -25708,7 +25708,7 @@ paths:
         - description: File entry ID
           in: path
           name: id
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -25793,7 +25793,7 @@ paths:
         - description: Server name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -25816,7 +25816,7 @@ paths:
         - description: Server name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -25839,7 +25839,7 @@ paths:
         - description: Server name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -25912,7 +25912,7 @@ paths:
         - description: SSL CA file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       responses:
@@ -25932,7 +25932,7 @@ paths:
         - description: SSL CA file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -25958,7 +25958,7 @@ paths:
         - description: SSL CA file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - in: formData
@@ -25986,7 +25986,7 @@ paths:
         - description: SSL CA file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - description: Payload of the cert entry
@@ -26017,7 +26017,7 @@ paths:
         - description: SSL CA file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - description: SSL CA file index
@@ -26090,7 +26090,7 @@ paths:
         - description: SSL certificate name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       responses:
@@ -26110,7 +26110,7 @@ paths:
         - description: SSL certificate name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -26134,7 +26134,7 @@ paths:
         - description: SSL certificate name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - in: formData
@@ -26202,7 +26202,7 @@ paths:
         - description: CRL file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       responses:
@@ -26222,7 +26222,7 @@ paths:
         - description: CRL file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - description: Entry index to return. Starts at 1. If not provided, all entries are returned.
@@ -26254,7 +26254,7 @@ paths:
         - description: CRL file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - description: CRL file contents
@@ -26297,13 +26297,13 @@ paths:
         - description: SSL crt list name
           in: query
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - description: SSL cert entry name
           in: query
           name: cert_file
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - description: The line number where the entry is located, in case several entries share the same certificate.
@@ -26331,7 +26331,7 @@ paths:
         - description: SSL crt-list filename
           in: query
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       produces:
@@ -26353,7 +26353,7 @@ paths:
         - description: SSL crt-list filename
           in: query
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - in: body
@@ -26397,7 +26397,7 @@ paths:
         - description: Stick table name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       responses:
@@ -26504,7 +26504,7 @@ paths:
         - description: Map file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - description: If true, deletes file from disk
@@ -26533,7 +26533,7 @@ paths:
         - description: Map file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       responses:
@@ -26555,7 +26555,7 @@ paths:
         - description: Map file name
           in: path
           name: name
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - default: false
@@ -26635,7 +26635,7 @@ paths:
         - description: Map id
           in: path
           name: id
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -26661,7 +26661,7 @@ paths:
         - description: Map id
           in: path
           name: id
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -26684,7 +26684,7 @@ paths:
         - description: Map id
           in: path
           name: id
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
         - $ref: '#/parameters/parent_name'
@@ -26741,7 +26741,7 @@ paths:
         - description: Certificate file name
           in: query
           name: certificate
-          pattern: ^[^\r\n&lt;>*;$#&{}"]+$
+          pattern: ^[^\r\n<>*;$#&{}"]+$
           required: true
           type: string
       responses:
