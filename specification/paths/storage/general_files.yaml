@@ -59,7 +59,7 @@ general_files_one:
       '200':
         description: Successful operation
         schema:
-          type: file
+          type: string
       '404':
         $ref: '#/responses/NotFound'
       'default':
