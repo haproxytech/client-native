@@ -26900,7 +26900,7 @@ paths:
         "200":
           description: Successful operation
           schema:
-            type: file
+            type: string
         "404":
           $ref: '#/responses/NotFound'
         default:
@@ -27181,7 +27181,7 @@ paths:
         "200":
           description: Successful operation
           schema:
-            type: file
+            type: string
         "404":
           $ref: '#/responses/NotFound'
         default:
@@ -27408,7 +27408,7 @@ paths:
         "200":
           description: Successful operation
           schema:
-            type: file
+            type: string
         "404":
           $ref: '#/responses/NotFound'
         default:
