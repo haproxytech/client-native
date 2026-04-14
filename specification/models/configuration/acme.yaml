@@ -29,8 +29,8 @@ acme:
       x-nullable: true
     challenge:
       type: string
-      enum: ['http-01', 'dns-01']
-      description: ACME challenge type. Only http-01 and dns-01 are supported.
+      enum: ['http-01', 'dns-01', 'dns-persist-01']
+      description: ACME challenge type.
     challenge_ready:
       type: array
       minItems: 1

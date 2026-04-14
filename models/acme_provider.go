@@ -52,9 +52,9 @@ type AcmeProvider struct {
 	// +kubebuilder:validation:Minimum=1024
 	Bits *int64 `json:"bits,omitempty"`
 
-	// ACME challenge type. Only http-01 and dns-01 are supported.
-	// Enum: ["http-01","dns-01"]
-	// +kubebuilder:validation:Enum=http-01;dns-01;
+	// ACME challenge type.
+	// Enum: ["http-01","dns-01","dns-persist-01"]
+	// +kubebuilder:validation:Enum=http-01;dns-01;dns-persist-01;
 	Challenge string `json:"challenge,omitempty"`
 
 	// How to wait for the DNS propagation: either wait for a CLI event on
@@ -163,7 +163,7 @@ var acmeProviderTypeChallengePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http-01","dns-01"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-01","dns-01","dns-persist-01"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -178,6 +178,9 @@ const (
 
 	// AcmeProviderChallengeDNSDash01 captures enum value "dns-01"
 	AcmeProviderChallengeDNSDash01 string = "dns-01"
+
+	// AcmeProviderChallengeDNSDashPersistDash01 captures enum value "dns-persist-01"
+	AcmeProviderChallengeDNSDashPersistDash01 string = "dns-persist-01"
 )
 
 // prop value enum
