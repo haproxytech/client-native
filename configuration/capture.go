@@ -124,6 +124,9 @@ func (c *client) EditDeclareCapture(index int64, frontend string, data *models.C
 	if _, err := p.GetOne(FrontendParentName, frontend, "declare capture", int(index)); err != nil {
 		return c.HandleError(strconv.FormatInt(index, 10), FrontendParentName, frontend, t, transactionID == "", err)
 	}
+	if err := p.Set(FrontendParentName, frontend, "declare capture", SerializeDeclareCapture(*data), int(index)); err != nil {
+		return c.HandleError(strconv.FormatInt(index, 10), FrontendParentName, frontend, t, transactionID == "", err)
+	}
 	return c.SaveData(p, t, transactionID == "")
 }
 
