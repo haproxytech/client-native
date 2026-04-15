@@ -142,6 +142,9 @@ func (c *client) EditGroup(name string, userlist string, data *models.Group, tra
 	if _, err := p.GetOne("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
 	}
+	if err := p.Set("userlist", userlist, "group", SerializeGroup(*data), i); err != nil {
+		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
+	}
 	return c.SaveData(p, t, transactionID == "")
 }
 
