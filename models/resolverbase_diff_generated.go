@@ -27,22 +27,40 @@ func (rec ResolverBase) Diff(obj ResolverBase, opts ...eqdiff.GoMethodGenOptions
 		diff["AcceptedPayloadSize"] = []interface{}{rec.AcceptedPayloadSize, obj.AcceptedPayloadSize}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HoldNx, obj.HoldNx, opts...) {
-		diff["HoldNx."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HoldNx"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HoldObsolete, obj.HoldObsolete, opts...) {
-		diff["HoldObsolete."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HoldObsolete"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HoldOther, obj.HoldOther, opts...) {
-		diff["HoldOther."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HoldOther"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HoldRefused, obj.HoldRefused, opts...) {
-		diff["HoldRefused."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HoldRefused"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HoldTimeout, obj.HoldTimeout, opts...) {
-		diff["HoldTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HoldTimeout"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HoldValid, obj.HoldValid, opts...) {
-		diff["HoldValid."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HoldValid"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}

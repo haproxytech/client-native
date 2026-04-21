@@ -26,31 +26,55 @@ import (
 func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerCPUMap(rec.CPUMaps, obj.CPUMaps, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["CPUMaps"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerCPUSet(rec.CPUSets, obj.CPUSets, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["CPUSets"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerH1CaseAdjust(rec.H1CaseAdjusts, obj.H1CaseAdjusts, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["H1CaseAdjusts"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerRuntimeAPI(rec.RuntimeAPIs, obj.RuntimeAPIs, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["RuntimeAPIs"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerSetVarFmt(rec.SetVarFmts, obj.SetVarFmts, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["SetVarFmts"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerSetVar(rec.SetVars, obj.SetVars, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["SetVars"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerThreadGroup(rec.ThreadGroupLines, obj.ThreadGroupLines, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ThreadGroupLines"+diffKey] = diffValue
 	}
 	if rec.Chroot != obj.Chroot {
 		diff["Chroot"] = []interface{}{rec.Chroot, obj.Chroot}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CloseSpreadTime, obj.CloseSpreadTime, opts...) {
-		diff["CloseSpreadTime."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CloseSpreadTime"+diffKey] = diffValue
 	}
 	if rec.ClusterSecret != obj.ClusterSecret {
 		diff["ClusterSecret"] = []interface{}{rec.ClusterSecret, obj.ClusterSecret}
@@ -62,22 +86,34 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["Daemon"] = []interface{}{rec.Daemon, obj.Daemon}
 	}
 	for diffKey, diffValue := range DiffPointerDebugOptions(rec.DebugOptions, obj.DebugOptions, opts...) {
-		diff["DebugOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DebugOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerGlobalDefaultPath(rec.DefaultPath, obj.DefaultPath, opts...) {
-		diff["DefaultPath."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DefaultPath"+diffKey] = diffValue
 	}
 	if rec.Description != obj.Description {
 		diff["Description"] = []interface{}{rec.Description, obj.Description}
 	}
 	for diffKey, diffValue := range DiffPointerDeviceAtlasOptions(rec.DeviceAtlasOptions, obj.DeviceAtlasOptions, opts...) {
-		diff["DeviceAtlasOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DeviceAtlasOptions"+diffKey] = diffValue
 	}
 	if rec.DNSAcceptFamily != obj.DNSAcceptFamily {
 		diff["DNSAcceptFamily"] = []interface{}{rec.DNSAcceptFamily, obj.DNSAcceptFamily}
 	}
 	for diffKey, diffValue := range DiffPointerEnvironmentOptions(rec.EnvironmentOptions, obj.EnvironmentOptions, opts...) {
-		diff["EnvironmentOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["EnvironmentOptions"+diffKey] = diffValue
 	}
 	if rec.ExposeDeprecatedDirectives != obj.ExposeDeprecatedDirectives {
 		diff["ExposeDeprecatedDirectives"] = []interface{}{rec.ExposeDeprecatedDirectives, obj.ExposeDeprecatedDirectives}
@@ -89,16 +125,25 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["ExternalCheck"] = []interface{}{rec.ExternalCheck, obj.ExternalCheck}
 	}
 	for diffKey, diffValue := range DiffPointerFiftyOneDegreesOptions(rec.FiftyOneDegreesOptions, obj.FiftyOneDegreesOptions, opts...) {
-		diff["FiftyOneDegreesOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FiftyOneDegreesOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ForceCfgParserPause, obj.ForceCfgParserPause, opts...) {
-		diff["ForceCfgParserPause."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ForceCfgParserPause"+diffKey] = diffValue
 	}
 	if rec.Gid != obj.Gid {
 		diff["Gid"] = []interface{}{rec.Gid, obj.Gid}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Grace, obj.Grace, opts...) {
-		diff["Grace."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Grace"+diffKey] = diffValue
 	}
 	if rec.Group != obj.Group {
 		diff["Group"] = []interface{}{rec.Group, obj.Group}
@@ -116,18 +161,33 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["H2WorkaroundBogusWebsocketClients"] = []interface{}{rec.H2WorkaroundBogusWebsocketClients, obj.H2WorkaroundBogusWebsocketClients}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HardStopAfter, obj.HardStopAfter, opts...) {
-		diff["HardStopAfter."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HardStopAfter"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerGlobalHarden(rec.Harden, obj.Harden, opts...) {
-		diff["Harden."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Harden"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerHTTPClientOptions(rec.HTTPClientOptions, obj.HTTPClientOptions, opts...) {
-		diff["HTTPClientOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HTTPClientOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerHTTPCodes(rec.HTTPErrCodes, obj.HTTPErrCodes, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["HTTPErrCodes"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerHTTPCodes(rec.HTTPFailCodes, obj.HTTPFailCodes, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["HTTPFailCodes"+diffKey] = diffValue
 	}
 	if rec.InsecureForkWanted != obj.InsecureForkWanted {
@@ -143,16 +203,25 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["Localpeer"] = []interface{}{rec.Localpeer, obj.Localpeer}
 	}
 	for diffKey, diffValue := range DiffPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname, opts...) {
-		diff["LogSendHostname."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["LogSendHostname"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerLuaOptions(rec.LuaOptions, obj.LuaOptions, opts...) {
-		diff["LuaOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["LuaOptions"+diffKey] = diffValue
 	}
 	if rec.MasterWorker != obj.MasterWorker {
 		diff["MasterWorker"] = []interface{}{rec.MasterWorker, obj.MasterWorker}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads, opts...) {
-		diff["MworkerMaxReloads."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MworkerMaxReloads"+diffKey] = diffValue
 	}
 	if rec.Nbthread != obj.Nbthread {
 		diff["Nbthread"] = []interface{}{rec.Nbthread, obj.Nbthread}
@@ -167,10 +236,16 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["NumaCPUMapping"] = []interface{}{rec.NumaCPUMapping, obj.NumaCPUMapping}
 	}
 	for diffKey, diffValue := range DiffPointerOcspUpdateOptions(rec.OcspUpdateOptions, obj.OcspUpdateOptions, opts...) {
-		diff["OcspUpdateOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["OcspUpdateOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerPerformanceOptions(rec.PerformanceOptions, obj.PerformanceOptions, opts...) {
-		diff["PerformanceOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PerformanceOptions"+diffKey] = diffValue
 	}
 	if rec.Pidfile != obj.Pidfile {
 		diff["Pidfile"] = []interface{}{rec.Pidfile, obj.Pidfile}
@@ -191,19 +266,31 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["ShmStatsFile"] = []interface{}{rec.ShmStatsFile, obj.ShmStatsFile}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ShmStatsFileMaxObjects, obj.ShmStatsFileMaxObjects, opts...) {
-		diff["ShmStatsFileMaxObjects."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ShmStatsFileMaxObjects"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerSslOptions(rec.SslOptions, obj.SslOptions, opts...) {
-		diff["SslOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslOptions"+diffKey] = diffValue
 	}
 	if rec.StatsFile != obj.StatsFile {
 		diff["StatsFile"] = []interface{}{rec.StatsFile, obj.StatsFile}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.StatsMaxconn, obj.StatsMaxconn, opts...) {
-		diff["StatsMaxconn."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StatsMaxconn"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.StatsTimeout, obj.StatsTimeout, opts...) {
-		diff["StatsTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StatsTimeout"+diffKey] = diffValue
 	}
 	if rec.StrictLimits != obj.StrictLimits {
 		diff["StrictLimits"] = []interface{}{rec.StrictLimits, obj.StrictLimits}
@@ -212,25 +299,46 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["ThreadGroups"] = []interface{}{rec.ThreadGroups, obj.ThreadGroups}
 	}
 	for diffKey, diffValue := range DiffPointerTuneBufferOptions(rec.TuneBufferOptions, obj.TuneBufferOptions, opts...) {
-		diff["TuneBufferOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TuneBufferOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerTuneLuaOptions(rec.TuneLuaOptions, obj.TuneLuaOptions, opts...) {
-		diff["TuneLuaOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TuneLuaOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerTuneOptions(rec.TuneOptions, obj.TuneOptions, opts...) {
-		diff["TuneOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TuneOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerTuneQuicOptions(rec.TuneQuicOptions, obj.TuneQuicOptions, opts...) {
-		diff["TuneQuicOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TuneQuicOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerTuneSslOptions(rec.TuneSslOptions, obj.TuneSslOptions, opts...) {
-		diff["TuneSslOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TuneSslOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerTuneVarsOptions(rec.TuneVarsOptions, obj.TuneVarsOptions, opts...) {
-		diff["TuneVarsOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TuneVarsOptions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerTuneZlibOptions(rec.TuneZlibOptions, obj.TuneZlibOptions, opts...) {
-		diff["TuneZlibOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TuneZlibOptions"+diffKey] = diffValue
 	}
 	if rec.UID != obj.UID {
 		diff["UID"] = []interface{}{rec.UID, obj.UID}
@@ -242,10 +350,16 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["User"] = []interface{}{rec.User, obj.User}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.WarnBlockedTrafficAfter, obj.WarnBlockedTrafficAfter, opts...) {
-		diff["WarnBlockedTrafficAfter."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["WarnBlockedTrafficAfter"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerWurflOptions(rec.WurflOptions, obj.WurflOptions, opts...) {
-		diff["WurflOptions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["WurflOptions"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -256,19 +370,20 @@ func DiffPointerCPUMap(x, y *CPUMap, opts ...eqdiff.GoMethodGenOptions) map[stri
 		return diff
 	}
 
-	key := "*CPUMap"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -280,19 +395,20 @@ func DiffPointerCPUSet(x, y *CPUSet, opts ...eqdiff.GoMethodGenOptions) map[stri
 		return diff
 	}
 
-	key := "*CPUSet"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -304,19 +420,20 @@ func DiffPointerDebugOptions(x, y *DebugOptions, opts ...eqdiff.GoMethodGenOptio
 		return diff
 	}
 
-	key := "DebugOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -328,19 +445,20 @@ func DiffPointerDeviceAtlasOptions(x, y *DeviceAtlasOptions, opts ...eqdiff.GoMe
 		return diff
 	}
 
-	key := "DeviceAtlasOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -352,19 +470,20 @@ func DiffPointerEnvironmentOptions(x, y *EnvironmentOptions, opts ...eqdiff.GoMe
 		return diff
 	}
 
-	key := "EnvironmentOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -376,19 +495,20 @@ func DiffPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions, opts ...eqd
 		return diff
 	}
 
-	key := "FiftyOneDegreesOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -400,19 +520,20 @@ func DiffPointerGlobalDefaultPath(x, y *GlobalDefaultPath, opts ...eqdiff.GoMeth
 		return diff
 	}
 
-	key := "DefaultPath"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -424,19 +545,20 @@ func DiffPointerGlobalHarden(x, y *GlobalHarden, opts ...eqdiff.GoMethodGenOptio
 		return diff
 	}
 
-	key := "Harden"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -448,19 +570,20 @@ func DiffPointerGlobalLogSendHostname(x, y *GlobalLogSendHostname, opts ...eqdif
 		return diff
 	}
 
-	key := "LogSendHostname"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -472,19 +595,20 @@ func DiffPointerH1CaseAdjust(x, y *H1CaseAdjust, opts ...eqdiff.GoMethodGenOptio
 		return diff
 	}
 
-	key := "*H1CaseAdjust"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -496,19 +620,20 @@ func DiffPointerHTTPClientOptions(x, y *HTTPClientOptions, opts ...eqdiff.GoMeth
 		return diff
 	}
 
-	key := "HTTPClientOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -520,19 +645,20 @@ func DiffPointerHTTPCodes(x, y *HTTPCodes, opts ...eqdiff.GoMethodGenOptions) ma
 		return diff
 	}
 
-	key := "*HTTPCodes"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -544,19 +670,20 @@ func DiffPointerLuaOptions(x, y *LuaOptions, opts ...eqdiff.GoMethodGenOptions) 
 		return diff
 	}
 
-	key := "LuaOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -568,19 +695,20 @@ func DiffPointerOcspUpdateOptions(x, y *OcspUpdateOptions, opts ...eqdiff.GoMeth
 		return diff
 	}
 
-	key := "OcspUpdateOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -592,19 +720,20 @@ func DiffPointerPerformanceOptions(x, y *PerformanceOptions, opts ...eqdiff.GoMe
 		return diff
 	}
 
-	key := "PerformanceOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -616,19 +745,20 @@ func DiffPointerRuntimeAPI(x, y *RuntimeAPI, opts ...eqdiff.GoMethodGenOptions) 
 		return diff
 	}
 
-	key := "*RuntimeAPI"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -640,19 +770,20 @@ func DiffPointerSetVar(x, y *SetVar, opts ...eqdiff.GoMethodGenOptions) map[stri
 		return diff
 	}
 
-	key := "*SetVar"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -664,19 +795,20 @@ func DiffPointerSetVarFmt(x, y *SetVarFmt, opts ...eqdiff.GoMethodGenOptions) ma
 		return diff
 	}
 
-	key := "*SetVarFmt"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -688,19 +820,20 @@ func DiffPointerSslOptions(x, y *SslOptions, opts ...eqdiff.GoMethodGenOptions) 
 		return diff
 	}
 
-	key := "SslOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -712,19 +845,20 @@ func DiffPointerThreadGroup(x, y *ThreadGroup, opts ...eqdiff.GoMethodGenOptions
 		return diff
 	}
 
-	key := "*ThreadGroup"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -736,19 +870,20 @@ func DiffPointerTuneBufferOptions(x, y *TuneBufferOptions, opts ...eqdiff.GoMeth
 		return diff
 	}
 
-	key := "TuneBufferOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -760,19 +895,20 @@ func DiffPointerTuneLuaOptions(x, y *TuneLuaOptions, opts ...eqdiff.GoMethodGenO
 		return diff
 	}
 
-	key := "TuneLuaOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -784,19 +920,20 @@ func DiffPointerTuneOptions(x, y *TuneOptions, opts ...eqdiff.GoMethodGenOptions
 		return diff
 	}
 
-	key := "TuneOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -808,19 +945,20 @@ func DiffPointerTuneQuicOptions(x, y *TuneQuicOptions, opts ...eqdiff.GoMethodGe
 		return diff
 	}
 
-	key := "TuneQuicOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -832,19 +970,20 @@ func DiffPointerTuneSslOptions(x, y *TuneSslOptions, opts ...eqdiff.GoMethodGenO
 		return diff
 	}
 
-	key := "TuneSslOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -856,19 +995,20 @@ func DiffPointerTuneVarsOptions(x, y *TuneVarsOptions, opts ...eqdiff.GoMethodGe
 		return diff
 	}
 
-	key := "TuneVarsOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -880,19 +1020,20 @@ func DiffPointerTuneZlibOptions(x, y *TuneZlibOptions, opts ...eqdiff.GoMethodGe
 		return diff
 	}
 
-	key := "TuneZlibOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -904,19 +1045,20 @@ func DiffPointerWurflOptions(x, y *WurflOptions, opts ...eqdiff.GoMethodGenOptio
 		return diff
 	}
 
-	key := "WurflOptions"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -950,7 +1092,10 @@ func DiffSlicePointerCPUMap(x, y []*CPUMap, opts ...eqdiff.GoMethodGenOptions) m
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerCPUMap(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -996,7 +1141,10 @@ func DiffSlicePointerCPUSet(x, y []*CPUSet, opts ...eqdiff.GoMethodGenOptions) m
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerCPUSet(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -1042,7 +1190,10 @@ func DiffSlicePointerH1CaseAdjust(x, y []*H1CaseAdjust, opts ...eqdiff.GoMethodG
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerH1CaseAdjust(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -1088,7 +1239,10 @@ func DiffSlicePointerHTTPCodes(x, y []*HTTPCodes, opts ...eqdiff.GoMethodGenOpti
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerHTTPCodes(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -1134,7 +1288,10 @@ func DiffSlicePointerRuntimeAPI(x, y []*RuntimeAPI, opts ...eqdiff.GoMethodGenOp
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerRuntimeAPI(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -1180,7 +1337,10 @@ func DiffSlicePointerSetVar(x, y []*SetVar, opts ...eqdiff.GoMethodGenOptions) m
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerSetVar(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -1226,7 +1386,10 @@ func DiffSlicePointerSetVarFmt(x, y []*SetVarFmt, opts ...eqdiff.GoMethodGenOpti
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerSetVarFmt(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -1272,7 +1435,10 @@ func DiffSlicePointerThreadGroup(x, y []*ThreadGroup, opts ...eqdiff.GoMethodGen
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerThreadGroup(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

@@ -24,7 +24,10 @@ import (
 func (rec Balance) Diff(obj Balance, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Algorithm, obj.Algorithm, opts...) {
-		diff["Algorithm."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Algorithm"+diffKey] = diffValue
 	}
 	if rec.HashExpression != obj.HashExpression {
 		diff["HashExpression"] = []interface{}{rec.HashExpression, obj.HashExpression}

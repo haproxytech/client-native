@@ -24,10 +24,16 @@ import (
 func (rec Errorloc) Diff(obj Errorloc, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.Code, obj.Code, opts...) {
-		diff["Code."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Code"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.URL, obj.URL, opts...) {
-		diff["URL."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["URL"+diffKey] = diffValue
 	}
 	return diff
 }

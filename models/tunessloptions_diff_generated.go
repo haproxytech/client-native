@@ -24,10 +24,16 @@ import (
 func (rec TuneSslOptions) Diff(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.Cachesize, obj.Cachesize, opts...) {
-		diff["Cachesize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Cachesize"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureBufferSize, obj.CaptureBufferSize, opts...) {
-		diff["CaptureBufferSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CaptureBufferSize"+diffKey] = diffValue
 	}
 	if rec.CertificateCompression != obj.CertificateCompression {
 		diff["CertificateCompression"] = []interface{}{rec.CertificateCompression, obj.CertificateCompression}
@@ -45,16 +51,28 @@ func (rec TuneSslOptions) Diff(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOpt
 		diff["Keylog"] = []interface{}{rec.Keylog, obj.Keylog}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Lifetime, obj.Lifetime, opts...) {
-		diff["Lifetime."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Lifetime"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxrecord, obj.Maxrecord, opts...) {
-		diff["Maxrecord."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Maxrecord"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.OcspUpdateMaxDelay, obj.OcspUpdateMaxDelay, opts...) {
-		diff["OcspUpdateMaxDelay."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["OcspUpdateMaxDelay"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.OcspUpdateMinDelay, obj.OcspUpdateMinDelay, opts...) {
-		diff["OcspUpdateMinDelay."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["OcspUpdateMinDelay"+diffKey] = diffValue
 	}
 	return diff
 }

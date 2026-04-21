@@ -26,19 +26,28 @@ import (
 func (rec StickTable) Diff(obj StickTable, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerStickTableField(rec.Fields, obj.Fields, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Fields"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
-		diff["Size."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Size"+diffKey] = diffValue
 	}
 	if rec.Type != obj.Type {
 		diff["Type"] = []interface{}{rec.Type, obj.Type}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Used, obj.Used, opts...) {
-		diff["Used."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Used"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -49,19 +58,20 @@ func DiffPointerStickTableField(x, y *StickTableField, opts ...eqdiff.GoMethodGe
 		return diff
 	}
 
-	key := "*StickTableField"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -95,7 +105,10 @@ func DiffSlicePointerStickTableField(x, y []*StickTableField, opts ...eqdiff.GoM
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerStickTableField(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

@@ -31,16 +31,25 @@ func (rec SslOcspResponse) Diff(obj SslOcspResponse, opts ...eqdiff.GoMethodGenO
 		diff["OcspResponseStatus"] = []interface{}{rec.OcspResponseStatus, obj.OcspResponseStatus}
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.ProducedAt, obj.ProducedAt, opts...) {
-		diff["ProducedAt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ProducedAt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.ResponderID, obj.ResponderID, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ResponderID"+diffKey] = diffValue
 	}
 	if rec.ResponseType != obj.ResponseType {
 		diff["ResponseType"] = []interface{}{rec.ResponseType, obj.ResponseType}
 	}
 	for diffKey, diffValue := range DiffPointerOCSPResponses(rec.Responses, obj.Responses, opts...) {
-		diff["Responses."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Responses"+diffKey] = diffValue
 	}
 	if rec.Version != obj.Version {
 		diff["Version"] = []interface{}{rec.Version, obj.Version}
@@ -54,19 +63,20 @@ func DiffPointerOCSPResponses(x, y *OCSPResponses, opts ...eqdiff.GoMethodGenOpt
 		return diff
 	}
 
-	key := "Responses"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

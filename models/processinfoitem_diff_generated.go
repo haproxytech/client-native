@@ -25,184 +25,358 @@ import (
 func (rec ProcessInfoItem) Diff(obj ProcessInfoItem, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.ActivePeers, obj.ActivePeers, opts...) {
-		diff["ActivePeers."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ActivePeers"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.BusyPolling, obj.BusyPolling, opts...) {
-		diff["BusyPolling."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BusyPolling"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.BytesOutRate, obj.BytesOutRate, opts...) {
-		diff["BytesOutRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BytesOutRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CompressBpsIn, obj.CompressBpsIn, opts...) {
-		diff["CompressBpsIn."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CompressBpsIn"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CompressBpsOut, obj.CompressBpsOut, opts...) {
-		diff["CompressBpsOut."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CompressBpsOut"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CompressBpsRateLim, obj.CompressBpsRateLim, opts...) {
-		diff["CompressBpsRateLim."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CompressBpsRateLim"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ConnRate, obj.ConnRate, opts...) {
-		diff["ConnRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ConnRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ConnRateLimit, obj.ConnRateLimit, opts...) {
-		diff["ConnRateLimit."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ConnRateLimit"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ConnectedPeers, obj.ConnectedPeers, opts...) {
-		diff["ConnectedPeers."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ConnectedPeers"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CumConns, obj.CumConns, opts...) {
-		diff["CumConns."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CumConns"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CumReq, obj.CumReq, opts...) {
-		diff["CumReq."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CumReq"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CumSslConns, obj.CumSslConns, opts...) {
-		diff["CumSslConns."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CumSslConns"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CurrConns, obj.CurrConns, opts...) {
-		diff["CurrConns."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CurrConns"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CurrSslConns, obj.CurrSslConns, opts...) {
-		diff["CurrSslConns."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CurrSslConns"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.DroppedLogs, obj.DroppedLogs, opts...) {
-		diff["DroppedLogs."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DroppedLogs"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.FailedResolutions, obj.FailedResolutions, opts...) {
-		diff["FailedResolutions."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FailedResolutions"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HardMaxConn, obj.HardMaxConn, opts...) {
-		diff["HardMaxConn."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HardMaxConn"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.IdlePct, obj.IdlePct, opts...) {
-		diff["IdlePct."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["IdlePct"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Jobs, obj.Jobs, opts...) {
-		diff["Jobs."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Jobs"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Listeners, obj.Listeners, opts...) {
-		diff["Listeners."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Listeners"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxConn, obj.MaxConn, opts...) {
-		diff["MaxConn."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxConn"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxConnRate, obj.MaxConnRate, opts...) {
-		diff["MaxConnRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxConnRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxPipes, obj.MaxPipes, opts...) {
-		diff["MaxPipes."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxPipes"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSessRate, obj.MaxSessRate, opts...) {
-		diff["MaxSessRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxSessRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSock, obj.MaxSock, opts...) {
-		diff["MaxSock."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxSock"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSslConns, obj.MaxSslConns, opts...) {
-		diff["MaxSslConns."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxSslConns"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSslRate, obj.MaxSslRate, opts...) {
-		diff["MaxSslRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxSslRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxZlibMemUsage, obj.MaxZlibMemUsage, opts...) {
-		diff["MaxZlibMemUsage."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxZlibMemUsage"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MemMaxMb, obj.MemMaxMb, opts...) {
-		diff["MemMaxMb."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MemMaxMb"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Nbthread, obj.Nbthread, opts...) {
-		diff["Nbthread."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Nbthread"+diffKey] = diffValue
 	}
 	if rec.Node != obj.Node {
 		diff["Node"] = []interface{}{rec.Node, obj.Node}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Pid, obj.Pid, opts...) {
-		diff["Pid."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Pid"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PipesFree, obj.PipesFree, opts...) {
-		diff["PipesFree."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PipesFree"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PipesUsed, obj.PipesUsed, opts...) {
-		diff["PipesUsed."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PipesUsed"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PoolAllocMb, obj.PoolAllocMb, opts...) {
-		diff["PoolAllocMb."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PoolAllocMb"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PoolFailed, obj.PoolFailed, opts...) {
-		diff["PoolFailed."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PoolFailed"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PoolUsedMb, obj.PoolUsedMb, opts...) {
-		diff["PoolUsedMb."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PoolUsedMb"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ProcessNum, obj.ProcessNum, opts...) {
-		diff["ProcessNum."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ProcessNum"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Processes, obj.Processes, opts...) {
-		diff["Processes."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Processes"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.ReleaseDate, obj.ReleaseDate, opts...) {
-		diff["ReleaseDate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReleaseDate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.RunQueue, obj.RunQueue, opts...) {
-		diff["RunQueue."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RunQueue"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SessRate, obj.SessRate, opts...) {
-		diff["SessRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SessRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SessRateLimit, obj.SessRateLimit, opts...) {
-		diff["SessRateLimit."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SessRateLimit"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslBackendKeyRate, obj.SslBackendKeyRate, opts...) {
-		diff["SslBackendKeyRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslBackendKeyRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslBackendMaxKeyRate, obj.SslBackendMaxKeyRate, opts...) {
-		diff["SslBackendMaxKeyRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslBackendMaxKeyRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslCacheLookups, obj.SslCacheLookups, opts...) {
-		diff["SslCacheLookups."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslCacheLookups"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslCacheMisses, obj.SslCacheMisses, opts...) {
-		diff["SslCacheMisses."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslCacheMisses"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslFrontendKeyRate, obj.SslFrontendKeyRate, opts...) {
-		diff["SslFrontendKeyRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslFrontendKeyRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslFrontendMaxKeyRate, obj.SslFrontendMaxKeyRate, opts...) {
-		diff["SslFrontendMaxKeyRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslFrontendMaxKeyRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslFrontendSessionReuse, obj.SslFrontendSessionReuse, opts...) {
-		diff["SslFrontendSessionReuse."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslFrontendSessionReuse"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslRate, obj.SslRate, opts...) {
-		diff["SslRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SslRateLimit, obj.SslRateLimit, opts...) {
-		diff["SslRateLimit."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslRateLimit"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Stopping, obj.Stopping, opts...) {
-		diff["Stopping."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Stopping"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Tasks, obj.Tasks, opts...) {
-		diff["Tasks."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Tasks"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TotalBytesOut, obj.TotalBytesOut, opts...) {
-		diff["TotalBytesOut."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TotalBytesOut"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Ulimitn, obj.Ulimitn, opts...) {
-		diff["Ulimitn."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Ulimitn"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Unstoppable, obj.Unstoppable, opts...) {
-		diff["Unstoppable."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Unstoppable"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Uptime, obj.Uptime, opts...) {
-		diff["Uptime."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Uptime"+diffKey] = diffValue
 	}
 	if rec.Version != obj.Version {
 		diff["Version"] = []interface{}{rec.Version, obj.Version}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ZlibMemUsage, obj.ZlibMemUsage, opts...) {
-		diff["ZlibMemUsage."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ZlibMemUsage"+diffKey] = diffValue
 	}
 	return diff
 }

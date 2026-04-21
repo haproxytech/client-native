@@ -68,9 +68,15 @@ func (rec Backend) Diff(obj Backend, opts ...eqdiff.GoMethodGenOptions) map[stri
 		diff["TCPResponseRuleList"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringServerTemplate(rec.ServerTemplates, obj.ServerTemplates, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ServerTemplates"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Servers"+diffKey] = diffValue
 	}
 	return diff
@@ -106,7 +112,10 @@ func DiffMapStringServer(x, y map[string]Server, opts ...eqdiff.GoMethodGenOptio
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -119,7 +128,10 @@ func DiffMapStringServer(x, y map[string]Server, opts ...eqdiff.GoMethodGenOptio
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}
@@ -156,7 +168,10 @@ func DiffMapStringServerTemplate(x, y map[string]ServerTemplate, opts ...eqdiff.
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -169,7 +184,10 @@ func DiffMapStringServerTemplate(x, y map[string]ServerTemplate, opts ...eqdiff.
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

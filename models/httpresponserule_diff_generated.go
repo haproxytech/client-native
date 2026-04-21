@@ -24,6 +24,9 @@ import (
 func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ReturnHeaders"+diffKey] = diffValue
 	}
 	if rec.ACLFile != obj.ACLFile {
@@ -45,7 +48,10 @@ func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGe
 		diff["CacheName"] = []interface{}{rec.CacheName, obj.CacheName}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureID, obj.CaptureID, opts...) {
-		diff["CaptureID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CaptureID"+diffKey] = diffValue
 	}
 	if rec.CaptureSample != obj.CaptureSample {
 		diff["CaptureSample"] = []interface{}{rec.CaptureSample, obj.CaptureSample}
@@ -57,7 +63,10 @@ func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGe
 		diff["CondTest"] = []interface{}{rec.CondTest, obj.CondTest}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.DenyStatus, obj.DenyStatus, opts...) {
-		diff["DenyStatus."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DenyStatus"+diffKey] = diffValue
 	}
 	if rec.Expr != obj.Expr {
 		diff["Expr"] = []interface{}{rec.Expr, obj.Expr}
@@ -99,7 +108,10 @@ func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGe
 		diff["NiceValue"] = []interface{}{rec.NiceValue, obj.NiceValue}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.RedirCode, obj.RedirCode, opts...) {
-		diff["RedirCode."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RedirCode"+diffKey] = diffValue
 	}
 	if rec.RedirOption != obj.RedirOption {
 		diff["RedirOption"] = []interface{}{rec.RedirOption, obj.RedirOption}
@@ -117,10 +129,16 @@ func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGe
 		diff["ReturnContentFormat"] = []interface{}{rec.ReturnContentFormat, obj.ReturnContentFormat}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.ReturnContentType, obj.ReturnContentType, opts...) {
-		diff["ReturnContentType."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReturnContentType"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ReturnStatusCode, obj.ReturnStatusCode, opts...) {
-		diff["ReturnStatusCode."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReturnStatusCode"+diffKey] = diffValue
 	}
 	if rec.RstTTL != obj.RstTTL {
 		diff["RstTTL"] = []interface{}{rec.RstTTL, obj.RstTTL}
@@ -135,7 +153,10 @@ func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGe
 		diff["ScIdx"] = []interface{}{rec.ScIdx, obj.ScIdx}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt, opts...) {
-		diff["ScInt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ScInt"+diffKey] = diffValue
 	}
 	if rec.SpoeEngine != obj.SpoeEngine {
 		diff["SpoeEngine"] = []interface{}{rec.SpoeEngine, obj.SpoeEngine}
@@ -165,7 +186,10 @@ func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGe
 		diff["TrackScKey"] = []interface{}{rec.TrackScKey, obj.TrackScKey}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TrackScStickCounter, obj.TrackScStickCounter, opts...) {
-		diff["TrackScStickCounter."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TrackScStickCounter"+diffKey] = diffValue
 	}
 	if rec.TrackScTable != obj.TrackScTable {
 		diff["TrackScTable"] = []interface{}{rec.TrackScTable, obj.TrackScTable}
@@ -186,10 +210,16 @@ func (rec HTTPResponseRule) Diff(obj HTTPResponseRule, opts ...eqdiff.GoMethodGe
 		diff["VarScope"] = []interface{}{rec.VarScope, obj.VarScope}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.WaitAtLeast, obj.WaitAtLeast, opts...) {
-		diff["WaitAtLeast."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["WaitAtLeast"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.WaitTime, obj.WaitTime, opts...) {
-		diff["WaitTime."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["WaitTime"+diffKey] = diffValue
 	}
 	return diff
 }

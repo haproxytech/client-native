@@ -26,9 +26,15 @@ import (
 func (rec EnvironmentOptions) Diff(obj EnvironmentOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerPresetEnv(rec.PresetEnvs, obj.PresetEnvs, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["PresetEnvs"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerSetEnv(rec.SetEnvs, obj.SetEnvs, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["SetEnvs"+diffKey] = diffValue
 	}
 	if rec.Resetenv != obj.Resetenv {
@@ -46,19 +52,20 @@ func DiffPointerPresetEnv(x, y *PresetEnv, opts ...eqdiff.GoMethodGenOptions) ma
 		return diff
 	}
 
-	key := "*PresetEnv"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -70,19 +77,20 @@ func DiffPointerSetEnv(x, y *SetEnv, opts ...eqdiff.GoMethodGenOptions) map[stri
 		return diff
 	}
 
-	key := "*SetEnv"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -116,7 +124,10 @@ func DiffSlicePointerPresetEnv(x, y []*PresetEnv, opts ...eqdiff.GoMethodGenOpti
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerPresetEnv(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -162,7 +173,10 @@ func DiffSlicePointerSetEnv(x, y []*SetEnv, opts ...eqdiff.GoMethodGenOptions) m
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerSetEnv(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

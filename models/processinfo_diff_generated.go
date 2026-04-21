@@ -27,7 +27,10 @@ func (rec ProcessInfo) Diff(obj ProcessInfo, opts ...eqdiff.GoMethodGenOptions) 
 		diff["Error"] = []interface{}{rec.Error, obj.Error}
 	}
 	for diffKey, diffValue := range DiffPointerProcessInfoItem(rec.Info, obj.Info, opts...) {
-		diff["Info."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Info"+diffKey] = diffValue
 	}
 	if rec.RuntimeAPI != obj.RuntimeAPI {
 		diff["RuntimeAPI"] = []interface{}{rec.RuntimeAPI, obj.RuntimeAPI}
@@ -41,19 +44,20 @@ func DiffPointerProcessInfoItem(x, y *ProcessInfoItem, opts ...eqdiff.GoMethodGe
 		return diff
 	}
 
-	key := "Info"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

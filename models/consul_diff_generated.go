@@ -24,7 +24,10 @@ import (
 func (rec Consul) Diff(obj Consul, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address, opts...) {
-		diff["Address."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Address"+diffKey] = diffValue
 	}
 	if rec.Defaults != obj.Defaults {
 		diff["Defaults"] = []interface{}{rec.Defaults, obj.Defaults}
@@ -33,19 +36,31 @@ func (rec Consul) Diff(obj Consul, opts ...eqdiff.GoMethodGenOptions) map[string
 		diff["Description"] = []interface{}{rec.Description, obj.Description}
 	}
 	for diffKey, diffValue := range DiffPointerBool(rec.Enabled, obj.Enabled, opts...) {
-		diff["Enabled."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Enabled"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.HealthCheckPolicy, obj.HealthCheckPolicy, opts...) {
-		diff["HealthCheckPolicy."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HealthCheckPolicy"+diffKey] = diffValue
 	}
 	if rec.HealthCheckPolicyMin != obj.HealthCheckPolicyMin {
 		diff["HealthCheckPolicyMin"] = []interface{}{rec.HealthCheckPolicyMin, obj.HealthCheckPolicyMin}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.ID, obj.ID, opts...) {
-		diff["ID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ID"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Mode, obj.Mode, opts...) {
-		diff["Mode."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Mode"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
@@ -54,24 +69,42 @@ func (rec Consul) Diff(obj Consul, opts ...eqdiff.GoMethodGenOptions) map[string
 		diff["Namespace"] = []interface{}{rec.Namespace, obj.Namespace}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.RetryTimeout, obj.RetryTimeout, opts...) {
-		diff["RetryTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RetryTimeout"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase, opts...) {
-		diff["ServerSlotsBase."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ServerSlotsBase"+diffKey] = diffValue
 	}
 	if rec.ServerSlotsGrowthIncrement != obj.ServerSlotsGrowthIncrement {
 		diff["ServerSlotsGrowthIncrement"] = []interface{}{rec.ServerSlotsGrowthIncrement, obj.ServerSlotsGrowthIncrement}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType, opts...) {
-		diff["ServerSlotsGrowthType."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ServerSlotsGrowthType"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.ServiceAllowlist, obj.ServiceAllowlist, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ServiceAllowlist"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.ServiceDenylist, obj.ServiceDenylist, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ServiceDenylist"+diffKey] = diffValue
 	}
 	if rec.ServiceNameRegexp != obj.ServiceNameRegexp {

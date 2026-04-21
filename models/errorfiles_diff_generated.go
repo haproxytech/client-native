@@ -26,6 +26,9 @@ import (
 func (rec Errorfiles) Diff(obj Errorfiles, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSliceInt64(rec.Codes, obj.Codes, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Codes"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {

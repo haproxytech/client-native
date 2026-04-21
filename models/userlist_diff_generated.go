@@ -29,9 +29,15 @@ func (rec Userlist) Diff(obj Userlist, opts ...eqdiff.GoMethodGenOptions) map[st
 		diff["UserlistBase."+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringGroup(rec.Groups, obj.Groups, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Groups"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringUser(rec.Users, obj.Users, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Users"+diffKey] = diffValue
 	}
 	return diff
@@ -67,7 +73,10 @@ func DiffMapStringGroup(x, y map[string]Group, opts ...eqdiff.GoMethodGenOptions
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -80,7 +89,10 @@ func DiffMapStringGroup(x, y map[string]Group, opts ...eqdiff.GoMethodGenOptions
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}
@@ -117,7 +129,10 @@ func DiffMapStringUser(x, y map[string]User, opts ...eqdiff.GoMethodGenOptions) 
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -130,7 +145,10 @@ func DiffMapStringUser(x, y map[string]User, opts ...eqdiff.GoMethodGenOptions) 
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

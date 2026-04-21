@@ -26,6 +26,9 @@ import (
 func (rec HTTPCheck) Diff(obj HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerReturnHeader(rec.CheckHeaders, obj.CheckHeaders, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["CheckHeaders"+diffKey] = diffValue
 	}
 	if rec.Addr != obj.Addr {
@@ -62,7 +65,10 @@ func (rec HTTPCheck) Diff(obj HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[
 		diff["Method"] = []interface{}{rec.Method, obj.Method}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MinRecv, obj.MinRecv, opts...) {
-		diff["MinRecv."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MinRecv"+diffKey] = diffValue
 	}
 	if rec.OkStatus != obj.OkStatus {
 		diff["OkStatus"] = []interface{}{rec.OkStatus, obj.OkStatus}
@@ -77,7 +83,10 @@ func (rec HTTPCheck) Diff(obj HTTPCheck, opts ...eqdiff.GoMethodGenOptions) map[
 		diff["Pattern"] = []interface{}{rec.Pattern, obj.Pattern}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	if rec.PortString != obj.PortString {
 		diff["PortString"] = []interface{}{rec.PortString, obj.PortString}
@@ -136,19 +145,20 @@ func DiffPointerReturnHeader(x, y *ReturnHeader, opts ...eqdiff.GoMethodGenOptio
 		return diff
 	}
 
-	key := "*ReturnHeader"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -182,7 +192,10 @@ func DiffSlicePointerReturnHeader(x, y []*ReturnHeader, opts ...eqdiff.GoMethodG
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerReturnHeader(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

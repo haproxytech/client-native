@@ -34,13 +34,19 @@ func (rec AcmeCertificateStatus) Diff(obj AcmeCertificateStatus, opts ...eqdiff.
 		diff["ExpiriesIn"] = []interface{}{rec.ExpiriesIn, obj.ExpiriesIn}
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.ExpiryDate, obj.ExpiryDate, opts...) {
-		diff["ExpiryDate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ExpiryDate"+diffKey] = diffValue
 	}
 	if rec.RenewalIn != obj.RenewalIn {
 		diff["RenewalIn"] = []interface{}{rec.RenewalIn, obj.RenewalIn}
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(rec.ScheduledRenewal, obj.ScheduledRenewal, opts...) {
-		diff["ScheduledRenewal."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ScheduledRenewal"+diffKey] = diffValue
 	}
 	if rec.State != obj.State {
 		diff["State"] = []interface{}{rec.State, obj.State}

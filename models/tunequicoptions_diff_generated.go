@@ -24,25 +24,46 @@ import (
 func (rec TuneQuicOptions) Diff(obj TuneQuicOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.FrontendConnTxBuffersLimit, obj.FrontendConnTxBuffersLimit, opts...) {
-		diff["FrontendConnTxBuffersLimit."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FrontendConnTxBuffersLimit"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.FrontendMaxIdleTimeout, obj.FrontendMaxIdleTimeout, opts...) {
-		diff["FrontendMaxIdleTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FrontendMaxIdleTimeout"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.FrontendMaxStreamsBidi, obj.FrontendMaxStreamsBidi, opts...) {
-		diff["FrontendMaxStreamsBidi."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FrontendMaxStreamsBidi"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.FrontendMaxTxMemory, obj.FrontendMaxTxMemory, opts...) {
-		diff["FrontendMaxTxMemory."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FrontendMaxTxMemory"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxFrameLoss, obj.MaxFrameLoss, opts...) {
-		diff["MaxFrameLoss."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxFrameLoss"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ReorderRatio, obj.ReorderRatio, opts...) {
-		diff["ReorderRatio."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReorderRatio"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.RetryThreshold, obj.RetryThreshold, opts...) {
-		diff["RetryThreshold."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RetryThreshold"+diffKey] = diffValue
 	}
 	if rec.SocketOwner != obj.SocketOwner {
 		diff["SocketOwner"] = []interface{}{rec.SocketOwner, obj.SocketOwner}

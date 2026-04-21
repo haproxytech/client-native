@@ -29,9 +29,15 @@ func (rec LuaOptions) Diff(obj LuaOptions, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["LoadPerThread"] = []interface{}{rec.LoadPerThread, obj.LoadPerThread}
 	}
 	for diffKey, diffValue := range DiffSlicePointerLuaLoad(rec.Loads, obj.Loads, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Loads"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerLuaPrependPath(rec.PrependPath, obj.PrependPath, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["PrependPath"+diffKey] = diffValue
 	}
 	return diff
@@ -43,19 +49,20 @@ func DiffPointerLuaLoad(x, y *LuaLoad, opts ...eqdiff.GoMethodGenOptions) map[st
 		return diff
 	}
 
-	key := "*LuaLoad"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -67,19 +74,20 @@ func DiffPointerLuaPrependPath(x, y *LuaPrependPath, opts ...eqdiff.GoMethodGenO
 		return diff
 	}
 
-	key := "*LuaPrependPath"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -113,7 +121,10 @@ func DiffSlicePointerLuaLoad(x, y []*LuaLoad, opts ...eqdiff.GoMethodGenOptions)
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerLuaLoad(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -159,7 +170,10 @@ func DiffSlicePointerLuaPrependPath(x, y []*LuaPrependPath, opts ...eqdiff.GoMet
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerLuaPrependPath(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

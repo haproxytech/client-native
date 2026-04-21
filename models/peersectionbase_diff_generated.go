@@ -24,10 +24,16 @@ import (
 func (rec PeerSectionBase) Diff(obj PeerSectionBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerDefaultBind(rec.DefaultBind, obj.DefaultBind, opts...) {
-		diff["DefaultBind."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DefaultBind"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerDefaultServer(rec.DefaultServer, obj.DefaultServer, opts...) {
-		diff["DefaultServer."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DefaultServer"+diffKey] = diffValue
 	}
 	if rec.Disabled != obj.Disabled {
 		diff["Disabled"] = []interface{}{rec.Disabled, obj.Disabled}
@@ -50,19 +56,20 @@ func DiffPointerDefaultBind(x, y *DefaultBind, opts ...eqdiff.GoMethodGenOptions
 		return diff
 	}
 
-	key := "DefaultBind"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

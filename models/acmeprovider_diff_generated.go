@@ -32,15 +32,24 @@ func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions
 		diff["AcmeProvider"] = []interface{}{rec.AcmeProvider, obj.AcmeProvider}
 	}
 	for diffKey, diffValue := range DiffMapStringString(rec.AcmeVars, obj.AcmeVars, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["AcmeVars"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Bits, obj.Bits, opts...) {
-		diff["Bits."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Bits"+diffKey] = diffValue
 	}
 	if rec.Challenge != obj.Challenge {
 		diff["Challenge"] = []interface{}{rec.Challenge, obj.Challenge}
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.ChallengeReady, obj.ChallengeReady, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ChallengeReady"+diffKey] = diffValue
 	}
 	if rec.Contact != obj.Contact {
@@ -53,10 +62,16 @@ func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions
 		diff["Directory"] = []interface{}{rec.Directory, obj.Directory}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.DNSDelay, obj.DNSDelay, opts...) {
-		diff["DNSDelay."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DNSDelay"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.DNSTimeout, obj.DNSTimeout, opts...) {
-		diff["DNSTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["DNSTimeout"+diffKey] = diffValue
 	}
 	if rec.Keytype != obj.Keytype {
 		diff["Keytype"] = []interface{}{rec.Keytype, obj.Keytype}
@@ -129,19 +144,17 @@ func DiffPointerInt64(x, y *int64, opts ...eqdiff.GoMethodGenOptions) map[string
 		return diff
 	}
 
-	key := "DNSTimeout"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	if *x != *y {
-		diff[key] = []interface{}{x, y}
+		diff[""] = []interface{}{*x, *y}
 	}
 
 	return diff

@@ -29,6 +29,9 @@ func (rec MailersSection) Diff(obj MailersSection, opts ...eqdiff.GoMethodGenOpt
 		diff["MailersSectionBase."+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringMailerEntry(rec.MailerEntries, obj.MailerEntries, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["MailerEntries"+diffKey] = diffValue
 	}
 	return diff
@@ -64,7 +67,10 @@ func DiffMapStringMailerEntry(x, y map[string]MailerEntry, opts ...eqdiff.GoMeth
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -77,7 +83,10 @@ func DiffMapStringMailerEntry(x, y map[string]MailerEntry, opts ...eqdiff.GoMeth
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

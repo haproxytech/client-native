@@ -30,12 +30,21 @@ func (rec SslCrlEntry) Diff(obj SslCrlEntry, opts ...eqdiff.GoMethodGenOptions) 
 		diff["Issuer"] = []interface{}{rec.Issuer, obj.Issuer}
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.LastUpdate, obj.LastUpdate, opts...) {
-		diff["LastUpdate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["LastUpdate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate, opts...) {
-		diff["NextUpdate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["NextUpdate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerRevokedCertificates(rec.RevokedCertificates, obj.RevokedCertificates, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["RevokedCertificates"+diffKey] = diffValue
 	}
 	if rec.SignatureAlgorithm != obj.SignatureAlgorithm {
@@ -59,19 +68,20 @@ func DiffPointerRevokedCertificates(x, y *RevokedCertificates, opts ...eqdiff.Go
 		return diff
 	}
 
-	key := "*RevokedCertificates"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -105,7 +115,10 @@ func DiffSlicePointerRevokedCertificates(x, y []*RevokedCertificates, opts ...eq
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerRevokedCertificates(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

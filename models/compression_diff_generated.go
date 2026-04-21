@@ -27,9 +27,15 @@ func (rec Compression) Diff(obj Compression, opts ...eqdiff.GoMethodGenOptions) 
 		diff["AlgoReq"] = []interface{}{rec.AlgoReq, obj.AlgoReq}
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.Algorithms, obj.Algorithms, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Algorithms"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.AlgosRes, obj.AlgosRes, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["AlgosRes"+diffKey] = diffValue
 	}
 	if rec.Direction != obj.Direction {
@@ -45,12 +51,21 @@ func (rec Compression) Diff(obj Compression, opts ...eqdiff.GoMethodGenOptions) 
 		diff["Offload"] = []interface{}{rec.Offload, obj.Offload}
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.Types, obj.Types, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Types"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.TypesReq, obj.TypesReq, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["TypesReq"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.TypesRes, obj.TypesRes, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["TypesRes"+diffKey] = diffValue
 	}
 	return diff
