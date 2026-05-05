@@ -37,12 +37,15 @@ import (
 type SslCertificate struct {
 
 	// algorithm
+	// Read Only: true
 	Algorithm string `json:"algorithm,omitempty"`
 
 	// authority key id
+	// Read Only: true
 	AuthorityKeyID string `json:"authority_key_id,omitempty"`
 
 	// description
+	// Read Only: true
 	Description string `json:"description,omitempty"`
 
 	// domains
@@ -50,6 +53,7 @@ type SslCertificate struct {
 	Domains string `json:"domains,omitempty"`
 
 	// file
+	// Read Only: true
 	File string `json:"file,omitempty"`
 
 	// ip addresses
@@ -76,9 +80,11 @@ type SslCertificate struct {
 	Serial string `json:"serial,omitempty"`
 
 	// sha1 finger print
+	// Read Only: true
 	Sha1FingerPrint string `json:"sha1_finger_print,omitempty"`
 
 	// sha256 finger print
+	// Read Only: true
 	Sha256FingerPrint string `json:"sha256_finger_print,omitempty"`
 
 	// File size in bytes.
@@ -86,15 +92,19 @@ type SslCertificate struct {
 	Size *int64 `json:"size,omitempty"`
 
 	// storage name
+	// Read Only: true
 	StorageName string `json:"storage_name,omitempty"`
 
 	// subject
+	// Read Only: true
 	Subject string `json:"subject,omitempty"`
 
 	// subject alternative names
+	// Read Only: true
 	SubjectAlternativeNames string `json:"subject_alternative_names,omitempty"`
 
 	// subject key id
+	// Read Only: true
 	SubjectKeyID string `json:"subject_key_id,omitempty"`
 }
 
@@ -144,7 +154,23 @@ func (m *SslCertificate) validateNotBefore(formats strfmt.Registry) error {
 func (m *SslCertificate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateAlgorithm(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAuthorityKeyID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateDescription(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateDomains(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateFile(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -164,7 +190,31 @@ func (m *SslCertificate) ContextValidate(ctx context.Context, formats strfmt.Reg
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateSha1FingerPrint(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSha256FingerPrint(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateSize(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateStorageName(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSubject(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSubjectAlternativeNames(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSubjectKeyID(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -174,9 +224,45 @@ func (m *SslCertificate) ContextValidate(ctx context.Context, formats strfmt.Reg
 	return nil
 }
 
+func (m *SslCertificate) contextValidateAlgorithm(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "algorithm", "body", string(m.Algorithm)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateAuthorityKeyID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "authority_key_id", "body", string(m.AuthorityKeyID)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateDescription(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "description", "body", string(m.Description)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *SslCertificate) contextValidateDomains(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "domains", "body", string(m.Domains)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateFile(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "file", "body", string(m.File)); err != nil {
 		return err
 	}
 
@@ -219,9 +305,63 @@ func (m *SslCertificate) contextValidateNotBefore(ctx context.Context, formats s
 	return nil
 }
 
+func (m *SslCertificate) contextValidateSha1FingerPrint(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "sha1_finger_print", "body", string(m.Sha1FingerPrint)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateSha256FingerPrint(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "sha256_finger_print", "body", string(m.Sha256FingerPrint)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *SslCertificate) contextValidateSize(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "size", "body", m.Size); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateStorageName(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "storage_name", "body", string(m.StorageName)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateSubject(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "subject", "body", string(m.Subject)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateSubjectAlternativeNames(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "subject_alternative_names", "body", string(m.SubjectAlternativeNames)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateSubjectKeyID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "subject_key_id", "body", string(m.SubjectKeyID)); err != nil {
 		return err
 	}
 

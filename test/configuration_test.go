@@ -1065,7 +1065,8 @@ func deleteTestFile(path string) error {
 }
 
 func prepareClient(path string) (c configuration.Configuration, err error) {
-	c, err = configuration.New(context.Background(),
+	c, err = configuration.New(
+		context.Background(),
 		options.ConfigurationFile(path),
 		options.HAProxyBin("echo"),
 		options.UseModelsValidation,
