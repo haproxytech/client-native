@@ -1,7 +1,7 @@
 ---
 app:
   type: object
-  description: App with all it's children resources
+  description: App with all its children resources
   x-go-name: FCGIApp
   allOf:
     - $ref: "#/definitions/fcgiAppBase"

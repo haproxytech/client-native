@@ -59,7 +59,7 @@ definitions:
             $ref: '#/definitions/acls'
             x-go-name: AclList
         type: object
-    description: App with all it's children resources
+    description: App with all its children resources
     type: object
     x-go-name: FCGIApp
   fcgiAppBase:
@@ -1905,7 +1905,7 @@ definitions:
             $ref: '#/definitions/log_targets'
             x-go-name: LogTargetList
         type: object
-    description: Frontend with all it's children resources
+    description: Frontend with all its children resources
     type: object
     x-go-name: Global
   global_base:
@@ -2257,7 +2257,7 @@ definitions:
             $ref: '#/definitions/tcp_checks'
             x-go-name: TCPCheckRuleList
         type: object
-    description: Defaults with all it's children resources
+    description: Defaults with all its children resources
     type: object
     x-go-name: Defaults
   defaults_base:
@@ -2811,7 +2811,7 @@ definitions:
             $ref: '#/definitions/tcp_request_rules'
             x-go-name: TCPRequestRuleList
         type: object
-    description: Frontend with all it's children resources
+    description: Frontend with all its children resources
     type: object
     x-go-name: Frontend
   frontend_base:
@@ -3210,7 +3210,7 @@ definitions:
             $ref: '#/definitions/tcp_response_rules'
             x-go-name: TCPResponseRuleList
         type: object
-    description: Backend with all it's children resources
+    description: Backend with all its children resources
     type: object
     x-go-name: Backend
   backend_base:
@@ -3759,7 +3759,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/server'
         type: object
-    description: Ring with all it's children resources
+    description: Ring with all its children resources
     type: object
     x-go-name: Ring
   ring_base:
@@ -3865,7 +3865,7 @@ definitions:
             $ref: '#/definitions/log_targets'
             x-go-name: LogTargetList
         type: object
-    description: LogForward with all it's children resources
+    description: LogForward with all its children resources
     type: object
     x-go-name: LogForward
   log_forward_base:
@@ -3910,7 +3910,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/user'
         type: object
-    description: Userlist with all it's children resources
+    description: Userlist with all its children resources
     type: object
     x-go-name: Userlist
   userlist_base:
@@ -3985,7 +3985,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/mailer_entry'
         type: object
-    description: MailersSection with all it's children resources
+    description: MailersSection with all its children resources
     type: object
     x-go-name: MailersSection
   mailers_section_base:
@@ -4061,7 +4061,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/table'
         type: object
-    description: Peer Section with all it's children resources
+    description: Peer Section with all its children resources
     type: object
     x-go-name: PeerSection
   peer_section_base:
@@ -9927,7 +9927,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/nameserver'
         type: object
-    description: Resolver with all it's children resources
+    description: Resolver with all its children resources
     type: object
     x-go-name: Resolver
   resolver_base:

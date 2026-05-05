@@ -28,7 +28,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// FCGIApp App with all it's children resources
+// FCGIApp App with all its children resources
 //
 // swagger:model FCGIApp
 type FCGIApp struct {

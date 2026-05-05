@@ -1,7 +1,7 @@
 ---
 defaults:
   type: object
-  description: Defaults with all it's children resources
+  description: Defaults with all its children resources
   x-go-name: Defaults
   allOf:
     - $ref: "#/definitions/defaults_base"

@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Frontend Frontend with all it's children resources
+// Frontend Frontend with all its children resources
 //
 // swagger:model Frontend
 type Frontend struct {

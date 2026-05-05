@@ -1,7 +1,7 @@
 ---
 resolver:
   type: object
-  description: Resolver with all it's children resources
+  description: Resolver with all its children resources
   x-go-name: Resolver
   allOf:
     - $ref: "#/definitions/resolver_base"
