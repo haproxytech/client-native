@@ -1,7 +1,7 @@
 ---
 backend:
   type: object
-  description: Backend with all it's children resources
+  description: Backend with all its children resources
   x-go-name: Backend
   allOf:
     - $ref: "#/definitions/backend_base"

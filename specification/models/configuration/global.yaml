@@ -1,7 +1,7 @@
 ---
 global:
   type: object
-  description: Frontend with all it's children resources
+  description: Frontend with all its children resources
   x-go-name: Global
   allOf:
     - $ref: "#/definitions/global_base"
