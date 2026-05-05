@@ -1,7 +1,7 @@
 ---
 frontend:
   type: object
-  description: Frontend with all it's children resources
+  description: Frontend with all its children resources
   x-go-name: Frontend
   allOf:
     - $ref: "#/definitions/frontend_base"

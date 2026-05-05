@@ -1,7 +1,7 @@
 ---
 log_forward:
   type: object
-  description: LogForward with all it's children resources
+  description: LogForward with all its children resources
   x-go-name: LogForward
   allOf:
     - $ref: "#/definitions/log_forward_base"

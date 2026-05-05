@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Backend Backend with all it's children resources
+// Backend Backend with all its children resources
 //
 // swagger:model Backend
 type Backend struct {

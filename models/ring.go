@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Ring Ring with all it's children resources
+// Ring Ring with all its children resources
 //
 // swagger:model Ring
 type Ring struct {
