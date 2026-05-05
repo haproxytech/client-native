@@ -4,6 +4,7 @@ SWAGGER_VERSION=v0.32.3
 GO_VERSION:=${shell go mod edit -json | jq -r .Go}
 GOLANGCI_LINT_VERSION=2.8.0
 CHECK_COMMIT=5.2.0
+GO_METHOD_GEN_VERSION=v0.1.1
 
 .PHONY: test
 test:
@@ -47,7 +48,7 @@ models: gentypes spec swagger-check go-method-gen-check
 .PHONY: go-method-gen-check
 go-method-gen-check:
 	@GO_METHOD_GEN_BIN_NAME="go-method-gen"; \
-	GO_METHOD_GEN_GITHUB="github.com/haproxytech/go-method-gen/cmd/go-method-gen@latest"; \
+	GO_METHOD_GEN_GITHUB="github.com/haproxytech/go-method-gen/cmd/go-method-gen@${GO_METHOD_GEN_VERSION}"; \
 	if [ -f "$$GO_METHOD_GEN_BIN_NAME" ]; then \
 		echo "✅ $$GO_METHOD_GEN_BIN_NAME already installed"; \
 	else \
