@@ -29,6 +29,9 @@ func (rec Resolver) Diff(obj Resolver, opts ...eqdiff.GoMethodGenOptions) map[st
 		diff["ResolverBase."+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringNameserver(rec.Nameservers, obj.Nameservers, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Nameservers"+diffKey] = diffValue
 	}
 	return diff
@@ -64,7 +67,10 @@ func DiffMapStringNameserver(x, y map[string]Nameserver, opts ...eqdiff.GoMethod
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -77,7 +83,10 @@ func DiffMapStringNameserver(x, y map[string]Nameserver, opts ...eqdiff.GoMethod
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

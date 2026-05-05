@@ -45,7 +45,10 @@ func (rec FCGILogStderr) Diff(obj FCGILogStderr, opts ...eqdiff.GoMethodGenOptio
 		diff["Minlevel"] = []interface{}{rec.Minlevel, obj.Minlevel}
 	}
 	for diffKey, diffValue := range DiffPointerFCGILogStderrSample(rec.Sample, obj.Sample, opts...) {
-		diff["Sample."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Sample"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -56,19 +59,20 @@ func DiffPointerFCGILogStderrSample(x, y *FCGILogStderrSample, opts ...eqdiff.Go
 		return diff
 	}
 
-	key := "Sample"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

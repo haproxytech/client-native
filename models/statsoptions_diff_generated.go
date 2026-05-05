@@ -35,6 +35,9 @@ func (rec StatsOptions) Diff(obj StatsOptions, opts ...eqdiff.GoMethodGenOptions
 		diff["StatsAdminCondTest"] = []interface{}{rec.StatsAdminCondTest, obj.StatsAdminCondTest}
 	}
 	for diffKey, diffValue := range DiffSlicePointerStatsAuth(rec.StatsAuths, obj.StatsAuths, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["StatsAuths"+diffKey] = diffValue
 	}
 	if rec.StatsEnable != obj.StatsEnable {
@@ -44,6 +47,9 @@ func (rec StatsOptions) Diff(obj StatsOptions, opts ...eqdiff.GoMethodGenOptions
 		diff["StatsHideVersion"] = []interface{}{rec.StatsHideVersion, obj.StatsHideVersion}
 	}
 	for diffKey, diffValue := range DiffSlicePointerStatsHTTPRequest(rec.StatsHTTPRequests, obj.StatsHTTPRequests, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["StatsHTTPRequests"+diffKey] = diffValue
 	}
 	if rec.StatsMaxconn != obj.StatsMaxconn {
@@ -53,13 +59,22 @@ func (rec StatsOptions) Diff(obj StatsOptions, opts ...eqdiff.GoMethodGenOptions
 		diff["StatsRealm"] = []interface{}{rec.StatsRealm, obj.StatsRealm}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.StatsRealmRealm, obj.StatsRealmRealm, opts...) {
-		diff["StatsRealmRealm."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StatsRealmRealm"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.StatsRefreshDelay, obj.StatsRefreshDelay, opts...) {
-		diff["StatsRefreshDelay."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StatsRefreshDelay"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.StatsShowDesc, obj.StatsShowDesc, opts...) {
-		diff["StatsShowDesc."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StatsShowDesc"+diffKey] = diffValue
 	}
 	if rec.StatsShowLegends != obj.StatsShowLegends {
 		diff["StatsShowLegends"] = []interface{}{rec.StatsShowLegends, obj.StatsShowLegends}
@@ -68,7 +83,10 @@ func (rec StatsOptions) Diff(obj StatsOptions, opts ...eqdiff.GoMethodGenOptions
 		diff["StatsShowModules"] = []interface{}{rec.StatsShowModules, obj.StatsShowModules}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.StatsShowNodeName, obj.StatsShowNodeName, opts...) {
-		diff["StatsShowNodeName."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StatsShowNodeName"+diffKey] = diffValue
 	}
 	if rec.StatsURIPrefix != obj.StatsURIPrefix {
 		diff["StatsURIPrefix"] = []interface{}{rec.StatsURIPrefix, obj.StatsURIPrefix}
@@ -82,19 +100,20 @@ func DiffPointerStatsAuth(x, y *StatsAuth, opts ...eqdiff.GoMethodGenOptions) ma
 		return diff
 	}
 
-	key := "*StatsAuth"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -106,19 +125,20 @@ func DiffPointerStatsHTTPRequest(x, y *StatsHTTPRequest, opts ...eqdiff.GoMethod
 		return diff
 	}
 
-	key := "*StatsHTTPRequest"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -152,7 +172,10 @@ func DiffSlicePointerStatsAuth(x, y []*StatsAuth, opts ...eqdiff.GoMethodGenOpti
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerStatsAuth(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -198,7 +221,10 @@ func DiffSlicePointerStatsHTTPRequest(x, y []*StatsHTTPRequest, opts ...eqdiff.G
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerStatsHTTPRequest(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

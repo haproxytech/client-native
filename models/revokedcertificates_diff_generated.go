@@ -25,7 +25,10 @@ import (
 func (rec RevokedCertificates) Diff(obj RevokedCertificates, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.RevocationDate, obj.RevocationDate, opts...) {
-		diff["RevocationDate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RevocationDate"+diffKey] = diffValue
 	}
 	if rec.SerialNumber != obj.SerialNumber {
 		diff["SerialNumber"] = []interface{}{rec.SerialNumber, obj.SerialNumber}

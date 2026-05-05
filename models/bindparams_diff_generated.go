@@ -75,6 +75,9 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["Curves"] = []interface{}{rec.Curves, obj.Curves}
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.DefaultCrtList, obj.DefaultCrtList, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["DefaultCrtList"+diffKey] = diffValue
 	}
 	if rec.DeferAccept != obj.DeferAccept {
@@ -120,7 +123,10 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["ID"] = []interface{}{rec.ID, obj.ID}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.IdlePing, obj.IdlePing, opts...) {
-		diff["IdlePing."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["IdlePing"+diffKey] = diffValue
 	}
 	if rec.Interface != obj.Interface {
 		diff["Interface"] = []interface{}{rec.Interface, obj.Interface}
@@ -198,10 +204,16 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["QuicSocket"] = []interface{}{rec.QuicSocket, obj.QuicSocket}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.QuicCcAlgoBurstSize, obj.QuicCcAlgoBurstSize, opts...) {
-		diff["QuicCcAlgoBurstSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["QuicCcAlgoBurstSize"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow, opts...) {
-		diff["QuicCcAlgoMaxWindow."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["QuicCcAlgoMaxWindow"+diffKey] = diffValue
 	}
 	if rec.SeverityOutput != obj.SeverityOutput {
 		diff["SeverityOutput"] = []interface{}{rec.SeverityOutput, obj.SeverityOutput}
@@ -234,7 +246,10 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["TCPMd5sig"] = []interface{}{rec.TCPMd5sig, obj.TCPMd5sig}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TCPUserTimeout, obj.TCPUserTimeout, opts...) {
-		diff["TCPUserTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TCPUserTimeout"+diffKey] = diffValue
 	}
 	if rec.Tfo != obj.Tfo {
 		diff["Tfo"] = []interface{}{rec.Tfo, obj.Tfo}

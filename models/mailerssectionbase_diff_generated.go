@@ -28,7 +28,10 @@ func (rec MailersSectionBase) Diff(obj MailersSectionBase, opts ...eqdiff.GoMeth
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout, opts...) {
-		diff["Timeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Timeout"+diffKey] = diffValue
 	}
 	return diff
 }

@@ -36,10 +36,16 @@ func (rec DgramBind) Diff(obj DgramBind, opts ...eqdiff.GoMethodGenOptions) map[
 		diff["Namespace"] = []interface{}{rec.Namespace, obj.Namespace}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd, opts...) {
-		diff["PortRangeEnd."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PortRangeEnd"+diffKey] = diffValue
 	}
 	if rec.Transparent != obj.Transparent {
 		diff["Transparent"] = []interface{}{rec.Transparent, obj.Transparent}

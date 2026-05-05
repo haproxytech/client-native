@@ -88,7 +88,8 @@ func GetClient(t *testing.T) (*ClientResponse, error) { //nolint:thelper
 	}
 
 	HAProxyCFG := "haproxy.cfg"
-	confClient, err := configuration.New(t.Context(),
+	confClient, err := configuration.New(
+		t.Context(),
 		configuration_options.ConfigurationFile(HAProxyCFG),
 		// options.UsePersistentTransactions,
 		configuration_options.TransactionsDir(os.TempDir()),
@@ -124,7 +125,8 @@ func GetClient(t *testing.T) (*ClientResponse, error) { //nolint:thelper
 	if err != nil {
 		return nil, err
 	}
-	nativeAPI, err := clientnative.New(t.Context(),
+	nativeAPI, err := clientnative.New(
+		t.Context(),
 		options.Configuration(confClient),
 		options.Runtime(runtimeClient),
 	)

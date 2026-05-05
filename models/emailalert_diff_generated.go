@@ -24,19 +24,28 @@ import (
 func (rec EmailAlert) Diff(obj EmailAlert, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.From, obj.From, opts...) {
-		diff["From."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["From"+diffKey] = diffValue
 	}
 	if rec.Level != obj.Level {
 		diff["Level"] = []interface{}{rec.Level, obj.Level}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Mailers, obj.Mailers, opts...) {
-		diff["Mailers."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Mailers"+diffKey] = diffValue
 	}
 	if rec.Myhostname != obj.Myhostname {
 		diff["Myhostname"] = []interface{}{rec.Myhostname, obj.Myhostname}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.To, obj.To, opts...) {
-		diff["To."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["To"+diffKey] = diffValue
 	}
 	return diff
 }

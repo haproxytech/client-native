@@ -29,6 +29,9 @@ func (rec CrtStore) Diff(obj CrtStore, opts ...eqdiff.GoMethodGenOptions) map[st
 		diff["CrtStoreBase."+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringCrtLoad(rec.CrtLoads, obj.CrtLoads, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["CrtLoads"+diffKey] = diffValue
 	}
 	return diff
@@ -64,7 +67,10 @@ func DiffMapStringCrtLoad(x, y map[string]CrtLoad, opts ...eqdiff.GoMethodGenOpt
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -77,7 +83,10 @@ func DiffMapStringCrtLoad(x, y map[string]CrtLoad, opts ...eqdiff.GoMethodGenOpt
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

@@ -55,7 +55,10 @@ func DiffSlicePointerEmailAlert(x, y []*EmailAlert, opts ...eqdiff.GoMethodGenOp
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerEmailAlert(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

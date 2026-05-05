@@ -27,7 +27,10 @@ func (rec PersistRule) Diff(obj PersistRule, opts ...eqdiff.GoMethodGenOptions) 
 		diff["RdpCookieName"] = []interface{}{rec.RdpCookieName, obj.RdpCookieName}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Type, obj.Type, opts...) {
-		diff["Type."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Type"+diffKey] = diffValue
 	}
 	return diff
 }

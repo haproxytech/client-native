@@ -24,10 +24,16 @@ import (
 func (rec Redispatch) Diff(obj Redispatch, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Enabled, obj.Enabled, opts...) {
-		diff["Enabled."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Enabled"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Interval, obj.Interval, opts...) {
-		diff["Interval."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Interval"+diffKey] = diffValue
 	}
 	return diff
 }

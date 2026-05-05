@@ -24,7 +24,10 @@ import (
 func (rec Originalto) Diff(obj Originalto, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Enabled, obj.Enabled, opts...) {
-		diff["Enabled."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Enabled"+diffKey] = diffValue
 	}
 	if rec.Except != obj.Except {
 		diff["Except"] = []interface{}{rec.Except, obj.Except}

@@ -32,10 +32,16 @@ func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions
 		diff["AcmeProvider"] = []interface{}{rec.AcmeProvider, obj.AcmeProvider}
 	}
 	for diffKey, diffValue := range DiffMapStringString(rec.AcmeVars, obj.AcmeVars, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["AcmeVars"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Bits, obj.Bits, opts...) {
-		diff["Bits."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Bits"+diffKey] = diffValue
 	}
 	if rec.Challenge != obj.Challenge {
 		diff["Challenge"] = []interface{}{rec.Challenge, obj.Challenge}
@@ -120,19 +126,17 @@ func DiffPointerInt64(x, y *int64, opts ...eqdiff.GoMethodGenOptions) map[string
 		return diff
 	}
 
-	key := "Bits"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	if *x != *y {
-		diff[key] = []interface{}{x, y}
+		diff[""] = []interface{}{*x, *y}
 	}
 
 	return diff

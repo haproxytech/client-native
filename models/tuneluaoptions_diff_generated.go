@@ -27,7 +27,10 @@ func (rec TuneLuaOptions) Diff(obj TuneLuaOptions, opts ...eqdiff.GoMethodGenOpt
 		diff["BoolSampleConversion"] = []interface{}{rec.BoolSampleConversion, obj.BoolSampleConversion}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.BurstTimeout, obj.BurstTimeout, opts...) {
-		diff["BurstTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BurstTimeout"+diffKey] = diffValue
 	}
 	if rec.ForcedYield != obj.ForcedYield {
 		diff["ForcedYield"] = []interface{}{rec.ForcedYield, obj.ForcedYield}
@@ -39,16 +42,28 @@ func (rec TuneLuaOptions) Diff(obj TuneLuaOptions, opts ...eqdiff.GoMethodGenOpt
 		diff["LogStderr"] = []interface{}{rec.LogStderr, obj.LogStderr}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxmem, obj.Maxmem, opts...) {
-		diff["Maxmem."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Maxmem"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ServiceTimeout, obj.ServiceTimeout, opts...) {
-		diff["ServiceTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ServiceTimeout"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SessionTimeout, obj.SessionTimeout, opts...) {
-		diff["SessionTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SessionTimeout"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TaskTimeout, obj.TaskTimeout, opts...) {
-		diff["TaskTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TaskTimeout"+diffKey] = diffValue
 	}
 	return diff
 }

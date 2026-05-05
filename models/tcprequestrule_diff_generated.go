@@ -87,7 +87,10 @@ func (rec TCPRequestRule) Diff(obj TCPRequestRule, opts ...eqdiff.GoMethodGenOpt
 		diff["ScIncID"] = []interface{}{rec.ScIncID, obj.ScIncID}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt, opts...) {
-		diff["ScInt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ScInt"+diffKey] = diffValue
 	}
 	if rec.ServerName != obj.ServerName {
 		diff["ServerName"] = []interface{}{rec.ServerName, obj.ServerName}
@@ -105,7 +108,10 @@ func (rec TCPRequestRule) Diff(obj TCPRequestRule, opts ...eqdiff.GoMethodGenOpt
 		diff["SwitchModeProto"] = []interface{}{rec.SwitchModeProto, obj.SwitchModeProto}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout, opts...) {
-		diff["Timeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Timeout"+diffKey] = diffValue
 	}
 	if rec.TosValue != obj.TosValue {
 		diff["TosValue"] = []interface{}{rec.TosValue, obj.TosValue}
@@ -114,7 +120,10 @@ func (rec TCPRequestRule) Diff(obj TCPRequestRule, opts ...eqdiff.GoMethodGenOpt
 		diff["TrackKey"] = []interface{}{rec.TrackKey, obj.TrackKey}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TrackStickCounter, obj.TrackStickCounter, opts...) {
-		diff["TrackStickCounter."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TrackStickCounter"+diffKey] = diffValue
 	}
 	if rec.TrackTable != obj.TrackTable {
 		diff["TrackTable"] = []interface{}{rec.TrackTable, obj.TrackTable}

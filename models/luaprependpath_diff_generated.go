@@ -24,7 +24,10 @@ import (
 func (rec LuaPrependPath) Diff(obj LuaPrependPath, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Path, obj.Path, opts...) {
-		diff["Path."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Path"+diffKey] = diffValue
 	}
 	if rec.Type != obj.Type {
 		diff["Type"] = []interface{}{rec.Type, obj.Type}

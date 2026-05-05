@@ -27,10 +27,16 @@ func (rec SiteService) Diff(obj SiteService, opts ...eqdiff.GoMethodGenOptions) 
 		diff["HTTPConnectionMode"] = []interface{}{rec.HTTPConnectionMode, obj.HTTPConnectionMode}
 	}
 	for diffKey, diffValue := range DiffSlicePointerBind(rec.Listeners, obj.Listeners, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Listeners"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
-		diff["Maxconn."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Maxconn"+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
 		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}

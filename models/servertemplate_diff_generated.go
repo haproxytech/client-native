@@ -30,13 +30,19 @@ func (rec ServerTemplate) Diff(obj ServerTemplate, opts ...eqdiff.GoMethodGenOpt
 		diff["Fqdn"] = []interface{}{rec.Fqdn, obj.Fqdn}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ID, obj.ID, opts...) {
-		diff["ID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ID"+diffKey] = diffValue
 	}
 	if rec.NumOrRange != obj.NumOrRange {
 		diff["NumOrRange"] = []interface{}{rec.NumOrRange, obj.NumOrRange}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	if rec.Prefix != obj.Prefix {
 		diff["Prefix"] = []interface{}{rec.Prefix, obj.Prefix}

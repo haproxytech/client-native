@@ -24,16 +24,25 @@ import (
 func (rec ClusterLogTarget) Diff(obj ClusterLogTarget, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Address, obj.Address, opts...) {
-		diff["Address."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Address"+diffKey] = diffValue
 	}
 	if rec.LogFormat != obj.LogFormat {
 		diff["LogFormat"] = []interface{}{rec.LogFormat, obj.LogFormat}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Protocol, obj.Protocol, opts...) {
-		diff["Protocol."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Protocol"+diffKey] = diffValue
 	}
 	return diff
 }

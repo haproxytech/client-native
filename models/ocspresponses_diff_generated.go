@@ -28,16 +28,25 @@ func (rec OCSPResponses) Diff(obj OCSPResponses, opts ...eqdiff.GoMethodGenOptio
 		diff["CertStatus"] = []interface{}{rec.CertStatus, obj.CertStatus}
 	}
 	for diffKey, diffValue := range DiffPointerCertificateID(rec.CertificateID, obj.CertificateID, opts...) {
-		diff["CertificateID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CertificateID"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.NextUpdate, obj.NextUpdate, opts...) {
-		diff["NextUpdate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["NextUpdate"+diffKey] = diffValue
 	}
 	if rec.RevocationReason != obj.RevocationReason {
 		diff["RevocationReason"] = []interface{}{rec.RevocationReason, obj.RevocationReason}
 	}
 	for diffKey, diffValue := range funcs.DiffStrfmtDate(rec.ThisUpdate, obj.ThisUpdate, opts...) {
-		diff["ThisUpdate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ThisUpdate"+diffKey] = diffValue
 	}
 	return diff
 }

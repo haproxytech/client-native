@@ -36,6 +36,9 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["DisableZeroCopyForwarding"] = []interface{}{rec.DisableZeroCopyForwarding, obj.DisableZeroCopyForwarding}
 	}
 	for diffKey, diffValue := range DiffSliceString(rec.EpollMaskEvents, obj.EpollMaskEvents, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["EpollMaskEvents"+diffKey] = diffValue
 	}
 	if rec.EventsMaxEventsAtOnce != obj.EventsMaxEventsAtOnce {
@@ -48,7 +51,10 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["FdEdgeTriggered"] = []interface{}{rec.FdEdgeTriggered, obj.FdEdgeTriggered}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.GlitchesKillCPUUsage, obj.GlitchesKillCPUUsage, opts...) {
-		diff["GlitchesKillCPUUsage."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["GlitchesKillCPUUsage"+diffKey] = diffValue
 	}
 	if rec.H1ZeroCopyFwdRecv != obj.H1ZeroCopyFwdRecv {
 		diff["H1ZeroCopyFwdRecv"] = []interface{}{rec.H1ZeroCopyFwdRecv, obj.H1ZeroCopyFwdRecv}
@@ -57,7 +63,10 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["H1ZeroCopyFwdSend"] = []interface{}{rec.H1ZeroCopyFwdSend, obj.H1ZeroCopyFwdSend}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2BeGlitchesThreshold, obj.H2BeGlitchesThreshold, opts...) {
-		diff["H2BeGlitchesThreshold."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["H2BeGlitchesThreshold"+diffKey] = diffValue
 	}
 	if rec.H2BeInitialWindowSize != obj.H2BeInitialWindowSize {
 		diff["H2BeInitialWindowSize"] = []interface{}{rec.H2BeInitialWindowSize, obj.H2BeInitialWindowSize}
@@ -66,10 +75,16 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["H2BeMaxConcurrentStreams"] = []interface{}{rec.H2BeMaxConcurrentStreams, obj.H2BeMaxConcurrentStreams}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2BeRxbuf, obj.H2BeRxbuf, opts...) {
-		diff["H2BeRxbuf."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["H2BeRxbuf"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeGlitchesThreshold, obj.H2FeGlitchesThreshold, opts...) {
-		diff["H2FeGlitchesThreshold."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["H2FeGlitchesThreshold"+diffKey] = diffValue
 	}
 	if rec.H2FeInitialWindowSize != obj.H2FeInitialWindowSize {
 		diff["H2FeInitialWindowSize"] = []interface{}{rec.H2FeInitialWindowSize, obj.H2FeInitialWindowSize}
@@ -78,16 +93,25 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["H2FeMaxConcurrentStreams"] = []interface{}{rec.H2FeMaxConcurrentStreams, obj.H2FeMaxConcurrentStreams}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeMaxTotalStreams, obj.H2FeMaxTotalStreams, opts...) {
-		diff["H2FeMaxTotalStreams."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["H2FeMaxTotalStreams"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeRxbuf, obj.H2FeRxbuf, opts...) {
-		diff["H2FeRxbuf."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["H2FeRxbuf"+diffKey] = diffValue
 	}
 	if rec.H2HeaderTableSize != obj.H2HeaderTableSize {
 		diff["H2HeaderTableSize"] = []interface{}{rec.H2HeaderTableSize, obj.H2HeaderTableSize}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2InitialWindowSize, obj.H2InitialWindowSize, opts...) {
-		diff["H2InitialWindowSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["H2InitialWindowSize"+diffKey] = diffValue
 	}
 	if rec.H2MaxConcurrentStreams != obj.H2MaxConcurrentStreams {
 		diff["H2MaxConcurrentStreams"] = []interface{}{rec.H2MaxConcurrentStreams, obj.H2MaxConcurrentStreams}
@@ -111,7 +135,10 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["IdlePoolShared"] = []interface{}{rec.IdlePoolShared, obj.IdlePoolShared}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Idletimer, obj.Idletimer, opts...) {
-		diff["Idletimer."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Idletimer"+diffKey] = diffValue
 	}
 	if rec.ListenerDefaultShards != obj.ListenerDefaultShards {
 		diff["ListenerDefaultShards"] = []interface{}{rec.ListenerDefaultShards, obj.ListenerDefaultShards}
@@ -120,10 +147,16 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["ListenerMultiQueue"] = []interface{}{rec.ListenerMultiQueue, obj.ListenerMultiQueue}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxChecksPerThread, obj.MaxChecksPerThread, opts...) {
-		diff["MaxChecksPerThread."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxChecksPerThread"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxRulesAtOnce, obj.MaxRulesAtOnce, opts...) {
-		diff["MaxRulesAtOnce."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxRulesAtOnce"+diffKey] = diffValue
 	}
 	if rec.Maxaccept != obj.Maxaccept {
 		diff["Maxaccept"] = []interface{}{rec.Maxaccept, obj.Maxaccept}
@@ -135,16 +168,28 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["Maxrewrite"] = []interface{}{rec.Maxrewrite, obj.Maxrewrite}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MemoryHotSize, obj.MemoryHotSize, opts...) {
-		diff["MemoryHotSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MemoryHotSize"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.NotsentLowatClient, obj.NotsentLowatClient, opts...) {
-		diff["NotsentLowatClient."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["NotsentLowatClient"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.NotsentLowatServer, obj.NotsentLowatServer, opts...) {
-		diff["NotsentLowatServer."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["NotsentLowatServer"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PatternCacheSize, obj.PatternCacheSize, opts...) {
-		diff["PatternCacheSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PatternCacheSize"+diffKey] = diffValue
 	}
 	if rec.PeersMaxUpdatesAtOnce != obj.PeersMaxUpdatesAtOnce {
 		diff["PeersMaxUpdatesAtOnce"] = []interface{}{rec.PeersMaxUpdatesAtOnce, obj.PeersMaxUpdatesAtOnce}
@@ -159,13 +204,22 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["PtZeroCopyForwarding"] = []interface{}{rec.PtZeroCopyForwarding, obj.PtZeroCopyForwarding}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ReniceRuntime, obj.ReniceRuntime, opts...) {
-		diff["ReniceRuntime."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReniceRuntime"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ReniceStartup, obj.ReniceStartup, opts...) {
-		diff["ReniceStartup."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReniceStartup"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.RingQueues, obj.RingQueues, opts...) {
-		diff["RingQueues."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RingQueues"+diffKey] = diffValue
 	}
 	if rec.RunqueueDepth != obj.RunqueueDepth {
 		diff["RunqueueDepth"] = []interface{}{rec.RunqueueDepth, obj.RunqueueDepth}
@@ -174,7 +228,10 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		diff["SchedLowLatency"] = []interface{}{rec.SchedLowLatency, obj.SchedLowLatency}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.StickCounters, obj.StickCounters, opts...) {
-		diff["StickCounters."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StickCounters"+diffKey] = diffValue
 	}
 	if rec.TakeoverOtherTgConnections != obj.TakeoverOtherTgConnections {
 		diff["TakeoverOtherTgConnections"] = []interface{}{rec.TakeoverOtherTgConnections, obj.TakeoverOtherTgConnections}

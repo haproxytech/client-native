@@ -24,7 +24,10 @@ import (
 func (rec HTTPCodes) Diff(obj HTTPCodes, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value, opts...) {
-		diff["Value."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Value"+diffKey] = diffValue
 	}
 	return diff
 }

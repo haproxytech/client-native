@@ -26,9 +26,15 @@ import (
 func (rec Cookie) Diff(obj Cookie, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerAttr(rec.Attrs, obj.Attrs, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Attrs"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerDomain(rec.Domains, obj.Domains, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Domains"+diffKey] = diffValue
 	}
 	if rec.Dynamic != obj.Dynamic {
@@ -47,7 +53,10 @@ func (rec Cookie) Diff(obj Cookie, opts ...eqdiff.GoMethodGenOptions) map[string
 		diff["Maxlife"] = []interface{}{rec.Maxlife, obj.Maxlife}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	if rec.Nocache != obj.Nocache {
 		diff["Nocache"] = []interface{}{rec.Nocache, obj.Nocache}
@@ -73,19 +82,20 @@ func DiffPointerAttr(x, y *Attr, opts ...eqdiff.GoMethodGenOptions) map[string][
 		return diff
 	}
 
-	key := "*Attr"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -97,19 +107,20 @@ func DiffPointerDomain(x, y *Domain, opts ...eqdiff.GoMethodGenOptions) map[stri
 		return diff
 	}
 
-	key := "*Domain"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -143,7 +154,10 @@ func DiffSlicePointerAttr(x, y []*Attr, opts ...eqdiff.GoMethodGenOptions) map[s
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerAttr(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -189,7 +203,10 @@ func DiffSlicePointerDomain(x, y []*Domain, opts ...eqdiff.GoMethodGenOptions) m
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerDomain(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

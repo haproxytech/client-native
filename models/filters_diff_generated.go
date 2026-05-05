@@ -33,19 +33,20 @@ func DiffPointerFilter(x, y *Filter, opts ...eqdiff.GoMethodGenOptions) map[stri
 		return diff
 	}
 
-	key := "*Filter"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -79,7 +80,10 @@ func DiffSlicePointerFilter(x, y []*Filter, opts ...eqdiff.GoMethodGenOptions) m
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerFilter(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

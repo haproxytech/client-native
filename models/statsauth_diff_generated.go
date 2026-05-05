@@ -24,10 +24,16 @@ import (
 func (rec StatsAuth) Diff(obj StatsAuth, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Passwd, obj.Passwd, opts...) {
-		diff["Passwd."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Passwd"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.User, obj.User, opts...) {
-		diff["User."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["User"+diffKey] = diffValue
 	}
 	return diff
 }

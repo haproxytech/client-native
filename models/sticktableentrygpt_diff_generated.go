@@ -27,7 +27,10 @@ func (rec StickTableEntryGpt) Diff(obj StickTableEntryGpt, opts ...eqdiff.GoMeth
 		diff["Idx"] = []interface{}{rec.Idx, obj.Idx}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Value, obj.Value, opts...) {
-		diff["Value."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Value"+diffKey] = diffValue
 	}
 	return diff
 }

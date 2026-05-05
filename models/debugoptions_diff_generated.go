@@ -24,13 +24,19 @@ import (
 func (rec DebugOptions) Diff(obj DebugOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.Anonkey, obj.Anonkey, opts...) {
-		diff["Anonkey."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Anonkey"+diffKey] = diffValue
 	}
 	if rec.Quiet != obj.Quiet {
 		diff["Quiet"] = []interface{}{rec.Quiet, obj.Quiet}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.StressLevel, obj.StressLevel, opts...) {
-		diff["StressLevel."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StressLevel"+diffKey] = diffValue
 	}
 	if rec.ZeroWarning != obj.ZeroWarning {
 		diff["ZeroWarning"] = []interface{}{rec.ZeroWarning, obj.ZeroWarning}

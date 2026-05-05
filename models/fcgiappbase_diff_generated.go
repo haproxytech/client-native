@@ -26,7 +26,10 @@ import (
 func (rec FCGIAppBase) Diff(obj FCGIAppBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Docroot, obj.Docroot, opts...) {
-		diff["Docroot."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Docroot"+diffKey] = diffValue
 	}
 	if rec.GetValues != obj.GetValues {
 		diff["GetValues"] = []interface{}{rec.GetValues, obj.GetValues}
@@ -38,6 +41,9 @@ func (rec FCGIAppBase) Diff(obj FCGIAppBase, opts ...eqdiff.GoMethodGenOptions) 
 		diff["KeepConn"] = []interface{}{rec.KeepConn, obj.KeepConn}
 	}
 	for diffKey, diffValue := range DiffSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["LogStderrs"+diffKey] = diffValue
 	}
 	if rec.MaxReqs != obj.MaxReqs {
@@ -50,12 +56,18 @@ func (rec FCGIAppBase) Diff(obj FCGIAppBase, opts ...eqdiff.GoMethodGenOptions) 
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["PassHeaders"+diffKey] = diffValue
 	}
 	if rec.PathInfo != obj.PathInfo {
 		diff["PathInfo"] = []interface{}{rec.PathInfo, obj.PathInfo}
 	}
 	for diffKey, diffValue := range DiffSlicePointerFCGISetParam(rec.SetParams, obj.SetParams, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["SetParams"+diffKey] = diffValue
 	}
 	return diff
@@ -67,19 +79,20 @@ func DiffPointerFCGILogStderr(x, y *FCGILogStderr, opts ...eqdiff.GoMethodGenOpt
 		return diff
 	}
 
-	key := "*FCGILogStderr"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -91,19 +104,20 @@ func DiffPointerFCGIPassHeader(x, y *FCGIPassHeader, opts ...eqdiff.GoMethodGenO
 		return diff
 	}
 
-	key := "*FCGIPassHeader"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -115,19 +129,20 @@ func DiffPointerFCGISetParam(x, y *FCGISetParam, opts ...eqdiff.GoMethodGenOptio
 		return diff
 	}
 
-	key := "*FCGISetParam"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -161,7 +176,10 @@ func DiffSlicePointerFCGILogStderr(x, y []*FCGILogStderr, opts ...eqdiff.GoMetho
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerFCGILogStderr(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -207,7 +225,10 @@ func DiffSlicePointerFCGIPassHeader(x, y []*FCGIPassHeader, opts ...eqdiff.GoMet
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerFCGIPassHeader(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -253,7 +274,10 @@ func DiffSlicePointerFCGISetParam(x, y []*FCGISetParam, opts ...eqdiff.GoMethodG
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerFCGISetParam(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

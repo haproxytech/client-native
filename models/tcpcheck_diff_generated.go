@@ -78,7 +78,10 @@ func (rec TCPCheck) Diff(obj TCPCheck, opts ...eqdiff.GoMethodGenOptions) map[st
 		diff["Pattern"] = []interface{}{rec.Pattern, obj.Pattern}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	if rec.PortString != obj.PortString {
 		diff["PortString"] = []interface{}{rec.PortString, obj.PortString}

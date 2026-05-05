@@ -30,7 +30,10 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 		diff["ACLKeyfmt"] = []interface{}{rec.ACLKeyfmt, obj.ACLKeyfmt}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureID, obj.CaptureID, opts...) {
-		diff["CaptureID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CaptureID"+diffKey] = diffValue
 	}
 	if rec.CaptureLen != obj.CaptureLen {
 		diff["CaptureLen"] = []interface{}{rec.CaptureLen, obj.CaptureLen}
@@ -78,7 +81,10 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 		diff["ScIdx"] = []interface{}{rec.ScIdx, obj.ScIdx}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt, opts...) {
-		diff["ScInt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ScInt"+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {
 		diff["Status"] = []interface{}{rec.Status, obj.Status}

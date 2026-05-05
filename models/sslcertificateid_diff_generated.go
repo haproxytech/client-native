@@ -24,7 +24,10 @@ import (
 func (rec SslCertificateID) Diff(obj SslCertificateID, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerCertificateID(rec.CertificateID, obj.CertificateID, opts...) {
-		diff["CertificateID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CertificateID"+diffKey] = diffValue
 	}
 	if rec.CertificateIDKey != obj.CertificateIDKey {
 		diff["CertificateIDKey"] = []interface{}{rec.CertificateIDKey, obj.CertificateIDKey}
@@ -41,19 +44,20 @@ func DiffPointerCertificateID(x, y *CertificateID, opts ...eqdiff.GoMethodGenOpt
 		return diff
 	}
 
-	key := "CertificateID"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

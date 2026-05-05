@@ -210,7 +210,7 @@ func ParseProgram(p parser.Parser, name string) (*models.Program, error) {
 		}
 	}
 
-	program.Command = misc.StringP((data.(*types.Command)).Args)
+	program.Command = misc.StringP(data.(*types.Command).Args)
 
 	data, err = p.Get(parser.Program, name, "user")
 	if err == nil {

@@ -27,7 +27,10 @@ func (rec OcspUpdateOptionsHttpproxy) Diff(obj OcspUpdateOptionsHttpproxy, opts 
 		diff["Address"] = []interface{}{rec.Address, obj.Address}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	return diff
 }
