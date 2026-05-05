@@ -1,7 +1,7 @@
 ---
 userlist:
   type: object
-  description: Userlist with all it's children resources
+  description: Userlist with all its children resources
   x-go-name: Userlist
   allOf:
     - $ref: "#/definitions/userlist_base"

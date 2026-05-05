@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// LogForward LogForward with all it's children resources
+// LogForward LogForward with all its children resources
 //
 // swagger:model LogForward
 type LogForward struct {

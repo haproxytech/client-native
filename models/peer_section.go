@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// PeerSection Peer Section with all it's children resources
+// PeerSection Peer Section with all its children resources
 //
 // swagger:model PeerSection
 type PeerSection struct {

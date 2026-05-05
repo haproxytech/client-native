@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// MailersSection MailersSection with all it's children resources
+// MailersSection MailersSection with all its children resources
 //
 // swagger:model MailersSection
 type MailersSection struct {
