@@ -10070,22 +10070,28 @@ definitions:
     description: A file containing one or more SSL/TLS certificates and keys
     properties:
       algorithm:
+        readOnly: true
         type: string
       authority_key_id:
+        readOnly: true
         type: string
       chain_issuer:
+        readOnly: true
         type: string
         x-omitempty: true
       chain_subject:
+        readOnly: true
         type: string
         x-omitempty: true
       description:
+        readOnly: true
         type: string
       domains:
         readOnly: true
         type: string
         x-omitempty: true
       file:
+        readOnly: true
         type: string
       ip_addresses:
         readOnly: true
@@ -10110,8 +10116,10 @@ definitions:
       serial:
         type: string
       sha1_finger_print:
+        readOnly: true
         type: string
       sha256_finger_print:
+        readOnly: true
         type: string
       size:
         description: File size in bytes.
@@ -10124,12 +10132,16 @@ definitions:
         type: string
         x-omitempty: true
       storage_name:
+        readOnly: true
         type: string
       subject:
+        readOnly: true
         type: string
       subject_alternative_names:
+        readOnly: true
         type: string
       subject_key_id:
+        readOnly: true
         type: string
     title: SSL File
     type: object
