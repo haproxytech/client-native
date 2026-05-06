@@ -48,8 +48,8 @@ type Nameserver struct {
 
 	// name
 	// Required: true
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	// Pattern: ^[A-Za-z0-9-_.:${}]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:${}]+$`
 	Name string `json:"name"`
 
 	// port
@@ -101,7 +101,7 @@ func (m *Nameserver) validateName(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:${}]+$`); err != nil {
 		return err
 	}
 
