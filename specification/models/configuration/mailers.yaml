@@ -43,7 +43,7 @@ mailer_entry:
   properties:
     name:
       type: string
-      pattern: '^[A-Za-z0-9-_]+$'
+      pattern: '^[A-Za-z0-9-_${}]+$'
       x-nullable: false
     address:
       type: string

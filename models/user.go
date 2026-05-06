@@ -53,8 +53,8 @@ type User struct {
 
 	// username
 	// Required: true
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	// Pattern: ^[A-Za-z0-9-_.:${}]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:${}]+$`
 	Username string `json:"username"`
 }
 
@@ -104,7 +104,7 @@ func (m *User) validateUsername(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("username", "body", m.Username, `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("username", "body", m.Username, `^[A-Za-z0-9-_.:${}]+$`); err != nil {
 		return err
 	}
 

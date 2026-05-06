@@ -36,7 +36,7 @@ group:
   properties:
     name:
       type: string
-      pattern: '^[A-Za-z0-9-_.:]+$'
+      pattern: '^[A-Za-z0-9-_.:${}]+$'
       x-nullable: false
     users:
       type: string
@@ -55,7 +55,7 @@ user:
   properties:
     username:
       type: string
-      pattern: '^[A-Za-z0-9-_.:]+$'
+      pattern: '^[A-Za-z0-9-_.:${}]+$'
       x-nullable: false
     secure_password:
       type: boolean
