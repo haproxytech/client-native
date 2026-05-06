@@ -3056,7 +3056,7 @@ definitions:
           - disabled
         type: string
       log_tag:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}]+$
         type: string
       logasap:
         enum:
@@ -3942,7 +3942,7 @@ definitions:
       secure_password:
         type: boolean
       username:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}]+$
         type: string
         x-nullable: false
     required:
@@ -3961,7 +3961,7 @@ definitions:
     description: HAProxy userlist group
     properties:
       name:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}]+$
         type: string
         x-nullable: false
       users:
@@ -4021,7 +4021,7 @@ definitions:
         type: string
         x-nullable: false
       name:
-        pattern: ^[A-Za-z0-9-_]+$
+        pattern: ^[A-Za-z0-9-_${}]+$
         type: string
         x-nullable: false
       port:
@@ -4104,7 +4104,7 @@ definitions:
         pattern: ^[^\s]+$
         type: string
       name:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}]+$
         type: string
         x-nullable: false
       port:
@@ -10015,7 +10015,7 @@ definitions:
         pattern: ^[^\s]+$
         type: string
       name:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}]+$
         type: string
         x-nullable: false
       port:

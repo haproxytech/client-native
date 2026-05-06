@@ -86,7 +86,7 @@ frontend_base:
       x-display-name: Log Format SD
     log_tag:
       type: string
-      pattern: '^[A-Za-z0-9-_.:]+$'
+      pattern: '^[A-Za-z0-9-_.:${}]+$'
     log_separate_errors:
       type: string
       enum: [enabled, disabled]
