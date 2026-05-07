@@ -502,6 +502,12 @@ tune_options:
       type: string
       enum: [enabled, disabled]
       description: Enables of disabled the zero-copy forwarding of data for the applets
+    cli_max_payload_size:
+      type: integer
+      x-display-name: CLI Maximum Payload Size
+      description: Maximum size in bytes allowed for the payload passed to a command on the CLI
+      x-nullable: true
+      x-size: true
     comp_maxlevel:
       type: integer
       x-display-name: Maximum Compression Level
@@ -573,6 +579,9 @@ tune_options:
     h2_be_max_concurrent_streams:
       type: integer
       description: Maximum number of concurrent streams per outgoing connection
+    h2_be_max_frames_at_once:
+      type: integer
+      description: Maximum number of HTTP/2 incoming frames processed at once on a backend connection
     h2_be_rxbuf:
       type: integer
       description: HTTP/2 receive buffer size for outgoing connections
@@ -588,6 +597,12 @@ tune_options:
     h2_fe_max_concurrent_streams:
       type: integer
       description: Maximum number of concurrent streams per incoming connection
+    h2_fe_max_frames_at_once:
+      type: integer
+      description: Maximum number of HTTP/2 incoming frames processed at once on a frontend connection
+    h2_fe_max_rst_at_once:
+      type: integer
+      description: Maximum number of HTTP/2 incoming RST_STREAM frames processed at once on a frontend connection
     h2_fe_max_total_streams:
       type: integer
       description: Maximum number of total streams processed per incoming HTTP/2 connection
@@ -597,6 +612,10 @@ tune_options:
       description: HTTP/2 receive buffer size for incoming connections
       x-nullable: true
       x-size: true
+    h2_log_errors:
+      type: string
+      enum: [none, connection, stream]
+      description: Level of HTTP/2 demultiplexer errors that will generate a log
     h2_zero_copy_fwd_send:
       type: string
       enum: [enabled, disabled]
@@ -733,6 +752,11 @@ tune_quic_options:
     frontend_max_streams_bidi:
       type: integer
       x-display-name: QUIC Max Number of Bidirectional Streams
+      x-nullable: true
+    frontend_stream_max_total:
+      type: integer
+      x-display-name: QUIC Frontend Stream Max Total
+      description: Maximum number of requests handled by a single QUIC frontend connection before graceful shutdown
       x-nullable: true
     frontend_max_tx_memory:
       type: integer
@@ -871,6 +895,10 @@ tune_lua_options:
       type: integer
       x-display-name: Lua Maximum Memory Usage
       x-nullable: true
+    openlibs:
+      type: string
+      x-display-name: Lua Open Libraries
+      description: 'Selects which Lua standard libraries are loaded. Accepts "all", "none", or a comma-separated list of: table, io, os, string, math, utf8, package, debug.'
     session_timeout:
       type: integer
       minimum: 0
@@ -913,6 +941,11 @@ tune_buffer_options:
     bufsize:
       type: integer
       x-display-name: Buffer Size
+      x-size: true
+    bufsize_large:
+      type: integer
+      description: Size in bytes of large buffers. By default, support for large buffers is not enabled.
+      x-nullable: true
       x-size: true
     bufsize_small:
       type: integer

@@ -1566,6 +1566,12 @@ definitions:
           - enabled
           - disabled
         type: string
+      cli_max_payload_size:
+        description: Maximum size in bytes allowed for the payload passed to a command on the CLI
+        type: integer
+        x-display-name: CLI Maximum Payload Size
+        x-nullable: true
+        x-size: true
       comp_maxlevel:
         type: integer
         x-display-name: Maximum Compression Level
@@ -1636,6 +1642,9 @@ definitions:
       h2_be_max_concurrent_streams:
         description: Maximum number of concurrent streams per outgoing connection
         type: integer
+      h2_be_max_frames_at_once:
+        description: Maximum number of HTTP/2 incoming frames processed at once on a backend connection
+        type: integer
       h2_be_rxbuf:
         description: HTTP/2 receive buffer size for outgoing connections
         type: integer
@@ -1650,6 +1659,12 @@ definitions:
         type: integer
       h2_fe_max_concurrent_streams:
         description: Maximum number of concurrent streams per incoming connection
+        type: integer
+      h2_fe_max_frames_at_once:
+        description: Maximum number of HTTP/2 incoming frames processed at once on a frontend connection
+        type: integer
+      h2_fe_max_rst_at_once:
+        description: Maximum number of HTTP/2 incoming RST_STREAM frames processed at once on a frontend connection
         type: integer
       h2_fe_max_total_streams:
         description: Maximum number of total streams processed per incoming HTTP/2 connection
@@ -1668,6 +1683,13 @@ definitions:
         type: integer
         x-display-name: HTTP/2 Initial Window Size
         x-nullable: true
+      h2_log_errors:
+        description: Level of HTTP/2 demultiplexer errors that will generate a log
+        enum:
+          - none
+          - connection
+          - stream
+        type: string
       h2_max_concurrent_streams:
         type: integer
         x-display-name: HTTP/2 Maximum Number of Concurrent Streams
@@ -1828,6 +1850,11 @@ definitions:
         x-display-name: QUIC Frontend Max Tx Memory
         x-nullable: true
         x-size: true
+      frontend_stream_max_total:
+        description: Maximum number of requests handled by a single QUIC frontend connection before graceful shutdown
+        type: integer
+        x-display-name: QUIC Frontend Stream Max Total
+        x-nullable: true
       max_frame_loss:
         type: integer
         x-display-name: QUIC Max Limit for Frame Loss
@@ -1982,6 +2009,10 @@ definitions:
         type: integer
         x-display-name: Lua Maximum Memory Usage
         x-nullable: true
+      openlibs:
+        description: 'Selects which Lua standard libraries are loaded. Accepts "all", "none", or a comma-separated list of: table, io, os, string, math, utf8, package, debug.'
+        type: string
+        x-display-name: Lua Open Libraries
       service_timeout:
         minimum: 0
         type: integer
@@ -2017,6 +2048,11 @@ definitions:
       bufsize:
         type: integer
         x-display-name: Buffer Size
+        x-size: true
+      bufsize_large:
+        description: Size in bytes of large buffers. By default, support for large buffers is not enabled.
+        type: integer
+        x-nullable: true
         x-size: true
       bufsize_small:
         description: Size of small buffers (for memory-restrained situations)

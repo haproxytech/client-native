@@ -47,6 +47,9 @@ func (rec TuneLuaOptions) Diff(obj TuneLuaOptions, opts ...eqdiff.GoMethodGenOpt
 		}
 		diff["Maxmem"+diffKey] = diffValue
 	}
+	if rec.Openlibs != obj.Openlibs {
+		diff["Openlibs"] = []interface{}{rec.Openlibs, obj.Openlibs}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ServiceTimeout, obj.ServiceTimeout, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

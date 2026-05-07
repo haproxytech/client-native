@@ -23,6 +23,7 @@ import (
 
 func (rec TuneOptions) Equal(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.AppletZeroCopyForwarding == obj.AppletZeroCopyForwarding &&
+		EqualPointerInt64(rec.CliMaxPayloadSize, obj.CliMaxPayloadSize, opts...) &&
 		rec.CompMaxlevel == obj.CompMaxlevel &&
 		rec.DefaultsPurge == obj.DefaultsPurge &&
 		rec.DisableFastForward == obj.DisableFastForward &&
@@ -39,14 +40,18 @@ func (rec TuneOptions) Equal(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions)
 		EqualPointerInt64(rec.H2BeGlitchesThreshold, obj.H2BeGlitchesThreshold, opts...) &&
 		rec.H2BeInitialWindowSize == obj.H2BeInitialWindowSize &&
 		rec.H2BeMaxConcurrentStreams == obj.H2BeMaxConcurrentStreams &&
+		rec.H2BeMaxFramesAtOnce == obj.H2BeMaxFramesAtOnce &&
 		EqualPointerInt64(rec.H2BeRxbuf, obj.H2BeRxbuf, opts...) &&
 		EqualPointerInt64(rec.H2FeGlitchesThreshold, obj.H2FeGlitchesThreshold, opts...) &&
 		rec.H2FeInitialWindowSize == obj.H2FeInitialWindowSize &&
 		rec.H2FeMaxConcurrentStreams == obj.H2FeMaxConcurrentStreams &&
+		rec.H2FeMaxFramesAtOnce == obj.H2FeMaxFramesAtOnce &&
+		rec.H2FeMaxRstAtOnce == obj.H2FeMaxRstAtOnce &&
 		EqualPointerInt64(rec.H2FeMaxTotalStreams, obj.H2FeMaxTotalStreams, opts...) &&
 		EqualPointerInt64(rec.H2FeRxbuf, obj.H2FeRxbuf, opts...) &&
 		rec.H2HeaderTableSize == obj.H2HeaderTableSize &&
 		EqualPointerInt64(rec.H2InitialWindowSize, obj.H2InitialWindowSize, opts...) &&
+		rec.H2LogErrors == obj.H2LogErrors &&
 		rec.H2MaxConcurrentStreams == obj.H2MaxConcurrentStreams &&
 		rec.H2MaxFrameSize == obj.H2MaxFrameSize &&
 		rec.H2ZeroCopyFwdSend == obj.H2ZeroCopyFwdSend &&

@@ -25,6 +25,7 @@ func (rec TuneBufferOptions) Equal(obj TuneBufferOptions, opts ...eqdiff.GoMetho
 	return EqualPointerInt64(rec.BuffersLimit, obj.BuffersLimit, opts...) &&
 		rec.BuffersReserve == obj.BuffersReserve &&
 		rec.Bufsize == obj.Bufsize &&
+		EqualPointerInt64(rec.BufsizeLarge, obj.BufsizeLarge, opts...) &&
 		EqualPointerInt64(rec.BufsizeSmall, obj.BufsizeSmall, opts...) &&
 		rec.Pipesize == obj.Pipesize &&
 		EqualPointerInt64(rec.RcvbufBackend, obj.RcvbufBackend, opts...) &&

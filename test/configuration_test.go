@@ -54,7 +54,9 @@ global
   tune.buffers.limit 11
   tune.buffers.reserve 12
   tune.bufsize 13
+  tune.bufsize.large 64k
   tune.bufsize.small 8k
+  tune.cli.max-payload-size 256k
   tune.comp.maxlevel 14
   tune.defaults.purge
   tune.disable-fast-forward
@@ -67,8 +69,12 @@ global
   tune.h1.fe.glitches-threshold 15
   tune.h1.zero-copy-fwd-recv on
   tune.h1.zero-copy-fwd-send on
+  tune.h2.be.max-frames-at-once 32
+  tune.h2.fe.max-frames-at-once 64
+  tune.h2.fe.max-rst-at-once 5
   tune.h2.header-table-size 15
   tune.h2.initial-window-size 16
+  tune.h2.log-errors connection
   tune.h2.max-concurrent-streams 17
   tune.h2.max-frame-size 18
   tune.h2.zero-copy-fwd-send on
@@ -84,6 +90,7 @@ global
   tune.lua.log.loggers on
   tune.lua.log.stderr auto
   tune.lua.maxmem 65536
+  tune.lua.openlibs string,math,table,utf8
   tune.lua.session-timeout 25
   tune.lua.task-timeout 26
   tune.lua.service-timeout 27
@@ -126,6 +133,7 @@ global
   tune.vars.reqres-max-size 53
   tune.vars.sess-max-size 54
   tune.vars.txn-max-size 55
+  tune.quic.fe.stream.max-total 1000
   tune.quic.frontend.conn-tx-buffers.limit 10
   tune.quic.frontend.max-idle-timeout 10000
   tune.quic.frontend.max-streams-bidi 100

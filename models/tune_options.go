@@ -40,6 +40,9 @@ type TuneOptions struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	AppletZeroCopyForwarding string `json:"applet_zero_copy_forwarding,omitempty"`
 
+	// Maximum size in bytes allowed for the payload passed to a command on the CLI
+	CliMaxPayloadSize *int64 `json:"cli_max_payload_size,omitempty"`
+
 	// comp maxlevel
 	CompMaxlevel int64 `json:"comp_maxlevel,omitempty"`
 
@@ -106,6 +109,9 @@ type TuneOptions struct {
 	// Maximum number of concurrent streams per outgoing connection
 	H2BeMaxConcurrentStreams int64 `json:"h2_be_max_concurrent_streams,omitempty"`
 
+	// Maximum number of HTTP/2 incoming frames processed at once on a backend connection
+	H2BeMaxFramesAtOnce int64 `json:"h2_be_max_frames_at_once,omitempty"`
+
 	// HTTP/2 receive buffer size for outgoing connections
 	H2BeRxbuf *int64 `json:"h2_be_rxbuf,omitempty"`
 
@@ -117,6 +123,12 @@ type TuneOptions struct {
 
 	// Maximum number of concurrent streams per incoming connection
 	H2FeMaxConcurrentStreams int64 `json:"h2_fe_max_concurrent_streams,omitempty"`
+
+	// Maximum number of HTTP/2 incoming frames processed at once on a frontend connection
+	H2FeMaxFramesAtOnce int64 `json:"h2_fe_max_frames_at_once,omitempty"`
+
+	// Maximum number of HTTP/2 incoming RST_STREAM frames processed at once on a frontend connection
+	H2FeMaxRstAtOnce int64 `json:"h2_fe_max_rst_at_once,omitempty"`
 
 	// Maximum number of total streams processed per incoming HTTP/2 connection
 	H2FeMaxTotalStreams *int64 `json:"h2_fe_max_total_streams,omitempty"`
@@ -131,6 +143,11 @@ type TuneOptions struct {
 
 	// h2 initial window size
 	H2InitialWindowSize *int64 `json:"h2_initial_window_size,omitempty"`
+
+	// Level of HTTP/2 demultiplexer errors that will generate a log
+	// Enum: ["none","connection","stream"]
+	// +kubebuilder:validation:Enum=none;connection;stream;
+	H2LogErrors string `json:"h2_log_errors,omitempty"`
 
 	// h2 max concurrent streams
 	H2MaxConcurrentStreams int64 `json:"h2_max_concurrent_streams,omitempty"`
@@ -296,6 +313,10 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateH2HeaderTableSize(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateH2LogErrors(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -619,6 +640,51 @@ func (m *TuneOptions) validateH2HeaderTableSize(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("h2_header_table_size", "body", m.H2HeaderTableSize, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var tuneOptionsTypeH2LogErrorsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["none","connection","stream"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tuneOptionsTypeH2LogErrorsPropEnum = append(tuneOptionsTypeH2LogErrorsPropEnum, v)
+	}
+}
+
+const (
+
+	// TuneOptionsH2LogErrorsNone captures enum value "none"
+	TuneOptionsH2LogErrorsNone string = "none"
+
+	// TuneOptionsH2LogErrorsConnection captures enum value "connection"
+	TuneOptionsH2LogErrorsConnection string = "connection"
+
+	// TuneOptionsH2LogErrorsStream captures enum value "stream"
+	TuneOptionsH2LogErrorsStream string = "stream"
+)
+
+// prop value enum
+func (m *TuneOptions) validateH2LogErrorsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, tuneOptionsTypeH2LogErrorsPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TuneOptions) validateH2LogErrors(formats strfmt.Registry) error {
+	if swag.IsZero(m.H2LogErrors) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateH2LogErrorsEnum("h2_log_errors", "body", m.H2LogErrors); err != nil {
 		return err
 	}
 

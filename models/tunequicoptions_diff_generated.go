@@ -47,6 +47,12 @@ func (rec TuneQuicOptions) Diff(obj TuneQuicOptions, opts ...eqdiff.GoMethodGenO
 		}
 		diff["FrontendMaxTxMemory"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.FrontendStreamMaxTotal, obj.FrontendStreamMaxTotal, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FrontendStreamMaxTotal"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxFrameLoss, obj.MaxFrameLoss, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

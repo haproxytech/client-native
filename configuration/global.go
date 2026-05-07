@@ -1276,6 +1276,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.AppletZeroCopyForwarding = strOption
 	}
 
+	intPOption, err = parseSizeOption(p, "tune.cli.max-payload-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.CliMaxPayloadSize = intPOption
+	}
+
 	intOption, err = parseInt64Option(p, "tune.comp.maxlevel")
 	if err != nil {
 		return nil, err
@@ -1656,6 +1665,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.H2BeMaxConcurrentStreams = intOption
 	}
 
+	intOption, err = parseInt64Option(p, "tune.h2.be.max-frames-at-once")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2BeMaxFramesAtOnce = intOption
+	}
+
 	intPOption, err = parseSizeOption(p, "tune.h2.be.rxbuf")
 	if err != nil {
 		return nil, err
@@ -1692,6 +1710,24 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.H2FeMaxConcurrentStreams = intOption
 	}
 
+	intOption, err = parseInt64Option(p, "tune.h2.fe.max-frames-at-once")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2FeMaxFramesAtOnce = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.fe.max-rst-at-once")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2FeMaxRstAtOnce = intOption
+	}
+
 	intPOption, err = parseInt64POption(p, "tune.h2.fe.max-total-streams")
 	if err != nil {
 		return nil, err
@@ -1708,6 +1744,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 	if intPOption != nil {
 		isEmpty = false
 		options.H2FeRxbuf = intPOption
+	}
+
+	strOption, err = parseStringOption(p, "tune.h2.log-errors")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.H2LogErrors = strOption
 	}
 
 	strOption, err = parseOnOffOption(p, "tune.h2.zero-copy-fwd-send")
@@ -1799,6 +1844,15 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 	if intPOption != nil && *intPOption != 0 {
 		isEmpty = false
 		options.Bufsize = *intPOption
+	}
+
+	intPOption, err = parseSizeOption(p, "tune.bufsize.large")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.BufsizeLarge = intPOption
 	}
 
 	intPOption, err = parseSizeOption(p, "tune.bufsize.small")
@@ -1941,6 +1995,15 @@ func parseTuneLuaOptions(p parser.Parser) (*models.TuneLuaOptions, error) {
 		isEmpty = false
 	}
 
+	strOption, err = parseStringOption(p, "tune.lua.openlibs")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		options.Openlibs = strOption
+		isEmpty = false
+	}
+
 	strOption, err = parseOnOffOption(p, "tune.lua.log.loggers")
 	if err != nil {
 		return nil, err
@@ -2021,6 +2084,15 @@ func parseTuneQuicOptions(p parser.Parser) (*models.TuneQuicOptions, error) {
 	if intPOption != nil {
 		isEmpty = false
 		options.FrontendMaxIdleTimeout = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.quic.fe.stream.max-total")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.FrontendStreamMaxTotal = intPOption
 	}
 
 	intPOption, err = parseInt64POption(p, "tune.quic.frontend.max-streams-bidi")
@@ -3697,6 +3769,9 @@ func serializeTuneBufferOptions(p parser.Parser, options *models.TuneBufferOptio
 	if err := serializeSizeOption(p, "tune.bufsize", &options.Bufsize); err != nil {
 		return err
 	}
+	if err := serializeSizeOption(p, "tune.bufsize.large", options.BufsizeLarge); err != nil {
+		return err
+	}
 	if err := serializeSizeOption(p, "tune.bufsize.small", options.BufsizeSmall); err != nil {
 		return err
 	}
@@ -3752,6 +3827,9 @@ func serializeTuneLuaOptions(p parser.Parser, options *models.TuneLuaOptions, co
 	if err := serializeInt64POption(p, "tune.lua.maxmem", options.Maxmem); err != nil {
 		return err
 	}
+	if err := serializeStringOption(p, "tune.lua.openlibs", options.Openlibs); err != nil {
+		return err
+	}
 	if err := serializeTimeoutOption(p, "tune.lua.service-timeout", options.ServiceTimeout, configOptions); err != nil {
 		return err
 	}
@@ -3769,6 +3847,9 @@ func serializeTuneQuicOptions(p parser.Parser, options *models.TuneQuicOptions, 
 		return err
 	}
 	if err := serializeTimeoutOption(p, "tune.quic.frontend.max-idle-timeout", options.FrontendMaxIdleTimeout, configOptions); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.fe.stream.max-total", options.FrontendStreamMaxTotal); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.quic.frontend.max-streams-bidi", options.FrontendMaxStreamsBidi); err != nil {
@@ -3867,6 +3948,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		options = &models.TuneOptions{}
 	}
 	if err := serializeOnOffOption(p, "tune.applet.zero-copy-forwarding", options.AppletZeroCopyForwarding); err != nil {
+		return err
+	}
+	if err := serializeSizeOption(p, "tune.cli.max-payload-size", options.CliMaxPayloadSize); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.comp.maxlevel", options.CompMaxlevel); err != nil {
@@ -3995,6 +4079,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 	if err := serializeInt64Option(p, "tune.h2.be.max-concurrent-streams", options.H2BeMaxConcurrentStreams); err != nil {
 		return err
 	}
+	if err := serializeInt64Option(p, "tune.h2.be.max-frames-at-once", options.H2BeMaxFramesAtOnce); err != nil {
+		return err
+	}
 	if err := serializeSizeOption(p, "tune.h2.be.rxbuf", options.H2BeRxbuf); err != nil {
 		return err
 	}
@@ -4007,10 +4094,19 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 	if err := serializeInt64Option(p, "tune.h2.fe.max-concurrent-streams", options.H2FeMaxConcurrentStreams); err != nil {
 		return err
 	}
+	if err := serializeInt64Option(p, "tune.h2.fe.max-frames-at-once", options.H2FeMaxFramesAtOnce); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.h2.fe.max-rst-at-once", options.H2FeMaxRstAtOnce); err != nil {
+		return err
+	}
 	if err := serializeInt64POption(p, "tune.h2.fe.max-total-streams", options.H2FeMaxTotalStreams); err != nil {
 		return err
 	}
 	if err := serializeSizeOption(p, "tune.h2.fe.rxbuf", options.H2FeRxbuf); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "tune.h2.log-errors", options.H2LogErrors); err != nil {
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.h2.zero-copy-fwd-send", options.H2ZeroCopyFwdSend); err != nil {

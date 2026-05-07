@@ -35,6 +35,12 @@ func (rec TuneBufferOptions) Diff(obj TuneBufferOptions, opts ...eqdiff.GoMethod
 	if rec.Bufsize != obj.Bufsize {
 		diff["Bufsize"] = []interface{}{rec.Bufsize, obj.Bufsize}
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.BufsizeLarge, obj.BufsizeLarge, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BufsizeLarge"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.BufsizeSmall, obj.BufsizeSmall, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

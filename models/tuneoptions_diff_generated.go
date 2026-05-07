@@ -26,6 +26,12 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 	if rec.AppletZeroCopyForwarding != obj.AppletZeroCopyForwarding {
 		diff["AppletZeroCopyForwarding"] = []interface{}{rec.AppletZeroCopyForwarding, obj.AppletZeroCopyForwarding}
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.CliMaxPayloadSize, obj.CliMaxPayloadSize, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CliMaxPayloadSize"+diffKey] = diffValue
+	}
 	if rec.CompMaxlevel != obj.CompMaxlevel {
 		diff["CompMaxlevel"] = []interface{}{rec.CompMaxlevel, obj.CompMaxlevel}
 	}
@@ -89,6 +95,9 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 	if rec.H2BeMaxConcurrentStreams != obj.H2BeMaxConcurrentStreams {
 		diff["H2BeMaxConcurrentStreams"] = []interface{}{rec.H2BeMaxConcurrentStreams, obj.H2BeMaxConcurrentStreams}
 	}
+	if rec.H2BeMaxFramesAtOnce != obj.H2BeMaxFramesAtOnce {
+		diff["H2BeMaxFramesAtOnce"] = []interface{}{rec.H2BeMaxFramesAtOnce, obj.H2BeMaxFramesAtOnce}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2BeRxbuf, obj.H2BeRxbuf, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey
@@ -106,6 +115,12 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 	}
 	if rec.H2FeMaxConcurrentStreams != obj.H2FeMaxConcurrentStreams {
 		diff["H2FeMaxConcurrentStreams"] = []interface{}{rec.H2FeMaxConcurrentStreams, obj.H2FeMaxConcurrentStreams}
+	}
+	if rec.H2FeMaxFramesAtOnce != obj.H2FeMaxFramesAtOnce {
+		diff["H2FeMaxFramesAtOnce"] = []interface{}{rec.H2FeMaxFramesAtOnce, obj.H2FeMaxFramesAtOnce}
+	}
+	if rec.H2FeMaxRstAtOnce != obj.H2FeMaxRstAtOnce {
+		diff["H2FeMaxRstAtOnce"] = []interface{}{rec.H2FeMaxRstAtOnce, obj.H2FeMaxRstAtOnce}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.H2FeMaxTotalStreams, obj.H2FeMaxTotalStreams, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
@@ -127,6 +142,9 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 			diffKey = "." + diffKey
 		}
 		diff["H2InitialWindowSize"+diffKey] = diffValue
+	}
+	if rec.H2LogErrors != obj.H2LogErrors {
+		diff["H2LogErrors"] = []interface{}{rec.H2LogErrors, obj.H2LogErrors}
 	}
 	if rec.H2MaxConcurrentStreams != obj.H2MaxConcurrentStreams {
 		diff["H2MaxConcurrentStreams"] = []interface{}{rec.H2MaxConcurrentStreams, obj.H2MaxConcurrentStreams}
