@@ -311,6 +311,16 @@ func ParseFilter(f types.Filter) *models.Filter {
 			Type:     "compression",
 			Metadata: misc.ParseMetadata(v.Comment),
 		}
+	case *filters.CompReq:
+		return &models.Filter{
+			Type:     "comp-req",
+			Metadata: misc.ParseMetadata(v.Comment),
+		}
+	case *filters.CompRes:
+		return &models.Filter{
+			Type:     "comp-res",
+			Metadata: misc.ParseMetadata(v.Comment),
+		}
 	case *filters.Spoe:
 		return &models.Filter{
 			Type:       "spoe",
@@ -346,6 +356,16 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 		}
 	case "compression":
 		return &filters.Compression{
+			Enabled: true,
+			Comment: comment,
+		}
+	case "comp-req":
+		return &filters.CompReq{
+			Enabled: true,
+			Comment: comment,
+		}
+	case "comp-res":
+		return &filters.CompRes{
 			Enabled: true,
 			Comment: comment,
 		}
@@ -393,4 +413,47 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 		}
 	}
 	return nil
+}
+
+func ParseFilterSequences(t, pName string, p parser.Parser) ([]*models.FilterSequence, error) {
+	section, err := getFilterParserFromParent(t)
+	if err != nil {
+		return nil, err
+	}
+	data, err := p.Get(section, pName, "filter-sequence", false)
+	if err != nil {
+		if errors.Is(err, parser_errors.ErrFetch) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	entries, ok := data.([]types.FilterSequence)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("filter-sequence")
+	}
+	out := make([]*models.FilterSequence, 0, len(entries))
+	for _, entry := range entries {
+		out = append(out, &models.FilterSequence{
+			Direction: misc.StringP(entry.Direction),
+			Filters:   append([]string(nil), entry.Filters...),
+			Metadata:  misc.ParseMetadata(entry.Comment),
+		})
+	}
+	return out, nil
+}
+
+func SerializeFilterSequence(fs models.FilterSequence) types.FilterSequence {
+	comment, err := misc.SerializeMetadata(fs.Metadata)
+	if err != nil {
+		comment = ""
+	}
+	direction := ""
+	if fs.Direction != nil {
+		direction = *fs.Direction
+	}
+	return types.FilterSequence{
+		Direction: direction,
+		Filters:   append([]string(nil), fs.Filters...),
+		Comment:   comment,
+	}
 }

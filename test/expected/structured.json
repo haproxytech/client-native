@@ -3099,6 +3099,26 @@
                     "type": "capture"
                 }
             ],
+            "filter_list": [
+                {
+                    "rule-files": null,
+                    "type": "comp-req"
+                },
+                {
+                    "rule-files": null,
+                    "type": "comp-res"
+                }
+            ],
+            "filter_sequence_list": [
+                {
+                    "direction": "request",
+                    "filters": ["comp-req"]
+                },
+                {
+                    "direction": "response",
+                    "filters": ["comp-res"]
+                }
+            ],
             "waf_body_rule_list": [
                 {
                     "cond": "unless",

@@ -336,6 +336,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/filter'
+  filter_sequence:
+    $ref: "models/configuration/filter.yaml#/filter_sequence"
+  filter_sequences:
+    title: Filter Sequences Array
+    description: HAProxy filter sequences array (corresponds to filter-sequence directive)
+    type: array
+    items:
+      $ref: '#/definitions/filter_sequence'
   stick_rule:
     $ref: "models/configuration/stick.yaml#/stick_rule"
   stick_rules:

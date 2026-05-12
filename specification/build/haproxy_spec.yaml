@@ -3396,6 +3396,9 @@ definitions:
           filter_list:
             $ref: '#/definitions/filters'
             x-go-name: FilterList
+          filter_sequence_list:
+            $ref: '#/definitions/filter_sequences'
+            x-go-name: FilterSequenceList
           http_after_response_rule_list:
             $ref: '#/definitions/http_after_response_rules'
             x-go-name: HTTPAfterResponseRuleList
@@ -3814,6 +3817,9 @@ definitions:
           filter_list:
             $ref: '#/definitions/filters'
             x-go-name: FilterList
+          filter_sequence_list:
+            $ref: '#/definitions/filter_sequences'
+            x-go-name: FilterSequenceList
           http_after_response_rule_list:
             $ref: '#/definitions/http_after_response_rules'
             x-go-name: HTTPAfterResponseRuleList
@@ -8327,6 +8333,8 @@ definitions:
           - bwlim-out
           - cache
           - compression
+          - comp-req
+          - comp-res
           - fcgi-app
           - spoe
           - trace
@@ -8342,6 +8350,37 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/filter'
+  filter_sequence:
+    additionalProperties: false
+    description: |
+      Specifies in which order filters declared on the proxy should be executed
+      for the request or response path. Corresponds to the HAProxy filter-sequence directive.
+    properties:
+      direction:
+        enum:
+          - request
+          - response
+        type: string
+        x-display-name: Direction
+      filters:
+        items:
+          type: string
+        type: array
+        x-display-name: Filters
+      metadata:
+        additionalProperties:
+          type: object
+    required:
+      - direction
+      - filters
+    title: Filter Sequence
+    type: object
+  filter_sequences:
+    title: Filter Sequences Array
+    description: HAProxy filter sequences array (corresponds to filter-sequence directive)
+    type: array
+    items:
+      $ref: '#/definitions/filter_sequence'
   stick_rule:
     additionalProperties: false
     description: Define a pattern used to create an entry in a stickiness table or matching condition or associate a user to a server.

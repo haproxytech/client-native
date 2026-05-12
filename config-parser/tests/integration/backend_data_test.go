@@ -201,6 +201,14 @@ const backend_cookiemyCookieattrSameSiteStrict = `
 backend test
   cookie myCookie attr \"SameSite=Strict\" attr \"mykey=myvalue\" insert
 `
+const backend_filtersequencerequestluamyfilter = `
+backend test
+  filter-sequence request lua.my-filter,comp-req
+`
+const backend_filtersequenceresponseluamyfilte = `
+backend test
+  filter-sequence response lua.my-filter,comp-res
+`
 const backend_defaultserveraddr127001 = `
 backend test
   default-server addr 127.0.0.1

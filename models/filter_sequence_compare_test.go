@@ -29,13 +29,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestFrontendEqual(t *testing.T) {
+func TestFilterSequenceEqual(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FilterSequence
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FilterSequence
+		var result FilterSequence
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -50,7 +50,7 @@ func TestFrontendEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FilterSequence
 		}{sample, result})
 	}
 
@@ -66,18 +66,18 @@ func TestFrontendEqual(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected FilterSequence to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendEqualFalse(t *testing.T) {
+func TestFilterSequenceEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FilterSequence
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FilterSequence
+		var result FilterSequence
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -87,7 +87,7 @@ func TestFrontendEqualFalse(t *testing.T) {
 			t.Error(err)
 		}
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FilterSequence
 		}{sample, result})
 	}
 
@@ -103,18 +103,18 @@ func TestFrontendEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected FilterSequence to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendDiff(t *testing.T) {
+func TestFilterSequenceDiff(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FilterSequence
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FilterSequence
+		var result FilterSequence
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -129,7 +129,7 @@ func TestFrontendDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FilterSequence
 		}{sample, result})
 	}
 
@@ -145,18 +145,18 @@ func TestFrontendDiff(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected FilterSequence to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestFrontendDiffFalse(t *testing.T) {
+func TestFilterSequenceDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FilterSequence
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FilterSequence
+		var result FilterSequence
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -166,14 +166,14 @@ func TestFrontendDiffFalse(t *testing.T) {
 			t.Error(err)
 		}
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FilterSequence
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 15 {
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -183,7 +183,7 @@ func TestFrontendDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be different in 15 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected FilterSequence to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

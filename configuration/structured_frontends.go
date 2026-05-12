@@ -201,6 +201,13 @@ func parseFrontendsSection(name string, p parser.Parser) (*models.Frontend, erro
 	}
 	f.FilterList = filters
 
+	// filter sequences
+	filterSequences, err := ParseFilterSequences(FrontendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	f.FilterSequenceList = filterSequences
+
 	// http after response rules
 	httpAfterResponseRules, err := ParseHTTPAfterRules(FrontendParentName, name, p)
 	if err != nil {
@@ -278,6 +285,11 @@ func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend, opt 
 	}
 	for i, filter := range f.FilterList {
 		if err = p.Insert(parser.Frontends, f.Name, "filter", SerializeFilter(*filter, a.Options), i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, fs := range f.FilterSequenceList {
+		if err = p.Insert(parser.Frontends, f.Name, "filter-sequence", SerializeFilterSequence(*fs), i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
 		}
 	}

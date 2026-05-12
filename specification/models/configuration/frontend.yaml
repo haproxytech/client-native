@@ -22,6 +22,9 @@ frontend:
         filter_list:
           $ref: "#/definitions/filters"
           x-go-name: FilterList
+        filter_sequence_list:
+          $ref: "#/definitions/filter_sequences"
+          x-go-name: FilterSequenceList
         log_target_list:
           $ref: "#/definitions/log_targets"
           x-go-name: LogTargetList

@@ -207,6 +207,8 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_errorloc303400httpwwwmyawesomesi", frontend_errorloc303400httpwwwmyawesomesi},
 		{"frontend_errorloc303404httpwwwmyawesomesi", frontend_errorloc303404httpwwwmyawesomesi},
 		{"frontend_errorloc303501errorpage", frontend_errorloc303501errorpage},
+		{"frontend_filtersequencerequestluamyfilter", frontend_filtersequencerequestluamyfilter},
+		{"frontend_filtersequenceresponseluamyfilte", frontend_filtersequenceresponseluamyfilte},
 		{"frontend_httpafterresponseaddheaderXHeade", frontend_httpafterresponseaddheaderXHeade},
 		{"frontend_httpafterresponseaddheaderXHeade_", frontend_httpafterresponseaddheaderXHeade_},
 		{"frontend_httpafterresponseaddheaderXHeade__", frontend_httpafterresponseaddheaderXHeade__},

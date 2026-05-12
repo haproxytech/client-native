@@ -110,6 +110,8 @@ backend test
   balance roundrobin
   persist rdp-cookie
   cookie test
+  filter-sequence request lua.my-filter,comp-req
+  filter-sequence response lua.my-filter,comp-res
   default-server addr 127.0.0.1
   default-server addr ::1
   default-server agent-check
@@ -2194,6 +2196,8 @@ frontend test
   bind :443 ktls off
   bind :443 tcp-ss 1
   bind-process all
+  filter-sequence request lua.my-filter,comp-req
+  filter-sequence response lua.my-filter,comp-res
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -3418,6 +3422,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 1},
 	{`  cpu-affinity per-core
 `, 1},
+	{`  filter-sequence request lua.my-filter,comp-req
+`, 2},
+	{`  filter-sequence response lua.my-filter,comp-res
+`, 2},
 	{`  cpu-set reset
 `, 1},
 	{`  cpu-set reset # some comment

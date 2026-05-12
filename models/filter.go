@@ -114,8 +114,8 @@ type Filter struct {
 
 	// type
 	// Required: true
-	// Enum: ["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace"]
-	// +kubebuilder:validation:Enum=bwlim-in;bwlim-out;cache;compression;fcgi-app;spoe;trace;
+	// Enum: ["bwlim-in","bwlim-out","cache","compression","comp-req","comp-res","fcgi-app","spoe","trace"]
+	// +kubebuilder:validation:Enum=bwlim-in;bwlim-out;cache;compression;comp-req;comp-res;fcgi-app;spoe;trace;
 	Type string `json:"type"`
 }
 
@@ -233,7 +233,7 @@ var filterTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["bwlim-in","bwlim-out","cache","compression","comp-req","comp-res","fcgi-app","spoe","trace"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -254,6 +254,12 @@ const (
 
 	// FilterTypeCompression captures enum value "compression"
 	FilterTypeCompression string = "compression"
+
+	// FilterTypeCompDashReq captures enum value "comp-req"
+	FilterTypeCompDashReq string = "comp-req"
+
+	// FilterTypeCompDashRes captures enum value "comp-res"
+	FilterTypeCompDashRes string = "comp-res"
 
 	// FilterTypeFCGIDashApp captures enum value "fcgi-app"
 	FilterTypeFCGIDashApp string = "fcgi-app"

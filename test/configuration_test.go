@@ -771,6 +771,10 @@ frontend test_2 from test_defaults
   stats auth admin2:AdMiN1234
   stats show-modules
   stats realm HAProxy\\ Statistics
+  filter comp-req
+  filter comp-res
+  filter-sequence request comp-req
+  filter-sequence response comp-res
 
 backend test # my comment
   mode http

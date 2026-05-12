@@ -248,6 +248,8 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_errorloc303501errorpage", backend_errorloc303501errorpage},
 		{"backend_externalcheckcommandbintrue", backend_externalcheckcommandbintrue},
 		{"backend_externalcheckpathusrbinbin", backend_externalcheckpathusrbinbin},
+		{"backend_filtersequencerequestluamyfilter", backend_filtersequencerequestluamyfilter},
+		{"backend_filtersequenceresponseluamyfilte", backend_filtersequenceresponseluamyfilte},
 		{"backend_forcepersistifaclname", backend_forcepersistifaclname},
 		{"backend_forcepersistunlessaclname", backend_forcepersistunlessaclname},
 		{"backend_hashtypeavalanche", backend_hashtypeavalanche},

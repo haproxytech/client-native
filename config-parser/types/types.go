@@ -435,6 +435,21 @@ type CPUAffinity struct {
 	Comment  string
 }
 
+//sections:frontend,backend
+//name:filter-sequence
+//is:multiple
+//no:parse
+//test:ok:filter-sequence request lua.my-filter,comp-req
+//test:ok:filter-sequence response lua.my-filter,comp-res
+//test:fail:filter-sequence
+//test:fail:filter-sequence request
+//test:fail:filter-sequence bogus filter
+type FilterSequence struct {
+	Direction string
+	Filters   []string
+	Comment   string
+}
+
 //sections:global
 //name:cpu-set
 //is:multiple

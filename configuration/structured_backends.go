@@ -176,6 +176,13 @@ func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error)
 	}
 	b.FilterList = filters
 
+	// filter sequences
+	filterSequences, err := ParseFilterSequences(BackendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	b.FilterSequenceList = filterSequences
+
 	// http after response rules
 	arules, err := ParseHTTPAfterRules(BackendParentName, name, p)
 	if err != nil {
@@ -304,6 +311,11 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 	}
 	for i, filter := range b.FilterList {
 		if err = p.Insert(parser.Backends, b.Name, "filter", SerializeFilter(*filter, a.Options), i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, fs := range b.FilterSequenceList {
+		if err = p.Insert(parser.Backends, b.Name, "filter-sequence", SerializeFilterSequence(*fs), i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
 	}

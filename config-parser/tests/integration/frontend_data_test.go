@@ -637,6 +637,14 @@ const frontend_bindprocess14 = `
 frontend test
   bind-process 1-4
 `
+const frontend_filtersequencerequestluamyfilter = `
+frontend test
+  filter-sequence request lua.my-filter,comp-req
+`
+const frontend_filtersequenceresponseluamyfilte = `
+frontend test
+  filter-sequence response lua.my-filter,comp-res
+`
 const frontend_emailalertfromadminexamplecom = `
 frontend test
   email-alert from admin@example.com

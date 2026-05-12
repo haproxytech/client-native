@@ -13,6 +13,8 @@ filter:
         - bwlim-out
         - cache
         - compression
+        - comp-req
+        - comp-res
         - fcgi-app
         - spoe
         - trace
@@ -161,3 +163,26 @@ filter:
     type: trace
     trace_name: name
     trace_rnd_parsing: true
+filter_sequence:
+  title: Filter Sequence
+  description: |
+    Specifies in which order filters declared on the proxy should be executed
+    for the request or response path. Corresponds to the HAProxy filter-sequence directive.
+  type: object
+  required:
+    - direction
+    - filters
+  properties:
+    direction:
+      type: string
+      enum: [request, response]
+      x-display-name: Direction
+    filters:
+      type: array
+      items:
+        type: string
+      x-display-name: Filters
+    metadata:
+      additionalProperties:
+        type: object
+  additionalProperties: false

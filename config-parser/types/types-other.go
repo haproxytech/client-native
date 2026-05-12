@@ -202,6 +202,8 @@ type Filter interface {
 //test:ok:filter opentracing config file
 //test:ok:filter fcgi-app my-application
 //test:ok:filter compression
+//test:ok:filter comp-req
+//test:ok:filter comp-res
 //test:ok:filter spoe config file
 //test:ok:filter spoe engine name config file
 //test:ok:filter trace name name random-parsing random-forwarding hexdump
