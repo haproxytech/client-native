@@ -23,8 +23,7 @@ acme:
         type: string
     bits:
       type: integer
-      description: Number of bits to generate an RSA certificate
-      minimum: 1024
+      description: Number of bits used when generating an RSA certificate. Ignored when keytype is ECDSA (curves is used instead).
       x-omitempty: true
       x-nullable: true
     challenge:
