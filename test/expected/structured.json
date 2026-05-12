@@ -1145,7 +1145,9 @@
                     "check-reuse-pool": "disabled",
                     "check-pool-conn-name": "foo",
                     "renegotiate": "enabled",
-                    "cc": "cubic"
+                    "cc": "cubic",
+                    "quic-cc-algo": "bbr",
+                    "quic_cc_algo_max_window": 1024
                 },
                 "webserv_noport": {
                     "check": "enabled",

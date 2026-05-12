@@ -281,6 +281,15 @@ func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["ProxyV2Options"+diffKey] = diffValue
 	}
+	if rec.QuicCcAlgo != obj.QuicCcAlgo {
+		diff["QuicCcAlgo"] = []interface{}{rec.QuicCcAlgo, obj.QuicCcAlgo}
+	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["QuicCcAlgoMaxWindow"+diffKey] = diffValue
+	}
 	if rec.Redir != obj.Redir {
 		diff["Redir"] = []interface{}{rec.Redir, obj.Redir}
 	}

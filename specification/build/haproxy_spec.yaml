@@ -980,6 +980,22 @@ definitions:
           type: string
         type: array
         x-omitempty: true
+      quic-cc-algo:
+        enum:
+          - cubic
+          - newreno
+          - bbr
+          - nocc
+        type: string
+      quic_cc_algo_max_window:
+        maximum: 4194304
+        minimum: 10
+        type: integer
+        x-default-unit: k
+        x-dependency:
+          quic-cc-algo: null
+        x-nullable: true
+        x-size: true
       redir:
         type: string
         x-display-name: Prefix

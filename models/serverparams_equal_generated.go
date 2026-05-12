@@ -90,6 +90,8 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		EqualPointerInt64(rec.PoolPurgeDelay, obj.PoolPurgeDelay, opts...) &&
 		rec.Proto == obj.Proto &&
 		EqualSliceString(rec.ProxyV2Options, obj.ProxyV2Options, opts...) &&
+		rec.QuicCcAlgo == obj.QuicCcAlgo &&
+		EqualPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow, opts...) &&
 		rec.Redir == obj.Redir &&
 		rec.Renegotiate == obj.Renegotiate &&
 		rec.ResolveNet == obj.ResolveNet &&

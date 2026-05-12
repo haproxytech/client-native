@@ -339,6 +339,18 @@ type ServerParams struct {
 	// proxy v2 options
 	ProxyV2Options []string `json:"proxy-v2-options,omitempty"`
 
+	// quic cc algo
+	// Enum: ["cubic","newreno","bbr","nocc"]
+	// +kubebuilder:validation:Enum=cubic;newreno;bbr;nocc;
+	QuicCcAlgo string `json:"quic-cc-algo,omitempty"`
+
+	// quic cc algo max window
+	// Maximum: 4.194304e+06
+	// Minimum: 10
+	// +kubebuilder:validation:Maximum=4.194304e+06
+	// +kubebuilder:validation:Minimum=10
+	QuicCcAlgoMaxWindow *int64 `json:"quic_cc_algo_max_window,omitempty"`
+
 	// redir
 	Redir string `json:"redir,omitempty"`
 
@@ -722,6 +734,14 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateProxyV2Options(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicCcAlgo(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicCcAlgoMaxWindow(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2290,6 +2310,70 @@ func (m *ServerParams) validateProxyV2Options(formats strfmt.Registry) error {
 			return err
 		}
 
+	}
+
+	return nil
+}
+
+var serverParamsTypeQuicCcAlgoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["cubic","newreno","bbr","nocc"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeQuicCcAlgoPropEnum = append(serverParamsTypeQuicCcAlgoPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsQuicCcAlgoCubic captures enum value "cubic"
+	ServerParamsQuicCcAlgoCubic string = "cubic"
+
+	// ServerParamsQuicCcAlgoNewreno captures enum value "newreno"
+	ServerParamsQuicCcAlgoNewreno string = "newreno"
+
+	// ServerParamsQuicCcAlgoBbr captures enum value "bbr"
+	ServerParamsQuicCcAlgoBbr string = "bbr"
+
+	// ServerParamsQuicCcAlgoNocc captures enum value "nocc"
+	ServerParamsQuicCcAlgoNocc string = "nocc"
+)
+
+// prop value enum
+func (m *ServerParams) validateQuicCcAlgoEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeQuicCcAlgoPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateQuicCcAlgo(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicCcAlgo) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateQuicCcAlgoEnum("quic-cc-algo", "body", m.QuicCcAlgo); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateQuicCcAlgoMaxWindow(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicCcAlgoMaxWindow) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("quic_cc_algo_max_window", "body", *m.QuicCcAlgoMaxWindow, 10, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("quic_cc_algo_max_window", "body", *m.QuicCcAlgoMaxWindow, 4.194304e+06, false); err != nil {
+		return err
 	}
 
 	return nil
