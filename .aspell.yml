@@ -89,6 +89,8 @@ allowed:
   - gptstr
   - hapee
   - haproxy
+  - heredoc
+  - heredocs
   - healthcheck
   - healthz
   - hostname
@@ -173,6 +175,7 @@ allowed:
   - subnet
   - subresource
   - subresources
+  - subtest
   - sudo
   - symlinks
   - syslog

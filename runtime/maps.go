@@ -230,7 +230,7 @@ func (s *SingleRuntime) AddMapEntryVersioned(version, name, key, value string) e
 func (s *SingleRuntime) AddMapPayload(name, payload string) error {
 	prefix := "<<\n"
 	if len(payload) < len(prefix) || payload[0:len(prefix)] != prefix {
-		payload = "<<\n" + payload + "\n"
+		payload = "<<\n" + terminateHeredocPayload(payload) + "\n"
 	}
 	cmd := fmt.Sprintf("add map %s %s", name, payload)
 	if err := s.Execute(cmd); err != nil {
@@ -259,7 +259,7 @@ func (s *SingleRuntime) PrepareMap(name string) (version string, err error) {
 func (s *SingleRuntime) AddMapPayloadVersioned(version, name, payload string) error {
 	prefix := "<<\n"
 	if len(payload) < len(prefix) || payload[0:len(prefix)] != prefix {
-		payload = "<<\n" + payload + "\n"
+		payload = "<<\n" + terminateHeredocPayload(payload) + "\n"
 	}
 	cmd := fmt.Sprintf("add map @%s %s %s", version, name, payload)
 	if err := s.Execute(cmd); err != nil {
