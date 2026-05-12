@@ -82,6 +82,9 @@ func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
+	if rec.Profile != obj.Profile {
+		diff["Profile"] = []interface{}{rec.Profile, obj.Profile}
+	}
 	if rec.ReuseKey != obj.ReuseKey {
 		diff["ReuseKey"] = []interface{}{rec.ReuseKey, obj.ReuseKey}
 	}

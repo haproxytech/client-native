@@ -1045,6 +1045,7 @@ acme test
   dns-timeout 10m
   keytype ECDSA
   map acme@t
+  profile shortlived
   reuse-key on
 
 crt-store cert-bunker1

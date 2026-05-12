@@ -101,6 +101,12 @@ type AcmeProvider struct {
 	// Required: true
 	Name string `json:"name"`
 
+	// Request a specific certificate profile from the CA by including a 'profile'
+	// field in the newOrder request (draft-ietf-acme-profiles). Profile names
+	// are CA-specific short identifiers (e.g. 'classic', 'shortlived').
+	//
+	Profile string `json:"profile,omitempty"`
+
 	// Try to reuse the private key instead of generating a new one.
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;

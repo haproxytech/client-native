@@ -3231,6 +3231,7 @@
             "dns_timeout": 600000,
             "keytype": "ECDSA",
             "map": "acme@t",
+            "profile": "shortlived",
             "reuse_key": "enabled"
         }
     },

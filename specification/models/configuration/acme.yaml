@@ -76,6 +76,12 @@ acme:
     map:
       type: string
       description: The map which will be used to store the ACME token (key) and thumbprint
+    profile:
+      type: string
+      description: |
+        Request a specific certificate profile from the CA by including a 'profile'
+        field in the newOrder request (draft-ietf-acme-profiles). Profile names
+        are CA-specific short identifiers (e.g. 'classic', 'shortlived').
     reuse_key:
       type: string
       enum: [enabled, disabled]

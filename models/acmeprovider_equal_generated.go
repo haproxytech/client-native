@@ -39,6 +39,7 @@ func (rec AcmeProvider) Equal(obj AcmeProvider, opts ...eqdiff.GoMethodGenOption
 		rec.Map == obj.Map &&
 		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
+		rec.Profile == obj.Profile &&
 		rec.ReuseKey == obj.ReuseKey
 }
 
