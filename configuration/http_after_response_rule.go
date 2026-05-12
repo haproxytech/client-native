@@ -501,10 +501,11 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 		}, nil
 	case *actions.DoLog:
 		return &models.HTTPAfterResponseRule{
-			Type:     "do-log",
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
-			Metadata: misc.ParseMetadata(v.Comment),
+			Type:       "do-log",
+			LogProfile: v.Profile,
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+			Metadata:   misc.ParseMetadata(v.Comment),
 		}, nil
 	}
 	return nil, nil //nolint:nilnil
@@ -709,6 +710,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 		}
 	case "do-log":
 		rule = &actions.DoLog{
+			Profile:  f.LogProfile,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,

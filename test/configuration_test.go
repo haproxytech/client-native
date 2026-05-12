@@ -482,7 +482,7 @@ frontend test
   acl waf_wafTest_drop var(txn.wafTest.drop),bool
   monitor-uri /healthz
   monitor fail if site_dead
-  filter trace name BEFORE-HTTP-COMP random-parsing hexdump
+  filter trace name BEFORE-HTTP-COMP random-parsing max-fwd 100 hexdump
   filter compression
   filter trace name AFTER-HTTP-COMP random-forwarding
   filter fcgi-app my-app
@@ -529,6 +529,9 @@ frontend test
   http-request set-timeout server 20
   http-request set-timeout tunnel 20
   http-request set-timeout client 20
+  http-request set-timeout connect 10
+  http-request set-timeout queue 15
+  http-request set-timeout tarpit 30
   http-request set-bandwidth-limit my-limit limit 1m period 10s
   http-request set-bandwidth-limit my-limit-reverse period 20s limit 2m
   http-request set-bandwidth-limit my-limit-cond limit 3m if FALSE
@@ -545,6 +548,7 @@ frontend test
   http-request set-retries var(txn.retries) if TRUE
   http-request do-log
   http-request do-log if FALSE
+  http-request do-log profile my-prof if TRUE
   http-request pause 20s
   http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 } # delay according to conn rate
   http-response allow if src 192.168.0.0/16

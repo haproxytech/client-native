@@ -67,6 +67,9 @@ type TCPResponseRule struct {
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
+	// log profile
+	LogProfile string `json:"log_profile,omitempty"`
+
 	// lua action
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`

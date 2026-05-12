@@ -34,6 +34,7 @@ func (rec HTTPAfterResponseRule) Equal(obj HTTPAfterResponseRule, opts ...eqdiff
 		rec.HdrMethod == obj.HdrMethod &&
 		rec.HdrName == obj.HdrName &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.MapFile == obj.MapFile &&
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&

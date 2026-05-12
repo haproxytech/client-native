@@ -127,6 +127,9 @@ type HTTPRequestRule struct {
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
+	// log profile
+	LogProfile string `json:"log_profile,omitempty"`
+
 	// lua action
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -276,8 +279,8 @@ type HTTPRequestRule struct {
 	Timeout string `json:"timeout,omitempty"`
 
 	// timeout type
-	// Enum: ["server","tunnel","client"]
-	// +kubebuilder:validation:Enum=server;tunnel;client;
+	// Enum: ["client","connect","queue","server","tarpit","tunnel"]
+	// +kubebuilder:validation:Enum=client;connect;queue;server;tarpit;tunnel;
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -1175,7 +1178,7 @@ var httpRequestRuleTypeTimeoutTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["server","tunnel","client"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["client","connect","queue","server","tarpit","tunnel"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1185,14 +1188,23 @@ func init() {
 
 const (
 
+	// HTTPRequestRuleTimeoutTypeClient captures enum value "client"
+	HTTPRequestRuleTimeoutTypeClient string = "client"
+
+	// HTTPRequestRuleTimeoutTypeConnect captures enum value "connect"
+	HTTPRequestRuleTimeoutTypeConnect string = "connect"
+
+	// HTTPRequestRuleTimeoutTypeQueue captures enum value "queue"
+	HTTPRequestRuleTimeoutTypeQueue string = "queue"
+
 	// HTTPRequestRuleTimeoutTypeServer captures enum value "server"
 	HTTPRequestRuleTimeoutTypeServer string = "server"
 
+	// HTTPRequestRuleTimeoutTypeTarpit captures enum value "tarpit"
+	HTTPRequestRuleTimeoutTypeTarpit string = "tarpit"
+
 	// HTTPRequestRuleTimeoutTypeTunnel captures enum value "tunnel"
 	HTTPRequestRuleTimeoutTypeTunnel string = "tunnel"
-
-	// HTTPRequestRuleTimeoutTypeClient captures enum value "client"
-	HTTPRequestRuleTimeoutTypeClient string = "client"
 )
 
 // prop value enum

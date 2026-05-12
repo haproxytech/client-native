@@ -510,11 +510,12 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 			}, nil
 		case *actions.DoLog:
 			return &models.TCPResponseRule{
-				Type:     models.TCPResponseRuleTypeContent,
-				Action:   models.TCPResponseRuleActionDoDashLog,
-				Cond:     a.Cond,
-				CondTest: a.CondTest,
-				Metadata: misc.ParseMetadata(v.Comment),
+				Type:       models.TCPResponseRuleTypeContent,
+				Action:     models.TCPResponseRuleActionDoDashLog,
+				LogProfile: a.Profile,
+				Cond:       a.Cond,
+				CondTest:   a.CondTest,
+				Metadata:   misc.ParseMetadata(v.Comment),
 			}, nil
 		}
 	}
@@ -763,6 +764,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 		case models.TCPResponseRuleActionDoDashLog:
 			return &tcp_types.Content{
 				Action: &actions.DoLog{
+					Profile:  t.LogProfile,
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},

@@ -98,6 +98,9 @@ type Filter struct {
 	// trace hexdump
 	TraceHexdump bool `json:"trace_hexdump,omitempty"`
 
+	// trace max fwd
+	TraceMaxFwd *int64 `json:"trace_max_fwd,omitempty"`
+
 	// trace name
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`

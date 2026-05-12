@@ -1692,6 +1692,7 @@
                 {
                     "rule-files": null,
                     "trace_hexdump": true,
+                    "trace_max_fwd": 100,
                     "trace_name": "BEFORE-HTTP-COMP",
                     "trace_rnd_parsing": true,
                     "type": "trace"
@@ -2109,6 +2110,21 @@
                     "type": "set-timeout"
                 },
                 {
+                    "timeout": "10",
+                    "timeout_type": "connect",
+                    "type": "set-timeout"
+                },
+                {
+                    "timeout": "15",
+                    "timeout_type": "queue",
+                    "type": "set-timeout"
+                },
+                {
+                    "timeout": "30",
+                    "timeout_type": "tarpit",
+                    "type": "set-timeout"
+                },
+                {
                     "bandwidth_limit_limit": "1m",
                     "bandwidth_limit_name": "my-limit",
                     "bandwidth_limit_period": "10s",
@@ -2204,6 +2220,12 @@
                     "type": "do-log",
                     "cond": "if",
                     "cond_test": "FALSE"
+                },
+                {
+                    "type": "do-log",
+                    "log_profile": "my-prof",
+                    "cond": "if",
+                    "cond_test": "TRUE"
                 },
                 {
                     "type": "pause",

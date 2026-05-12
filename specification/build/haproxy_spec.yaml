@@ -5241,6 +5241,12 @@ definitions:
           type:
             required: true
             value: set-log-level
+      log_profile:
+        type: string
+        x-dependency:
+          type:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -5569,9 +5575,12 @@ definitions:
             value: set-timeout
       timeout_type:
         enum:
-          - server
-          - tunnel
           - client
+          - connect
+          - queue
+          - server
+          - tarpit
+          - tunnel
         type: string
         x-dependency:
           type:
@@ -5914,6 +5923,12 @@ definitions:
           type:
             required: true
             value: set-log-level
+      log_profile:
+        type: string
+        x-dependency:
+          type:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -6164,9 +6179,12 @@ definitions:
             value: set-timeout
       timeout_type:
         enum:
-          - server
-          - tunnel
           - client
+          - connect
+          - queue
+          - server
+          - tarpit
+          - tunnel
         type: string
         x-dependency:
           type:
@@ -6427,6 +6445,12 @@ definitions:
           type:
             required: true
             value: set-log-level
+      log_profile:
+        type: string
+        x-dependency:
+          type:
+            value: do-log
+        x-display-name: Log Profile
       map_file:
         pattern: ^[^\s]+$
         type: string
@@ -7143,6 +7167,12 @@ definitions:
             value: set-log-level
           type:
             value: content
+      log_profile:
+        type: string
+        x-dependency:
+          action:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -7567,6 +7597,12 @@ definitions:
             value: set-log-level
           type:
             value: content
+      log_profile:
+        type: string
+        x-dependency:
+          action:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -8260,6 +8296,13 @@ definitions:
         x-dependency:
           type:
             value: trace
+      trace_max_fwd:
+        type: integer
+        x-dependency:
+          type:
+            value: trace
+        x-display-name: Trace Max Forward
+        x-nullable: true
       trace_name:
         pattern: ^[^\s]+$
         type: string

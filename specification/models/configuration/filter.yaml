@@ -40,6 +40,13 @@ filter:
       x-dependency:
         type:
           value: trace
+    trace_max_fwd:
+      type: integer
+      x-nullable: true
+      x-display-name: Trace Max Forward
+      x-dependency:
+        type:
+          value: trace
     spoe_engine:
       type: string
       pattern: '^[^\s]+$'

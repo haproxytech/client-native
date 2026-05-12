@@ -56,6 +56,9 @@ func (rec TCPRequestRule) Diff(obj TCPRequestRule, opts ...eqdiff.GoMethodGenOpt
 	if rec.LogLevel != obj.LogLevel {
 		diff["LogLevel"] = []interface{}{rec.LogLevel, obj.LogLevel}
 	}
+	if rec.LogProfile != obj.LogProfile {
+		diff["LogProfile"] = []interface{}{rec.LogProfile, obj.LogProfile}
+	}
 	if rec.LuaAction != obj.LuaAction {
 		diff["LuaAction"] = []interface{}{rec.LuaAction, obj.LuaAction}
 	}

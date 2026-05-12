@@ -109,6 +109,9 @@ type HTTPResponseRule struct {
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
+	// log profile
+	LogProfile string `json:"log_profile,omitempty"`
+
 	// lua action
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -228,8 +231,8 @@ type HTTPResponseRule struct {
 	Timeout string `json:"timeout,omitempty"`
 
 	// timeout type
-	// Enum: ["server","tunnel","client"]
-	// +kubebuilder:validation:Enum=server;tunnel;client;
+	// Enum: ["client","connect","queue","server","tarpit","tunnel"]
+	// +kubebuilder:validation:Enum=client;connect;queue;server;tarpit;tunnel;
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -935,7 +938,7 @@ var httpResponseRuleTypeTimeoutTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["server","tunnel","client"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["client","connect","queue","server","tarpit","tunnel"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -945,14 +948,23 @@ func init() {
 
 const (
 
+	// HTTPResponseRuleTimeoutTypeClient captures enum value "client"
+	HTTPResponseRuleTimeoutTypeClient string = "client"
+
+	// HTTPResponseRuleTimeoutTypeConnect captures enum value "connect"
+	HTTPResponseRuleTimeoutTypeConnect string = "connect"
+
+	// HTTPResponseRuleTimeoutTypeQueue captures enum value "queue"
+	HTTPResponseRuleTimeoutTypeQueue string = "queue"
+
 	// HTTPResponseRuleTimeoutTypeServer captures enum value "server"
 	HTTPResponseRuleTimeoutTypeServer string = "server"
 
+	// HTTPResponseRuleTimeoutTypeTarpit captures enum value "tarpit"
+	HTTPResponseRuleTimeoutTypeTarpit string = "tarpit"
+
 	// HTTPResponseRuleTimeoutTypeTunnel captures enum value "tunnel"
 	HTTPResponseRuleTimeoutTypeTunnel string = "tunnel"
-
-	// HTTPResponseRuleTimeoutTypeClient captures enum value "client"
-	HTTPResponseRuleTimeoutTypeClient string = "client"
 )
 
 // prop value enum

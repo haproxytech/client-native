@@ -30,6 +30,7 @@ func (rec TCPResponseRule) Equal(obj TCPResponseRule, opts ...eqdiff.GoMethodGen
 		rec.CondTest == obj.CondTest &&
 		rec.Expr == obj.Expr &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MarkValue == obj.MarkValue &&

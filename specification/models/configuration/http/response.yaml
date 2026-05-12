@@ -107,7 +107,7 @@ http_response_rule:
           required: true
     timeout_type:
       type: string
-      enum: [server, tunnel, client]
+      enum: [client, connect, queue, server, tarpit, tunnel]
       x-dependency:
         type:
           value: set-timeout
@@ -153,6 +153,12 @@ http_response_rule:
         type:
           value: set-log-level
           required: true
+    log_profile:
+      type: string
+      x-display-name: Log Profile
+      x-dependency:
+        type:
+          value: do-log
     rst_ttl:
       type: integer
       x-display-name: RST TTL

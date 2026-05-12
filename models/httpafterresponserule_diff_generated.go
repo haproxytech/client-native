@@ -62,6 +62,9 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 	if rec.LogLevel != obj.LogLevel {
 		diff["LogLevel"] = []interface{}{rec.LogLevel, obj.LogLevel}
 	}
+	if rec.LogProfile != obj.LogProfile {
+		diff["LogProfile"] = []interface{}{rec.LogProfile, obj.LogProfile}
+	}
 	if rec.MapFile != obj.MapFile {
 		diff["MapFile"] = []interface{}{rec.MapFile, obj.MapFile}
 	}

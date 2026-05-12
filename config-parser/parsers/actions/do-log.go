@@ -19,7 +19,6 @@ package actions
 
 import (
 	stderrors "errors"
-	"fmt"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -27,6 +26,7 @@ import (
 )
 
 type DoLog struct {
+	Profile  string
 	Cond     string
 	CondTest string
 	Comment  string
@@ -37,24 +37,32 @@ func (f *DoLog) Parse(parts []string, parserType types.ParserType, comment strin
 		f.Comment = comment
 	}
 	var command []string
-	var minLen, requiredLen int
+	var minLen int
 	switch parserType {
 	case types.HTTP, types.QUIC:
 		command = parts[1:]
 		minLen = 2
-		requiredLen = 4
 	case types.TCP:
 		command = parts[2:]
 		minLen = 3
-		requiredLen = 5
 	}
 	if len(parts) == minLen {
 		return nil
 	}
-	if len(parts) < requiredLen {
+	// command[0] is "do-log". The remaining tokens are an optional
+	// "profile <name>" plus an optional "if|unless <cond>".
+	rest := command[1:]
+	if len(rest) >= 2 && rest[0] == "profile" {
+		f.Profile = rest[1]
+		rest = rest[2:]
+	}
+	if len(rest) == 0 {
+		return nil
+	}
+	if len(rest) < 2 {
 		return stderrors.New("not enough params")
 	}
-	_, condition := common.SplitRequest(command)
+	_, condition := common.SplitRequest(rest)
 	if len(condition) > 1 {
 		f.Cond = condition[0]
 		f.CondTest = strings.Join(condition[1:], " ")
@@ -63,10 +71,19 @@ func (f *DoLog) Parse(parts []string, parserType types.ParserType, comment strin
 }
 
 func (f *DoLog) String() string {
-	if f.Cond != "" {
-		return fmt.Sprintf("do-log %s %s", f.Cond, f.CondTest)
+	var b strings.Builder
+	b.WriteString("do-log")
+	if f.Profile != "" {
+		b.WriteString(" profile ")
+		b.WriteString(f.Profile)
 	}
-	return "do-log"
+	if f.Cond != "" {
+		b.WriteString(" ")
+		b.WriteString(f.Cond)
+		b.WriteString(" ")
+		b.WriteString(f.CondTest)
+	}
+	return b.String()
 }
 
 func (f *DoLog) GetComment() string {

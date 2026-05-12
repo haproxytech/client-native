@@ -651,10 +651,11 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 		}
 	case *actions.DoLog:
 		return &models.HTTPResponseRule{
-			Type:     models.HTTPResponseRuleTypeDoDashLog,
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
-			Metadata: misc.ParseMetadata(v.Comment),
+			Type:       models.HTTPResponseRuleTypeDoDashLog,
+			LogProfile: v.Profile,
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+			Metadata:   misc.ParseMetadata(v.Comment),
 		}
 	}
 	return nil
@@ -1039,6 +1040,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule, opt *options.Configura
 		}
 	case "do-log":
 		rule = &actions.DoLog{
+			Profile:  f.LogProfile,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,

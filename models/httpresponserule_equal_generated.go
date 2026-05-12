@@ -40,6 +40,7 @@ func (rec HTTPResponseRule) Equal(obj HTTPResponseRule, opts ...eqdiff.GoMethodG
 		rec.HdrMethod == obj.HdrMethod &&
 		rec.HdrName == obj.HdrName &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MapFile == obj.MapFile &&

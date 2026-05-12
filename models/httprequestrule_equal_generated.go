@@ -44,6 +44,7 @@ func (rec HTTPRequestRule) Equal(obj HTTPRequestRule, opts ...eqdiff.GoMethodGen
 		rec.HintFormat == obj.HintFormat &&
 		rec.HintName == obj.HintName &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MapFile == obj.MapFile &&

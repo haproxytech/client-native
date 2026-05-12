@@ -89,6 +89,12 @@ http_after_response_rule:
         type:
           value: set-log-level
           required: true
+    log_profile:
+      type: string
+      x-display-name: Log Profile
+      x-dependency:
+        type:
+          value: do-log
     var_name:
       type: string
       pattern: '^[^\s]+$'

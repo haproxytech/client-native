@@ -209,6 +209,8 @@ type Filter interface {
 //test:ok:filter trace random-forwarding hexdump
 //test:ok:filter trace hexdump
 //test:ok:filter trace
+//test:ok:filter trace name name max-fwd 100
+//test:ok:filter trace name name random-forwarding max-fwd 100 hexdump
 //test:fail:filter bwlim-in
 //test:fail:filter bwlim-in name
 //test:fail:filter bwlim-in name default-limit

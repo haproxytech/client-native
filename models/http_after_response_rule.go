@@ -83,6 +83,9 @@ type HTTPAfterResponseRule struct {
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
+	// log profile
+	LogProfile string `json:"log_profile,omitempty"`
+
 	// map file
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`

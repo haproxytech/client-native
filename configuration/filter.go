@@ -303,6 +303,7 @@ func ParseFilter(f types.Filter) *models.Filter {
 			TraceHexdump:       v.Hexdump,
 			TraceRndForwarding: v.RandomForwarding,
 			TraceRndParsing:    v.RandomParsing,
+			TraceMaxFwd:        v.MaxFwd,
 			Metadata:           misc.ParseMetadata(v.Comment),
 		}
 	case *filters.Compression:
@@ -340,6 +341,7 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 			Hexdump:          f.TraceHexdump,
 			RandomForwarding: f.TraceRndForwarding,
 			RandomParsing:    f.TraceRndParsing,
+			MaxFwd:           f.TraceMaxFwd,
 			Comment:          comment,
 		}
 	case "compression":
