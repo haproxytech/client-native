@@ -47,6 +47,9 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 	if rec.CondTest != obj.CondTest {
 		diff["CondTest"] = []interface{}{rec.CondTest, obj.CondTest}
 	}
+	if rec.HdrExpr != obj.HdrExpr {
+		diff["HdrExpr"] = []interface{}{rec.HdrExpr, obj.HdrExpr}
+	}
 	if rec.HdrFormat != obj.HdrFormat {
 		diff["HdrFormat"] = []interface{}{rec.HdrFormat, obj.HdrFormat}
 	}
@@ -58,6 +61,9 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 	}
 	if rec.HdrName != obj.HdrName {
 		diff["HdrName"] = []interface{}{rec.HdrName, obj.HdrName}
+	}
+	if rec.HdrPrefix != obj.HdrPrefix {
+		diff["HdrPrefix"] = []interface{}{rec.HdrPrefix, obj.HdrPrefix}
 	}
 	if rec.LogLevel != obj.LogLevel {
 		diff["LogLevel"] = []interface{}{rec.LogLevel, obj.LogLevel}

@@ -2049,6 +2049,38 @@ const backend_httprequestaddaclmaplstsrc = `
 backend test
   http-request add-acl(map.lst) [src]
 `
+const backend_httprequestaddheadersbinvartxnol = `
+backend test
+  http-request add-headers-bin var(txn.oldheaders)
+`
+const backend_httprequestaddheadersbinvartxnol_ = `
+backend test
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+`
+const backend_httprequestaddheadersbinvartxnol__ = `
+backend test
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+`
+const backend_httprequestdelheadersbinvartxnol = `
+backend test
+  http-request del-headers-bin var(txn.oldheaders)
+`
+const backend_httprequestdelheadersbinvartxnol_ = `
+backend test
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+`
+const backend_httprequestdelheadersbinvartxnol__ = `
+backend test
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+`
+const backend_httprequestsetheadersbinvartxnol = `
+backend test
+  http-request set-headers-bin var(txn.oldheaders)
+`
+const backend_httprequestsetheadersbinvartxnol_ = `
+backend test
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
+`
 const backend_httprequestaddheaderXvaluevalue = `
 backend test
   http-request add-header X-value value
@@ -2845,6 +2877,30 @@ const backend_httpresponseaddheaderXvaluevalue = `
 backend test
   http-response add-header X-value value
 `
+const backend_httpresponseaddheadersbinvartxno = `
+backend test
+  http-response add-headers-bin var(txn.oldheaders)
+`
+const backend_httpresponseaddheadersbinvartxno_ = `
+backend test
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+`
+const backend_httpresponsedelheadersbinvartxno = `
+backend test
+  http-response del-headers-bin var(txn.oldheaders)
+`
+const backend_httpresponsedelheadersbinvartxno_ = `
+backend test
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+`
+const backend_httpresponsesetheadersbinvartxno = `
+backend test
+  http-response set-headers-bin var(txn.oldheaders)
+`
+const backend_httpresponsesetheadersbinvartxno_ = `
+backend test
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
+`
 const backend_httpresponsedelaclmaplstsrc = `
 backend test
   http-response del-acl(map.lst) [src]
@@ -3332,6 +3388,30 @@ backend test
 const backend_httpafterresponsedelheaderXValue___ = `
 backend test
   http-after-response del-header X-Value -m GET unless acl
+`
+const backend_httpafterresponseaddheadersbinva = `
+backend test
+  http-after-response add-headers-bin var(txn.oldheaders)
+`
+const backend_httpafterresponseaddheadersbinva_ = `
+backend test
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+`
+const backend_httpafterresponsedelheadersbinva = `
+backend test
+  http-after-response del-headers-bin var(txn.oldheaders)
+`
+const backend_httpafterresponsedelheadersbinva_ = `
+backend test
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+`
+const backend_httpafterresponsesetheadersbinva = `
+backend test
+  http-after-response set-headers-bin var(txn.oldheaders)
+`
+const backend_httpafterresponsesetheadersbinva_ = `
+backend test
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
 `
 const backend_httpafterresponsereplaceheaderSe = `
 backend test

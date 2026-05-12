@@ -66,6 +66,9 @@ type HTTPAfterResponseRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// hdr expr
+	HdrExpr string `json:"hdr_expr,omitempty"`
+
 	// hdr format
 	HdrFormat string `json:"hdr_format,omitempty"`
 
@@ -77,6 +80,9 @@ type HTTPAfterResponseRule struct {
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
+
+	// hdr prefix
+	HdrPrefix string `json:"hdr_prefix,omitempty"`
 
 	// log level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
@@ -134,8 +140,8 @@ type HTTPAfterResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: ["add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var","do-log"]
-	// +kubebuilder:validation:Enum=add-header;allow;capture;del-acl;del-header;del-map;replace-header;replace-value;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;set-header;set-log-level;set-map;set-status;set-var;set-var-fmt;strict-mode;unset-var;do-log;
+	// Enum: ["add-header","add-headers-bin","allow","capture","del-acl","del-header","del-headers-bin","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-headers-bin","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var","do-log"]
+	// +kubebuilder:validation:Enum=add-header;add-headers-bin;allow;capture;del-acl;del-header;del-headers-bin;del-map;replace-header;replace-value;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;set-header;set-headers-bin;set-log-level;set-map;set-status;set-var;set-var-fmt;strict-mode;unset-var;do-log;
 	Type string `json:"type"`
 
 	// var expr
@@ -456,7 +462,7 @@ var httpAfterResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var","do-log"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-header","add-headers-bin","allow","capture","del-acl","del-header","del-headers-bin","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-headers-bin","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var","do-log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -469,6 +475,9 @@ const (
 	// HTTPAfterResponseRuleTypeAddDashHeader captures enum value "add-header"
 	HTTPAfterResponseRuleTypeAddDashHeader string = "add-header"
 
+	// HTTPAfterResponseRuleTypeAddDashHeadersDashBin captures enum value "add-headers-bin"
+	HTTPAfterResponseRuleTypeAddDashHeadersDashBin string = "add-headers-bin"
+
 	// HTTPAfterResponseRuleTypeAllow captures enum value "allow"
 	HTTPAfterResponseRuleTypeAllow string = "allow"
 
@@ -480,6 +489,9 @@ const (
 
 	// HTTPAfterResponseRuleTypeDelDashHeader captures enum value "del-header"
 	HTTPAfterResponseRuleTypeDelDashHeader string = "del-header"
+
+	// HTTPAfterResponseRuleTypeDelDashHeadersDashBin captures enum value "del-headers-bin"
+	HTTPAfterResponseRuleTypeDelDashHeadersDashBin string = "del-headers-bin"
 
 	// HTTPAfterResponseRuleTypeDelDashMap captures enum value "del-map"
 	HTTPAfterResponseRuleTypeDelDashMap string = "del-map"
@@ -510,6 +522,9 @@ const (
 
 	// HTTPAfterResponseRuleTypeSetDashHeader captures enum value "set-header"
 	HTTPAfterResponseRuleTypeSetDashHeader string = "set-header"
+
+	// HTTPAfterResponseRuleTypeSetDashHeadersDashBin captures enum value "set-headers-bin"
+	HTTPAfterResponseRuleTypeSetDashHeadersDashBin string = "set-headers-bin"
 
 	// HTTPAfterResponseRuleTypeSetDashLogDashLevel captures enum value "set-log-level"
 	HTTPAfterResponseRuleTypeSetDashLogDashLevel string = "set-log-level"

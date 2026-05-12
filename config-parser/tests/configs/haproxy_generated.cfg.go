@@ -490,6 +490,14 @@ backend test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request add-acl(map.lst) [src]
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+  http-request del-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+  http-request set-headers-bin var(txn.oldheaders)
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
@@ -689,6 +697,12 @@ backend test
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response add-acl(map.lst) [src]
   http-response add-header X-value value
+  http-response add-headers-bin var(txn.oldheaders)
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+  http-response set-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
   http-response del-acl(map.lst) [src]
   http-response allow
   http-response cache-store cache-name
@@ -811,6 +825,12 @@ backend test
   http-after-response del-header X-Value -m GET
   http-after-response del-header X-Value -m GET if acl
   http-after-response del-header X-Value -m GET unless acl
+  http-after-response add-headers-bin var(txn.oldheaders)
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders)
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders)
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2 if acl
   http-after-response replace-value Cache-control ^public$ private
@@ -1389,6 +1409,14 @@ defaults test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request add-acl(map.lst) [src]
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+  http-request del-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+  http-request set-headers-bin var(txn.oldheaders)
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
@@ -1588,6 +1616,12 @@ defaults test
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response add-acl(map.lst) [src]
   http-response add-header X-value value
+  http-response add-headers-bin var(txn.oldheaders)
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+  http-response set-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
   http-response del-acl(map.lst) [src]
   http-response allow
   http-response cache-store cache-name
@@ -1710,6 +1744,12 @@ defaults test
   http-after-response del-header X-Value -m GET
   http-after-response del-header X-Value -m GET if acl
   http-after-response del-header X-Value -m GET unless acl
+  http-after-response add-headers-bin var(txn.oldheaders)
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders)
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders)
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2 if acl
   http-after-response replace-value Cache-control ^public$ private
@@ -2248,6 +2288,14 @@ frontend test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request add-acl(map.lst) [src]
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+  http-request del-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+  http-request set-headers-bin var(txn.oldheaders)
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
@@ -2449,6 +2497,12 @@ frontend test
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response add-acl(map.lst) [src]
   http-response add-header X-value value
+  http-response add-headers-bin var(txn.oldheaders)
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+  http-response set-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
   http-response del-acl(map.lst) [src]
   http-response allow
   http-response cache-store cache-name
@@ -2572,6 +2626,12 @@ frontend test
   http-after-response del-header X-Value -m GET
   http-after-response del-header X-Value -m GET if acl
   http-after-response del-header X-Value -m GET unless acl
+  http-after-response add-headers-bin var(txn.oldheaders)
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders)
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders)
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2 if acl
   http-after-response replace-value Cache-control ^public$ private
@@ -4392,6 +4452,22 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-request add-acl(map.lst) [src]
 `, 3},
+	{`  http-request add-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-request add-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
+	{`  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+`, 3},
+	{`  http-request del-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-request del-headers-bin var(txn.oldheaders) -m beg
+`, 3},
+	{`  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+`, 3},
+	{`  http-request set-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-request set-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
 	{`  http-request add-header X-value value
 `, 3},
 	{`  http-request cache-use cache-name
@@ -4768,6 +4844,18 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-response add-header X-value value
 `, 3},
+	{`  http-response add-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-response add-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
+	{`  http-response del-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-response del-headers-bin var(txn.oldheaders) -m beg
+`, 3},
+	{`  http-response set-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-response set-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
 	{`  http-response del-acl(map.lst) [src]
 `, 3},
 	{`  http-response allow
@@ -4993,6 +5081,18 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  http-after-response del-header X-Value -m GET if acl
 `, 3},
 	{`  http-after-response del-header X-Value -m GET unless acl
+`, 3},
+	{`  http-after-response add-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
+	{`  http-after-response del-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+`, 3},
+	{`  http-after-response set-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
 `, 3},
 	{`  http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
 `, 3},

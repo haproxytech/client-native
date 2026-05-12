@@ -282,6 +282,17 @@ type Action interface {
 //test:fail:http-request set-map(map.lst) %[src]
 //test:ok:http-request add-acl(map.lst) [src]
 //test:fail:http-request add-acl(map.lst)
+//test:ok:http-request add-headers-bin var(txn.oldheaders)
+//test:ok:http-request add-headers-bin var(txn.oldheaders) prefix x-
+//test:ok:http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+//test:fail:http-request add-headers-bin
+//test:ok:http-request del-headers-bin var(txn.oldheaders)
+//test:ok:http-request del-headers-bin var(txn.oldheaders) -m beg
+//test:ok:http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+//test:fail:http-request del-headers-bin
+//test:ok:http-request set-headers-bin var(txn.oldheaders)
+//test:ok:http-request set-headers-bin var(txn.oldheaders) prefix x-
+//test:fail:http-request set-headers-bin
 //test:ok:http-request add-header X-value value
 //test:quote_ok:http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
 //test:quote_ok:http-request add-header Authorisation "Basic eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz"
@@ -589,6 +600,15 @@ type HTTPRequests struct{}
 //test:fail:http-response add-acl(map.lst)
 //test:ok:http-response add-header X-value value
 //test:fail:http-response add-header X-value
+//test:ok:http-response add-headers-bin var(txn.oldheaders)
+//test:ok:http-response add-headers-bin var(txn.oldheaders) prefix x-
+//test:fail:http-response add-headers-bin
+//test:ok:http-response del-headers-bin var(txn.oldheaders)
+//test:ok:http-response del-headers-bin var(txn.oldheaders) -m beg
+//test:fail:http-response del-headers-bin
+//test:ok:http-response set-headers-bin var(txn.oldheaders)
+//test:ok:http-response set-headers-bin var(txn.oldheaders) prefix x-
+//test:fail:http-response set-headers-bin
 //test:ok:http-response del-acl(map.lst) [src]
 //test:fail:http-response del-acl(map.lst)
 //test:ok:http-response allow
@@ -783,6 +803,15 @@ type HTTPResponses struct{}
 //test:ok:http-after-response del-header X-Value -m GET if acl
 //test:ok:http-after-response del-header X-Value -m GET unless acl
 //test:fail:http-after-response del-header
+//test:ok:http-after-response add-headers-bin var(txn.oldheaders)
+//test:ok:http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+//test:fail:http-after-response add-headers-bin
+//test:ok:http-after-response del-headers-bin var(txn.oldheaders)
+//test:ok:http-after-response del-headers-bin var(txn.oldheaders) -m beg
+//test:fail:http-after-response del-headers-bin
+//test:ok:http-after-response set-headers-bin var(txn.oldheaders)
+//test:ok:http-after-response set-headers-bin var(txn.oldheaders) prefix x-
+//test:fail:http-after-response set-headers-bin
 //test:ok:http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
 //test:ok:http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2 if acl
 //test:fail:http-after-response replace-header Set-Cookie

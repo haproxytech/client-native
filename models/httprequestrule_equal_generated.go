@@ -37,10 +37,12 @@ func (rec HTTPRequestRule) Equal(obj HTTPRequestRule, opts ...eqdiff.GoMethodGen
 		rec.CondTest == obj.CondTest &&
 		EqualPointerInt64(rec.DenyStatus, obj.DenyStatus, opts...) &&
 		rec.Expr == obj.Expr &&
+		rec.HdrExpr == obj.HdrExpr &&
 		rec.HdrFormat == obj.HdrFormat &&
 		rec.HdrMatch == obj.HdrMatch &&
 		rec.HdrMethod == obj.HdrMethod &&
 		rec.HdrName == obj.HdrName &&
+		rec.HdrPrefix == obj.HdrPrefix &&
 		rec.HintFormat == obj.HintFormat &&
 		rec.HintName == obj.HintName &&
 		rec.LogLevel == obj.LogLevel &&

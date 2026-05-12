@@ -601,6 +601,9 @@ frontend test
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
   http-after-response sc-set-gpt0(1) 20 if FALSE
   http-after-response set-header Strict-Transport-Security "max-age=31536000"
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response set-log-level silent if FALSE
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \1;ip=%bi;\2
   http-after-response replace-value Cache-control ^public$ private
@@ -761,7 +764,13 @@ frontend test_2 from test_defaults
   option clitcpka
   http-request capture req.cook_cnt(FirstVisit),bool len 10
   http-request capture req.cook_cnt(FirstVisit),bool id 0
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-response capture res.header id 0
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders)
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt
   unique-id-header X-Unique-ID-test-2
   clitcpka-cnt 10

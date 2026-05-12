@@ -272,6 +272,33 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			CondTest:  v.CondTest,
 			Metadata:  misc.ParseMetadata(v.Comment),
 		}
+	case *http_actions.AddHeadersBin:
+		return &models.HTTPResponseRule{
+			Type:      "add-headers-bin",
+			HdrExpr:   v.Expr,
+			HdrPrefix: v.Prefix,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+			Metadata:  misc.ParseMetadata(v.Comment),
+		}
+	case *http_actions.DelHeadersBin:
+		return &models.HTTPResponseRule{
+			Type:      "del-headers-bin",
+			HdrExpr:   v.Expr,
+			HdrMethod: v.Method,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+			Metadata:  misc.ParseMetadata(v.Comment),
+		}
+	case *http_actions.SetHeadersBin:
+		return &models.HTTPResponseRule{
+			Type:      "set-headers-bin",
+			HdrExpr:   v.Expr,
+			HdrPrefix: v.Prefix,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+			Metadata:  misc.ParseMetadata(v.Comment),
+		}
 	case *http_actions.Allow:
 		return &models.HTTPResponseRule{
 			Type:     "allow",
@@ -680,6 +707,30 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule, opt *options.Configura
 		rule = &http_actions.AddHeader{
 			Name:     f.HdrName,
 			Fmt:      f.HdrFormat,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "add-headers-bin":
+		rule = &http_actions.AddHeadersBin{
+			Expr:     f.HdrExpr,
+			Prefix:   f.HdrPrefix,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "del-headers-bin":
+		rule = &http_actions.DelHeadersBin{
+			Expr:     f.HdrExpr,
+			Method:   f.HdrMethod,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "set-headers-bin":
+		rule = &http_actions.SetHeadersBin{
+			Expr:     f.HdrExpr,
+			Prefix:   f.HdrPrefix,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,

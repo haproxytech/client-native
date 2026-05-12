@@ -92,6 +92,9 @@ type HTTPResponseRule struct {
 	// expr
 	Expr string `json:"expr,omitempty"`
 
+	// hdr expr
+	HdrExpr string `json:"hdr_expr,omitempty"`
+
 	// hdr format
 	HdrFormat string `json:"hdr_format,omitempty"`
 
@@ -103,6 +106,9 @@ type HTTPResponseRule struct {
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
+
+	// hdr prefix
+	HdrPrefix string `json:"hdr_prefix,omitempty"`
 
 	// log level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
@@ -255,8 +261,8 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: ["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]
-	// +kubebuilder:validation:Enum=add-acl;add-header;allow;cache-store;capture;del-acl;del-header;del-map;deny;lua;pause;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-fc-mark;set-fc-tos;set-header;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc;unset-var;wait-for-body;set-bandwidth-limit;do-log;
+	// Enum: ["add-acl","add-header","add-headers-bin","allow","cache-store","capture","del-acl","del-header","del-headers-bin","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-headers-bin","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]
+	// +kubebuilder:validation:Enum=add-acl;add-header;add-headers-bin;allow;cache-store;capture;del-acl;del-header;del-headers-bin;del-map;deny;lua;pause;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-fc-mark;set-fc-tos;set-header;set-headers-bin;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc;unset-var;wait-for-body;set-bandwidth-limit;do-log;
 	Type string `json:"type"`
 
 	// var expr
@@ -1028,7 +1034,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","add-headers-bin","allow","cache-store","capture","del-acl","del-header","del-headers-bin","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-headers-bin","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1044,6 +1050,9 @@ const (
 	// HTTPResponseRuleTypeAddDashHeader captures enum value "add-header"
 	HTTPResponseRuleTypeAddDashHeader string = "add-header"
 
+	// HTTPResponseRuleTypeAddDashHeadersDashBin captures enum value "add-headers-bin"
+	HTTPResponseRuleTypeAddDashHeadersDashBin string = "add-headers-bin"
+
 	// HTTPResponseRuleTypeAllow captures enum value "allow"
 	HTTPResponseRuleTypeAllow string = "allow"
 
@@ -1058,6 +1067,9 @@ const (
 
 	// HTTPResponseRuleTypeDelDashHeader captures enum value "del-header"
 	HTTPResponseRuleTypeDelDashHeader string = "del-header"
+
+	// HTTPResponseRuleTypeDelDashHeadersDashBin captures enum value "del-headers-bin"
+	HTTPResponseRuleTypeDelDashHeadersDashBin string = "del-headers-bin"
 
 	// HTTPResponseRuleTypeDelDashMap captures enum value "del-map"
 	HTTPResponseRuleTypeDelDashMap string = "del-map"
@@ -1112,6 +1124,9 @@ const (
 
 	// HTTPResponseRuleTypeSetDashHeader captures enum value "set-header"
 	HTTPResponseRuleTypeSetDashHeader string = "set-header"
+
+	// HTTPResponseRuleTypeSetDashHeadersDashBin captures enum value "set-headers-bin"
+	HTTPResponseRuleTypeSetDashHeadersDashBin string = "set-headers-bin"
 
 	// HTTPResponseRuleTypeSetDashLogDashLevel captures enum value "set-log-level"
 	HTTPResponseRuleTypeSetDashLogDashLevel string = "set-log-level"

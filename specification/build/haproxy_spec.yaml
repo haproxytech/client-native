@@ -5176,6 +5176,16 @@ definitions:
               - set-src-port
               - set-retries
         x-display-name: Standard HAProxy expression
+      hdr_expr:
+        type: string
+        x-dependency:
+          type:
+            required: true
+            value:
+              - add-headers-bin
+              - del-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Expression
       hdr_format:
         type: string
         x-dependency:
@@ -5202,6 +5212,7 @@ definitions:
           type:
             value:
               - del-header
+              - del-headers-bin
         x-display-name: Header Match Method
       hdr_name:
         type: string
@@ -5215,6 +5226,14 @@ definitions:
               - set-header
               - replace-value
         x-display-name: Header Name
+      hdr_prefix:
+        type: string
+        x-dependency:
+          type:
+            value:
+              - add-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Prefix
       hint_format:
         pattern: ^[^\s]+$
         type: string
@@ -5626,12 +5645,14 @@ definitions:
         enum:
           - add-acl
           - add-header
+          - add-headers-bin
           - allow
           - auth
           - cache-use
           - capture
           - del-acl
           - del-header
+          - del-headers-bin
           - del-map
           - deny
           - disable-l7-retry
@@ -5662,6 +5683,7 @@ definitions:
           - set-fc-mark
           - set-fc-tos
           - set-header
+          - set-headers-bin
           - set-log-level
           - set-map
           - set-mark
@@ -5874,6 +5896,16 @@ definitions:
               - set-fc-mark
               - set-fc-tos
         x-display-name: Standard HAProxy expression
+      hdr_expr:
+        type: string
+        x-dependency:
+          type:
+            required: true
+            value:
+              - add-headers-bin
+              - del-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Expression
       hdr_format:
         type: string
         x-dependency:
@@ -5900,6 +5932,7 @@ definitions:
           type:
             value:
               - del-header
+              - del-headers-bin
         x-display-name: Header Match Method
       hdr_name:
         type: string
@@ -5913,6 +5946,14 @@ definitions:
               - set-header
               - replace-value
         x-display-name: Header Name
+      hdr_prefix:
+        type: string
+        x-dependency:
+          type:
+            value:
+              - add-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Prefix
       log_level:
         enum:
           - emerg
@@ -6230,11 +6271,13 @@ definitions:
         enum:
           - add-acl
           - add-header
+          - add-headers-bin
           - allow
           - cache-store
           - capture
           - del-acl
           - del-header
+          - del-headers-bin
           - del-map
           - deny
           - lua
@@ -6253,6 +6296,7 @@ definitions:
           - set-fc-mark
           - set-fc-tos
           - set-header
+          - set-headers-bin
           - set-log-level
           - set-map
           - set-mark
@@ -6396,6 +6440,16 @@ definitions:
           freeFormat: true
           operation: getACLs
           property: acl_name
+      hdr_expr:
+        type: string
+        x-dependency:
+          type:
+            required: true
+            value:
+              - add-headers-bin
+              - del-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Expression
       hdr_format:
         type: string
         x-dependency:
@@ -6422,6 +6476,7 @@ definitions:
           type:
             value:
               - del-header
+              - del-headers-bin
         x-display-name: Header Match Method
       hdr_name:
         type: string
@@ -6435,6 +6490,14 @@ definitions:
               - set-header
               - replace-value
         x-display-name: Header Name
+      hdr_prefix:
+        type: string
+        x-dependency:
+          type:
+            value:
+              - add-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Prefix
       log_level:
         enum:
           - emerg
@@ -6553,10 +6616,12 @@ definitions:
       type:
         enum:
           - add-header
+          - add-headers-bin
           - allow
           - capture
           - del-acl
           - del-header
+          - del-headers-bin
           - del-map
           - replace-header
           - replace-value
@@ -6567,6 +6632,7 @@ definitions:
           - sc-set-gpt
           - sc-set-gpt0
           - set-header
+          - set-headers-bin
           - set-log-level
           - set-map
           - set-status

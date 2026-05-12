@@ -199,7 +199,7 @@ func TestHTTPResponseRuleDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 57 {
+		if len(listDiffFields) != 59 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -209,7 +209,7 @@ func TestHTTPResponseRuleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected HTTPResponseRule to be different in 57 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected HTTPResponseRule to be different in 59 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

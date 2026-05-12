@@ -11,11 +11,13 @@ http_response_rule:
       enum:
         - add-acl
         - add-header
+        - add-headers-bin
         - allow
         - cache-store
         - capture
         - del-acl
         - del-header
+        - del-headers-bin
         - del-map
         - deny
         - lua
@@ -34,6 +36,7 @@ http_response_rule:
         - set-fc-mark
         - set-fc-tos
         - set-header
+        - set-headers-bin
         - set-log-level
         - set-map
         - set-mark
@@ -145,7 +148,20 @@ http_response_rule:
       x-display-name: Header Match Method
       x-dependency:
         type:
-          value: [del-header]
+          value: [del-header, del-headers-bin]
+    hdr_expr:
+      type: string
+      x-display-name: Binary Headers Expression
+      x-dependency:
+        type:
+          value: [add-headers-bin, del-headers-bin, set-headers-bin]
+          required: true
+    hdr_prefix:
+      type: string
+      x-display-name: Binary Headers Prefix
+      x-dependency:
+        type:
+          value: [add-headers-bin, set-headers-bin]
     log_level:
       type: string
       enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
