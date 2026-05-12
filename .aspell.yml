@@ -8,6 +8,7 @@ allowed:
   - acls
   - adfs
   - addons
+  - algo
   - apitest
   - apikey
   - apk
@@ -51,6 +52,7 @@ allowed:
   - dataplaneapi
   - dataplanes
   - datepicker
+  - del
   - dereference
   - dgram
   - discoverability
@@ -191,8 +193,9 @@ allowed:
   - sudo
   - symlinks
   - syslog
-  - textarea
+  - tarpit
   - tcp
+  - textarea
   - timeseries
   - tls
   - tooltip
@@ -210,6 +213,7 @@ allowed:
   - userlists
   - utils
   - uweight
+  - varint
   - vfg
   - vite
   - vrrp

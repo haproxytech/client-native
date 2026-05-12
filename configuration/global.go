@@ -118,7 +118,10 @@ func serializeCPUAffinity(p parser.Parser, cpuAffinity *models.GlobalBaseCPUAffi
 func parseCPUAffinity(p parser.Parser) (*models.GlobalBaseCPUAffinity, error) {
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "cpu-affinity")
 	if err != nil {
-		return nil, nil //nolint:nilnil
+		if errors.Is(err, parser_errors.ErrFetch) {
+			return nil, nil //nolint:nilnil
+		}
+		return nil, err
 	}
 	cpuAffinity, ok := data.(*types.CPUAffinity)
 	if !ok {

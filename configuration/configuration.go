@@ -3054,10 +3054,7 @@ func (s *SectionObject) useSmallBuffers(field reflect.Value) error {
 	if !ok {
 		return misc.CreateTypeAssertError("option use-small-buffers")
 	}
-	noOption := false
-	if usb.Enabled != nil && *usb.Enabled == "disabled" {
-		noOption = true
-	}
+	noOption := usb.Enabled != nil && *usb.Enabled == "disabled"
 	d := &types.OptionUseSmallBuffers{
 		NoOption:  noOption,
 		Queue:     usb.Queue,

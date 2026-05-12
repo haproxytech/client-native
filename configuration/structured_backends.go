@@ -285,7 +285,7 @@ func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error)
 	return b, nil
 }
 
-func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit,gocyclo,cyclop
+func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	p := *a.Parser
 	var err error
 
