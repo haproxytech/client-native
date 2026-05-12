@@ -11915,8 +11915,7 @@ definitions:
           type: string
         description: List of variables passed to the dns-01 provider (typically API keys)
       bits:
-        description: Number of bits to generate an RSA certificate
-        minimum: 1024
+        description: Number of bits used when generating an RSA certificate. Ignored when keytype is ECDSA (curves is used instead).
         type: integer
         x-nullable: true
         x-omitempty: true
