@@ -103,6 +103,36 @@ func (c *client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	return c.SaveData(p, t, transactionID == "")
 }
 
+func serializeCPUAffinity(p parser.Parser, cpuAffinity *models.GlobalBaseCPUAffinity) error {
+	if cpuAffinity == nil || cpuAffinity.Affinity == nil || *cpuAffinity.Affinity == "" {
+		_ = p.Set(parser.Global, parser.GlobalSectionName, "cpu-affinity", nil)
+		return nil
+	}
+	value := &types.CPUAffinity{
+		Affinity: *cpuAffinity.Affinity,
+		Argument: cpuAffinity.Argument,
+	}
+	return p.Set(parser.Global, parser.GlobalSectionName, "cpu-affinity", value)
+}
+
+func parseCPUAffinity(p parser.Parser) (*models.GlobalBaseCPUAffinity, error) {
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "cpu-affinity")
+	if err != nil {
+		return nil, nil //nolint:nilnil
+	}
+	cpuAffinity, ok := data.(*types.CPUAffinity)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("cpu-affinity")
+	}
+	if cpuAffinity.Affinity == "" {
+		return nil, nil //nolint:nilnil
+	}
+	return &models.GlobalBaseCPUAffinity{
+		Affinity: &cpuAffinity.Affinity,
+		Argument: cpuAffinity.Argument,
+	}, nil
+}
+
 func parseCPUMaps(p parser.Parser) ([]*models.CPUMap, error) {
 	var cpuMaps []*models.CPUMap
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
@@ -2424,6 +2454,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.CPUPolicy = cpuPolicy
 
+	cpuAffinity, err := parseCPUAffinity(p)
+	if err != nil {
+		return nil, err
+	}
+	global.CPUAffinity = cpuAffinity
+
 	daemon, err := parseBoolOption(p, "daemon")
 	if err != nil {
 		return nil, err
@@ -2662,6 +2698,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.Nbthread = nbthread
 
+	maxThreadsPerGroup, err := parseInt64POption(p, "max-threads-per-group")
+	if err != nil {
+		return nil, err
+	}
+	global.MaxThreadsPerGroup = maxThreadsPerGroup
+
 	noQuic, err := parseBoolOption(p, "no-quic")
 	if err != nil {
 		return nil, err
@@ -2748,6 +2790,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 	global.StatsMaxconn = statsMaxconn
+
+	statsCalculateMaxCounters, err := parseStringOption(p, "stats calculate-max-counters")
+	if err != nil {
+		return nil, err
+	}
+	global.StatsCalculateMaxCounters = onOff(statsCalculateMaxCounters)
 
 	statsTimeout, err := parseTimeoutOption(p, "stats timeout")
 	if err != nil {
@@ -3378,6 +3426,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
+	if err := serializeCPUAffinity(p, data.CPUAffinity); err != nil {
+		return err
+	}
+
 	if err := serializeBoolOption(p, "daemon", data.Daemon); err != nil {
 		return err
 	}
@@ -3550,6 +3602,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
+	if err := serializeInt64POption(p, "max-threads-per-group", data.MaxThreadsPerGroup); err != nil {
+		return err
+	}
+
 	if err := serializeBoolOption(p, "no-quic", data.NoQuic); err != nil {
 		return err
 	}
@@ -3606,6 +3662,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeInt64POption(p, "stats maxconn", data.StatsMaxconn); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "stats calculate-max-counters", onOff(data.StatsCalculateMaxCounters)); err != nil {
 		return err
 	}
 

@@ -33,6 +33,34 @@ const global_cpumapauto140123 = `
 global
   cpu-map auto:1-4 0-1 2-3
 `
+const global_cpuaffinitypercore = `
+global
+  cpu-affinity per-core
+`
+const global_cpuaffinitypergroup = `
+global
+  cpu-affinity per-group
+`
+const global_cpuaffinitypergroupauto = `
+global
+  cpu-affinity per-group auto
+`
+const global_cpuaffinitypergrouploose = `
+global
+  cpu-affinity per-group loose
+`
+const global_cpuaffinityauto = `
+global
+  cpu-affinity auto
+`
+const global_cpuaffinityperthread = `
+global
+  cpu-affinity per-thread
+`
+const global_cpuaffinityperccx = `
+global
+  cpu-affinity per-ccx
+`
 const global_cpusetreset = `
 global
   cpu-set reset

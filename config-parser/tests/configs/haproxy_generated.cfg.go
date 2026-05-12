@@ -26,6 +26,7 @@ global test
   cpu-map 1/all 0-3
   cpu-map auto:1-4 0-3
   cpu-map auto:1-4 0-1 2-3
+  cpu-affinity per-core
   cpu-set reset
   cpu-set reset # some comment
   cpu-set drop-cpu 1 # some comment
@@ -3409,6 +3410,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  cpu-map auto:1-4 0-3
 `, 1},
 	{`  cpu-map auto:1-4 0-1 2-3
+`, 1},
+	{`  cpu-affinity per-core
 `, 1},
 	{`  cpu-set reset
 `, 1},

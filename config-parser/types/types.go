@@ -419,6 +419,23 @@ type CPUMap struct {
 }
 
 //sections:global
+//name:cpu-affinity
+//no:parse
+//test:ok:cpu-affinity per-core
+//test:ok:cpu-affinity per-group
+//test:ok:cpu-affinity per-group auto
+//test:ok:cpu-affinity per-group loose
+//test:ok:cpu-affinity auto
+//test:ok:cpu-affinity per-thread
+//test:ok:cpu-affinity per-ccx
+//test:fail:cpu-affinity
+type CPUAffinity struct {
+	Affinity string
+	Argument string
+	Comment  string
+}
+
+//sections:global
 //name:cpu-set
 //is:multiple
 //test:ok:cpu-set reset

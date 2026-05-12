@@ -206,6 +206,8 @@ global
   user thomas
   group anderson
   nbthread 128
+  max-threads-per-group 16
+  cpu-affinity per-group auto
   pidfile pidfile.text
   ssl-default-bind-ciphers ECDH+AESGCM:ECDH+CHACHA20
   ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384
@@ -214,6 +216,7 @@ global
   thread-group first 1-16
   stats-file /var/haproxy/my-stats
   stats maxconn 20
+  stats calculate-max-counters on
   ssl-load-extra-files bundle
   deviceatlas-json-file atlas.json
   deviceatlas-log-level 1

@@ -2334,6 +2334,30 @@ definitions:
       cluster_secret:
         type: string
         x-display-name: Cluster Secret
+      cpu_affinity:
+        description: |
+          Defines how threads are bound to cpus. Mirrors the HAProxy 3.4 cpu-affinity directive.
+        properties:
+          affinity:
+            enum:
+              - per-core
+              - per-group
+              - auto
+              - per-thread
+              - per-ccx
+            type: string
+            x-display-name: Affinity
+          argument:
+            description: Optional argument used together with the per-group affinity.
+            enum:
+              - auto
+              - loose
+            type: string
+            x-display-name: Argument
+        required:
+          - affinity
+        type: object
+        x-display-name: CPU Affinity
       cpu_maps:
         items:
           properties:
@@ -2553,6 +2577,14 @@ definitions:
       master-worker:
         type: boolean
         x-display-name: Master Worker Mode
+      max_threads_per_group:
+        description: |
+          Defines the maximum number of threads in a thread group. The minimum value is
+          1 and the maximum value is 64 on 64-bit systems (32 on 32-bit systems).
+        minimum: 1
+        type: integer
+        x-display-name: Max Threads Per Group
+        x-nullable: true
       metadata:
         additionalProperties:
           type: object
@@ -2661,6 +2693,15 @@ definitions:
         x-nullable: true
       ssl_options:
         $ref: '#/definitions/ssl_options'
+      stats_calculate_max_counters:
+        description: |
+          Activates or deactivates the calculation of stats max counters.
+          Defaults to enabled in HAProxy.
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Stats Calculate Max Counters
       stats_file:
         type: string
       stats_maxconn:

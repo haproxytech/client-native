@@ -79,6 +79,12 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.ClusterSecret != obj.ClusterSecret {
 		diff["ClusterSecret"] = []interface{}{rec.ClusterSecret, obj.ClusterSecret}
 	}
+	for diffKey, diffValue := range DiffPointerGlobalBaseCPUAffinity(rec.CPUAffinity, obj.CPUAffinity, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CPUAffinity"+diffKey] = diffValue
+	}
 	if rec.CPUPolicy != obj.CPUPolicy {
 		diff["CPUPolicy"] = []interface{}{rec.CPUPolicy, obj.CPUPolicy}
 	}
@@ -217,6 +223,12 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.MasterWorker != obj.MasterWorker {
 		diff["MasterWorker"] = []interface{}{rec.MasterWorker, obj.MasterWorker}
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.MaxThreadsPerGroup, obj.MaxThreadsPerGroup, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxThreadsPerGroup"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey
@@ -276,6 +288,9 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 			diffKey = "." + diffKey
 		}
 		diff["SslOptions"+diffKey] = diffValue
+	}
+	if rec.StatsCalculateMaxCounters != obj.StatsCalculateMaxCounters {
+		diff["StatsCalculateMaxCounters"] = []interface{}{rec.StatsCalculateMaxCounters, obj.StatsCalculateMaxCounters}
 	}
 	if rec.StatsFile != obj.StatsFile {
 		diff["StatsFile"] = []interface{}{rec.StatsFile, obj.StatsFile}
@@ -490,6 +505,31 @@ func DiffPointerEnvironmentOptions(x, y *EnvironmentOptions, opts ...eqdiff.GoMe
 }
 
 func DiffPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	switch {
+	case x == nil:
+		diff[""] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[""] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerGlobalBaseCPUAffinity(x, y *GlobalBaseCPUAffinity, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

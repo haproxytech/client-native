@@ -32,6 +32,7 @@ func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) b
 		rec.Chroot == obj.Chroot &&
 		EqualPointerInt64(rec.CloseSpreadTime, obj.CloseSpreadTime, opts...) &&
 		rec.ClusterSecret == obj.ClusterSecret &&
+		EqualPointerGlobalBaseCPUAffinity(rec.CPUAffinity, obj.CPUAffinity, opts...) &&
 		rec.CPUPolicy == obj.CPUPolicy &&
 		rec.Daemon == obj.Daemon &&
 		EqualPointerDebugOptions(rec.DebugOptions, obj.DebugOptions, opts...) &&
@@ -64,6 +65,7 @@ func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) b
 		EqualPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname, opts...) &&
 		EqualPointerLuaOptions(rec.LuaOptions, obj.LuaOptions, opts...) &&
 		rec.MasterWorker == obj.MasterWorker &&
+		EqualPointerInt64(rec.MaxThreadsPerGroup, obj.MaxThreadsPerGroup, opts...) &&
 		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		EqualPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads, opts...) &&
 		rec.Nbthread == obj.Nbthread &&
@@ -80,6 +82,7 @@ func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) b
 		rec.ShmStatsFile == obj.ShmStatsFile &&
 		EqualPointerInt64(rec.ShmStatsFileMaxObjects, obj.ShmStatsFileMaxObjects, opts...) &&
 		EqualPointerSslOptions(rec.SslOptions, obj.SslOptions, opts...) &&
+		rec.StatsCalculateMaxCounters == obj.StatsCalculateMaxCounters &&
 		rec.StatsFile == obj.StatsFile &&
 		EqualPointerInt64(rec.StatsMaxconn, obj.StatsMaxconn, opts...) &&
 		EqualPointerInt64(rec.StatsTimeout, obj.StatsTimeout, opts...) &&
@@ -135,6 +138,13 @@ func EqualPointerEnvironmentOptions(x, y *EnvironmentOptions, opts ...eqdiff.GoM
 }
 
 func EqualPointerFiftyOneDegreesOptions(x, y *FiftyOneDegreesOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualPointerGlobalBaseCPUAffinity(x, y *GlobalBaseCPUAffinity, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

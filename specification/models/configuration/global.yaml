@@ -99,6 +99,14 @@ global_base:
     nbthread:
       type: integer
       x-display-name: Number of Threads
+    max_threads_per_group:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      x-display-name: Max Threads Per Group
+      description: |
+        Defines the maximum number of threads in a thread group. The minimum value is
+        1 and the maximum value is 64 on 64-bit systems (32 on 32-bit systems).
     master-worker:
       type: boolean
       x-display-name: Master Worker Mode
@@ -128,6 +136,13 @@ global_base:
       type: integer
       x-nullable: true
       x-display-name: Stats maxconn
+    stats_calculate_max_counters:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Stats Calculate Max Counters
+      description: |
+        Activates or deactivates the calculation of stats max counters.
+        Defaults to enabled in HAProxy.
     stats_file:
       type: string
     warn_blocked_traffic_after:
@@ -192,6 +207,23 @@ global_base:
           "resource",
         ]
       x-display-name: CPU Policy
+    cpu_affinity:
+      type: object
+      x-display-name: CPU Affinity
+      description: |
+        Defines how threads are bound to cpus. Mirrors the HAProxy 3.4 cpu-affinity directive.
+      required:
+        - affinity
+      properties:
+        affinity:
+          type: string
+          enum: [per-core, per-group, auto, per-thread, per-ccx]
+          x-display-name: Affinity
+        argument:
+          type: string
+          enum: [auto, loose]
+          x-display-name: Argument
+          description: Optional argument used together with the per-group affinity.
     cpu_set:
       type: array
       x-go-name: CPUSets

@@ -266,6 +266,11 @@
         "module-path": "/tmp/modules/path",
         "mworker_max_reloads": 5,
         "nbthread": 128,
+        "max_threads_per_group": 16,
+        "cpu_affinity": {
+            "affinity": "per-group",
+            "argument": "auto"
+        },
         "node": "node",
         "numa_cpu_mapping": "enabled",
         "pidfile": "pidfile.text",
@@ -276,6 +281,7 @@
         "setcap": "cap_net_raw,cap_net_bind_service",
         "stats_file": "/var/haproxy/my-stats",
         "stats_maxconn": 20,
+        "stats_calculate_max_counters": "enabled",
         "strict_limits": true,
         "thread_groups": 1,
         "tune_options": {
