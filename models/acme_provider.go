@@ -46,9 +46,7 @@ type AcmeProvider struct {
 	// List of variables passed to the dns-01 provider (typically API keys)
 	AcmeVars map[string]string `json:"acme_vars,omitempty"`
 
-	// Number of bits to generate an RSA certificate
-	// Minimum: 1024
-	// +kubebuilder:validation:Minimum=1024
+	// Number of bits used when generating an RSA certificate. Ignored when keytype is ECDSA (curves is used instead).
 	Bits *int64 `json:"bits,omitempty"`
 
 	// ACME challenge type. Only http-01 and dns-01 are supported.
@@ -96,10 +94,6 @@ type AcmeProvider struct {
 func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateBits(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateChallenge(formats); err != nil {
 		res = append(res, err)
 	}
@@ -123,18 +117,6 @@ func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *AcmeProvider) validateBits(formats strfmt.Registry) error {
-	if swag.IsZero(m.Bits) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("bits", "body", *m.Bits, 1024, false); err != nil {
-		return err
-	}
-
 	return nil
 }
 
