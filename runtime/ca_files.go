@@ -111,7 +111,7 @@ func (s *SingleRuntime) SetCAFile(caFile, payload string) error {
 	if payload == "" {
 		return fmt.Errorf("%s %w", "Argument payload empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("set ssl ca-file %s <<\n%s", caFile, payload)
+	cmd := fmt.Sprintf("set ssl ca-file %s <<\n%s\n", caFile, terminateHeredocPayload(payload))
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
@@ -172,7 +172,7 @@ func (s *SingleRuntime) DeleteCAFile(caFile string) error {
 
 // AddCAFileEntry adds an entry into the CA file
 func (s *SingleRuntime) AddCAFileEntry(caFile, payload string) error {
-	cmd := fmt.Sprintf("add ssl ca-file %s <<\n%s\n", caFile, payload)
+	cmd := fmt.Sprintf("add ssl ca-file %s <<\n%s\n", caFile, terminateHeredocPayload(payload))
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
