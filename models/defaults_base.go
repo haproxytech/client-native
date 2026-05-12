@@ -508,6 +508,9 @@ type DefaultsBase struct {
 
 	// unique id header
 	UniqueIDHeader string `json:"unique_id_header,omitempty"`
+
+	// use small buffers
+	UseSmallBuffers *UseSmallBuffers `json:"use_small_buffers,omitempty"`
 }
 
 // Validate validates this defaults base
@@ -859,6 +862,10 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTunnelTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUseSmallBuffers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3572,6 +3579,25 @@ func (m *DefaultsBase) validateTunnelTimeout(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *DefaultsBase) validateUseSmallBuffers(formats strfmt.Registry) error {
+	if swag.IsZero(m.UseSmallBuffers) { // not required
+		return nil
+	}
+
+	if m.UseSmallBuffers != nil {
+		if err := m.UseSmallBuffers.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this defaults base based on the context it is used
 func (m *DefaultsBase) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -3657,6 +3683,10 @@ func (m *DefaultsBase) ContextValidate(ctx context.Context, formats strfmt.Regis
 	}
 
 	if err := m.contextValidateStatsOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateUseSmallBuffers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -4104,6 +4134,27 @@ func (m *DefaultsBase) contextValidateStatsOptions(ctx context.Context, formats 
 				return ve.ValidateName("stats_options")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("stats_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *DefaultsBase) contextValidateUseSmallBuffers(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.UseSmallBuffers != nil {
+
+		if swag.IsZero(m.UseSmallBuffers) { // not required
+			return nil
+		}
+
+		if err := m.UseSmallBuffers.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
 			}
 			return err
 		}

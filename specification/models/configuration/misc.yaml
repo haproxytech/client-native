@@ -268,6 +268,9 @@ stats_options:
     stats_show_modules:
       type: boolean
       x-display-name: Stats Show Modules
+    stats_show_version:
+      type: boolean
+      x-display-name: Stats Show Version
     stats_realm:
       type: boolean
       x-display-name: Stats Realm
@@ -403,6 +406,25 @@ originalto:
     header:
       type: string
       pattern: '^[^\s]+$'
+use_small_buffers:
+  type: object
+  x-display-name: Use Small Buffers
+  description: Enables support for small buffers for the given categories.
+  required:
+    - enabled
+  properties:
+    enabled:
+      type: string
+      enum: [enabled, disabled]
+    queue:
+      type: boolean
+      x-display-name: Queue
+    l7_retries:
+      type: boolean
+      x-display-name: L7 Retries
+    check:
+      type: boolean
+      x-display-name: Check
 http_codes:
   type: object
   x-go-name: HTTPCodes

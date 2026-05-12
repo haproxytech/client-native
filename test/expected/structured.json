@@ -3404,6 +3404,14 @@
             "hash_preserve_affinity": "maxconn",
             "maxconn": 2000,
             "mode": "http",
+            "use_small_buffers": {
+                "enabled": "enabled",
+                "queue": true,
+                "l7_retries": true
+            },
+            "stats_options": {
+                "stats_show_version": true
+            },
             "metadata": {
                 "comment": "testing_defaults"
             },

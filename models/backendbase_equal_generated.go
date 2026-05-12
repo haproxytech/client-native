@@ -111,7 +111,8 @@ func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.Tcpka == obj.Tcpka &&
 		rec.Transparent == obj.Transparent &&
 		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout, opts...) &&
-		rec.UseFCGIApp == obj.UseFCGIApp
+		rec.UseFCGIApp == obj.UseFCGIApp &&
+		EqualPointerUseSmallBuffers(rec.UseSmallBuffers, obj.UseSmallBuffers, opts...)
 }
 
 func EqualPointerBackendForcePersist(x, y *BackendForcePersist, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -276,6 +277,13 @@ func EqualPointerSource(x, y *Source, opts ...eqdiff.GoMethodGenOptions) bool {
 }
 
 func EqualPointerStatsOptions(x, y *StatsOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualPointerUseSmallBuffers(x, y *UseSmallBuffers, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

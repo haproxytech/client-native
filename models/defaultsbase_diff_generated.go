@@ -494,5 +494,11 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 	if rec.UniqueIDHeader != obj.UniqueIDHeader {
 		diff["UniqueIDHeader"] = []interface{}{rec.UniqueIDHeader, obj.UniqueIDHeader}
 	}
+	for diffKey, diffValue := range DiffPointerUseSmallBuffers(rec.UseSmallBuffers, obj.UseSmallBuffers, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["UseSmallBuffers"+diffKey] = diffValue
+	}
 	return diff
 }

@@ -648,6 +648,7 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_statsshowmodules", frontend_statsshowmodules},
 		{"frontend_statsshownode", frontend_statsshownode},
 		{"frontend_statsshownodeEurope1", frontend_statsshownodeEurope1},
+		{"frontend_statsshowversion", frontend_statsshowversion},
 		{"frontend_statsuriadminstats", frontend_statsuriadminstats},
 		{"frontend_sticktabletypeintegersize1msrvke", frontend_sticktabletypeintegersize1msrvke},
 		{"frontend_sticktabletypeintegersize1msrvke_", frontend_sticktabletypeintegersize1msrvke_},

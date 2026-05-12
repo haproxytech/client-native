@@ -629,6 +629,8 @@ definitions:
     $ref: "models/monitor.yaml#/monitor_fail"
   originalto:
     $ref: "models/configuration/misc.yaml#/originalto"
+  use_small_buffers:
+    $ref: "models/configuration/misc.yaml#/use_small_buffers"
   smtpchk_params:
     $ref: "models/configuration/misc.yaml#/smtpchk_params"
   mysql_check_params:

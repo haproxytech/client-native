@@ -407,6 +407,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, any) { //nol
 		return true, s.source()
 	case "Originalto":
 		return true, s.originalto()
+	case "UseSmallBuffers":
+		return true, s.useSmallBuffers()
 	case "LogSteps":
 		return true, s.logSteps()
 	default:
@@ -1072,6 +1074,9 @@ func (s *SectionParser) statsOptions() any { //nolint:gocognit
 			if v.Name == "show-modules" {
 				opt.StatsShowModules = true
 			}
+			if v.Name == "show-version" {
+				opt.StatsShowVersion = true
+			}
 		case *stats.ShowDesc:
 			if v.Desc != "" {
 				opt.StatsShowDesc = misc.StringP(v.Desc)
@@ -1516,6 +1521,24 @@ func (s *SectionParser) originalto() any {
 	return originalto
 }
 
+func (s *SectionParser) useSmallBuffers() any {
+	data, err := s.get("option use-small-buffers", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionUseSmallBuffers)
+	enabled := "enabled"
+	if d.NoOption {
+		enabled = "disabled"
+	}
+	return &models.UseSmallBuffers{
+		Enabled:   &enabled,
+		Queue:     d.Queue,
+		L7Retries: d.L7Retries,
+		Check:     d.Check,
+	}
+}
+
 func (s *SectionParser) logSteps() any {
 	if s.Section == parser.Frontends || s.Section == parser.Defaults {
 		data, err := s.get("log-steps", false)
@@ -1705,6 +1728,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.source(field)
 	case "Originalto":
 		return true, s.originalto(field)
+	case "UseSmallBuffers":
+		return true, s.useSmallBuffers(field)
 	case "LogSteps":
 		return true, s.logSteps(field)
 	case "UseFCGIApp":
@@ -2617,6 +2642,12 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 		}
 		ss = append(ss, s)
 	}
+	if opt.StatsShowVersion {
+		s := &stats.OneWord{
+			Name: "show-version",
+		}
+		ss = append(ss, s)
+	}
 	if opt.StatsRealm {
 		s := &stats.Realm{
 			Realm: *opt.StatsRealmRealm,
@@ -3010,6 +3041,30 @@ func (s *SectionObject) originalto(field reflect.Value) error {
 		Header: originalto.Header,
 	}
 	return s.set("option originalto", d)
+}
+
+func (s *SectionObject) useSmallBuffers(field reflect.Value) error {
+	if s.Section != parser.Defaults && s.Section != parser.Backends {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("option use-small-buffers", nil)
+	}
+	usb, ok := field.Elem().Interface().(models.UseSmallBuffers)
+	if !ok {
+		return misc.CreateTypeAssertError("option use-small-buffers")
+	}
+	noOption := false
+	if usb.Enabled != nil && *usb.Enabled == "disabled" {
+		noOption = true
+	}
+	d := &types.OptionUseSmallBuffers{
+		NoOption:  noOption,
+		Queue:     usb.Queue,
+		L7Retries: usb.L7Retries,
+		Check:     usb.Check,
+	}
+	return s.set("option use-small-buffers", d)
 }
 
 func (s *SectionObject) logSteps(field reflect.Value) error {

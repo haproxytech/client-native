@@ -1327,6 +1327,7 @@ type StatsSettings interface { //nolint:iface
 //test:ok:stats hide-version
 //test:ok:stats show-legends
 //test:ok:stats show-modules
+//test:ok:stats show-version
 //test:fail:stats NON-EXISTS
 //test:ok:stats maxconn 10
 //test:fail:stats maxconn WORD

@@ -134,5 +134,6 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.Transparent == obj.Transparent &&
 		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout, opts...) &&
 		rec.UniqueIDFormat == obj.UniqueIDFormat &&
-		rec.UniqueIDHeader == obj.UniqueIDHeader
+		rec.UniqueIDHeader == obj.UniqueIDHeader &&
+		EqualPointerUseSmallBuffers(rec.UseSmallBuffers, obj.UseSmallBuffers, opts...)
 }

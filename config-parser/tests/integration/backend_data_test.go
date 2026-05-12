@@ -1093,6 +1093,34 @@ const backend_optionhttpchkmethoduriversionhos = `
 backend test
   option httpchk <method> <uri> <version> <host>
 `
+const backend_optionusesmallbuffers = `
+backend test
+  option use-small-buffers
+`
+const backend_nooptionusesmallbuffers = `
+backend test
+  no option use-small-buffers
+`
+const backend_optionusesmallbuffersqueue = `
+backend test
+  option use-small-buffers queue
+`
+const backend_optionusesmallbuffersl7retries = `
+backend test
+  option use-small-buffers l7-retries
+`
+const backend_optionusesmallbufferscheck = `
+backend test
+  option use-small-buffers check
+`
+const backend_optionusesmallbuffersqueuel7retr = `
+backend test
+  option use-small-buffers queue l7-retries check
+`
+const backend_optionusesmallbuffersqueuel7retr_ = `
+backend test
+  option use-small-buffers queue l7-retries check # comment
+`
 const backend_optionmysqlcheck = `
 backend test
   option mysql-check
@@ -4608,6 +4636,10 @@ backend test
 const backend_statsshowmodules = `
 backend test
   stats show-modules
+`
+const backend_statsshowversion = `
+backend test
+  stats show-version
 `
 const backend_statsmaxconn10 = `
 backend test

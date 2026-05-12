@@ -89,6 +89,9 @@ type StatsOptions struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	StatsShowNodeName *string `json:"stats_show_node_name"`
 
+	// stats show version
+	StatsShowVersion bool `json:"stats_show_version,omitempty"`
+
 	// stats uri prefix
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`

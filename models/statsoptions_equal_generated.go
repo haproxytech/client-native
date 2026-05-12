@@ -37,6 +37,7 @@ func (rec StatsOptions) Equal(obj StatsOptions, opts ...eqdiff.GoMethodGenOption
 		rec.StatsShowLegends == obj.StatsShowLegends &&
 		rec.StatsShowModules == obj.StatsShowModules &&
 		EqualPointerString(rec.StatsShowNodeName, obj.StatsShowNodeName, opts...) &&
+		rec.StatsShowVersion == obj.StatsShowVersion &&
 		rec.StatsURIPrefix == obj.StatsURIPrefix
 }
 

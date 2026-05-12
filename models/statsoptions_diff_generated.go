@@ -88,6 +88,9 @@ func (rec StatsOptions) Diff(obj StatsOptions, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["StatsShowNodeName"+diffKey] = diffValue
 	}
+	if rec.StatsShowVersion != obj.StatsShowVersion {
+		diff["StatsShowVersion"] = []interface{}{rec.StatsShowVersion, obj.StatsShowVersion}
+	}
 	if rec.StatsURIPrefix != obj.StatsURIPrefix {
 		diff["StatsURIPrefix"] = []interface{}{rec.StatsURIPrefix, obj.StatsURIPrefix}
 	}

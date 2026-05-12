@@ -421,6 +421,12 @@ func (rec BackendBase) Diff(obj BackendBase, opts ...eqdiff.GoMethodGenOptions) 
 	if rec.UseFCGIApp != obj.UseFCGIApp {
 		diff["UseFCGIApp"] = []interface{}{rec.UseFCGIApp, obj.UseFCGIApp}
 	}
+	for diffKey, diffValue := range DiffPointerUseSmallBuffers(rec.UseSmallBuffers, obj.UseSmallBuffers, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["UseSmallBuffers"+diffKey] = diffValue
+	}
 	return diff
 }
 
@@ -1000,6 +1006,31 @@ func DiffPointerSource(x, y *Source, opts ...eqdiff.GoMethodGenOptions) map[stri
 }
 
 func DiffPointerStatsOptions(x, y *StatsOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	switch {
+	case x == nil:
+		diff[""] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[""] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerUseSmallBuffers(x, y *UseSmallBuffers, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

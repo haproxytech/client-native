@@ -29,13 +29,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestStatsOptionsEqual(t *testing.T) {
+func TestUseSmallBuffersEqual(t *testing.T) {
 	samples := []struct {
-		a, b StatsOptions
+		a, b UseSmallBuffers
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample StatsOptions
-		var result StatsOptions
+		var sample UseSmallBuffers
+		var result UseSmallBuffers
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -50,7 +50,7 @@ func TestStatsOptionsEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b StatsOptions
+			a, b UseSmallBuffers
 		}{sample, result})
 	}
 
@@ -66,18 +66,18 @@ func TestStatsOptionsEqual(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StatsOptions to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected UseSmallBuffers to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestStatsOptionsEqualFalse(t *testing.T) {
+func TestUseSmallBuffersEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b StatsOptions
+		a, b UseSmallBuffers
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample StatsOptions
-		var result StatsOptions
+		var sample UseSmallBuffers
+		var result UseSmallBuffers
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -86,17 +86,11 @@ func TestStatsOptionsEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.StatsAdmin = !sample.StatsAdmin
-		result.StatsEnable = !sample.StatsEnable
-		result.StatsHideVersion = !sample.StatsHideVersion
-		result.StatsMaxconn = sample.StatsMaxconn + 1
-		result.StatsRealm = !sample.StatsRealm
-		result.StatsRefreshDelay = Ptr(*sample.StatsRefreshDelay + 1)
-		result.StatsShowLegends = !sample.StatsShowLegends
-		result.StatsShowModules = !sample.StatsShowModules
-		result.StatsShowVersion = !sample.StatsShowVersion
+		result.Check = !sample.Check
+		result.L7Retries = !sample.L7Retries
+		result.Queue = !sample.Queue
 		samples = append(samples, struct {
-			a, b StatsOptions
+			a, b UseSmallBuffers
 		}{sample, result})
 	}
 
@@ -112,18 +106,18 @@ func TestStatsOptionsEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StatsOptions to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected UseSmallBuffers to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestStatsOptionsDiff(t *testing.T) {
+func TestUseSmallBuffersDiff(t *testing.T) {
 	samples := []struct {
-		a, b StatsOptions
+		a, b UseSmallBuffers
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample StatsOptions
-		var result StatsOptions
+		var sample UseSmallBuffers
+		var result UseSmallBuffers
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -138,7 +132,7 @@ func TestStatsOptionsDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b StatsOptions
+			a, b UseSmallBuffers
 		}{sample, result})
 	}
 
@@ -154,18 +148,18 @@ func TestStatsOptionsDiff(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StatsOptions to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected UseSmallBuffers to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestStatsOptionsDiffFalse(t *testing.T) {
+func TestUseSmallBuffersDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b StatsOptions
+		a, b UseSmallBuffers
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample StatsOptions
-		var result StatsOptions
+		var sample UseSmallBuffers
+		var result UseSmallBuffers
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -174,24 +168,18 @@ func TestStatsOptionsDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.StatsAdmin = !sample.StatsAdmin
-		result.StatsEnable = !sample.StatsEnable
-		result.StatsHideVersion = !sample.StatsHideVersion
-		result.StatsMaxconn = sample.StatsMaxconn + 1
-		result.StatsRealm = !sample.StatsRealm
-		result.StatsRefreshDelay = Ptr(*sample.StatsRefreshDelay + 1)
-		result.StatsShowLegends = !sample.StatsShowLegends
-		result.StatsShowModules = !sample.StatsShowModules
-		result.StatsShowVersion = !sample.StatsShowVersion
+		result.Check = !sample.Check
+		result.L7Retries = !sample.L7Retries
+		result.Queue = !sample.Queue
 		samples = append(samples, struct {
-			a, b StatsOptions
+			a, b UseSmallBuffers
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 17 {
+		if len(listDiffFields) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -201,7 +189,7 @@ func TestStatsOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StatsOptions to be different in 17 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected UseSmallBuffers to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

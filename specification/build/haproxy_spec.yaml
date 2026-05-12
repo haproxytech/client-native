@@ -3365,6 +3365,8 @@ definitions:
       unique_id_header:
         type: string
         x-display-name: Unique ID header
+      use_small_buffers:
+        $ref: '#/definitions/use_small_buffers'
     required:
       - name
     title: Defaults Base
@@ -4404,6 +4406,8 @@ definitions:
       use_fcgi_app:
         type: string
         x-display-name: FastCGI application
+      use_small_buffers:
+        $ref: '#/definitions/use_small_buffers'
     required:
       - name
     title: Backend Base
@@ -9109,6 +9113,9 @@ definitions:
         type: string
         x-nullable: true
         x-omitempty: false
+      stats_show_version:
+        type: boolean
+        x-display-name: Stats Show Version
       stats_uri_prefix:
         pattern: ^[^\s]+$
         type: string
@@ -11452,6 +11459,27 @@ definitions:
       - enabled
     type: object
     x-display-name: OriginalTo
+  use_small_buffers:
+    description: Enables support for small buffers for the given categories.
+    properties:
+      check:
+        type: boolean
+        x-display-name: Check
+      enabled:
+        enum:
+          - enabled
+          - disabled
+        type: string
+      l7_retries:
+        type: boolean
+        x-display-name: L7 Retries
+      queue:
+        type: boolean
+        x-display-name: Queue
+    required:
+      - enabled
+    type: object
+    x-display-name: Use Small Buffers
   smtpchk_params:
     properties:
       domain:

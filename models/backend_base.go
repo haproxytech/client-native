@@ -408,6 +408,9 @@ type BackendBase struct {
 
 	// use fcgi app
 	UseFCGIApp string `json:"use_fcgi_app,omitempty"`
+
+	// use small buffers
+	UseSmallBuffers *UseSmallBuffers `json:"use_small_buffers,omitempty"`
 }
 
 // Validate validates this backend base
@@ -703,6 +706,10 @@ func (m *BackendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTunnelTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUseSmallBuffers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2825,6 +2832,25 @@ func (m *BackendBase) validateTunnelTimeout(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *BackendBase) validateUseSmallBuffers(formats strfmt.Registry) error {
+	if swag.IsZero(m.UseSmallBuffers) { // not required
+		return nil
+	}
+
+	if m.UseSmallBuffers != nil {
+		if err := m.UseSmallBuffers.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this backend base based on the context it is used
 func (m *BackendBase) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -2926,6 +2952,10 @@ func (m *BackendBase) ContextValidate(ctx context.Context, formats strfmt.Regist
 	}
 
 	if err := m.contextValidateStickTable(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateUseSmallBuffers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3468,6 +3498,27 @@ func (m *BackendBase) contextValidateStickTable(ctx context.Context, formats str
 				return ve.ValidateName("stick_table")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("stick_table")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *BackendBase) contextValidateUseSmallBuffers(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.UseSmallBuffers != nil {
+
+		if swag.IsZero(m.UseSmallBuffers) { // not required
+			return nil
+		}
+
+		if err := m.UseSmallBuffers.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
 			}
 			return err
 		}

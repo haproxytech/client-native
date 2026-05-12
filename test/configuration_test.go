@@ -344,6 +344,8 @@ defaults test_defaults # testing_defaults
   balance roundrobin
   hash-balance-factor 150
   hash-preserve-affinity maxconn
+  option use-small-buffers queue l7-retries
+  stats show-version
   default-server fall 2000 rise 4000 inter 5s port 8888 sni-auto check-sni-auto ktls off
 
 defaults test_defaults_2 from test_defaults

@@ -3321,6 +3321,10 @@ const frontend_statsshowmodules = `
 frontend test
   stats show-modules
 `
+const frontend_statsshowversion = `
+frontend test
+  stats show-version
+`
 const frontend_statsmaxconn10 = `
 frontend test
   stats maxconn 10

@@ -296,6 +296,7 @@ backend test
   log 127.0.0.1:1515 sample 1:6 local2
   option forwardfor
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+  option use-small-buffers
   option mysql-check
   option pgsql-check user john
   option redispatch
@@ -1136,6 +1137,7 @@ backend test
   stats hide-version
   stats show-legends
   stats show-modules
+  stats show-version
   stats maxconn 10
   stats realm HAProxy\\ Statistics
   stats refresh 10s
@@ -1373,6 +1375,7 @@ defaults test
   log 127.0.0.1:1515 format rfc5424 sample 1-5:6 local2
   log 127.0.0.1:1515 sample 1:6 local2
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+  option use-small-buffers
   unique-id-format %{+X}o_%ci:%cp_%fi:%fp_%Ts_%rt:%pid
   unique-id-header X-Unique-ID
   load-server-state-from-file global
@@ -2003,6 +2006,7 @@ defaults test
   stats hide-version
   stats show-legends
   stats show-modules
+  stats show-version
   stats maxconn 10
   stats realm HAProxy\\ Statistics
   stats refresh 10s
@@ -2831,6 +2835,7 @@ frontend test
   stats hide-version
   stats show-legends
   stats show-modules
+  stats show-version
   stats maxconn 10
   stats realm HAProxy\\ Statistics
   stats refresh 10s
@@ -3857,6 +3862,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 2},
 	{`  option httplog
 `, 1},
+	{`  option use-small-buffers
+`, 2},
 	{`  option mysql-check
 `, 1},
 	{`  option pgsql-check user john
@@ -5598,6 +5605,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  stats show-legends
 `, 3},
 	{`  stats show-modules
+`, 3},
+	{`  stats show-version
 `, 3},
 	{`  stats maxconn 10
 `, 3},

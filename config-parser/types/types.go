@@ -925,6 +925,25 @@ type OptionHTTPLog struct {
 	Comment  string
 }
 
+//sections:defaults,backend
+//name:option use-small-buffers
+//no:parse
+//test:ok:option use-small-buffers
+//test:ok:no option use-small-buffers
+//test:ok:option use-small-buffers queue
+//test:ok:option use-small-buffers l7-retries
+//test:ok:option use-small-buffers check
+//test:ok:option use-small-buffers queue l7-retries check
+//test:ok:option use-small-buffers queue l7-retries check # comment
+//test:fail:option use-small-buffers bogus
+type OptionUseSmallBuffers struct {
+	NoOption  bool
+	Queue     bool
+	L7Retries bool
+	Check     bool
+	Comment   string
+}
+
 //sections:backend
 //name:option mysql-check
 //no:parse

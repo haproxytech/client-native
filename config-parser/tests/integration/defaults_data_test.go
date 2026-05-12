@@ -1069,6 +1069,34 @@ const defaults_optionhttpchkmethoduriversionhos = `
 defaults test
   option httpchk <method> <uri> <version> <host>
 `
+const defaults_optionusesmallbuffers = `
+defaults test
+  option use-small-buffers
+`
+const defaults_nooptionusesmallbuffers = `
+defaults test
+  no option use-small-buffers
+`
+const defaults_optionusesmallbuffersqueue = `
+defaults test
+  option use-small-buffers queue
+`
+const defaults_optionusesmallbuffersl7retries = `
+defaults test
+  option use-small-buffers l7-retries
+`
+const defaults_optionusesmallbufferscheck = `
+defaults test
+  option use-small-buffers check
+`
+const defaults_optionusesmallbuffersqueuel7retr = `
+defaults test
+  option use-small-buffers queue l7-retries check
+`
+const defaults_optionusesmallbuffersqueuel7retr_ = `
+defaults test
+  option use-small-buffers queue l7-retries check # comment
+`
 const defaults_uniqueidformatXocicpfifpTsrtpid = `
 defaults test
   unique-id-format %{+X}o_%ci:%cp_%fi:%fp_%Ts_%rt:%pid
@@ -3676,6 +3704,10 @@ defaults test
 const defaults_statsshowmodules = `
 defaults test
   stats show-modules
+`
+const defaults_statsshowversion = `
+defaults test
+  stats show-version
 `
 const defaults_statsmaxconn10 = `
 defaults test

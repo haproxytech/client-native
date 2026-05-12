@@ -326,6 +326,8 @@ backend_base:
       x-display-name: Nolinger
     originalto:
       $ref: "#/definitions/originalto"
+    use_small_buffers:
+      $ref: "#/definitions/use_small_buffers"
     persist:
       type: string
       enum: [enabled, disabled]
