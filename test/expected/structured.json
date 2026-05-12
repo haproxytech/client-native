@@ -3214,6 +3214,7 @@
             "directory": "https://acme.example.com/directory",
             "keytype": "ECDSA",
             "map": "acme@t",
+            "profile": "shortlived",
             "reuse_key": "enabled"
         }
     },

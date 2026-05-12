@@ -173,6 +173,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		"directory":     &acme.Directory,
 		"keytype":       &acme.Keytype,
 		"map":           &acme.Map,
+		"profile":       &acme.Profile,
 		"reuse-key":     &acme.ReuseKey,
 	}
 
@@ -243,6 +244,7 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 		"directory":     acme.Directory,
 		"keytype":       acme.Keytype,
 		"map":           acme.Map,
+		"profile":       acme.Profile,
 		"reuse-key":     onOff(acme.ReuseKey),
 	}
 

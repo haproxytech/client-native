@@ -33,6 +33,7 @@ func (rec AcmeProvider) Equal(obj AcmeProvider, opts ...eqdiff.GoMethodGenOption
 		rec.Keytype == obj.Keytype &&
 		rec.Map == obj.Map &&
 		rec.Name == obj.Name &&
+		rec.Profile == obj.Profile &&
 		rec.ReuseKey == obj.ReuseKey
 }
 

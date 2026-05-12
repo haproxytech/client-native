@@ -1030,6 +1030,7 @@ acme test
   directory https://acme.example.com/directory
   keytype ECDSA
   map acme@t
+  profile shortlived
   reuse-key on
 
 crt-store cert-bunker1
