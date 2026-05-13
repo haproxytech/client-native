@@ -115,6 +115,7 @@ allowed:
   - ioutil
   - ipam
   - istanbul
+  - instantiations
   - iweight
   - jose
   - json
