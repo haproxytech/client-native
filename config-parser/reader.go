@@ -343,6 +343,17 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					if p.Options.Log {
 						p.Options.Logger.Tracef("%shttp-errors section %s active", p.Options.LogPrefix, data.Name)
 					}
+				case "healthcheck":
+					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
+					rawData, _ := parserSectionName.Get(false)
+					data := rawData.(*types.Section) //nolint:forcetypeassert
+					config.HealthCheck = p.getHealthCheckParser()
+					config.HealthCheck.Section = *data
+					p.Parsers[HealthChecks][data.Name] = config.HealthCheck
+					config.Active = config.HealthCheck
+					if p.Options.Log {
+						p.Options.Logger.Tracef("%shealthcheck section %s active", p.Options.LogPrefix, data.Name)
+					}
 				case "ring":
 					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
 					rawData, _ := parserSectionName.Get(false)

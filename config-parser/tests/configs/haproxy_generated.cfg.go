@@ -2928,6 +2928,74 @@ frontend test
   quic-initial dgram-drop
   quic-initial dgram-drop if TRUE
 
+healthcheck test
+  type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+  type mysql-check
+  type pgsql-check user john
+  type smtpchk
+  http-check comment testcomment
+  http-check connect
+  http-check connect default
+  http-check connect port 8080
+  http-check connect addr 8.8.8.8
+  http-check connect send-proxy
+  http-check connect via-socks4
+  http-check connect ssl
+  http-check connect sni haproxy.1wt.eu
+  http-check connect alpn h2,http/1.1
+  http-check connect proto h2
+  http-check connect linger
+  http-check connect comment testcomment
+  http-check connect port 443 addr 8.8.8.8 send-proxy via-socks4 ssl sni haproxy.1wt.eu alpn h2,http/1.1 linger proto h2 comment testcomment
+  http-check disable-on-404
+  http-check expect status 200
+  http-check expect min-recv 50 status 200
+  http-check expect comment testcomment status 200
+  http-check expect ok-status L7OK status 200
+  http-check expect error-status L7RSP status 200
+  http-check expect tout-status L7TOUT status 200
+  http-check expect on-success \"my-log-format\" status 200
+  http-check expect on-error \"my-log-format\" status 200
+  http-check expect status-code \"500\" status 200
+  http-check expect ! string SQL\\ Error
+  http-check expect ! rstatus ^5
+  http-check expect rstring <!--tag:[0-9a-f]*--></html>
+  http-check send meth GET
+  http-check send uri /health
+  http-check send ver \"HTTP/1.1\"
+  http-check send comment testcomment
+  http-check send meth GET uri /health ver \"HTTP/1.1\" hdr Host example.com hdr Accept-Encoding gzip body '{\"key\":\"value\"}'
+  http-check send uri-lf my-log-format body-lf 'my-log-format'
+  http-check send-state
+  http-check set-var(check.port) int(1234)
+  http-check set-var-fmt(check.port) int(1234)
+  http-check unset-var(txn.from)
+  tcp-check comment testcomment
+  tcp-check connect
+  tcp-check connect port 443 ssl
+  tcp-check connect port 110 linger
+  tcp-check connect port 143
+  tcp-check expect string +PONG
+  tcp-check expect string role:master
+  tcp-check expect string +OK
+  tcp-check send-lf testfmt
+  tcp-check send-lf testfmt comment testcomment
+  tcp-check send-binary testhexstring
+  tcp-check send-binary testhexstring comment testcomment
+  tcp-check send-binary-lf testhexfmt
+  tcp-check send-binary-lf testhexfmt comment testcomment
+  tcp-check set-var(check.port) int(1234)
+  tcp-check expect string +OK\ POP3\ ready
+  tcp-check expect string *\ OK\ IMAP4\ ready
+  tcp-check send PING\r\n
+  tcp-check send PING\r\n comment testcomment
+  tcp-check send QUIT\r\n
+  tcp-check send QUIT\r\n comment testcomment
+  tcp-check send info\ replication\r\n
+  tcp-check set-var-fmt(check.name) "%H"
+  tcp-check set-var-fmt(txn.from) "addr=%[src]:%[src_port]"
+  tcp-check unset-var(txn.from)
+
 log-forward test
   dgram-bind :80,:443
   dgram-bind 10.0.0.1:10080,10.0.0.1:10443
@@ -3939,17 +4007,25 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 2},
 	{`  option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
 `, 2},
+	{`  type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+`, 1},
 	{`  option httplog
 `, 1},
 	{`  option use-small-buffers
 `, 2},
 	{`  option mysql-check
 `, 1},
+	{`  type mysql-check
+`, 1},
 	{`  option pgsql-check user john
+`, 1},
+	{`  type pgsql-check user john
 `, 1},
 	{`  option redispatch
 `, 1},
 	{`  option smtpchk
+`, 1},
+	{`  type smtpchk
 `, 1},
 	{`  external-check path /usr/bin:/bin
 `, 1},
@@ -5188,103 +5264,103 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  http-error status 400 errorfiles myerror
 `, 3},
 	{`  http-check comment testcomment
-`, 2},
+`, 3},
 	{`  http-check connect
-`, 2},
+`, 3},
 	{`  http-check connect default
-`, 2},
+`, 3},
 	{`  http-check connect port 8080
-`, 2},
+`, 3},
 	{`  http-check connect addr 8.8.8.8
-`, 2},
+`, 3},
 	{`  http-check connect send-proxy
-`, 2},
+`, 3},
 	{`  http-check connect via-socks4
-`, 2},
+`, 3},
 	{`  http-check connect ssl
-`, 2},
+`, 3},
 	{`  http-check connect sni haproxy.1wt.eu
-`, 2},
+`, 3},
 	{`  http-check connect alpn h2,http/1.1
-`, 2},
+`, 3},
 	{`  http-check connect proto h2
-`, 2},
+`, 3},
 	{`  http-check connect linger
-`, 2},
+`, 3},
 	{`  http-check connect comment testcomment
-`, 2},
+`, 3},
 	{`  http-check connect port 443 addr 8.8.8.8 send-proxy via-socks4 ssl sni haproxy.1wt.eu alpn h2,http/1.1 linger proto h2 comment testcomment
-`, 2},
+`, 3},
 	{`  http-check disable-on-404
-`, 2},
+`, 3},
 	{`  http-check expect status 200
-`, 2},
+`, 3},
 	{`  http-check expect min-recv 50 status 200
-`, 2},
+`, 3},
 	{`  http-check expect comment testcomment status 200
-`, 2},
+`, 3},
 	{`  http-check expect ok-status L7OK status 200
-`, 2},
+`, 3},
 	{`  http-check expect error-status L7RSP status 200
-`, 2},
+`, 3},
 	{`  http-check expect tout-status L7TOUT status 200
-`, 2},
+`, 3},
 	{`  http-check expect on-success \"my-log-format\" status 200
-`, 2},
+`, 3},
 	{`  http-check expect on-error \"my-log-format\" status 200
-`, 2},
+`, 3},
 	{`  http-check expect status-code \"500\" status 200
-`, 2},
+`, 3},
 	{`  http-check expect ! string SQL\\ Error
-`, 2},
+`, 3},
 	{`  http-check expect ! rstatus ^5
-`, 2},
+`, 3},
 	{`  http-check expect rstring <!--tag:[0-9a-f]*--></html>
-`, 2},
+`, 3},
 	{`  http-check send meth GET
-`, 2},
+`, 3},
 	{`  http-check send uri /health
-`, 2},
+`, 3},
 	{`  http-check send ver \"HTTP/1.1\"
-`, 2},
+`, 3},
 	{`  http-check send comment testcomment
-`, 2},
+`, 3},
 	{`  http-check send meth GET uri /health ver \"HTTP/1.1\" hdr Host example.com hdr Accept-Encoding gzip body '{\"key\":\"value\"}'
-`, 2},
+`, 3},
 	{`  http-check send uri-lf my-log-format body-lf 'my-log-format'
-`, 2},
+`, 3},
 	{`  http-check send-state
-`, 2},
+`, 3},
 	{`  tcp-check comment testcomment
-`, 2},
+`, 3},
 	{`  tcp-check connect
-`, 2},
+`, 3},
 	{`  tcp-check connect port 443 ssl
-`, 2},
+`, 3},
 	{`  tcp-check connect port 110 linger
-`, 2},
+`, 3},
 	{`  tcp-check connect port 143
-`, 2},
+`, 3},
 	{`  tcp-check expect string +PONG
-`, 2},
+`, 3},
 	{`  tcp-check expect string role:master
-`, 2},
+`, 3},
 	{`  tcp-check expect string +OK
-`, 2},
+`, 3},
 	{`  tcp-check send-lf testfmt
-`, 2},
+`, 3},
 	{`  tcp-check send-lf testfmt comment testcomment
-`, 2},
+`, 3},
 	{`  tcp-check send-binary testhexstring
-`, 2},
+`, 3},
 	{`  tcp-check send-binary testhexstring comment testcomment
-`, 2},
+`, 3},
 	{`  tcp-check send-binary-lf testhexfmt
-`, 2},
+`, 3},
 	{`  tcp-check send-binary-lf testhexfmt comment testcomment
-`, 2},
+`, 3},
 	{`  tcp-check set-var(check.port) int(1234)
-`, 2},
+`, 3},
 	{`  tcp-request content accept
 `, 3},
 	{`  tcp-request content accept if !HTTP

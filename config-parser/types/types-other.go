@@ -77,6 +77,16 @@ type SimpleOption struct {
 	Comment  string
 }
 
+//name:simple-type
+//no:sections
+//struct:name:Type
+//dir:simple
+//no:init
+type SimpleType struct {
+	NoType  bool
+	Comment string
+}
+
 //name:simple-timeout
 //no:sections
 //struct:name:Timeout
@@ -896,7 +906,7 @@ type HTTPAfterResponse struct{}
 type HTTPErrors struct{}
 
 //name:http-check
-//sections:defaults,backend
+//sections:defaults,backend,healthcheck
 //struct:name:Checks
 //dir:http
 //is:multiple
@@ -954,7 +964,7 @@ type HTTPErrors struct{}
 type HTTPCheck struct{}
 
 //name:tcp-check
-//sections:defaults,backend
+//sections:defaults,backend,healthcheck
 //struct:name:Checks
 //dir:tcp
 //is:multiple

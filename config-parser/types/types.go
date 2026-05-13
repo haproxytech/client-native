@@ -930,6 +930,23 @@ type OptionHttpchk struct {
 	Comment  string
 }
 
+//sections:healthcheck
+//name:type httpchk
+//no:parse
+//test:ok:type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+//test:ok:type httpchk <uri>
+//test:ok:type httpchk <method> <uri>
+//test:ok:type httpchk <method> <uri> <version>
+//test:ok:type httpchk <method> <uri> <version> <host>
+type TypeHttpchk struct {
+	NoType  bool
+	Method  string
+	URI     string
+	Version string
+	Host    string
+	Comment string
+}
+
 //sections:frontend
 //name:option httplog
 //no:parse
@@ -981,6 +998,24 @@ type OptionMysqlCheck struct {
 	Comment       string
 }
 
+//sections:healthcheck
+//name:type mysql-check
+//no:parse
+//test:ok:type mysql-check
+//test:ok:type mysql-check user john
+//test:ok:type mysql-check user john post-41
+//test:ok:type mysql-check user john pre-41
+//test:ok:type mysql-check # comment
+//test:fail:type mysql-check user
+//test:fail:type mysql-check user john 41
+//test:fail:type mysql-check user # comment
+type TypeMysqlCheck struct {
+	NoType        bool
+	User          string
+	ClientVersion string
+	Comment       string
+}
+
 //sections:backend
 //name:option pgsql-check
 //no:parse
@@ -994,6 +1029,21 @@ type OptionPgsqlCheck struct {
 	NoOption bool
 	User     string
 	Comment  string
+}
+
+//sections:healthcheck
+//name:type pgsql-check
+//no:parse
+//test:ok:type pgsql-check user john
+//test:ok:type pgsql-check user john # comment
+//test:fail:type pgsql-check
+//test:fail:type pgsql-check # comment
+//test:fail:type pgsql-check user
+//test:fail:type pgsql-check user # comment
+type TypePgsqlCheck struct {
+	NoType  bool
+	User    string
+	Comment string
 }
 
 //sections:backend
@@ -1024,6 +1074,22 @@ type OptionSmtpchk struct {
 	Hello    string
 	Domain   string
 	Comment  string
+}
+
+//sections:healthcheck
+//name:type smtpchk
+//no:parse
+//test:ok:type smtpchk
+//test:ok:no type smtpchk
+//test:ok:type smtpchk HELO mydomain.org
+//test:ok:type smtpchk EHLO mydomain.org
+//test:ok:type smtpchk # comment
+//test:ok:type smtpchk HELO mydomain.org # comment
+type TypeSmtpchk struct {
+	NoType  bool
+	Hello   string
+	Domain  string
+	Comment string
 }
 
 //sections:backend

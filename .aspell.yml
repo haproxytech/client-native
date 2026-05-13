@@ -29,6 +29,7 @@ allowed:
   - bwlim
   - caniuse
   - casbin
+  - chk
   - chmigrate
   - cli
   - clickhouse
@@ -186,6 +187,7 @@ allowed:
   - searchselect
   - shm
   - sig
+  - smtpchk
   - sni
   - spammy
   - ssl

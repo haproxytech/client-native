@@ -53,6 +53,7 @@ func (p *configParser) String() string {
 		LogForward,
 		LogProfile,
 		HTTPErrors,
+		HealthChecks,
 		Acme,
 		CrtStore,
 		FCGIApp,

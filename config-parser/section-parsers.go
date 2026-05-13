@@ -53,6 +53,7 @@ func (p *configParser) createParsers(parser map[string]ParserInterface, sequence
 	addParser(parser, &sequence, &extra.Section{Name: "traces"})
 	addParser(parser, &sequence, &extra.Section{Name: "log-profile"})
 	addParser(parser, &sequence, &extra.Section{Name: "acme"})
+	addParser(parser, &sequence, &extra.Section{Name: "healthcheck"})
 	if !p.Options.DisableUnProcessed {
 		addParser(parser, &sequence, &extra.UnProcessed{})
 	}
@@ -1068,5 +1069,26 @@ func (p *configParser) getAcmeParser() *Parsers {
 	addParser(parser, &sequence, &simple.Word{Name: "profile"})
 	addParser(parser, &sequence, &simple.Word{Name: "provider-name"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "reuse-key"})
+	return p.createParsers(parser, sequence)
+}
+
+func (p *configParser) getHealthCheckParser() *Parsers {
+	parser := map[string]ParserInterface{}
+	sequence := []Section{}
+	addParser(parser, &sequence, &simple.Type{Name: "ssl-hello-chk"})
+	addParser(parser, &sequence, &simple.Type{Name: "redis-check"})
+	addParser(parser, &sequence, &simple.Type{Name: "ldap-check"})
+	addParser(parser, &sequence, &simple.Type{Name: "spop-check"})
+	addParser(parser, &sequence, &simple.Type{Name: "tcp-check"})
+	addParser(parser, &sequence, &parsers.TypePgsqlCheck{})
+	addParser(parser, &sequence, &parsers.TypeSmtpchk{})
+	addParser(parser, &sequence, &parsers.TypeMysqlCheck{})
+	addParser(parser, &sequence, &parsers.TypeHttpchk{})
+	addParser(parser, &sequence, &tcp.Checks{})
+	if p.Options.UseV2HTTPCheck {
+		addParser(parser, &sequence, &parsers.HTTPCheckV2{})
+	} else {
+		addParser(parser, &sequence, &http.Checks{Mode: "healthcheck"})
+	}
 	return p.createParsers(parser, sequence)
 }
