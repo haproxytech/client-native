@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-cmp/cmp"
 	native_errors "github.com/haproxytech/client-native/v5/errors"
 	"github.com/haproxytech/client-native/v5/misc"
@@ -158,7 +159,12 @@ func (c *client) Reload() (string, error) {
 	if c.options.MasterSocketData == nil {
 		return "", fmt.Errorf("cannot reload: not connected to a master socket")
 	}
-	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 7}) {
+	// Init-time version probe is fire-and-forget; retry here so a transient
+	// startup failure doesn't permanently disable the gate.
+	if haproxyVersion == nil {
+		_, _ = c.GetVersion()
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("2.7")}) {
 		return "", fmt.Errorf("cannot reload: requires HAProxy 2.7 or later but current version is %v", haproxyVersion)
 	}
 
@@ -237,7 +243,7 @@ func (c *client) AddServer(backend, name, attributes string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
-	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 6}) {
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("2.6")}) {
 		return fmt.Errorf("this operation requires HAProxy 2.6 or later but current version is %v", haproxyVersion)
 	}
 	for _, runtime := range c.runtimes {
@@ -254,8 +260,8 @@ func (c *client) DeleteServer(backend, name string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
-	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 6}) {
-		return fmt.Errorf("this operation requires HAProxy 2.6 or later")
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("2.6")}) {
+		return errors.New("this operation requires HAProxy 2.6 or later")
 	}
 	for _, runtime := range c.runtimes {
 		err := runtime.DeleteServer(backend, name)
@@ -839,7 +845,7 @@ func (c *client) AddMapPayloadVersioned(name string, entries models.MapEntries) 
 		return err
 	}
 	canAtomicUpdate := false
-	v := HAProxyVersion{Major: 2, Minor: 4}
+	v := HAProxyVersion{Version: semver.MustParse("2.4")}
 	if c.IsVersionBiggerOrEqual(&v) {
 		canAtomicUpdate = true
 	}
@@ -1142,7 +1148,7 @@ func (c *client) AddACLAtomic(aclID string, entries models.ACLFilesEntries) erro
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
-	v := HAProxyVersion{Major: 2, Minor: 4}
+	v := HAProxyVersion{Version: semver.MustParse("2.4")}
 	if !c.IsVersionBiggerOrEqual(&v) {
 		return fmt.Errorf("not supported for HAProxy versions lower than 2.4 %w", native_errors.ErrGeneral)
 	}
