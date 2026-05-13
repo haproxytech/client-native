@@ -49,6 +49,9 @@ frontend:
         ssl_front_use_list:
           $ref: "#/definitions/ssl_front_uses"
           x-go-name: SSLFrontUses
+        force_be_switch_list:
+          $ref: "#/definitions/force_be_switches"
+          x-go-name: ForceBeSwitchList
 frontend_base:
   title: Frontend Base
   description: HAProxy frontend configuration

@@ -43,6 +43,9 @@ func (rec Frontend) Diff(obj Frontend, opts ...eqdiff.GoMethodGenOptions) map[st
 	for diffKey, diffValue := range rec.FilterSequenceList.Diff(obj.FilterSequenceList, opts...) {
 		diff["FilterSequenceList"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range rec.ForceBeSwitchList.Diff(obj.ForceBeSwitchList, opts...) {
+		diff["ForceBeSwitchList"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList, opts...) {
 		diff["HTTPAfterResponseRuleList"+diffKey] = diffValue
 	}

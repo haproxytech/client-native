@@ -28,6 +28,7 @@ func (rec Frontend) Equal(obj Frontend, opts ...eqdiff.GoMethodGenOptions) bool 
 		rec.CaptureList.Equal(obj.CaptureList, opts...) &&
 		rec.FilterList.Equal(obj.FilterList, opts...) &&
 		rec.FilterSequenceList.Equal(obj.FilterSequenceList, opts...) &&
+		rec.ForceBeSwitchList.Equal(obj.ForceBeSwitchList, opts...) &&
 		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList, opts...) &&
 		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList, opts...) &&
 		rec.HTTPRequestRuleList.Equal(obj.HTTPRequestRuleList, opts...) &&

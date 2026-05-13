@@ -1563,6 +1563,21 @@ type IgnorePersist struct {
 	Comment  string
 }
 
+//sections:frontend
+//name:force-be-switch
+//is:multiple
+//test:ok:force-be-switch if acl-name
+//test:ok:force-be-switch unless acl-name
+//test:fail:force-be-switch
+//test:fail:force-be-switch if
+//test:fail:force-be-switch ddd acl-name
+//test:fail:force-be-switch acl-name
+type ForceBeSwitch struct {
+	Cond     string
+	CondTest string
+	Comment  string
+}
+
 //sections:global
 //name:unix-bind
 //test:ok:unix-bind prefix pre

@@ -3399,6 +3399,9 @@ definitions:
           filter_sequence_list:
             $ref: '#/definitions/filter_sequences'
             x-go-name: FilterSequenceList
+          force_be_switch_list:
+            $ref: '#/definitions/force_be_switches'
+            x-go-name: ForceBeSwitchList
           http_after_response_rule_list:
             $ref: '#/definitions/http_after_response_rules'
             x-go-name: HTTPAfterResponseRuleList
@@ -12354,6 +12357,38 @@ definitions:
       $ref: "#/definitions/ssl_front_use"
     x-omitempty: true
     x-go-name: SSLFrontUses
+  force_be_switch:
+    description: |
+      Allow content switching to select a backend instance even if it is
+      disabled or unpublished. May appear multiple times on a frontend.
+    properties:
+      cond:
+        enum:
+          - if
+          - unless
+        type: string
+        x-display-name: Condition
+      cond_test:
+        type: string
+        x-dependency:
+          cond:
+            required: true
+        x-display-name: Condition Test
+      metadata:
+        additionalProperties:
+          type: object
+    required:
+      - cond
+      - cond_test
+    title: Force Backend Switch Rule
+    type: object
+    x-go-name: ForceBeSwitch
+  force_be_switches:
+    type: array
+    items:
+      $ref: "#/definitions/force_be_switch"
+    x-omitempty: true
+    x-go-name: ForceBeSwitches
   acme_provider:
     additionalProperties: false
     description: Define an ACME provider to generate certificates automatically
@@ -28782,6 +28817,159 @@ paths:
       summary: Replace an SSLFrontUse
       tags:
         - SSLFrontUse
+  /services/haproxy/configuration/frontends/{parent_name}/force_be_switches:
+    get:
+      description: Returns all force-be-switch rules configured on the specified frontend.
+      operationId: getAllForceBeSwitches
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switches'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of force-be-switch rules
+      tags:
+        - ForceBeSwitch
+    post:
+      description: Adds a new force-be-switch rule on the specified frontend.
+      operationId: createForceBeSwitch
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: ForceBeSwitch created
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new force-be-switch rule
+      tags:
+        - ForceBeSwitch
+  /services/haproxy/configuration/frontends/{parent_name}/force_be_switches/{index}:
+    delete:
+      description: Deletes a force-be-switch rule by its index on the specified frontend.
+      operationId: deleteForceBeSwitch
+      parameters:
+        - description: ForceBeSwitch index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: ForceBeSwitch deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a force-be-switch rule
+      tags:
+        - ForceBeSwitch
+    get:
+      description: Returns a single force-be-switch rule by its index on the specified frontend.
+      operationId: getForceBeSwitch
+      parameters:
+        - description: ForceBeSwitch index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "404":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one force-be-switch rule
+      tags:
+        - ForceBeSwitch
+    put:
+      description: Replaces a force-be-switch rule by its index on the specified frontend.
+      operationId: replaceForceBeSwitch
+      parameters:
+        - description: ForceBeSwitch index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: ForceBeSwitch replaced
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a force-be-switch rule
+      tags:
+        - ForceBeSwitch
   /services/haproxy/configuration/acme:
     get:
       description: Returns an array of all the configured ACME providers

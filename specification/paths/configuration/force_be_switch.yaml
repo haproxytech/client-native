@@ -1,0 +1,154 @@
+---
+force_be_switches:
+  get:
+    summary: Return an array of force-be-switch rules
+    description: Returns all force-be-switch rules configured on the specified frontend.
+    operationId: getAllForceBeSwitches
+    tags:
+      - ForceBeSwitch
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/force_be_switches"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new force-be-switch rule
+    description: Adds a new force-be-switch rule on the specified frontend.
+    operationId: createForceBeSwitch
+    tags:
+      - ForceBeSwitch
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/force_be_switch'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/force_be_switch"
+      '201':
+        description: ForceBeSwitch created
+        schema:
+          $ref: "#/definitions/force_be_switch"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+force_be_switches_one:
+  get:
+    summary: Return one force-be-switch rule
+    description: Returns a single force-be-switch rule by its index on the specified frontend.
+    operationId: getForceBeSwitch
+    tags:
+      - ForceBeSwitch
+    parameters:
+      - name: index
+        in: path
+        description: ForceBeSwitch index (zero-based)
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/force_be_switch"
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a force-be-switch rule
+    description: Replaces a force-be-switch rule by its index on the specified frontend.
+    operationId: replaceForceBeSwitch
+    tags:
+      - ForceBeSwitch
+    parameters:
+      - name: index
+        in: path
+        description: ForceBeSwitch index (zero-based)
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/force_be_switch'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/force_be_switch"
+      '200':
+        description: ForceBeSwitch replaced
+        schema:
+          $ref: "#/definitions/force_be_switch"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a force-be-switch rule
+    description: Deletes a force-be-switch rule by its index on the specified frontend.
+    operationId: deleteForceBeSwitch
+    tags:
+      - ForceBeSwitch
+    parameters:
+      - name: index
+        in: path
+        description: ForceBeSwitch index (zero-based)
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: ForceBeSwitch deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

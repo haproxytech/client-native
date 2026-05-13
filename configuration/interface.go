@@ -44,6 +44,7 @@ type Configuration interface {
 	DgramBind
 	FCGIApp
 	Filter
+	ForceBeSwitch
 	Frontend
 	Global
 	HTTPCheck

@@ -905,6 +905,14 @@ const frontend_declarecaptureresponselen2 = `
 frontend test
   declare capture response len 2
 `
+const frontend_forcebeswitchifaclname = `
+frontend test
+  force-be-switch if acl-name
+`
+const frontend_forcebeswitchunlessaclname = `
+frontend test
+  force-be-switch unless acl-name
+`
 const frontend_optionhttprestrictreqhdrnamespre = `
 frontend test
   option http-restrict-req-hdr-names preserve

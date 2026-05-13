@@ -2280,6 +2280,8 @@ frontend test
   monitor fail if no_db01 no_db02
   declare capture request len 1
   declare capture response len 2
+  force-be-switch if acl-name
+  force-be-switch unless acl-name
   option http-restrict-req-hdr-names preserve
   option originalto
   ssl-f-use crt test.foobar.pem
@@ -4359,6 +4361,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  ignore-persist if acl-name
 `, 1},
 	{`  ignore-persist unless acl-name
+`, 1},
+	{`  force-be-switch if acl-name
+`, 1},
+	{`  force-be-switch unless acl-name
 `, 1},
 	{`  unix-bind prefix pre
 `, 1},

@@ -31,6 +31,7 @@ const (
 	FilterChildType                = "filter"
 	LogTargetChildType             = "log_target"
 	SSLFrontUseChildType           = "ssl_front_use"
+	ForceBeSwitchChildType         = "force_be_switch"
 )
 
 type CnParentType string

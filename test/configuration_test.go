@@ -730,6 +730,8 @@ frontend test
   declare capture request len 1
   ssl-f-use crt foobar.pem.rsa sigalgs "RSA-PSS+SHA256"
   ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
+  force-be-switch if internal_acl
+  force-be-switch unless public_acl
 
 frontend test_2 from test_defaults
   mode http

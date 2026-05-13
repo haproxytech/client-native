@@ -756,6 +756,14 @@ definitions:
       $ref: "#/definitions/ssl_front_use"
     x-omitempty: true
     x-go-name: SSLFrontUses
+  force_be_switch:
+    $ref: "models/configuration/force_be_switch.yaml#/force_be_switch"
+  force_be_switches:
+    type: array
+    items:
+      $ref: "#/definitions/force_be_switch"
+    x-omitempty: true
+    x-go-name: ForceBeSwitches
   acme_provider:
     $ref: "models/configuration/acme.yaml#/acme"
   acme_providers:
@@ -1330,6 +1338,14 @@ paths:
     $ref: "paths/configuration/ssl_front_use.yaml#/ssl_front_uses"
   /services/haproxy/configuration/frontends/{parent_name}/ssl_front_uses/{index}:
     $ref: "paths/configuration/ssl_front_use.yaml#/ssl_front_uses_one"
+  {{ range parents "force_be_switch" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/force_be_switches:
+    $ref: "paths/configuration/force_be_switch.yaml#/force_be_switches"
+  {{ end -}}
+  {{ range parents "force_be_switch" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/force_be_switches/{index}:
+    $ref: "paths/configuration/force_be_switch.yaml#/force_be_switches_one"
+  {{ end -}}
   /services/haproxy/configuration/acme:
     $ref: "paths/configuration/acme.yaml#/acme_providers"
   /services/haproxy/configuration/acme/{name}:

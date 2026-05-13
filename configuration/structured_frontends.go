@@ -264,6 +264,13 @@ func parseFrontendsSection(name string, p parser.Parser) (*models.Frontend, erro
 	}
 	f.SSLFrontUses = sslFuses
 
+	// force-be-switch rules
+	forceBeSwitches, err := ParseForceBeSwitches(FrontendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	f.ForceBeSwitchList = forceBeSwitches
+
 	return f, nil
 }
 
@@ -376,6 +383,12 @@ func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend, opt 
 	for i, use := range f.SSLFrontUses {
 		u := SerializeSSLFrontUse(*use)
 		if err = p.Insert(parser.Frontends, f.Name, "ssl-f-use", u, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, rule := range f.ForceBeSwitchList {
+		r := SerializeForceBeSwitch(*rule)
+		if err = p.Insert(parser.Frontends, f.Name, "force-be-switch", r, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
 		}
 	}

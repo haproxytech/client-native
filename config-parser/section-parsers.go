@@ -607,6 +607,7 @@ func (p *configParser) getFrontendParser() *Parsers {
 	addParser(parser, &sequence, &simple.Word{Name: "guid"})
 	addParser(parser, &sequence, &quic.Initial{})
 	addParser(parser, &sequence, &parsers.SSLFrontUse{})
+	addParser(parser, &sequence, &parsers.ForceBeSwitch{})
 	return p.createParsers(parser, sequence)
 }
 

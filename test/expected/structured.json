@@ -3035,6 +3035,16 @@
                     "ocsp": "test2.foobar.ocsp",
                     "ocsp_update": "enabled"
                 }
+            ],
+            "force_be_switch_list": [
+                {
+                    "cond": "if",
+                    "cond_test": "internal_acl"
+                },
+                {
+                    "cond": "unless",
+                    "cond_test": "public_acl"
+                }
             ]
         },
         "test_2": {
