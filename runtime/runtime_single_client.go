@@ -144,6 +144,10 @@ func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
 
 // Execute executes command on runtime API
 func (s *SingleRuntime) Execute(command string) error {
+	// Make sure to only execute a single command.
+	if strings.ContainsAny(command, ";") {
+		return ErrRuntimeInvalidChar
+	}
 	rawdata, err := s.ExecuteRaw(command)
 	if err != nil {
 		return fmt.Errorf("%w [%s]", err, command)
@@ -158,6 +162,10 @@ func (s *SingleRuntime) Execute(command string) error {
 }
 
 func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
+	// Make sure to only execute a single command.
+	if strings.ContainsAny(command, ";") {
+		return "", ErrRuntimeInvalidChar
+	}
 	rawdata, err := s.ExecuteRaw(command)
 	if err != nil {
 		return "", fmt.Errorf("%w [%s]", err, command)
@@ -172,15 +180,15 @@ func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
 }
 
 func (s *SingleRuntime) ExecuteMaster(command string) (string, error) {
+	// Make sure to only execute a single command.
+	if strings.ContainsAny(command, ";") {
+		return "", ErrRuntimeInvalidChar
+	}
 	// allow one retry if connection breaks temporarily
 	return s.executeRaw(command, 1, masterSocket)
 }
 
 func (s *SingleRuntime) executeRaw(command string, retry int, socket socketType) (string, error) {
-	// Make sure to only execute a single command.
-	if strings.ContainsAny(command, ";") {
-		return "", ErrRuntimeInvalidChar
-	}
 	result, err := s.readFromSocket(command, socket)
 	if err != nil && retry > 0 {
 		retry--
