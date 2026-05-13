@@ -30,6 +30,6 @@ func (s *MajorVersionInRuntime) TestExample() {
 	if err != nil {
 		s.FailNow(err.Error())
 	}
-	versionStr := fmt.Sprintf("%d.%d", version.Major, version.Minor)
+	versionStr := fmt.Sprintf("%d.%d", version.Major(), version.Minor())
 	s.Equal(versionStr, s.haproxy_version)
 }
