@@ -106,6 +106,8 @@ allowed:
   - infos
   - ipam
   - istanbul
+  - instantiations
+  - iweight
   - jose
   - json
   - jsonpath

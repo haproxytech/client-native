@@ -31,7 +31,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 	"github.com/joho/godotenv"
 )
 
@@ -164,7 +164,7 @@ func main() {
 		"backport-ee": {},
 	}
 	for _, version := range versions {
-		ver := strconv.Itoa(int(version.Major())) + "." + strconv.Itoa(int(version.Minor()))
+		ver := strconv.FormatUint(version.Major(), 10) + "." + strconv.FormatUint(version.Minor(), 10)
 		question += "\n" + "| " + ver + " | " + "backport-" + ver + " |"
 		backportLabels["backport-"+ver] = struct{}{}
 	}
