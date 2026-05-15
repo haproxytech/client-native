@@ -26,12 +26,10 @@ import (
 	"net/url"
 	"os"
 	"slices"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/joho/godotenv"
 )
 
@@ -80,10 +78,6 @@ type GitlabLabel struct {
 	Description string `json:"description,omitempty"` // omitempty handles cases where description might be null or absent
 }
 
-type Support struct {
-	Versions []string `yaml:"versions"`
-}
-
 type MergeRequest struct {
 	Description string `json:"description"`
 }
@@ -91,6 +85,16 @@ type MergeRequest struct {
 var baseURL string //nolint:gochecknoglobals
 
 const LABEL_COLOR = "#8fbc8f" //nolint:revive
+
+// supportedVersions lists the active client-native release lines for which
+// the bot will propose backports. Update this when a new release is cut
+// or an old one is EOL'd.
+var supportedVersions = []string{ //nolint:gochecknoglobals
+	"5.1",
+	"6.0",
+	"6.2",
+	"6.3",
+}
 
 //nolint:modernize,perfsprint
 func main() {
@@ -121,26 +125,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	docs, err := GetBranches()
-	if err != nil {
-		slog.Error(err.Error())
-		os.Exit(1)
-	}
-	var versions []*semver.Version
-	for _, r := range docs {
-		v, err := semver.NewVersion(r)
-		if err != nil {
-			slog.Debug("could not parse branch name as semver, skipping", "branch", r, "error", err)
-			continue
-		}
-		versions = append(versions, v)
-	}
-
-	sort.Sort(semver.Collection(versions))
-	if len(versions) > 6 {
-		versions = versions[len(versions)-6:]
-	}
-
 	gitlabToken := os.Getenv("GITLAB_TOKEN")
 
 	CI_MERGE_REQUEST_IID_STR := os.Getenv("CI_MERGE_REQUEST_IID") //nolint:revive
@@ -163,8 +147,7 @@ func main() {
 	backportLabels := map[string]struct{}{
 		"backport-ee": {},
 	}
-	for _, version := range versions {
-		ver := strconv.FormatUint(version.Major(), 10) + "." + strconv.FormatUint(version.Minor(), 10)
+	for _, ver := range supportedVersions {
 		question += "\n" + "| " + ver + " | " + "backport-" + ver + " |"
 		backportLabels["backport-"+ver] = struct{}{}
 	}
@@ -364,78 +347,6 @@ func getProjectlabels(backportLabels map[string]struct{}, projectID string) erro
 	}
 
 	return nil
-}
-
-func GetBranches() ([]string, error) {
-	projectID := os.Getenv("CI_PROJECT_ID")
-	token := os.Getenv("GITLAB_TOKEN")
-
-	if baseURL == "" || projectID == "" || token == "" {
-		return nil, errors.New("one or more required environment variables are not set: CI_API_V4_URL, CI_PROJECT_ID, GITLAB_TOKEN")
-	}
-
-	var branches []string
-	client := &http.Client{}
-
-	nextPageURL := fmt.Sprintf("%s/projects/%s/repository/branches", baseURL, url.PathEscape(projectID))
-
-	for nextPageURL != "" {
-		req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, nextPageURL, nil)
-		if err != nil {
-			return nil, fmt.Errorf("failed to create request: %w", err)
-		}
-		req.Header.Add("PRIVATE-TOKEN", token) //nolint:canonicalheader
-
-		resp, err := client.Do(req)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get branches: %w", err)
-		}
-
-		if resp.StatusCode != http.StatusOK {
-			body, _ := io.ReadAll(resp.Body)
-			resp.Body.Close()
-			return nil, fmt.Errorf("failed to get branches: status %s, body: %s", resp.Status, string(body))
-		}
-
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			resp.Body.Close()
-			return nil, fmt.Errorf("failed to read response body: %w", err)
-		}
-		resp.Body.Close()
-
-		type Branch struct {
-			Name string `json:"name"`
-		}
-		var gitlabBranches []Branch
-		err = json.Unmarshal(body, &gitlabBranches)
-		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal response body: %w", err)
-		}
-
-		for _, b := range gitlabBranches {
-			branches = append(branches, b.Name)
-		}
-
-		// Check for the next page using Link header
-		linkHeader := resp.Header.Get("Link")
-		if linkHeader == "" {
-			nextPageURL = ""
-			continue
-		}
-
-		links := strings.Split(linkHeader, ",")
-		nextPageURL = ""
-		for _, link := range links {
-			parts := strings.Split(strings.TrimSpace(link), ";")
-			if len(parts) == 2 && strings.TrimSpace(parts[1]) == `rel="next"` {
-				nextPageURL = strings.Trim(parts[0], "<>")
-				break
-			}
-		}
-	}
-
-	return branches, nil
 }
 
 const hello = `
