@@ -217,8 +217,8 @@ type Frontend struct {
 	LogSeparateErrors string `json:"log_separate_errors,omitempty"`
 
 	// log tag
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	// Pattern: ^[A-Za-z0-9-_.:${}"]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:${}"]+$`
 	LogTag string `json:"log_tag,omitempty"`
 
 	// logasap
@@ -1436,7 +1436,7 @@ func (m *Frontend) validateLogTag(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("log_tag", "body", m.LogTag, `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("log_tag", "body", m.LogTag, `^[A-Za-z0-9-_.:${}"]+$`); err != nil {
 		return err
 	}
 
