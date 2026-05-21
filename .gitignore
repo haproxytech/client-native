@@ -2,4 +2,6 @@
 .idea/
 bin/golangci-lint
 bin/swagger
+bin
 .envrc
+bin/go-method-gen

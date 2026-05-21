@@ -172,7 +172,8 @@ func TestClusterSettingsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 4 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -332,7 +333,8 @@ func TestClusterSettingsClusterDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 7 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 7 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -492,7 +494,8 @@ func TestClusterLogTargetDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 4 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

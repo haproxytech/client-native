@@ -17,6 +17,11 @@
 
 package models
 
+import (
+	"strings"
+	"unicode"
+)
+
 var NilSameAsEmpty = true
 var SkipIndex = true
 
@@ -154,4 +159,27 @@ func equalMapStringMapSting(m1, m2 map[string]map[string]string, opt Options) bo
 		}
 	}
 	return true
+}
+
+func GetListOfDiffFields(diffs map[string][]interface{}) []string {
+	fields := make(map[string]struct{}, len(diffs))
+	for diff := range diffs {
+		var sb strings.Builder
+		for _, r := range diff {
+			if !(unicode.IsLetter(r) || unicode.IsNumber(r)) {
+				break
+			}
+			sb.WriteRune(r)
+		}
+		key := sb.String()
+		if key == "Metadata" {
+			continue
+		}
+		fields[key] = struct{}{}
+	}
+	result := make([]string, 0, len(fields))
+	for k := range fields {
+		result = append(result, k)
+	}
+	return result
 }

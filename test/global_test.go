@@ -61,7 +61,7 @@ func TestPutGlobal(t *testing.T) {
 	ver, global, err := clientTest.GetGlobalConfiguration("")
 	require.NoError(t, err)
 
-	require.True(t, g.GlobalBase.Equal(global.GlobalBase, models.Options{NilSameAsEmpty: false}), "diff %v", cmp.Diff(g.GlobalBase, global.GlobalBase))
+	require.True(t, g.GlobalBase.Equal(global.GlobalBase), "diff %v", cmp.Diff(g.GlobalBase, global.GlobalBase))
 	if ver != version {
 		t.Fatal("Version not incremented!")
 	}
@@ -77,7 +77,7 @@ func TestPutEmptyGlobal(t *testing.T) {
 	ver, global, err := clientTest.GetGlobalConfiguration("")
 	require.NoError(t, err)
 
-	require.True(t, g.GlobalBase.Equal(global.GlobalBase, models.Options{NilSameAsEmpty: false}), "diff %v", cmp.Diff(g.GlobalBase, global.GlobalBase))
+	require.True(t, g.GlobalBase.Equal(global.GlobalBase), "diff %v", cmp.Diff(g.GlobalBase, global.GlobalBase))
 	if ver != version {
 		t.Fatal("Version not incremented!")
 	}
@@ -90,7 +90,7 @@ func TestPutEmptyGlobal(t *testing.T) {
 	ver, global, err = clientTest.GetGlobalConfiguration("")
 	require.NoError(t, err)
 
-	require.True(t, g.GlobalBase.Equal(global.GlobalBase, models.Options{NilSameAsEmpty: false}), "diff %v", cmp.Diff(g.GlobalBase, global.GlobalBase))
+	require.True(t, g.GlobalBase.Equal(global.GlobalBase), "diff %v", cmp.Diff(g.GlobalBase, global.GlobalBase))
 	if ver != version {
 		t.Fatal("Version not incremented!")
 	}

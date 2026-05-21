@@ -178,7 +178,8 @@ func TestOcspUpdateOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 5 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 5 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -338,7 +339,8 @@ func TestOcspUpdateOptionsHttpproxyDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

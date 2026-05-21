@@ -153,7 +153,7 @@ func TestPushStructuredDefaults(t *testing.T) {
 	ver, defaults, err := clientTest.GetStructuredDefaultsConfiguration("")
 	require.NoError(t, err)
 
-	//assert.EqualValues(t, d, defaults)
+	// assert.EqualValues(t, d, defaults)
 	require.True(t, defaults.Equal(*d), "k=%s - diff %v", "defaults", cmp.Diff(*defaults, *d))
 
 	if ver != version {
@@ -237,7 +237,8 @@ func TestEditCreateDeleteStructuredDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "disabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err = clientTest.CreateStructuredDefaultsSection(d, "", version)
 	require.NoError(t, err)
 	version++
@@ -256,7 +257,8 @@ func TestEditCreateDeleteStructuredDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "enabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err = clientTest.EditStructuredDefaultsSection("created", d, "", version)
 	require.NoError(t, err)
 	version++
@@ -282,5 +284,4 @@ func TestEditCreateDeleteStructuredDefaultsSection(t *testing.T) {
 
 	err = clientTest.DeleteDefaultsSection("i_dont_exist", "", version)
 	require.Error(t, err, "Should throw error, non existent defaults section")
-
 }

@@ -204,7 +204,8 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 66 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 66 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

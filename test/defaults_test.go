@@ -227,7 +227,8 @@ func TestEditCreateDeleteDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "disabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err := clientTest.CreateDefaultsSection(d, "", version)
 	if err != nil {
 		t.Error(err.Error())
@@ -274,7 +275,8 @@ func TestEditCreateDeleteDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "enabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err = clientTest.EditDefaultsSection("created", d, "", version)
 	if err != nil {
 		t.Error(err.Error())

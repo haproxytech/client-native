@@ -320,7 +320,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 					Enabled: misc.StringP("enabled"),
 					Except:  "127.0.0.1",
 				},
-			}},
+			},
+		},
 		{
 			BackendBase: models.BackendBase{
 				Name: "created",
@@ -388,7 +389,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 					{Cond: misc.StringP("if"), CondTest: misc.StringP("host_www")},
 					{Cond: misc.StringP("unless"), CondTest: misc.StringP("missing_cl")},
 				},
-			}},
+			},
+		},
 	}
 
 	for i, backend := range backends {
@@ -694,7 +696,8 @@ func TestCreateEditDeleteBackendHTTPConnectionMode(t *testing.T) {
 						},
 					},
 					HTTPConnectionMode: "httpclose",
-				}},
+				},
+			},
 			expectedHTTPConnectionMode: "httpclose",
 		},
 		{
@@ -710,7 +713,8 @@ func TestCreateEditDeleteBackendHTTPConnectionMode(t *testing.T) {
 						},
 					},
 					HTTPConnectionMode: "http-keep-alive",
-				}},
+				},
+			},
 			expectedHTTPConnectionMode: "http-keep-alive",
 		},
 		{
@@ -726,7 +730,8 @@ func TestCreateEditDeleteBackendHTTPConnectionMode(t *testing.T) {
 						},
 					},
 					HTTPConnectionMode: "",
-				}},
+				},
+			},
 			expectedHTTPConnectionMode: "",
 		},
 	}
