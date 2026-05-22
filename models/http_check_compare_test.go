@@ -188,7 +188,8 @@ func TestHTTPCheckDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 34 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 34 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {

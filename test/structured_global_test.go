@@ -72,5 +72,4 @@ func TestPutStructuredGlobal(t *testing.T) {
 
 	err = clientTest.PushStructuredGlobalConfiguration(g, "", 55)
 	require.Error(t, err, "Should have returned version conflict.")
-
 }

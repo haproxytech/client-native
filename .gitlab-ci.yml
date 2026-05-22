@@ -66,7 +66,7 @@ generate:
   tags:
     - go
   before_script:
-    - find models -maxdepth 1 -type f -name "*.go" -exec rm {} \;
+    - rm -rf models/*.go
     - make models
   script:
     - |

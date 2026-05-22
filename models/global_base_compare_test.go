@@ -230,7 +230,8 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 72 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 72 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -388,7 +389,8 @@ func TestCPUMapDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -546,7 +548,8 @@ func TestCPUSetDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -704,7 +707,8 @@ func TestGlobalDefaultPathDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -862,7 +866,8 @@ func TestH1CaseAdjustDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -1020,7 +1025,8 @@ func TestGlobalHardenDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 1 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 1 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -1178,7 +1184,8 @@ func TestGlobalHardenRejectPrivilegedPortsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -1336,7 +1343,8 @@ func TestGlobalLogSendHostnameDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -1494,7 +1502,8 @@ func TestRuntimeAPIDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -1652,7 +1661,8 @@ func TestSetVarFmtDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -1810,7 +1820,8 @@ func TestSetVarDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -1968,7 +1979,8 @@ func TestThreadGroupDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
