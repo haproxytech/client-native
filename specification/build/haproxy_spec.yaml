@@ -4398,6 +4398,69 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/backend'
+  healthcheck:
+    allOf:
+      - $ref: '#/definitions/healthcheck_base'
+      - properties:
+          http_check_list:
+            $ref: '#/definitions/http_checks'
+            x-go-name: HTTPCheckRuleList
+          tcp_check_list:
+            $ref: '#/definitions/tcp_checks'
+            x-go-name: TCPCheckRuleList
+        type: object
+    description: HealthCheck with all it's children resources
+    type: object
+    x-go-name: HealthCheck
+  healthcheck_base:
+    description: HealthCheck with all it's children resources
+    properties:
+      httpchk_params:
+        $ref: '#/definitions/httpchk_params'
+        x-dependency:
+          type:
+            value: httpchk
+      mysql_check_params:
+        $ref: '#/definitions/mysql_check_params'
+        x-dependency:
+          type:
+            value: mysql-check
+      name:
+        pattern: ^[A-Za-z0-9-_.:]+$
+        type: string
+        x-nullable: false
+      pgsql_check_params:
+        $ref: '#/definitions/pgsql_check_params'
+        x-dependency:
+          type:
+            value: pgsql-check
+      smtpchk_params:
+        $ref: '#/definitions/smtpchk_params'
+        x-dependency:
+          type:
+            value: smtpchk
+      type:
+        enum:
+          - httpchk
+          - ldap-check
+          - mysql-check
+          - pgsql-check
+          - redis-check
+          - smtpchk
+          - spop-check
+          - ssl-hello-chk
+          - tcp-check
+        type: string
+    required:
+      - name
+    type: object
+    x-go-name: HealthCheckBase
+  healthchecks:
+    title: HealthChecks
+    description: HAProxy healthchecks array
+    type: array
+    items:
+      $ref: '#/definitions/healthcheck'
   ring:
     allOf:
       - $ref: '#/definitions/ring_base'
@@ -12593,6 +12656,7 @@ tags:
   - name: HTTPErrors
   - name: HTTPRequestRule
   - name: HTTPResponseRule
+  - name: HealthCheck
   - name: Information
   - name: LogForward
   - name: LogProfile
@@ -20546,6 +20610,60 @@ paths:
       summary: Replace an TCP Check list
       tags:
         - TCPCheck
+  /services/haproxy/configuration/healthchecks/{parent_name}/tcp_checks:
+    get:
+      description: Returns all TCP checks that are configured in specified parent.
+      operationId: getAllTCPCheckHealthcheck
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_checks'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of TCP checks
+      tags:
+        - TCPCheck
+    put:
+      description: Replaces a whole list of TCP Checks with the list given in parameter
+      operationId: replaceAllTCPCheckHealthcheck
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_checks'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All TCP Check lines replaced
+          schema:
+            $ref: '#/definitions/tcp_checks'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_checks'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an TCP Check list
+      tags:
+        - TCPCheck
   /services/haproxy/configuration/backends/{parent_name}/tcp_checks/{index}:
     delete:
       description: Deletes a TCP check configuration by it's index from the specified parent.
@@ -20783,6 +20901,143 @@ paths:
     put:
       description: Replaces a TCP Check configuration by it's index in the specified parent.
       operationId: replaceTCPCheckDefaults
+      parameters:
+        - description: TCP Check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_check'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: TCP check replaced
+          schema:
+            $ref: '#/definitions/tcp_check'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_check'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a TCP check
+      tags:
+        - TCPCheck
+  /services/haproxy/configuration/healthchecks/{parent_name}/tcp_checks/{index}:
+    delete:
+      description: Deletes a TCP check configuration by it's index from the specified parent.
+      operationId: deleteTCPCheckHealthcheck
+      parameters:
+        - description: TCP check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: TCP check deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a TCP check
+      tags:
+        - TCPCheck
+    get:
+      description: Returns one TCP check configuration by it's index in the specified parent.
+      operationId: getTCPCheckHealthcheck
+      parameters:
+        - description: TCP Check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_check'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one TCP check
+      tags:
+        - TCPCheck
+    post:
+      description: Adds a new TCP check of the specified type in the specified parent.
+      operationId: createTCPCheckHealthcheck
+      parameters:
+        - description: TCP check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_check'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: TCP check created
+          schema:
+            $ref: '#/definitions/tcp_check'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_check'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new TCP check
+      tags:
+        - TCPCheck
+    put:
+      description: Replaces a TCP Check configuration by it's index in the specified parent.
+      operationId: replaceTCPCheckHealthcheck
       parameters:
         - description: TCP Check Index
           in: path
@@ -29089,3 +29344,155 @@ paths:
       summary: Modify an ACME provider
       tags:
         - Acme
+  /services/haproxy/configuration/healthchecks:
+    get:
+      description: Returns an array of all configured healthchecks.
+      operationId: getHealthChecks
+      parameters:
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/healthchecks'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of healthchecks
+      tags:
+        - HealthCheck
+    post:
+      description: Adds a new healthcheck to the configuration file.
+      operationId: createHealthCheck
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/healthcheck'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
+      responses:
+        "201":
+          description: HealthCheck created
+          schema:
+            $ref: '#/definitions/healthcheck'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/healthcheck'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a healthcheck
+      tags:
+        - HealthCheck
+  /services/haproxy/configuration/healthchecks/{name}:
+    delete:
+      description: Deletes a healthcheck from the configuration by it's name.
+      operationId: deleteHealthCheck
+      parameters:
+        - description: HealthCheck name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: HealthCheck deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a healthcheck
+      tags:
+        - HealthCheck
+    get:
+      description: Returns one healthcheck configuration by it's name.
+      operationId: getHealthCheck
+      parameters:
+        - description: HealthCheck name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/healthcheck'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return a healthcheck
+      tags:
+        - HealthCheck
+    put:
+      description: Replaces a healthcheck configuration by it's name.
+      operationId: replaceHealthCheck
+      parameters:
+        - description: HealthCheck name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/healthcheck'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
+      responses:
+        "200":
+          description: HealthCheck replaced
+          schema:
+            $ref: '#/definitions/healthcheck'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/healthcheck'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a healthcheck
+      tags:
+        - HealthCheck

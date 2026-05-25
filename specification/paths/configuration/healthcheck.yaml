@@ -1,0 +1,153 @@
+---
+healthchecks:
+  get:
+    summary: Return an array of healthchecks
+    description: Returns an array of all configured healthchecks.
+    operationId: getHealthChecks
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
+    tags:
+      - HealthCheck
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/healthchecks"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a healthcheck
+    description: Adds a new healthcheck to the configuration file.
+    operationId: createHealthCheck
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/healthcheck"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
+    tags:
+      - HealthCheck
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/healthcheck"
+      '201':
+        description: HealthCheck created
+        schema:
+          $ref: "#/definitions/healthcheck"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+healthchecks_one:
+  get:
+    summary: Return a healthcheck
+    description: Returns one healthcheck configuration by it's name.
+    operationId: getHealthCheck
+    tags:
+      - HealthCheck
+    parameters:
+      - name: name
+        in: path
+        description: HealthCheck name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/healthcheck"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a healthcheck
+    description: Replaces a healthcheck configuration by it's name.
+    operationId: replaceHealthCheck
+    tags:
+      - HealthCheck
+    parameters:
+      - name: name
+        in: path
+        description: HealthCheck name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/healthcheck"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/healthcheck"
+      '200':
+        description: HealthCheck replaced
+        schema:
+          $ref: "#/definitions/healthcheck"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a healthcheck
+    description: Deletes a healthcheck from the configuration by it's name.
+    operationId: deleteHealthCheck
+    tags:
+      - HealthCheck
+    parameters:
+      - name: name
+        in: path
+        description: HealthCheck name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: HealthCheck deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

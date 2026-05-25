@@ -1,0 +1,58 @@
+---
+healthcheck:
+  type: object
+  description: HealthCheck with all it's children resources
+  x-go-name: HealthCheck
+  allOf:
+    - $ref: "#/definitions/healthcheck_base"
+    - type: object
+      properties:
+        tcp_check_list:
+          $ref: "#/definitions/tcp_checks"
+          x-go-name: TCPCheckRuleList
+        http_check_list:
+          $ref: "#/definitions/http_checks"
+          x-go-name: HTTPCheckRuleList
+healthcheck_base:
+  type: object
+  description: HealthCheck with all it's children resources
+  x-go-name: HealthCheckBase
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    type:
+      type: string
+      enum:
+        - httpchk
+        - ldap-check
+        - mysql-check
+        - pgsql-check
+        - redis-check
+        - smtpchk
+        - spop-check
+        - ssl-hello-chk
+        - tcp-check
+    httpchk_params:
+      $ref: "#/definitions/httpchk_params"
+      x-dependency:
+        type:
+          value: httpchk
+    mysql_check_params:
+      $ref: "#/definitions/mysql_check_params"
+      x-dependency:
+        type:
+          value: mysql-check
+    pgsql_check_params:
+      $ref: "#/definitions/pgsql_check_params"
+      x-dependency:
+        type:
+          value: pgsql-check
+    smtpchk_params:
+      $ref: "#/definitions/smtpchk_params"
+      x-dependency:
+        type:
+          value: smtpchk

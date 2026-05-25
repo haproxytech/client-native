@@ -118,6 +118,16 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/backend'
+  healthcheck:
+    $ref: "models/configuration/healthcheck.yaml#/healthcheck"
+  healthcheck_base:
+    $ref: "models/configuration/healthcheck.yaml#/healthcheck_base"
+  healthchecks:
+    title: HealthChecks
+    description: HAProxy healthchecks array
+    type: array
+    items:
+      $ref: '#/definitions/healthcheck'
   ring:
     $ref: "models/configuration/ring.yaml#/ring"
   ring_base:
@@ -949,6 +959,7 @@ tags:
   - name: Traces
   - name: LogProfile
   - name: Acme
+  - name: HealthCheck
 security:
   - basic_auth: []
 paths:
@@ -1350,3 +1361,7 @@ paths:
     $ref: "paths/configuration/acme.yaml#/acme_providers"
   /services/haproxy/configuration/acme/{name}:
     $ref: "paths/configuration/acme.yaml#/acme_providers_one"
+  /services/haproxy/configuration/healthchecks:
+    $ref: "paths/configuration/healthcheck.yaml#/healthchecks"
+  /services/haproxy/configuration/healthchecks/{name}:
+    $ref: "paths/configuration/healthcheck.yaml#/healthchecks_one"
