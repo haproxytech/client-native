@@ -165,7 +165,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 
 	stringAttr := map[string]*string{
 		"account-key":   &acme.AccountKey,
-		"acme-provider": &acme.AcmeProvider,
+		"provider-name": &acme.AcmeProvider,
 		"acme-vars":     &varsStr,
 		"challenge":     &acme.Challenge,
 		"contact":       &acme.Contact,
@@ -236,7 +236,7 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 
 	stringAttr := map[string]string{
 		"account-key":   acme.AccountKey,
-		"acme-provider": acme.AcmeProvider,
+		"provider-name": acme.AcmeProvider,
 		"acme-vars":     acmeVars,
 		"challenge":     acme.Challenge,
 		"contact":       acme.Contact,

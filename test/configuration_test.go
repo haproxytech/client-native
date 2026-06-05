@@ -1023,7 +1023,7 @@ mailers localmailer1
 
 acme test
   contact me@example.com
-  acme-provider gandy
+  provider-name gandy
   acme-vars "ApiKey=ple744587,Zone=example.com"
   bits 4096
   challenge http-01
