@@ -1035,7 +1035,6 @@ func (p *configParser) getAcmeParser() *Parsers {
 	parser := map[string]ParserInterface{}
 	sequence := []Section{}
 	addParser(parser, &sequence, &simple.Word{Name: "account-key"})
-	addParser(parser, &sequence, &simple.Word{Name: "acme-provider"})
 	addParser(parser, &sequence, &simple.Word{Name: "acme-vars"})
 	addParser(parser, &sequence, &simple.Number{Name: "bits"})
 	addParser(parser, &sequence, &simple.Word{Name: "challenge"})
@@ -1044,6 +1043,7 @@ func (p *configParser) getAcmeParser() *Parsers {
 	addParser(parser, &sequence, &simple.Word{Name: "directory"})
 	addParser(parser, &sequence, &simple.Word{Name: "keytype"})
 	addParser(parser, &sequence, &simple.Word{Name: "map"})
+	addParser(parser, &sequence, &simple.Word{Name: "provider-name"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "reuse-key"})
 	return p.createParsers(parser, sequence)
 }

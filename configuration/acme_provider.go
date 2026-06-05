@@ -165,7 +165,6 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 
 	stringAttr := map[string]*string{
 		"account-key":   &acme.AccountKey,
-		"acme-provider": &acme.AcmeProvider,
 		"acme-vars":     &varsStr,
 		"challenge":     &acme.Challenge,
 		"contact":       &acme.Contact,
@@ -173,6 +172,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		"directory":     &acme.Directory,
 		"keytype":       &acme.Keytype,
 		"map":           &acme.Map,
+		"provider-name": &acme.AcmeProvider,
 		"reuse-key":     &acme.ReuseKey,
 	}
 
@@ -235,7 +235,6 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 
 	stringAttr := map[string]string{
 		"account-key":   acme.AccountKey,
-		"acme-provider": acme.AcmeProvider,
 		"acme-vars":     acmeVars,
 		"challenge":     acme.Challenge,
 		"contact":       acme.Contact,
@@ -243,6 +242,7 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider) error {
 		"directory":     acme.Directory,
 		"keytype":       acme.Keytype,
 		"map":           acme.Map,
+		"provider-name": acme.AcmeProvider,
 		"reuse-key":     onOff(acme.ReuseKey),
 	}
 
