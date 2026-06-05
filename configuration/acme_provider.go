@@ -172,7 +172,6 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 
 	stringAttr := map[string]*string{
 		"account-key":     &acme.AccountKey,
-		"acme-provider":   &acme.AcmeProvider,
 		"acme-vars":       &varsStr,
 		"challenge":       &acme.Challenge,
 		"challenge-ready": &challReadyStr,
@@ -184,6 +183,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		"keytype":         &acme.Keytype,
 		"map":             &acme.Map,
 		"profile":         &acme.Profile,
+		"provider-name":   &acme.AcmeProvider,
 		"reuse-key":       &acme.ReuseKey,
 	}
 
@@ -274,7 +274,6 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider, opt *opti
 
 	stringAttr := map[string]string{
 		"account-key":     acme.AccountKey,
-		"acme-provider":   acme.AcmeProvider,
 		"acme-vars":       acmeVars,
 		"challenge":       acme.Challenge,
 		"challenge-ready": strings.Join(acme.ChallengeReady, ","),
@@ -286,6 +285,7 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider, opt *opti
 		"keytype":         acme.Keytype,
 		"map":             acme.Map,
 		"profile":         acme.Profile,
+		"provider-name":   acme.AcmeProvider,
 		"reuse-key":       onOff(acme.ReuseKey),
 	}
 
