@@ -28,7 +28,6 @@ func (rec CrtLoad) Equal(obj CrtLoad, opts ...eqdiff.GoMethodGenOptions) bool {
 		rec.Certificate == obj.Certificate &&
 		rec.Issuer == obj.Issuer &&
 		rec.Key == obj.Key &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Ocsp == obj.Ocsp &&
 		rec.OcspUpdate == obj.OcspUpdate &&
 		rec.Sctl == obj.Sctl

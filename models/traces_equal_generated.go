@@ -22,6 +22,5 @@ import (
 )
 
 func (rec Traces) Equal(obj Traces, opts ...eqdiff.GoMethodGenOptions) bool {
-	return rec.Entries.Equal(obj.Entries, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...)
+	return rec.Entries.Equal(obj.Entries, opts...)
 }

@@ -25,7 +25,6 @@ func (rec Server) Equal(obj Server, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ServerParams.Equal(obj.ServerParams, opts...) &&
 		rec.Address == obj.Address &&
 		EqualPointerInt64(rec.ID, obj.ID, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		EqualPointerInt64(rec.Port, obj.Port, opts...)
 }

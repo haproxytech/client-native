@@ -25,7 +25,6 @@ func (rec RingBase) Equal(obj RingBase, opts ...eqdiff.GoMethodGenOptions) bool 
 	return rec.Description == obj.Description &&
 		rec.Format == obj.Format &&
 		EqualPointerInt64(rec.Maxlen, obj.Maxlen, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		EqualPointerInt64(rec.Size, obj.Size, opts...) &&
 		EqualPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect, opts...) &&

@@ -26,7 +26,6 @@ func (rec PeerSectionBase) Equal(obj PeerSectionBase, opts ...eqdiff.GoMethodGen
 		EqualPointerDefaultServer(rec.DefaultServer, obj.DefaultServer, opts...) &&
 		rec.Disabled == obj.Disabled &&
 		rec.Enabled == obj.Enabled &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Shards == obj.Shards
 }

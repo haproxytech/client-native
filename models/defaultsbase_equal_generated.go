@@ -98,7 +98,6 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.Logasap == obj.Logasap &&
 		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) &&
 		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
 		rec.MonitorURI.Equal(obj.MonitorURI, opts...) &&
 		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams, opts...) &&

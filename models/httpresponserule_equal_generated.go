@@ -49,7 +49,6 @@ func (rec HTTPResponseRule) Equal(obj HTTPResponseRule, opts ...eqdiff.GoMethodG
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
 		rec.MarkValue == obj.MarkValue &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NiceValue == obj.NiceValue &&
 		EqualPointerInt64(rec.RedirCode, obj.RedirCode, opts...) &&
 		rec.RedirOption == obj.RedirOption &&

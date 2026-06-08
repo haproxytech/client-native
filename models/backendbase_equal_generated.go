@@ -77,7 +77,6 @@ func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.LogHealthChecks == obj.LogHealthChecks &&
 		rec.LogTag == obj.LogTag &&
 		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
 		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams, opts...) &&
 		rec.Name == obj.Name &&

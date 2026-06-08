@@ -35,7 +35,6 @@ func (rec TCPCheck) Equal(obj TCPCheck, opts ...eqdiff.GoMethodGenOptions) bool 
 		rec.HexString == obj.HexString &&
 		rec.Linger == obj.Linger &&
 		rec.Match == obj.Match &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MinRecv == obj.MinRecv &&
 		rec.OkStatus == obj.OkStatus &&
 		rec.OnError == obj.OnError &&

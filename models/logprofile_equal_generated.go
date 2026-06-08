@@ -23,7 +23,6 @@ import (
 
 func (rec LogProfile) Equal(obj LogProfile, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.LogTag == obj.LogTag &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.Steps.Equal(obj.Steps, opts...)
 }

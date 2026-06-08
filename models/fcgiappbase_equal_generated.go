@@ -28,7 +28,6 @@ func (rec FCGIAppBase) Equal(obj FCGIAppBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.KeepConn == obj.KeepConn &&
 		EqualSlicePointerFCGILogStderr(rec.LogStderrs, obj.LogStderrs, opts...) &&
 		rec.MaxReqs == obj.MaxReqs &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MpxsConns == obj.MpxsConns &&
 		rec.Name == obj.Name &&
 		EqualSlicePointerFCGIPassHeader(rec.PassHeaders, obj.PassHeaders, opts...) &&

@@ -22,6 +22,5 @@ import (
 )
 
 func (rec UserlistBase) Equal(obj UserlistBase, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
-		rec.Name == obj.Name
+	return rec.Name == obj.Name
 }

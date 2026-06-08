@@ -34,7 +34,6 @@ func (rec SSLFrontUse) Equal(obj SSLFrontUse, opts ...eqdiff.GoMethodGenOptions)
 		rec.Ecdhe == obj.Ecdhe &&
 		rec.Issuer == obj.Issuer &&
 		rec.Key == obj.Key &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NoAlpn == obj.NoAlpn &&
 		rec.NoCaNames == obj.NoCaNames &&
 		rec.Npn == obj.Npn &&

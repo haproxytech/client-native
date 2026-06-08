@@ -22,7 +22,6 @@ import (
 )
 
 func (rec MailersSectionBase) Equal(obj MailersSectionBase, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
-		rec.Name == obj.Name &&
+	return rec.Name == obj.Name &&
 		EqualPointerInt64(rec.Timeout, obj.Timeout, opts...)
 }

@@ -23,6 +23,5 @@ import (
 
 func (rec FilterSequence) Equal(obj FilterSequence, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerString(rec.Direction, obj.Direction, opts...) &&
-		EqualSliceString(rec.Filters, obj.Filters, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...)
+		EqualSliceString(rec.Filters, obj.Filters, opts...)
 }

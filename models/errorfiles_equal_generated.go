@@ -23,7 +23,6 @@ import (
 
 func (rec Errorfiles) Equal(obj Errorfiles, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualSliceInt64(rec.Codes, obj.Codes, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name
 }
 

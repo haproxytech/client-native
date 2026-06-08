@@ -23,6 +23,5 @@ import (
 
 func (rec ForceBeSwitch) Equal(obj ForceBeSwitch, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerString(rec.Cond, obj.Cond, opts...) &&
-		EqualPointerString(rec.CondTest, obj.CondTest, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...)
+		EqualPointerString(rec.CondTest, obj.CondTest, opts...)
 }

@@ -23,7 +23,6 @@ import (
 
 func (rec PeerEntry) Equal(obj PeerEntry, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerString(rec.Address, obj.Address, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
 		rec.Shard == obj.Shard

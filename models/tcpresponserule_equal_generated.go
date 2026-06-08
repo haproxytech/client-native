@@ -34,7 +34,6 @@ func (rec TCPResponseRule) Equal(obj TCPResponseRule, opts ...eqdiff.GoMethodGen
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MarkValue == obj.MarkValue &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NiceValue == obj.NiceValue &&
 		rec.RstTTL == obj.RstTTL &&
 		rec.ScExpr == obj.ScExpr &&

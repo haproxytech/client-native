@@ -74,7 +74,6 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		rec.LogTag == obj.LogTag &&
 		rec.Logasap == obj.Logasap &&
 		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
 		EqualPointerMonitorFail(rec.MonitorFail, obj.MonitorFail, opts...) &&
 		rec.MonitorURI.Equal(obj.MonitorURI, opts...) &&
