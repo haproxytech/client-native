@@ -1149,6 +1149,10 @@ userlist second
 	user neo password $6$k6y3o.eP$JlKBxxHSwRv6J.C0/D7cV91 groups one
 	user thomas insecure-password white-rabbit groups one,two
 	user anderson insecure-password hello groups two
+
+healthcheck test
+  type tcp-check
+  tcp-check send GET\ /\ HTTP/2.0\r\n
 `
 const testPath = "/tmp/haproxy-test.cfg"
 

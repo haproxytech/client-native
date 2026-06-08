@@ -821,7 +821,7 @@ type HTTPReuse struct {
 }
 
 //deprecated:true
-//sections:defaults,backend
+//sections:defaults,backend,healthcheck
 //name:http-check
 //is:multiple
 //test:ok:http-check disable-on-404

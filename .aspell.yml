@@ -246,3 +246,4 @@ allowed:
   - allowlist
   - gocognit
   - nolint
+  - healtcheck

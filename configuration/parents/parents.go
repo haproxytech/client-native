@@ -18,7 +18,7 @@ package parents
 type Parent struct {
 	PathParentType    string
 	ParentType        string
-	IsGenericParent   bool // only one of the parents for a child type can be set as Geenric - used in Dapi
+	IsGenericParent   bool // only one of the parents for a child type can be set as Generic - used in Dapi
 	GenericParentType string
 	IsUnnamedParent   bool
 }
@@ -41,6 +41,7 @@ func Parents(childType string) []Parent {
 		return []Parent{
 			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},
 			{PathParentType: "defaults", ParentType: "Defaults", GenericParentType: "Backend"},
+			{PathParentType: "healthchecks", ParentType: "Healthcheck", GenericParentType: "Backend"},
 		}
 	case HTTPErrorRuleChildType:
 		return []Parent{
@@ -64,6 +65,7 @@ func Parents(childType string) []Parent {
 		return []Parent{
 			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},
 			{PathParentType: "defaults", ParentType: "Defaults", GenericParentType: "Backend"},
+			{PathParentType: "healthchecks", ParentType: "Healthcheck", GenericParentType: "Backend"},
 		}
 	case TCPRequestRuleChildType:
 		return []Parent{

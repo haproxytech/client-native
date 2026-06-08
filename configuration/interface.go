@@ -47,6 +47,7 @@ type Configuration interface {
 	ForceBeSwitch
 	Frontend
 	Global
+	Healthcheck
 	HTTPCheck
 	HTTPRequestRule
 	HTTPResponseRule

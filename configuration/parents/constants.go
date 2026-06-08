@@ -37,13 +37,14 @@ const (
 type CnParentType string
 
 const (
-	BackendParentType    CnParentType = "backend"
-	FrontendParentType   CnParentType = "frontend"
-	DefaultsParentType   CnParentType = "defaults"
-	LogForwardParentType CnParentType = "log_forward"
-	PeerParentType       CnParentType = "peers"
-	RingParentType       CnParentType = "ring"
-	GlobalParentType     CnParentType = "global"
-	FCGIAppParentType    CnParentType = "fcgi-app"
-	ResolverParentType   CnParentType = "resolvers"
+	BackendParentType     CnParentType = "backend"
+	FrontendParentType    CnParentType = "frontend"
+	DefaultsParentType    CnParentType = "defaults"
+	LogForwardParentType  CnParentType = "log_forward"
+	PeerParentType        CnParentType = "peers"
+	RingParentType        CnParentType = "ring"
+	GlobalParentType      CnParentType = "global"
+	FCGIAppParentType     CnParentType = "fcgi-app"
+	ResolverParentType    CnParentType = "resolvers"
+	HealthcheckParentType CnParentType = "healthcheck"
 )

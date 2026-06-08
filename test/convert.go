@@ -334,6 +334,15 @@ func StructuredToGroupMap() map[string]models.Groups {
 	return res
 }
 
+func StructuredToHealthcheckMap() map[string]models.Healthchecks {
+	resources, _ := expectedResources[models.HealthCheck]("healthchecks")
+	res := make(map[string]models.Healthchecks)
+	keyRoot := ""
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
+	return res
+}
+
 func StructuredToHTTPAfterResponseRuleMap() map[string]models.HTTPAfterResponseRules {
 	res := make(map[string]models.HTTPAfterResponseRules)
 	resources := make(map[string][]models.HTTPAfterResponseRule)

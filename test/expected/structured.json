@@ -3885,5 +3885,15 @@
                 }
             }
         }
+    },
+    "healthchecks": {
+        "name": "test",
+        "type": "tcp-check",
+        "tcp_check_rule_list": [
+            {
+                "action": "send",
+                "data": "GET\\ /\\ HTTP/2.0\\r\\n"
+            }
+        ]
     }
 }

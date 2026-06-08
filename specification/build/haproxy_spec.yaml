@@ -17401,6 +17401,60 @@ paths:
       summary: Replace an HTTP checks list
       tags:
         - HTTPCheck
+  /services/haproxy/configuration/healthchecks/{parent_name}/http_checks:
+    get:
+      description: Returns all HTTP checks that are configured in specified parent.
+      operationId: getAllHTTPCheckHealthcheck
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_checks'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of HTTP checks
+      tags:
+        - HTTPCheck
+    put:
+      description: Replaces a whole list of HTTP checks with the list given in parameter
+      operationId: replaceAllHTTPCheckHealthcheck
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_checks'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All HTTP checks lines replaced
+          schema:
+            $ref: '#/definitions/http_checks'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_checks'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an HTTP checks list
+      tags:
+        - HTTPCheck
   /services/haproxy/configuration/backends/{parent_name}/http_checks/{index}:
     delete:
       description: Deletes a HTTP check configuration by it's index from the specified parent.
@@ -17638,6 +17692,143 @@ paths:
     put:
       description: Replaces a HTTP Check configuration by it's index in the specified parent.
       operationId: replaceHTTPCheckDefaults
+      parameters:
+        - description: HTTP Check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_check'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: HTTP check replaced
+          schema:
+            $ref: '#/definitions/http_check'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_check'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a HTTP check
+      tags:
+        - HTTPCheck
+  /services/haproxy/configuration/healthchecks/{parent_name}/http_checks/{index}:
+    delete:
+      description: Deletes a HTTP check configuration by it's index from the specified parent.
+      operationId: deleteHTTPCheckHealthcheck
+      parameters:
+        - description: HTTP check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: HTTP check deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a HTTP check
+      tags:
+        - HTTPCheck
+    get:
+      description: Returns one HTTP check configuration by it's index in the specified parent.
+      operationId: getHTTPCheckHealthcheck
+      parameters:
+        - description: HTTP Check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_check'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one HTTP check
+      tags:
+        - HTTPCheck
+    post:
+      description: Adds a new HTTP check of the specified type in the specified parent.
+      operationId: createHTTPCheckHealthcheck
+      parameters:
+        - description: HTTP check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_check'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: HTTP check created
+          schema:
+            $ref: '#/definitions/http_check'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_check'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new HTTP check
+      tags:
+        - HTTPCheck
+    put:
+      description: Replaces a HTTP Check configuration by it's index in the specified parent.
+      operationId: replaceHTTPCheckHealthcheck
       parameters:
         - description: HTTP Check Index
           in: path

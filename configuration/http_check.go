@@ -78,6 +78,8 @@ func (c *client) GetHTTPCheck(id int64, parentType string, parentName string, tr
 	switch parentType {
 	case BackendParentName:
 		section = parser.Backends
+	case HealthcheckParentName:
+		section = parser.HealthChecks
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
@@ -109,6 +111,8 @@ func (c *client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 	switch parentType {
 	case BackendParentName:
 		section = parser.Backends
+	case HealthcheckParentName:
+		section = parser.HealthChecks
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
@@ -142,6 +146,8 @@ func (c *client) CreateHTTPCheck(id int64, parentType string, parentName string,
 	switch parentType {
 	case BackendParentName:
 		section = parser.Backends
+	case HealthcheckParentName:
+		section = parser.HealthChecks
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
@@ -177,6 +183,8 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 	switch parentType {
 	case BackendParentName:
 		section = parser.Backends
+	case HealthcheckParentName:
+		section = parser.HealthChecks
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
@@ -223,6 +231,8 @@ func (c *client) ReplaceHTTPChecks(parentType string, parentName string, data mo
 	switch parentType {
 	case BackendParentName:
 		section = parser.Backends
+	case HealthcheckParentName:
+		section = parser.HealthChecks
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
@@ -260,6 +270,8 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 		}
 	case BackendParentName:
 		section = parser.Backends
+	case HealthcheckParentName:
+		section = parser.HealthChecks
 	default:
 		return nil, NewConfError(ErrValidationError, "unsupported section in http_error: "+t)
 	}
