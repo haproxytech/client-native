@@ -4,7 +4,7 @@ SWAGGER_VERSION=v0.32.3
 GO_VERSION:=${shell go mod edit -json | jq -r .Go}
 GOLANGCI_LINT_VERSION=2.8.0
 CHECK_COMMIT=5.2.0
-GO_METHOD_GEN_VERSION=v0.1.3
+GO_METHOD_GEN_VERSION:=${shell go mod edit -json | jq -r '.Require[] | select(.Path == "github.com/haproxytech/go-method-gen") | .Version'}
 
 .PHONY: test
 test:
@@ -37,7 +37,7 @@ spec:
 models: gentypes spec swagger-check go-method-gen-check
 	rm -rf models/*.go
 	./bin/swagger generate model --additional-initialism=FCGI -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
-	./bin/go-method-gen --header-file=specification/copyright.txt --scan=models --debug --overrides=models/funcs/overrides.yaml && find ./generated -name "*.go" -exec cp {} ./models \; && rm -rf generated
+	./bin/go-method-gen --go-method-gen-version=${GO_METHOD_GEN_VERSION} --header-file=specification/copyright.txt --scan=models --debug --overrides=models/funcs/overrides.yaml && find ./generated -name "*.go" -exec cp {} ./models \; && rm -rf generated
 	go run cmd/struct_equal_generator/*.go -l ${PROJECT_PATH}/specification/copyright.txt ${PROJECT_PATH}/models
 	go run cmd/struct_tags_checker/*.go ${PROJECT_PATH}/models
 	go run cmd/kubebuilder_marker_generator/*.go  ${PROJECT_PATH}/models
