@@ -16,7 +16,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/haproxytech/client-native/v5 v5.1.9
 	github.com/haproxytech/go-logger v1.1.0
-	github.com/haproxytech/go-method-gen v0.1.2
+	github.com/haproxytech/go-method-gen v0.1.3
 	github.com/json-iterator/go v1.1.12
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/mitchellh/mapstructure v1.5.0

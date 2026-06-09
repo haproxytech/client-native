@@ -18,8 +18,6 @@
 package models
 
 import (
-	"reflect"
-
 	"github.com/haproxytech/go-method-gen/pkg/eqdiff"
 )
 
@@ -27,55 +25,6 @@ func (rec Server) Equal(obj Server, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ServerParams.Equal(obj.ServerParams, opts...) &&
 		rec.Address == obj.Address &&
 		EqualPointerInt64(rec.ID, obj.ID, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		EqualPointerInt64(rec.Port, obj.Port, opts...)
-}
-
-func EqualInterface(x, y interface{}, opts ...eqdiff.GoMethodGenOptions) bool {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	if (x == nil) != (y == nil) {
-		if opt == nil || !opt.TreatNilNotAsEmpty {
-			return true
-		}
-		return false
-	}
-
-	if opt == nil || !opt.CompareInterfaces {
-		return true
-	}
-
-	return reflect.DeepEqual(x, y)
-}
-
-func EqualMapStringInterface(x, y map[string]interface{}, opts ...eqdiff.GoMethodGenOptions) bool {
-	var opt *eqdiff.GoMethodGenOptions
-	if len(opts) > 0 {
-		opt = &opts[0]
-	}
-
-	if (x == nil) != (y == nil) {
-		if opt == nil || !opt.TreatNilNotAsEmpty {
-			if len(x) == 0 && len(y) == 0 {
-				return true
-			}
-		}
-		return false
-	}
-
-	if len(x) != len(y) {
-		return false
-	}
-
-	for kx, vx := range x {
-		if vy, exists := y[kx]; !exists || !EqualInterface(vx, vy, opts...) {
-			return false
-		}
-	}
-
-	return true
 }
