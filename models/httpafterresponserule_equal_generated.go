@@ -37,7 +37,6 @@ func (rec HTTPAfterResponseRule) Equal(obj HTTPAfterResponseRule, opts ...eqdiff
 		rec.MapFile == obj.MapFile &&
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.ScExpr == obj.ScExpr &&
 		rec.ScID == obj.ScID &&
 		rec.ScIdx == obj.ScIdx &&

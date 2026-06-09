@@ -25,7 +25,6 @@ func (rec EmailAlert) Equal(obj EmailAlert, opts ...eqdiff.GoMethodGenOptions) b
 	return EqualPointerString(rec.From, obj.From, opts...) &&
 		rec.Level == obj.Level &&
 		EqualPointerString(rec.Mailers, obj.Mailers, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Myhostname == obj.Myhostname &&
 		EqualPointerString(rec.To, obj.To, opts...)
 }

@@ -50,7 +50,6 @@ func (rec HTTPRequestRule) Equal(obj HTTPRequestRule, opts ...eqdiff.GoMethodGen
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
 		rec.MarkValue == obj.MarkValue &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MethodFmt == obj.MethodFmt &&
 		rec.NiceValue == obj.NiceValue &&
 		rec.Normalizer == obj.Normalizer &&

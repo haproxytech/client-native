@@ -23,7 +23,6 @@ import (
 
 func (rec HTTPErrorRule) Equal(obj HTTPErrorRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.ReturnContent == obj.ReturnContent &&
 		rec.ReturnContentFormat == obj.ReturnContentFormat &&
 		EqualPointerString(rec.ReturnContentType, obj.ReturnContentType, opts...) &&

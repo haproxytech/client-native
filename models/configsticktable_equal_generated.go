@@ -24,7 +24,6 @@ import (
 func (rec ConfigStickTable) Equal(obj ConfigStickTable, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerInt64(rec.Expire, obj.Expire, opts...) &&
 		EqualPointerInt64(rec.Keylen, obj.Keylen, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Nopurge == obj.Nopurge &&
 		rec.Peers == obj.Peers &&
 		rec.RecvOnly == obj.RecvOnly &&

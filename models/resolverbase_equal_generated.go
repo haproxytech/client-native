@@ -29,7 +29,6 @@ func (rec ResolverBase) Equal(obj ResolverBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerInt64(rec.HoldRefused, obj.HoldRefused, opts...) &&
 		EqualPointerInt64(rec.HoldTimeout, obj.HoldTimeout, opts...) &&
 		EqualPointerInt64(rec.HoldValid, obj.HoldValid, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.ParseResolvConf == obj.ParseResolvConf &&
 		rec.ResolveRetries == obj.ResolveRetries &&

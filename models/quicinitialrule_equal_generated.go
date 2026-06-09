@@ -24,6 +24,5 @@ import (
 func (rec QUICInitialRule) Equal(obj QUICInitialRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Type == obj.Type
 }

@@ -23,6 +23,5 @@ import (
 
 func (rec Capture) Equal(obj Capture, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Length == obj.Length &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Type == obj.Type
 }

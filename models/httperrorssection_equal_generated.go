@@ -23,6 +23,5 @@ import (
 
 func (rec HTTPErrorsSection) Equal(obj HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name
 }
