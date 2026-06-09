@@ -23,6 +23,5 @@ import (
 
 func (rec Errorloc) Equal(obj Errorloc, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerInt64(rec.Code, obj.Code, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		EqualPointerString(rec.URL, obj.URL, opts...)
 }

@@ -33,7 +33,6 @@ func (rec HTTPCheck) Equal(obj HTTPCheck, opts ...eqdiff.GoMethodGenOptions) boo
 		rec.ExclamationMark == obj.ExclamationMark &&
 		rec.Linger == obj.Linger &&
 		rec.Match == obj.Match &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Method == obj.Method &&
 		EqualPointerInt64(rec.MinRecv, obj.MinRecv, opts...) &&
 		rec.OkStatus == obj.OkStatus &&

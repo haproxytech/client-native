@@ -24,7 +24,6 @@ import (
 func (rec Bind) Equal(obj Bind, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BindParams.Equal(obj.BindParams, opts...) &&
 		rec.Address == obj.Address &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		EqualPointerInt64(rec.Port, obj.Port, opts...) &&
 		EqualPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd, opts...)
 }

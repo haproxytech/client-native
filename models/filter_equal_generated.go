@@ -29,7 +29,6 @@ func (rec Filter) Equal(obj Filter, opts ...eqdiff.GoMethodGenOptions) bool {
 		rec.DefaultPeriod == obj.DefaultPeriod &&
 		rec.Key == obj.Key &&
 		rec.Limit == obj.Limit &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MinSize == obj.MinSize &&
 		rec.SpoeConfig == obj.SpoeConfig &&
 		rec.SpoeEngine == obj.SpoeEngine &&
