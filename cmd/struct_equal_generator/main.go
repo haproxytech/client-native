@@ -149,19 +149,21 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit
 						break
 					}
 				}
-				hasTests = true
-				err = generateEqualAndDiff(generateEqualAndDiffOptions{
-					PackageName:       packageName,
-					FileTest:          fileTest,
-					Name:              currSpecType.Name.Name,
-					CurrType:          currSpecType,
-					Fields:            fields,
-					NeedsOptions:      needsOptions,
-					NeedsOptionsIndex: needsOptionsIndex,
-					Mode:              "struct",
-				})
-				if err != nil {
-					log.Panic(err)
+				if len(fields) != 0 {
+					hasTests = true
+					err = generateEqualAndDiff(generateEqualAndDiffOptions{
+						PackageName:       packageName,
+						FileTest:          fileTest,
+						Name:              currSpecType.Name.Name,
+						CurrType:          currSpecType,
+						Fields:            fields,
+						NeedsOptions:      needsOptions,
+						NeedsOptionsIndex: needsOptionsIndex,
+						Mode:              "struct",
+					})
+					if err != nil {
+						log.Panic(err)
+					}
 				}
 			case *ast.Ident:
 				hasTests = true
@@ -246,6 +248,9 @@ func getFields(fields []Field, node *ast.StructType, imports map[string]string) 
 	for _, field := range node.Fields.List {
 		if len(field.Names) > 0 {
 			res := getTypeString(field.Type, imports)
+			if res.HasInterfaceInType || res.HasInterfaceSubType || res.IsInterface {
+				continue
+			}
 			if res.StructType != nil {
 				var structFields []Field
 				structFields, no, nOpt := getFields(structFields, res.StructType, imports)
