@@ -87,20 +87,23 @@ func hasEqualOpt(typeName string) bool {
 }
 
 type getTypeStringResponse struct {
-	StructType   *ast.StructType
-	SubType      *getTypeStringResponse
-	Name         string
-	TypeName     string
-	MapKeyType   string
-	MapItemType  string
-	IsBasicType  bool
-	IsComplex    bool
-	IsComparable bool
-	HasStringer  bool
-	HasEqual     bool
-	HasEqualOpt  bool
-	IsArray      bool
-	IsMap        bool
+	StructType          *ast.StructType
+	SubType             *getTypeStringResponse
+	Name                string
+	TypeName            string
+	MapKeyType          string
+	MapItemType         string
+	IsBasicType         bool
+	IsComplex           bool
+	IsComparable        bool
+	HasStringer         bool
+	HasEqual            bool
+	HasEqualOpt         bool
+	IsArray             bool
+	IsMap               bool
+	IsInterface         bool
+	HasInterfaceSubType bool
+	HasInterfaceInType  bool
 }
 
 func getTypeString(expr ast.Expr, imports map[string]string) getTypeStringResponse {
@@ -124,7 +127,9 @@ func getTypeString(expr ast.Expr, imports map[string]string) getTypeStringRespon
 				HasEqual:     res.HasEqual,
 				HasEqualOpt:  res.HasEqualOpt,
 				SubType:      res.SubType,
+				IsInterface:  res.IsInterface,
 			},
+			HasInterfaceSubType: res.IsInterface,
 		}
 	case *ast.Ident:
 		if t.Obj == nil {
@@ -157,6 +162,8 @@ func getTypeString(expr ast.Expr, imports map[string]string) getTypeStringRespon
 			IsComplex:    rValue.IsComplex,
 			IsMap:        true,
 			IsComparable: isComparable(rValue.Name),
+			HasInterfaceInType: (rKey.HasInterfaceInType || rKey.HasInterfaceSubType || rKey.IsInterface) ||
+				(rValue.HasInterfaceInType || rValue.HasInterfaceSubType || rValue.IsInterface),
 		}
 	case *ast.SelectorExpr:
 		start := expr.Pos() - 1
@@ -178,6 +185,11 @@ func getTypeString(expr ast.Expr, imports map[string]string) getTypeStringRespon
 	case *ast.StructType:
 		return getTypeStringResponse{
 			StructType: t,
+		}
+	case *ast.InterfaceType:
+		return getTypeStringResponse{
+			Name:        "any",
+			IsInterface: true,
 		}
 	}
 	return getTypeStringResponse{}
