@@ -81,6 +81,7 @@ func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) b
 		EqualPointerInt64(rec.QuicCcAlgoBurstSize, obj.QuicCcAlgoBurstSize, opts...) &&
 		EqualPointerInt64(rec.QuicCcAlgoMaxWindow, obj.QuicCcAlgoMaxWindow, opts...) &&
 		rec.SeverityOutput == obj.SeverityOutput &&
+		rec.Shards == obj.Shards &&
 		rec.Sigalgs == obj.Sigalgs &&
 		rec.Ssl == obj.Ssl &&
 		rec.SslCafile == obj.SslCafile &&

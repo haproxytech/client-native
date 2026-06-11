@@ -2160,6 +2160,9 @@ frontend test
   bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
   bind :443 idle-ping 10s
   bind :443 idle-ping 10
+  bind :443 shards 4
+  bind :443 shards by-thread
+  bind :443 shards by-group
   bind :443 ssl tls-tickets
   bind :443 ssl no-strict-sni
   bind-process all
@@ -3332,6 +3335,12 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  bind :443 idle-ping 10s
 `, 1},
 	{`  bind :443 idle-ping 10
+`, 1},
+	{`  bind :443 shards 4
+`, 1},
+	{`  bind :443 shards by-thread
+`, 1},
+	{`  bind :443 shards by-group
 `, 1},
 	{`  bind :443 ssl tls-tickets
 `, 1},

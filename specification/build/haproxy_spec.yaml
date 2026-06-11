@@ -498,6 +498,10 @@ definitions:
         example: none
         type: string
         x-display-name: Format
+      shards:
+        pattern: ^(by-thread|by-group|[0-9]+)$
+        type: string
+        x-display-name: Shards
       sigalgs:
         type: string
         x-dependency:

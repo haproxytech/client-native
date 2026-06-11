@@ -264,6 +264,10 @@ type ACL struct {
 //test:ok:bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
 //test:ok:bind :443 idle-ping 10s
 //test:ok:bind :443 idle-ping 10
+//test:ok:bind :443 shards 4
+//test:ok:bind :443 shards by-thread
+//test:ok:bind :443 shards by-group
+//test:fail:bind :443 shards
 //test:ok:bind :443 ssl tls-tickets
 //test:ok:bind :443 ssl no-strict-sni
 //test:fail:bind :443 idle-ping
