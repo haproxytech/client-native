@@ -212,7 +212,7 @@ func SerializeLogProfile(p parser.Parser, lp *models.LogProfile) error {
 		if err != nil {
 			return err
 		}
-		if err := p.SectionCommentSet(parser.LogForward, lp.Name, comment); err != nil {
+		if err := p.SectionCommentSet(parser.LogProfile, lp.Name, comment); err != nil {
 			return err
 		}
 	}
