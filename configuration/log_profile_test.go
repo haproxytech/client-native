@@ -78,3 +78,33 @@ func TestLogProfileStepQuoteRoundTrip(t *testing.T) {
 		}
 	}
 }
+
+// Metadata is stored in the section comment of the log-profile section
+// itself, not in another section type sharing the name.
+func TestLogProfileMetadataRoundTrip(t *testing.T) {
+	config := `log-profile myprof
+  log-tag "tag1"
+`
+	p, err := parser.New(options.String(config))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	lp, err := ParseLogProfile(p, "myprof")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	lp.Metadata = map[string]any{"comment": "managed"}
+	if err := SerializeLogProfile(p, lp); err != nil {
+		t.Fatalf("SerializeLogProfile: %v", err)
+	}
+
+	got, err := ParseLogProfile(p, "myprof")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.Metadata == nil || got.Metadata["comment"] != "managed" {
+		t.Errorf("metadata not round-tripped, got %#v", got.Metadata)
+	}
+}
