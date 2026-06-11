@@ -111,6 +111,7 @@ allowed:
   - http
   - https
   - httpCLF
+  - htx
   - iana
   - ineffassign
   - infos
@@ -156,6 +157,7 @@ allowed:
   - packagetag
   - param
   - params
+  - parsers
   - parallelize
   - passthrough
   - placholder

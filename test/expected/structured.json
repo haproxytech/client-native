@@ -3595,7 +3595,6 @@
             "http-check": {
                 "type": "send-state"
             },
-            "http-use-htx": "enabled",
             "http_connection_mode": "httpclose",
             "http_ignore_probes": "disabled",
             "http_keep_alive_timeout": 3000,

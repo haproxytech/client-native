@@ -119,10 +119,6 @@ defaults_base:
     abortonclose:
       type: string
       enum: [enabled, disabled]
-    http-use-htx:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: HTTP Use HTX
     dontlognull:
       type: string
       enum: [enabled, disabled]

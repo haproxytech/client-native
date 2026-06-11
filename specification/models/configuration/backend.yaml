@@ -102,13 +102,6 @@ backend_base:
       x-dependency:
         mode:
           value: http
-    http_proxy:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: HTTP proxy mode
-      x-dependency:
-        mode:
-          value: http
     http_restrict_req_hdr_names:
       type: string
       enum: [preserve, delete, reject]
@@ -285,13 +278,6 @@ backend_base:
           value: http
     stick_table:
       $ref: "#/definitions/config_stick_table"
-    http-use-htx:
-      type: string
-      enum: [enabled, disabled]
-      x-dependency:
-        mode:
-          value: http
-      pattern: '^[^\s]+$'
     accept_invalid_http_response:
       type: string
       enum: [enabled, disabled]

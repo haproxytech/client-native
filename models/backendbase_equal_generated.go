@@ -60,11 +60,9 @@ func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.HTTPBufferRequest == obj.HTTPBufferRequest &&
 		rec.HTTPDropRequestTrailers == obj.HTTPDropRequestTrailers &&
 		rec.HTTPNoDelay == obj.HTTPNoDelay &&
-		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
 		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&
 		rec.HTTPPretendKeepalive == obj.HTTPPretendKeepalive &&
-		rec.HTTPProxy == obj.HTTPProxy &&
 		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) &&
 		rec.HTTPRestrictReqHdrNames == obj.HTTPRestrictReqHdrNames &&
 		rec.HTTPReuse == obj.HTTPReuse &&
