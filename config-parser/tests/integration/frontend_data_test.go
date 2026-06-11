@@ -589,6 +589,18 @@ const frontend_bind443idleping10 = `
 frontend test
   bind :443 idle-ping 10
 `
+const frontend_bind443shards4 = `
+frontend test
+  bind :443 shards 4
+`
+const frontend_bind443shardsbythread = `
+frontend test
+  bind :443 shards by-thread
+`
+const frontend_bind443shardsbygroup = `
+frontend test
+  bind :443 shards by-group
+`
 const frontend_bind443ssltlstickets = `
 frontend test
   bind :443 ssl tls-tickets
