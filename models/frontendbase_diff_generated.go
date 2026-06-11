@@ -164,9 +164,6 @@ func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions
 	if rec.HTTPDropResponseTrailers != obj.HTTPDropResponseTrailers {
 		diff["HTTPDropResponseTrailers"] = []interface{}{rec.HTTPDropResponseTrailers, obj.HTTPDropResponseTrailers}
 	}
-	if rec.HTTPUseHtx != obj.HTTPUseHtx {
-		diff["HTTPUseHtx"] = []interface{}{rec.HTTPUseHtx, obj.HTTPUseHtx}
-	}
 	if rec.HTTPConnectionMode != obj.HTTPConnectionMode {
 		diff["HTTPConnectionMode"] = []interface{}{rec.HTTPConnectionMode, obj.HTTPConnectionMode}
 	}

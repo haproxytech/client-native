@@ -200,13 +200,6 @@ frontend_base:
           value: tcp
     stick_table:
       $ref: "#/definitions/config_stick_table"
-    http-use-htx:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: HTTP Use HTX
-      x-dependency:
-        mode:
-          value: http
     abortonclose:
       type: string
       enum: [enabled, disabled]

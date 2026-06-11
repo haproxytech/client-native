@@ -73,7 +73,6 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.HTTPBufferRequest == obj.HTTPBufferRequest &&
 		rec.HTTPDropRequestTrailers == obj.HTTPDropRequestTrailers &&
 		rec.HTTPDropResponseTrailers == obj.HTTPDropResponseTrailers &&
-		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
 		rec.HTTPIgnoreProbes == obj.HTTPIgnoreProbes &&
 		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&

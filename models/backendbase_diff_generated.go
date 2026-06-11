@@ -193,9 +193,6 @@ func (rec BackendBase) Diff(obj BackendBase, opts ...eqdiff.GoMethodGenOptions) 
 	if rec.HTTPNoDelay != obj.HTTPNoDelay {
 		diff["HTTPNoDelay"] = []interface{}{rec.HTTPNoDelay, obj.HTTPNoDelay}
 	}
-	if rec.HTTPUseHtx != obj.HTTPUseHtx {
-		diff["HTTPUseHtx"] = []interface{}{rec.HTTPUseHtx, obj.HTTPUseHtx}
-	}
 	if rec.HTTPConnectionMode != obj.HTTPConnectionMode {
 		diff["HTTPConnectionMode"] = []interface{}{rec.HTTPConnectionMode, obj.HTTPConnectionMode}
 	}
@@ -207,9 +204,6 @@ func (rec BackendBase) Diff(obj BackendBase, opts ...eqdiff.GoMethodGenOptions) 
 	}
 	if rec.HTTPPretendKeepalive != obj.HTTPPretendKeepalive {
 		diff["HTTPPretendKeepalive"] = []interface{}{rec.HTTPPretendKeepalive, obj.HTTPPretendKeepalive}
-	}
-	if rec.HTTPProxy != obj.HTTPProxy {
-		diff["HTTPProxy"] = []interface{}{rec.HTTPProxy, obj.HTTPProxy}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {

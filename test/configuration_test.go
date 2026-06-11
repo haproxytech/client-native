@@ -346,7 +346,6 @@ defaults unnamed_defaults_1
   option clitcpka
   option dontlognull
   option forwardfor header X-Forwarded-For
-  option http-use-htx
   option httpclose
   option httplog
   option disable-h2-upgrade

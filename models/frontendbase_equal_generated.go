@@ -55,7 +55,6 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		rec.H1CaseAdjustBogusClient == obj.H1CaseAdjustBogusClient &&
 		rec.HTTPBufferRequest == obj.HTTPBufferRequest &&
 		rec.HTTPDropResponseTrailers == obj.HTTPDropResponseTrailers &&
-		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
 		rec.HTTPIgnoreProbes == obj.HTTPIgnoreProbes &&
 		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&
