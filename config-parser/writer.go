@@ -55,11 +55,11 @@ func (p *configParser) String() string {
 		HTTPErrors,
 		Acme,
 		CrtStore,
+		FCGIApp,
 		Frontends,
 		Backends,
 		Listen,
 		Program,
-		FCGIApp,
 	}
 
 	for _, section := range sections {
