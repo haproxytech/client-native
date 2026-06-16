@@ -565,6 +565,18 @@ const frontend_bind443nbconn2 = `
 frontend test
   bind :443 nbconn +2
 `
+const frontend_bind443shards4 = `
+frontend test
+  bind :443 shards 4
+`
+const frontend_bind443shardsbythread = `
+frontend test
+  bind :443 shards by-thread
+`
+const frontend_bind443shardsbygroup = `
+frontend test
+  bind :443 shards by-group
+`
 const frontend_bindprocessall = `
 frontend test
   bind-process all

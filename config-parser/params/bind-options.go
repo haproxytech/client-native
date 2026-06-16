@@ -205,6 +205,7 @@ func getBindOptions() []BindOption {
 		&BindOptionValue{Name: "ocsp-update"},
 		&BindOptionValue{Name: "process"},
 		&BindOptionValue{Name: "proto"},
+		&BindOptionValue{Name: "shards"},
 		&BindOptionValue{Name: "sigalgs"},
 		&BindOptionValue{Name: "ssl-max-ver"},
 		&BindOptionValue{Name: "ssl-min-ver"},

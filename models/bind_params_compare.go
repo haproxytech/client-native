@@ -236,6 +236,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Shards != t.Shards {
+		return false
+	}
+
 	if s.Sigalgs != t.Sigalgs {
 		return false
 	}
@@ -525,6 +529,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.SeverityOutput != t.SeverityOutput {
 		diff["SeverityOutput"] = []interface{}{s.SeverityOutput, t.SeverityOutput}
+	}
+
+	if s.Shards != t.Shards {
+		diff["Shards"] = []interface{}{s.Shards, t.Shards}
 	}
 
 	if s.Sigalgs != t.Sigalgs {
