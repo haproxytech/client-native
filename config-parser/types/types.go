@@ -259,6 +259,9 @@ type ACL struct {
 //test:ok:bind :443 nbconn +2
 //test:ok:bind :443 guid-prefix guid-example
 //test:ok:bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
+//test:ok:bind :443 shards 4
+//test:ok:bind :443 shards by-thread
+//test:ok:bind :443 shards by-group
 type Bind struct {
 	Path    string // can be address:port or socket path
 	Params  []params.BindOption

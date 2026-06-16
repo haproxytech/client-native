@@ -372,6 +372,8 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 				b.Npn = v.Value
 			case "proto":
 				b.Proto = v.Value
+			case "shards":
+				b.Shards = v.Value
 			case "sigalgs":
 				b.Sigalgs = v.Value
 			case "ssl-max-ver":
@@ -586,6 +588,9 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 	}
 	if b.Proto != "" {
 		options = append(options, &params.BindOptionValue{Name: "proto", Value: b.Proto})
+	}
+	if b.Shards != "" {
+		options = append(options, &params.BindOptionValue{Name: "shards", Value: b.Shards})
 	}
 	if b.Sigalgs != "" {
 		options = append(options, &params.BindOptionValue{Name: "sigalgs", Value: b.Sigalgs})

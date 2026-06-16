@@ -188,6 +188,9 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.SeverityOutput != obj.SeverityOutput {
 		diff["SeverityOutput"] = []interface{}{rec.SeverityOutput, obj.SeverityOutput}
 	}
+	if rec.Shards != obj.Shards {
+		diff["Shards"] = []interface{}{rec.Shards, obj.Shards}
+	}
 	if rec.Sigalgs != obj.Sigalgs {
 		diff["Sigalgs"] = []interface{}{rec.Sigalgs, obj.Sigalgs}
 	}

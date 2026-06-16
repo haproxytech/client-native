@@ -76,6 +76,7 @@ func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) b
 		rec.QuicForceRetry == obj.QuicForceRetry &&
 		rec.QuicSocket == obj.QuicSocket &&
 		rec.SeverityOutput == obj.SeverityOutput &&
+		rec.Shards == obj.Shards &&
 		rec.Sigalgs == obj.Sigalgs &&
 		rec.Ssl == obj.Ssl &&
 		rec.SslCafile == obj.SslCafile &&

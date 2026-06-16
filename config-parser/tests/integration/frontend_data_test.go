@@ -573,6 +573,18 @@ const frontend_bind443defaultcrtfoobarpemrsadef = `
 frontend test
   bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
 `
+const frontend_bind443shards4 = `
+frontend test
+  bind :443 shards 4
+`
+const frontend_bind443shardsbythread = `
+frontend test
+  bind :443 shards by-thread
+`
+const frontend_bind443shardsbygroup = `
+frontend test
+  bind :443 shards by-group
+`
 const frontend_bindprocessall = `
 frontend test
   bind-process all

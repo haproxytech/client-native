@@ -195,6 +195,10 @@ bind_params:
     proto:
       type: string
       x-display-name: Protocol name
+    shards:
+      type: string
+      pattern: '^(by-thread|by-group|[0-9]+)$'
+      x-display-name: Shards
     sigalgs:
       type: string
       x-dependency:
