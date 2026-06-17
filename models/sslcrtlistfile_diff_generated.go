@@ -30,7 +30,10 @@ func (rec SslCrtListFile) Diff(obj SslCrtListFile, opts ...eqdiff.GoMethodGenOpt
 		diff["File"] = []interface{}{rec.File, obj.File}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
-		diff["Size."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Size"+diffKey] = diffValue
 	}
 	if rec.StorageName != obj.StorageName {
 		diff["StorageName"] = []interface{}{rec.StorageName, obj.StorageName}

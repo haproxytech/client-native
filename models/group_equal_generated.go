@@ -22,7 +22,6 @@ import (
 )
 
 func (rec Group) Equal(obj Group, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
-		rec.Name == obj.Name &&
+	return rec.Name == obj.Name &&
 		rec.Users == obj.Users
 }

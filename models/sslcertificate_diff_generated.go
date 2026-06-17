@@ -53,10 +53,16 @@ func (rec SslCertificate) Diff(obj SslCertificate, opts ...eqdiff.GoMethodGenOpt
 		diff["Issuers"] = []interface{}{rec.Issuers, obj.Issuers}
 	}
 	for diffKey, diffValue := range DiffPointerStrfmtDateTime(rec.NotAfter, obj.NotAfter, opts...) {
-		diff["NotAfter."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["NotAfter"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerStrfmtDateTime(rec.NotBefore, obj.NotBefore, opts...) {
-		diff["NotBefore."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["NotBefore"+diffKey] = diffValue
 	}
 	if rec.Serial != obj.Serial {
 		diff["Serial"] = []interface{}{rec.Serial, obj.Serial}
@@ -68,7 +74,10 @@ func (rec SslCertificate) Diff(obj SslCertificate, opts ...eqdiff.GoMethodGenOpt
 		diff["Sha256FingerPrint"] = []interface{}{rec.Sha256FingerPrint, obj.Sha256FingerPrint}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
-		diff["Size."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Size"+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {
 		diff["Status"] = []interface{}{rec.Status, obj.Status}
@@ -94,19 +103,20 @@ func DiffPointerStrfmtDateTime(x, y *strfmt.DateTime, opts ...eqdiff.GoMethodGen
 		return diff
 	}
 
-	key := "NotBefore"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range funcs.DiffStrfmtDateTime(*x, *y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

@@ -91,6 +91,7 @@ func TestFilterEqualFalse(t *testing.T) {
 		result.Limit = sample.Limit + 1
 		result.MinSize = sample.MinSize + 1
 		result.TraceHexdump = !sample.TraceHexdump
+		result.TraceMaxFwd = Ptr(*sample.TraceMaxFwd + 1)
 		result.TraceRndForwarding = !sample.TraceRndForwarding
 		result.TraceRndParsing = !sample.TraceRndParsing
 		samples = append(samples, struct {
@@ -177,6 +178,7 @@ func TestFilterDiffFalse(t *testing.T) {
 		result.Limit = sample.Limit + 1
 		result.MinSize = sample.MinSize + 1
 		result.TraceHexdump = !sample.TraceHexdump
+		result.TraceMaxFwd = Ptr(*sample.TraceMaxFwd + 1)
 		result.TraceRndForwarding = !sample.TraceRndForwarding
 		result.TraceRndParsing = !sample.TraceRndParsing
 		samples = append(samples, struct {
@@ -187,7 +189,7 @@ func TestFilterDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 16 {
+		if len(listDiffFields) != 17 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -197,7 +199,7 @@ func TestFilterDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Filter to be different in 16 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Filter to be different in 17 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

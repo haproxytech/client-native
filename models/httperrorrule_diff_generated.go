@@ -24,6 +24,9 @@ import (
 func (rec HTTPErrorRule) Diff(obj HTTPErrorRule, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerReturnHeader(rec.ReturnHeaders, obj.ReturnHeaders, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ReturnHeaders"+diffKey] = diffValue
 	}
 	if rec.ReturnContent != obj.ReturnContent {
@@ -33,7 +36,10 @@ func (rec HTTPErrorRule) Diff(obj HTTPErrorRule, opts ...eqdiff.GoMethodGenOptio
 		diff["ReturnContentFormat"] = []interface{}{rec.ReturnContentFormat, obj.ReturnContentFormat}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.ReturnContentType, obj.ReturnContentType, opts...) {
-		diff["ReturnContentType."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReturnContentType"+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {
 		diff["Status"] = []interface{}{rec.Status, obj.Status}

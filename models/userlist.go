@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Userlist Userlist with all it's children resources
+// Userlist Userlist with all its children resources
 //
 // swagger:model Userlist
 type Userlist struct {

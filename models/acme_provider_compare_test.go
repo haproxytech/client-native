@@ -179,7 +179,7 @@ func TestAcmeProviderDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 15 {
+		if len(listDiffFields) != 16 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -189,7 +189,7 @@ func TestAcmeProviderDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected AcmeProvider to be different in 15 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected AcmeProvider to be different in 16 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

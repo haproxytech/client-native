@@ -92,6 +92,9 @@ type HTTPResponseRule struct {
 	// expr
 	Expr string `json:"expr,omitempty"`
 
+	// hdr expr
+	HdrExpr string `json:"hdr_expr,omitempty"`
+
 	// hdr format
 	HdrFormat string `json:"hdr_format,omitempty"`
 
@@ -104,10 +107,16 @@ type HTTPResponseRule struct {
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
 
+	// hdr prefix
+	HdrPrefix string `json:"hdr_prefix,omitempty"`
+
 	// log level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
+
+	// log profile
+	LogProfile string `json:"log_profile,omitempty"`
 
 	// lua action
 	// Pattern: ^[^\s]+$
@@ -228,8 +237,8 @@ type HTTPResponseRule struct {
 	Timeout string `json:"timeout,omitempty"`
 
 	// timeout type
-	// Enum: ["server","tunnel","client"]
-	// +kubebuilder:validation:Enum=server;tunnel;client;
+	// Enum: ["client","connect","queue","server","tarpit","tunnel"]
+	// +kubebuilder:validation:Enum=client;connect;queue;server;tarpit;tunnel;
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -252,8 +261,8 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: ["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]
-	// +kubebuilder:validation:Enum=add-acl;add-header;allow;cache-store;capture;del-acl;del-header;del-map;deny;lua;pause;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-fc-mark;set-fc-tos;set-header;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc;unset-var;wait-for-body;set-bandwidth-limit;do-log;
+	// Enum: ["add-acl","add-header","add-headers-bin","allow","cache-store","capture","del-acl","del-header","del-headers-bin","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-headers-bin","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]
+	// +kubebuilder:validation:Enum=add-acl;add-header;add-headers-bin;allow;cache-store;capture;del-acl;del-header;del-headers-bin;del-map;deny;lua;pause;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-fc-mark;set-fc-tos;set-header;set-headers-bin;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc;unset-var;wait-for-body;set-bandwidth-limit;do-log;
 	Type string `json:"type"`
 
 	// var expr
@@ -935,7 +944,7 @@ var httpResponseRuleTypeTimeoutTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["server","tunnel","client"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["client","connect","queue","server","tarpit","tunnel"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -945,14 +954,23 @@ func init() {
 
 const (
 
+	// HTTPResponseRuleTimeoutTypeClient captures enum value "client"
+	HTTPResponseRuleTimeoutTypeClient string = "client"
+
+	// HTTPResponseRuleTimeoutTypeConnect captures enum value "connect"
+	HTTPResponseRuleTimeoutTypeConnect string = "connect"
+
+	// HTTPResponseRuleTimeoutTypeQueue captures enum value "queue"
+	HTTPResponseRuleTimeoutTypeQueue string = "queue"
+
 	// HTTPResponseRuleTimeoutTypeServer captures enum value "server"
 	HTTPResponseRuleTimeoutTypeServer string = "server"
 
+	// HTTPResponseRuleTimeoutTypeTarpit captures enum value "tarpit"
+	HTTPResponseRuleTimeoutTypeTarpit string = "tarpit"
+
 	// HTTPResponseRuleTimeoutTypeTunnel captures enum value "tunnel"
 	HTTPResponseRuleTimeoutTypeTunnel string = "tunnel"
-
-	// HTTPResponseRuleTimeoutTypeClient captures enum value "client"
-	HTTPResponseRuleTimeoutTypeClient string = "client"
 )
 
 // prop value enum
@@ -1016,7 +1034,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","add-headers-bin","allow","cache-store","capture","del-acl","del-header","del-headers-bin","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-headers-bin","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1032,6 +1050,9 @@ const (
 	// HTTPResponseRuleTypeAddDashHeader captures enum value "add-header"
 	HTTPResponseRuleTypeAddDashHeader string = "add-header"
 
+	// HTTPResponseRuleTypeAddDashHeadersDashBin captures enum value "add-headers-bin"
+	HTTPResponseRuleTypeAddDashHeadersDashBin string = "add-headers-bin"
+
 	// HTTPResponseRuleTypeAllow captures enum value "allow"
 	HTTPResponseRuleTypeAllow string = "allow"
 
@@ -1046,6 +1067,9 @@ const (
 
 	// HTTPResponseRuleTypeDelDashHeader captures enum value "del-header"
 	HTTPResponseRuleTypeDelDashHeader string = "del-header"
+
+	// HTTPResponseRuleTypeDelDashHeadersDashBin captures enum value "del-headers-bin"
+	HTTPResponseRuleTypeDelDashHeadersDashBin string = "del-headers-bin"
 
 	// HTTPResponseRuleTypeDelDashMap captures enum value "del-map"
 	HTTPResponseRuleTypeDelDashMap string = "del-map"
@@ -1100,6 +1124,9 @@ const (
 
 	// HTTPResponseRuleTypeSetDashHeader captures enum value "set-header"
 	HTTPResponseRuleTypeSetDashHeader string = "set-header"
+
+	// HTTPResponseRuleTypeSetDashHeadersDashBin captures enum value "set-headers-bin"
+	HTTPResponseRuleTypeSetDashHeadersDashBin string = "set-headers-bin"
 
 	// HTTPResponseRuleTypeSetDashLogDashLevel captures enum value "set-log-level"
 	HTTPResponseRuleTypeSetDashLogDashLevel string = "set-log-level"

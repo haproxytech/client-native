@@ -30,7 +30,10 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 		diff["ACLKeyfmt"] = []interface{}{rec.ACLKeyfmt, obj.ACLKeyfmt}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.CaptureID, obj.CaptureID, opts...) {
-		diff["CaptureID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CaptureID"+diffKey] = diffValue
 	}
 	if rec.CaptureLen != obj.CaptureLen {
 		diff["CaptureLen"] = []interface{}{rec.CaptureLen, obj.CaptureLen}
@@ -44,6 +47,9 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 	if rec.CondTest != obj.CondTest {
 		diff["CondTest"] = []interface{}{rec.CondTest, obj.CondTest}
 	}
+	if rec.HdrExpr != obj.HdrExpr {
+		diff["HdrExpr"] = []interface{}{rec.HdrExpr, obj.HdrExpr}
+	}
 	if rec.HdrFormat != obj.HdrFormat {
 		diff["HdrFormat"] = []interface{}{rec.HdrFormat, obj.HdrFormat}
 	}
@@ -56,8 +62,14 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 	if rec.HdrName != obj.HdrName {
 		diff["HdrName"] = []interface{}{rec.HdrName, obj.HdrName}
 	}
+	if rec.HdrPrefix != obj.HdrPrefix {
+		diff["HdrPrefix"] = []interface{}{rec.HdrPrefix, obj.HdrPrefix}
+	}
 	if rec.LogLevel != obj.LogLevel {
 		diff["LogLevel"] = []interface{}{rec.LogLevel, obj.LogLevel}
+	}
+	if rec.LogProfile != obj.LogProfile {
+		diff["LogProfile"] = []interface{}{rec.LogProfile, obj.LogProfile}
 	}
 	if rec.MapFile != obj.MapFile {
 		diff["MapFile"] = []interface{}{rec.MapFile, obj.MapFile}
@@ -78,7 +90,10 @@ func (rec HTTPAfterResponseRule) Diff(obj HTTPAfterResponseRule, opts ...eqdiff.
 		diff["ScIdx"] = []interface{}{rec.ScIdx, obj.ScIdx}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ScInt, obj.ScInt, opts...) {
-		diff["ScInt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ScInt"+diffKey] = diffValue
 	}
 	if rec.Status != obj.Status {
 		diff["Status"] = []interface{}{rec.Status, obj.Status}

@@ -28,7 +28,7 @@ func (x SpoeScope) Diff(y SpoeScope, opts ...eqdiff.GoMethodGenOptions) map[stri
 func DiffSpoeScope(x, y SpoeScope, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x != y {
-		diff["self"] = []interface{}{x, y}
+		diff[""] = []interface{}{x, y}
 	}
 	return diff
 }

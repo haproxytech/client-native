@@ -41,6 +41,11 @@ type TuneSslOptions struct {
 	// capture buffer size
 	CaptureBufferSize *int64 `json:"capture_buffer_size,omitempty"`
 
+	// certificate compression
+	// Enum: ["auto","disabled"]
+	// +kubebuilder:validation:Enum=auto;disabled;
+	CertificateCompression string `json:"certificate_compression,omitempty"`
+
 	// ctx cache size
 	CtxCacheSize int64 `json:"ctx_cache_size,omitempty"`
 
@@ -74,6 +79,10 @@ type TuneSslOptions struct {
 func (m *TuneSslOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateCertificateCompression(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateKeylog(formats); err != nil {
 		res = append(res, err)
 	}
@@ -85,6 +94,48 @@ func (m *TuneSslOptions) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var tuneSslOptionsTypeCertificateCompressionPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["auto","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tuneSslOptionsTypeCertificateCompressionPropEnum = append(tuneSslOptionsTypeCertificateCompressionPropEnum, v)
+	}
+}
+
+const (
+
+	// TuneSslOptionsCertificateCompressionAuto captures enum value "auto"
+	TuneSslOptionsCertificateCompressionAuto string = "auto"
+
+	// TuneSslOptionsCertificateCompressionDisabled captures enum value "disabled"
+	TuneSslOptionsCertificateCompressionDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *TuneSslOptions) validateCertificateCompressionEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, tuneSslOptionsTypeCertificateCompressionPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TuneSslOptions) validateCertificateCompression(formats strfmt.Registry) error {
+	if swag.IsZero(m.CertificateCompression) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCertificateCompressionEnum("certificate_compression", "body", m.CertificateCompression); err != nil {
+		return err
+	}
+
 	return nil
 }
 

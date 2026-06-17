@@ -575,6 +575,13 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			if v.Name == "ktls" {
 				serverParams.Ktls = v.Value
 			}
+		case *params.ServerOptionParams:
+			if v.Name == "quic-cc-algo" {
+				serverParams.QuicCcAlgo = v.Value
+				if len(v.Params) >= 1 && len(v.Params[0]) > 0 {
+					serverParams.QuicCcAlgoMaxWindow = misc.Ptr(*misc.ParseSize(v.Params[0]) / 1024)
+				}
+			}
 		}
 	}
 	// Add corresponding arguments to the source option.
@@ -984,6 +991,13 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.Ktls != "" {
 		options = append(options, &params.ServerOptionOnOff{Name: "ktls", Value: s.Ktls})
+	}
+	if s.QuicCcAlgo != "" {
+		var p []string
+		if s.QuicCcAlgoMaxWindow != nil {
+			p = append(p, misc.SerializeSize(*s.QuicCcAlgoMaxWindow*1024))
+		}
+		options = append(options, &params.ServerOptionParams{Name: "quic-cc-algo", Value: s.QuicCcAlgo, Params: p})
 	}
 	return options
 }

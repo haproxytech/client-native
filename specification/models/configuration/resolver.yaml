@@ -1,7 +1,7 @@
 ---
 resolver:
   type: object
-  description: Resolver with all it's children resources
+  description: Resolver with all its children resources
   x-go-name: Resolver
   allOf:
     - $ref: "#/definitions/resolver_base"
@@ -91,7 +91,7 @@ nameserver:
   properties:
     name:
       type: string
-      pattern: '^[A-Za-z0-9-_.:]+$'
+      pattern: '^[A-Za-z0-9-_.:${}"]+$'
       x-nullable: false
     address:
       type: string

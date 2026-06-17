@@ -71,6 +71,11 @@ type Enabled struct {
 //test:fail:maxconn
 //test:fail:stats maxconn
 //test:fail:stats maxconn string
+//generate:type:MaxThreadsPerGroup
+//name:max-threads-per-group
+//test:ok:max-threads-per-group 32
+//test:fail:max-threads-per-group
+//test:fail:max-threads-per-group string
 type Int64C struct {
 	Value   int64
 	Comment string
@@ -95,6 +100,12 @@ type Int64C struct {
 //test:fail:stats timeout
 //test:fail:stats
 //test:fail:timeout
+//generate:type:StatsCalculateMaxCounters
+//name:stats calculate-max-counters
+//test:ok:stats calculate-max-counters on
+//test:ok:stats calculate-max-counters off
+//test:fail:stats calculate-max-counters
+//test:fail:stats calculate-max-counters bogus
 //generate:type:LogSendHostName
 //name:log-send-hostname
 //test:ok:log-send-hostname

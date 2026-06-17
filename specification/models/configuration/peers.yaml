@@ -1,7 +1,7 @@
 ---
 peer_section:
   type: object
-  description: Peer Section with all it's children resources
+  description: Peer Section with all its children resources
   x-go-name: PeerSection
   allOf:
     - $ref: "#/definitions/peer_section_base"
@@ -63,7 +63,7 @@ peer_entry:
   properties:
     name:
       type: string
-      pattern: '^[A-Za-z0-9-_.:]+$'
+      pattern: '^[A-Za-z0-9-_.:${}"]+$'
       x-nullable: false
     address:
       type: string

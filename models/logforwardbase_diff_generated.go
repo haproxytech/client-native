@@ -27,19 +27,28 @@ func (rec LogForwardBase) Diff(obj LogForwardBase, opts ...eqdiff.GoMethodGenOpt
 		diff["AssumeRfc6587Ntf"] = []interface{}{rec.AssumeRfc6587Ntf, obj.AssumeRfc6587Ntf}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Backlog, obj.Backlog, opts...) {
-		diff["Backlog."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Backlog"+diffKey] = diffValue
 	}
 	if rec.DontParseLog != obj.DontParseLog {
 		diff["DontParseLog"] = []interface{}{rec.DontParseLog, obj.DontParseLog}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
-		diff["Maxconn."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Maxconn"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutClient, obj.TimeoutClient, opts...) {
-		diff["TimeoutClient."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TimeoutClient"+diffKey] = diffValue
 	}
 	return diff
 }

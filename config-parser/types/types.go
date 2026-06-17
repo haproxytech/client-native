@@ -263,6 +263,10 @@ type ACL struct{}
 //test:ok:bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
 //test:ok:bind :443 idle-ping 10s
 //test:ok:bind :443 idle-ping 10
+//test:ok:bind :443 shards 4
+//test:ok:bind :443 shards by-thread
+//test:ok:bind :443 shards by-group
+//test:fail:bind :443 shards
 //test:ok:bind :443 ssl tls-tickets
 //test:ok:bind :443 ssl no-strict-sni
 //test:ok:bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem
@@ -416,6 +420,38 @@ type CPUMap struct {
 	Process string
 	CPUSet  string
 	Comment string
+}
+
+//sections:global
+//name:cpu-affinity
+//no:parse
+//test:ok:cpu-affinity per-core
+//test:ok:cpu-affinity per-group
+//test:ok:cpu-affinity per-group auto
+//test:ok:cpu-affinity per-group loose
+//test:ok:cpu-affinity auto
+//test:ok:cpu-affinity per-thread
+//test:ok:cpu-affinity per-ccx
+//test:fail:cpu-affinity
+type CPUAffinity struct {
+	Affinity string
+	Argument string
+	Comment  string
+}
+
+//sections:frontend,backend
+//name:filter-sequence
+//is:multiple
+//no:parse
+//test:ok:filter-sequence request lua.my-filter,comp-req
+//test:ok:filter-sequence response lua.my-filter,comp-res
+//test:fail:filter-sequence
+//test:fail:filter-sequence request
+//test:fail:filter-sequence bogus filter
+type FilterSequence struct {
+	Direction string
+	Filters   []string
+	Comment   string
 }
 
 //sections:global
@@ -906,6 +942,25 @@ type OptionHTTPLog struct {
 	NoOption bool
 	Clf      bool
 	Comment  string
+}
+
+//sections:defaults,backend
+//name:option use-small-buffers
+//no:parse
+//test:ok:option use-small-buffers
+//test:ok:no option use-small-buffers
+//test:ok:option use-small-buffers queue
+//test:ok:option use-small-buffers l7-retries
+//test:ok:option use-small-buffers check
+//test:ok:option use-small-buffers queue l7-retries check
+//test:ok:option use-small-buffers queue l7-retries check # comment
+//test:fail:option use-small-buffers bogus
+type OptionUseSmallBuffers struct {
+	NoOption  bool
+	Queue     bool
+	L7Retries bool
+	Check     bool
+	Comment   string
 }
 
 //sections:backend
@@ -1507,6 +1562,21 @@ type ForcePersist struct {
 //test:fail:ignore-persist ddd acl-name
 //test:fail:ignore-persist acl-name
 type IgnorePersist struct {
+	Cond     string
+	CondTest string
+	Comment  string
+}
+
+//sections:frontend
+//name:force-be-switch
+//is:multiple
+//test:ok:force-be-switch if acl-name
+//test:ok:force-be-switch unless acl-name
+//test:fail:force-be-switch
+//test:fail:force-be-switch if
+//test:fail:force-be-switch ddd acl-name
+//test:fail:force-be-switch acl-name
+type ForceBeSwitch struct {
 	Cond     string
 	CondTest string
 	Comment  string

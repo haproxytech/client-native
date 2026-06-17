@@ -24,10 +24,16 @@ import (
 func (rec SetVar) Diff(obj SetVar, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Expr, obj.Expr, opts...) {
-		diff["Expr."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Expr"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	return diff
 }

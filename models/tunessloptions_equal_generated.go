@@ -24,6 +24,7 @@ import (
 func (rec TuneSslOptions) Equal(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerInt64(rec.Cachesize, obj.Cachesize, opts...) &&
 		EqualPointerInt64(rec.CaptureBufferSize, obj.CaptureBufferSize, opts...) &&
+		rec.CertificateCompression == obj.CertificateCompression &&
 		rec.CtxCacheSize == obj.CtxCacheSize &&
 		rec.DefaultDhParam == obj.DefaultDhParam &&
 		rec.ForcePrivateCache == obj.ForcePrivateCache &&

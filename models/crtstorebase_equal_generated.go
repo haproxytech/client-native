@@ -24,6 +24,5 @@ import (
 func (rec CrtStoreBase) Equal(obj CrtStoreBase, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.CrtBase == obj.CrtBase &&
 		rec.KeyBase == obj.KeyBase &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name
 }

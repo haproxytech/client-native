@@ -24,7 +24,6 @@ import (
 func (rec Program) Equal(obj Program, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerString(rec.Command, obj.Command, opts...) &&
 		rec.Group == obj.Group &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.StartOnReload == obj.StartOnReload &&
 		rec.User == obj.User

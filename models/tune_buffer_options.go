@@ -45,6 +45,9 @@ type TuneBufferOptions struct {
 	// bufsize
 	Bufsize int64 `json:"bufsize,omitempty"`
 
+	// Size in bytes of large buffers. By default, support for large buffers is not enabled.
+	BufsizeLarge *int64 `json:"bufsize_large,omitempty"`
+
 	// Size of small buffers (for memory-restrained situations)
 	// Minimum: 1
 	// +kubebuilder:validation:Minimum=1

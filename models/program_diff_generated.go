@@ -24,7 +24,10 @@ import (
 func (rec Program) Diff(obj Program, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Command, obj.Command, opts...) {
-		diff["Command."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Command"+diffKey] = diffValue
 	}
 	if rec.Group != obj.Group {
 		diff["Group"] = []interface{}{rec.Group, obj.Group}

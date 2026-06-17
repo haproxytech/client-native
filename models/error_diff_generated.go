@@ -24,12 +24,21 @@ import (
 func (rec Error) Diff(obj Error, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.Code, obj.Code, opts...) {
-		diff["Code."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Code"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Message, obj.Message, opts...) {
-		diff["Message."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Message"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringString(rec.Error, obj.Error, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Error"+diffKey] = diffValue
 	}
 	return diff

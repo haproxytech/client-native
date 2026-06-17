@@ -29,12 +29,12 @@ func (rec Filter) Equal(obj Filter, opts ...eqdiff.GoMethodGenOptions) bool {
 		rec.DefaultPeriod == obj.DefaultPeriod &&
 		rec.Key == obj.Key &&
 		rec.Limit == obj.Limit &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MinSize == obj.MinSize &&
 		rec.SpoeConfig == obj.SpoeConfig &&
 		rec.SpoeEngine == obj.SpoeEngine &&
 		rec.Table == obj.Table &&
 		rec.TraceHexdump == obj.TraceHexdump &&
+		EqualPointerInt64(rec.TraceMaxFwd, obj.TraceMaxFwd, opts...) &&
 		rec.TraceName == obj.TraceName &&
 		rec.TraceRndForwarding == obj.TraceRndForwarding &&
 		rec.TraceRndParsing == obj.TraceRndParsing &&

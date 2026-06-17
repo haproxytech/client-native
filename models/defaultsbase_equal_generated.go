@@ -73,7 +73,6 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.HTTPBufferRequest == obj.HTTPBufferRequest &&
 		rec.HTTPDropRequestTrailers == obj.HTTPDropRequestTrailers &&
 		rec.HTTPDropResponseTrailers == obj.HTTPDropResponseTrailers &&
-		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
 		rec.HTTPIgnoreProbes == obj.HTTPIgnoreProbes &&
 		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&
@@ -98,7 +97,6 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.Logasap == obj.Logasap &&
 		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) &&
 		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
 		rec.MonitorURI.Equal(obj.MonitorURI, opts...) &&
 		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams, opts...) &&
@@ -134,5 +132,6 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.Transparent == obj.Transparent &&
 		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout, opts...) &&
 		rec.UniqueIDFormat == obj.UniqueIDFormat &&
-		rec.UniqueIDHeader == obj.UniqueIDHeader
+		rec.UniqueIDHeader == obj.UniqueIDHeader &&
+		EqualPointerUseSmallBuffers(rec.UseSmallBuffers, obj.UseSmallBuffers, opts...)
 }

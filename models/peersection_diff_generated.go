@@ -32,15 +32,27 @@ func (rec PeerSection) Diff(obj PeerSection, opts ...eqdiff.GoMethodGenOptions) 
 		diff["LogTargetList"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Binds"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringPeerEntry(rec.PeerEntries, obj.PeerEntries, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["PeerEntries"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Servers"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringTable(rec.Tables, obj.Tables, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Tables"+diffKey] = diffValue
 	}
 	return diff
@@ -76,7 +88,10 @@ func DiffMapStringPeerEntry(x, y map[string]PeerEntry, opts ...eqdiff.GoMethodGe
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -89,7 +104,10 @@ func DiffMapStringPeerEntry(x, y map[string]PeerEntry, opts ...eqdiff.GoMethodGe
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}
@@ -126,7 +144,10 @@ func DiffMapStringTable(x, y map[string]Table, opts ...eqdiff.GoMethodGenOptions
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -139,7 +160,10 @@ func DiffMapStringTable(x, y map[string]Table, opts ...eqdiff.GoMethodGenOptions
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

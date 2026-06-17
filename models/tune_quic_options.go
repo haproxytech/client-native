@@ -49,6 +49,9 @@ type TuneQuicOptions struct {
 	// frontend max tx memory
 	FrontendMaxTxMemory *int64 `json:"frontend_max_tx_memory,omitempty"`
 
+	// Maximum number of requests handled by a single QUIC frontend connection before graceful shutdown
+	FrontendStreamMaxTotal *int64 `json:"frontend_stream_max_total,omitempty"`
+
 	// max frame loss
 	MaxFrameLoss *int64 `json:"max_frame_loss,omitempty"`
 

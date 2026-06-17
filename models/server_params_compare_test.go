@@ -104,6 +104,7 @@ func TestServerParamsEqualFalse(t *testing.T) {
 		result.PoolLowConn = Ptr(*sample.PoolLowConn + 1)
 		result.PoolMaxConn = Ptr(*sample.PoolMaxConn + 1)
 		result.PoolPurgeDelay = Ptr(*sample.PoolPurgeDelay + 1)
+		result.QuicCcAlgoMaxWindow = Ptr(*sample.QuicCcAlgoMaxWindow + 1)
 		result.Rise = Ptr(*sample.Rise + 1)
 		result.Shard = sample.Shard + 1
 		result.Slowstart = Ptr(*sample.Slowstart + 1)
@@ -207,6 +208,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 		result.PoolLowConn = Ptr(*sample.PoolLowConn + 1)
 		result.PoolMaxConn = Ptr(*sample.PoolMaxConn + 1)
 		result.PoolPurgeDelay = Ptr(*sample.PoolPurgeDelay + 1)
+		result.QuicCcAlgoMaxWindow = Ptr(*sample.QuicCcAlgoMaxWindow + 1)
 		result.Rise = Ptr(*sample.Rise + 1)
 		result.Shard = sample.Shard + 1
 		result.Slowstart = Ptr(*sample.Slowstart + 1)
@@ -221,7 +223,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 109 {
+		if len(listDiffFields) != 111 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -231,7 +233,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ServerParams to be different in 109 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ServerParams to be different in 111 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

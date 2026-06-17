@@ -28,6 +28,7 @@ func (rec TuneLuaOptions) Equal(obj TuneLuaOptions, opts ...eqdiff.GoMethodGenOp
 		rec.LogLoggers == obj.LogLoggers &&
 		rec.LogStderr == obj.LogStderr &&
 		EqualPointerInt64(rec.Maxmem, obj.Maxmem, opts...) &&
+		rec.Openlibs == obj.Openlibs &&
 		EqualPointerInt64(rec.ServiceTimeout, obj.ServiceTimeout, opts...) &&
 		EqualPointerInt64(rec.SessionTimeout, obj.SessionTimeout, opts...) &&
 		EqualPointerInt64(rec.TaskTimeout, obj.TaskTimeout, opts...)

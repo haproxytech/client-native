@@ -24,7 +24,10 @@ import (
 func (rec CPUSet) Diff(obj CPUSet, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Directive, obj.Directive, opts...) {
-		diff["Directive."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Directive"+diffKey] = diffValue
 	}
 	if rec.Set != obj.Set {
 		diff["Set"] = []interface{}{rec.Set, obj.Set}

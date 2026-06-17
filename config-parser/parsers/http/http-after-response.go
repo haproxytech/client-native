@@ -60,18 +60,24 @@ func (h *AfterResponses) Parse(line string, parts []string, comment string) (str
 	switch {
 	case action == "add-header":
 		err = h.ParseHTTPRequest(&actions.AddHeader{}, parts, comment)
+	case action == "add-headers-bin":
+		err = h.ParseHTTPRequest(&actions.AddHeadersBin{}, parts, comment)
 	case action == "allow":
 		err = h.ParseHTTPRequest(&actions.Allow{}, parts, comment)
 	case action == "capture":
 		err = h.ParseHTTPRequest(&httpActions.Capture{}, parts, comment)
 	case action == "del-header":
 		err = h.ParseHTTPRequest(&actions.DelHeader{}, parts, comment)
+	case action == "del-headers-bin":
+		err = h.ParseHTTPRequest(&actions.DelHeadersBin{}, parts, comment)
 	case action == "replace-header":
 		err = h.ParseHTTPRequest(&actions.ReplaceHeader{}, parts, comment)
 	case action == "replace-value":
 		err = h.ParseHTTPRequest(&actions.ReplaceValue{}, parts, comment)
 	case action == "set-header":
 		err = h.ParseHTTPRequest(&actions.SetHeader{}, parts, comment)
+	case action == "set-headers-bin":
+		err = h.ParseHTTPRequest(&actions.SetHeadersBin{}, parts, comment)
 	case action == "set-status":
 		err = h.ParseHTTPRequest(&actions.SetStatus{}, parts, comment)
 	case action == "strict-mode":

@@ -37,20 +37,22 @@ func (rec HTTPRequestRule) Equal(obj HTTPRequestRule, opts ...eqdiff.GoMethodGen
 		rec.CondTest == obj.CondTest &&
 		EqualPointerInt64(rec.DenyStatus, obj.DenyStatus, opts...) &&
 		rec.Expr == obj.Expr &&
+		rec.HdrExpr == obj.HdrExpr &&
 		rec.HdrFormat == obj.HdrFormat &&
 		rec.HdrMatch == obj.HdrMatch &&
 		rec.HdrMethod == obj.HdrMethod &&
 		rec.HdrName == obj.HdrName &&
+		rec.HdrPrefix == obj.HdrPrefix &&
 		rec.HintFormat == obj.HintFormat &&
 		rec.HintName == obj.HintName &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MapFile == obj.MapFile &&
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
 		rec.MarkValue == obj.MarkValue &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.MethodFmt == obj.MethodFmt &&
 		rec.NiceValue == obj.NiceValue &&
 		rec.Normalizer == obj.Normalizer &&

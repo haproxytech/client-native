@@ -33,10 +33,16 @@ func (rec Cache) Diff(obj Cache, opts ...eqdiff.GoMethodGenOptions) map[string][
 		diff["MaxSecondaryEntries"] = []interface{}{rec.MaxSecondaryEntries, obj.MaxSecondaryEntries}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerBool(rec.ProcessVary, obj.ProcessVary, opts...) {
-		diff["ProcessVary."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ProcessVary"+diffKey] = diffValue
 	}
 	if rec.TotalMaxSize != obj.TotalMaxSize {
 		diff["TotalMaxSize"] = []interface{}{rec.TotalMaxSize, obj.TotalMaxSize}

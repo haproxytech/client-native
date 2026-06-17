@@ -27,6 +27,9 @@ func (rec Ring) Diff(obj Ring, opts ...eqdiff.GoMethodGenOptions) map[string][]i
 		diff["RingBase."+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringServer(rec.Servers, obj.Servers, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Servers"+diffKey] = diffValue
 	}
 	return diff

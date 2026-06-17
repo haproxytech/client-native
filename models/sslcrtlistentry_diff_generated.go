@@ -24,6 +24,9 @@ import (
 func (rec SslCrtListEntry) Diff(obj SslCrtListEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSliceString(rec.SNIFilter, obj.SNIFilter, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["SNIFilter"+diffKey] = diffValue
 	}
 	if rec.SSLBindConfig != obj.SSLBindConfig {

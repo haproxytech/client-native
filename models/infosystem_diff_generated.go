@@ -24,13 +24,19 @@ import (
 func (rec InfoSystem) Diff(obj InfoSystem, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInfoSystemCPUInfo(rec.CPUInfo, obj.CPUInfo, opts...) {
-		diff["CPUInfo."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CPUInfo"+diffKey] = diffValue
 	}
 	if rec.Hostname != obj.Hostname {
 		diff["Hostname"] = []interface{}{rec.Hostname, obj.Hostname}
 	}
 	for diffKey, diffValue := range DiffPointerInfoSystemMemInfo(rec.MemInfo, obj.MemInfo, opts...) {
-		diff["MemInfo."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MemInfo"+diffKey] = diffValue
 	}
 	if rec.OsString != obj.OsString {
 		diff["OsString"] = []interface{}{rec.OsString, obj.OsString}
@@ -39,7 +45,10 @@ func (rec InfoSystem) Diff(obj InfoSystem, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["Time"] = []interface{}{rec.Time, obj.Time}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Uptime, obj.Uptime, opts...) {
-		diff["Uptime."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Uptime"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -50,19 +59,20 @@ func DiffPointerInfoSystemCPUInfo(x, y *InfoSystemCPUInfo, opts ...eqdiff.GoMeth
 		return diff
 	}
 
-	key := "CPUInfo"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -74,19 +84,20 @@ func DiffPointerInfoSystemMemInfo(x, y *InfoSystemMemInfo, opts ...eqdiff.GoMeth
 		return diff
 	}
 
-	key := "MemInfo"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

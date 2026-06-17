@@ -53,6 +53,8 @@ func (h *Requests) Parse(line string, parts []string, comment string) (string, e
 		switch parts[1] {
 		case "add-header":
 			err = h.ParseHTTPRequest(&httpActions.AddHeader{}, parts, comment)
+		case "add-headers-bin":
+			err = h.ParseHTTPRequest(&httpActions.AddHeadersBin{}, parts, comment)
 		case "allow":
 			err = h.ParseHTTPRequest(&httpActions.Allow{}, parts, comment)
 		case "auth":
@@ -63,6 +65,8 @@ func (h *Requests) Parse(line string, parts []string, comment string) (string, e
 			err = h.ParseHTTPRequest(&httpActions.Capture{}, parts, comment)
 		case "del-header":
 			err = h.ParseHTTPRequest(&httpActions.DelHeader{}, parts, comment)
+		case "del-headers-bin":
+			err = h.ParseHTTPRequest(&httpActions.DelHeadersBin{}, parts, comment)
 		case "deny":
 			err = h.ParseHTTPRequest(&httpActions.Deny{}, parts, comment)
 		case "disable-l7-retry":
@@ -97,6 +101,8 @@ func (h *Requests) Parse(line string, parts []string, comment string) (string, e
 			err = h.ParseHTTPRequest(&actions.SetDstPort{}, parts, comment)
 		case "set-header":
 			err = h.ParseHTTPRequest(&httpActions.SetHeader{}, parts, comment)
+		case "set-headers-bin":
+			err = h.ParseHTTPRequest(&httpActions.SetHeadersBin{}, parts, comment)
 		case "set-log-level":
 			err = h.ParseHTTPRequest(&actions.SetLogLevel{}, parts, comment)
 		case "set-mark":

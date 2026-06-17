@@ -8,6 +8,7 @@ allowed:
   - acls
   - adfs
   - addons
+  - algo
   - apitest
   - apikey
   - apk
@@ -51,6 +52,7 @@ allowed:
   - dataplaneapi
   - dataplanes
   - datepicker
+  - del
   - dereference
   - dgram
   - discoverability
@@ -100,6 +102,8 @@ allowed:
   - gptstr
   - hapee
   - haproxy
+  - heredoc
+  - heredocs
   - healthcheck
   - healthz
   - hostname
@@ -107,12 +111,14 @@ allowed:
   - http
   - https
   - httpCLF
+  - htx
   - iana
   - ineffassign
   - infos
   - ioutil
   - ipam
   - istanbul
+  - instantiations
   - iweight
   - jose
   - json
@@ -151,6 +157,7 @@ allowed:
   - packagetag
   - param
   - params
+  - parsers
   - parallelize
   - passthrough
   - placholder
@@ -188,15 +195,18 @@ allowed:
   - subnet
   - subresource
   - subresources
+  - subtest
   - sudo
   - symlinks
   - syslog
-  - textarea
+  - tarpit
   - tcp
+  - textarea
   - timeseries
   - tls
   - tooltip
   - tsconfig
+  - tunable
   - typings
   - ubuntu
   - uniq
@@ -209,6 +219,7 @@ allowed:
   - userlists
   - utils
   - uweight
+  - varint
   - vfg
   - vite
   - vrrp

@@ -30,10 +30,16 @@ func (rec SpoeMessage) Diff(obj SpoeMessage, opts ...eqdiff.GoMethodGenOptions) 
 		diff["Args"] = []interface{}{rec.Args, obj.Args}
 	}
 	for diffKey, diffValue := range DiffPointerSpoeMessageEvent(rec.Event, obj.Event, opts...) {
-		diff["Event."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Event"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -44,19 +50,20 @@ func DiffPointerSpoeMessageEvent(x, y *SpoeMessageEvent, opts ...eqdiff.GoMethod
 		return diff
 	}
 
-	key := "Event"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

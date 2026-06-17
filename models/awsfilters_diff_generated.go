@@ -24,10 +24,16 @@ import (
 func (rec AwsFilters) Diff(obj AwsFilters, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Key, obj.Key, opts...) {
-		diff["Key."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Key"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Value, obj.Value, opts...) {
-		diff["Value."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Value"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -38,19 +44,17 @@ func DiffPointerString(x, y *string, opts ...eqdiff.GoMethodGenOptions) map[stri
 		return diff
 	}
 
-	key := "Value"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	if *x != *y {
-		diff[key] = []interface{}{x, y}
+		diff[""] = []interface{}{*x, *y}
 	}
 
 	return diff

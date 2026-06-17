@@ -170,11 +170,6 @@ type FrontendBase struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPDropResponseTrailers string `json:"http-drop-response-trailers,omitempty"`
 
-	// http use htx
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPUseHtx string `json:"http-use-htx,omitempty"`
-
 	// http connection mode
 	// Enum: ["httpclose","http-server-close","http-keep-alive"]
 	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
@@ -243,8 +238,8 @@ type FrontendBase struct {
 	LogSeparateErrors string `json:"log_separate_errors,omitempty"`
 
 	// log tag
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	// Pattern: ^[A-Za-z0-9-_.:${}"]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:${}"]+$`
 	LogTag string `json:"log_tag,omitempty"`
 
 	// logasap
@@ -432,10 +427,6 @@ func (m *FrontendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPDropResponseTrailers(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPUseHtx(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1259,48 +1250,6 @@ func (m *FrontendBase) validateHTTPDropResponseTrailers(formats strfmt.Registry)
 	return nil
 }
 
-var frontendBaseTypeHTTPUseHtxPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendBaseTypeHTTPUseHtxPropEnum = append(frontendBaseTypeHTTPUseHtxPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendBaseHTTPUseHtxEnabled captures enum value "enabled"
-	FrontendBaseHTTPUseHtxEnabled string = "enabled"
-
-	// FrontendBaseHTTPUseHtxDisabled captures enum value "disabled"
-	FrontendBaseHTTPUseHtxDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *FrontendBase) validateHTTPUseHtxEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, frontendBaseTypeHTTPUseHtxPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *FrontendBase) validateHTTPUseHtx(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPUseHtx) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPUseHtxEnum("http-use-htx", "body", m.HTTPUseHtx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var frontendBaseTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
@@ -1714,7 +1663,7 @@ func (m *FrontendBase) validateLogTag(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("log_tag", "body", m.LogTag, `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("log_tag", "body", m.LogTag, `^[A-Za-z0-9-_.:${}"]+$`); err != nil {
 		return err
 	}
 

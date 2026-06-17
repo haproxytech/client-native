@@ -30,7 +30,10 @@ func (rec User) Diff(obj User, opts ...eqdiff.GoMethodGenOptions) map[string][]i
 		diff["Password"] = []interface{}{rec.Password, obj.Password}
 	}
 	for diffKey, diffValue := range DiffPointerBool(rec.SecurePassword, obj.SecurePassword, opts...) {
-		diff["SecurePassword."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SecurePassword"+diffKey] = diffValue
 	}
 	if rec.Username != obj.Username {
 		diff["Username"] = []interface{}{rec.Username, obj.Username}

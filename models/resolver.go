@@ -29,7 +29,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Resolver Resolver with all it's children resources
+// Resolver Resolver with all its children resources
 //
 // swagger:model Resolver
 type Resolver struct {

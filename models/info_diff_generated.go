@@ -24,10 +24,16 @@ import (
 func (rec Info) Diff(obj Info, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInfoAPI(rec.API, obj.API, opts...) {
-		diff["API."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["API"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInfoSystem(rec.System, obj.System, opts...) {
-		diff["System."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["System"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -38,19 +44,20 @@ func DiffPointerInfoAPI(x, y *InfoAPI, opts ...eqdiff.GoMethodGenOptions) map[st
 		return diff
 	}
 
-	key := "API"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -62,19 +69,20 @@ func DiffPointerInfoSystem(x, y *InfoSystem, opts ...eqdiff.GoMethodGenOptions) 
 		return diff
 	}
 
-	key := "System"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

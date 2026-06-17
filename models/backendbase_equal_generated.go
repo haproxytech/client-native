@@ -60,11 +60,9 @@ func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.HTTPBufferRequest == obj.HTTPBufferRequest &&
 		rec.HTTPDropRequestTrailers == obj.HTTPDropRequestTrailers &&
 		rec.HTTPNoDelay == obj.HTTPNoDelay &&
-		rec.HTTPUseHtx == obj.HTTPUseHtx &&
 		rec.HTTPConnectionMode == obj.HTTPConnectionMode &&
 		EqualPointerInt64(rec.HTTPKeepAliveTimeout, obj.HTTPKeepAliveTimeout, opts...) &&
 		rec.HTTPPretendKeepalive == obj.HTTPPretendKeepalive &&
-		rec.HTTPProxy == obj.HTTPProxy &&
 		EqualPointerInt64(rec.HTTPRequestTimeout, obj.HTTPRequestTimeout, opts...) &&
 		rec.HTTPRestrictReqHdrNames == obj.HTTPRestrictReqHdrNames &&
 		rec.HTTPReuse == obj.HTTPReuse &&
@@ -77,7 +75,6 @@ func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.LogHealthChecks == obj.LogHealthChecks &&
 		rec.LogTag == obj.LogTag &&
 		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Mode == obj.Mode &&
 		EqualPointerMysqlCheckParams(rec.MysqlCheckParams, obj.MysqlCheckParams, opts...) &&
 		rec.Name == obj.Name &&
@@ -111,7 +108,8 @@ func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.Tcpka == obj.Tcpka &&
 		rec.Transparent == obj.Transparent &&
 		EqualPointerInt64(rec.TunnelTimeout, obj.TunnelTimeout, opts...) &&
-		rec.UseFCGIApp == obj.UseFCGIApp
+		rec.UseFCGIApp == obj.UseFCGIApp &&
+		EqualPointerUseSmallBuffers(rec.UseSmallBuffers, obj.UseSmallBuffers, opts...)
 }
 
 func EqualPointerBackendForcePersist(x, y *BackendForcePersist, opts ...eqdiff.GoMethodGenOptions) bool {
@@ -276,6 +274,13 @@ func EqualPointerSource(x, y *Source, opts ...eqdiff.GoMethodGenOptions) bool {
 }
 
 func EqualPointerStatsOptions(x, y *StatsOptions, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualPointerUseSmallBuffers(x, y *UseSmallBuffers, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

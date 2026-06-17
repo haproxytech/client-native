@@ -53,7 +53,6 @@ func TestPushStructuredDefaults(t *testing.T) {
 			QueueTimeout:   &tOutS,
 			Mode:           "tcp",
 			MonitorURI:     "/healthz",
-			HTTPUseHtx:     "enabled",
 			Balance: &models.Balance{
 				Algorithm: &balanceAlgorithm,
 			},

@@ -24,6 +24,9 @@ import (
 func (rec CrtLoad) Diff(obj CrtLoad, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSliceString(rec.Domains, obj.Domains, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Domains"+diffKey] = diffValue
 	}
 	if rec.Acme != obj.Acme {

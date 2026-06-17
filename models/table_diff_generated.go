@@ -24,7 +24,10 @@ import (
 func (rec Table) Diff(obj Table, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Expire, obj.Expire, opts...) {
-		diff["Expire."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Expire"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
@@ -45,10 +48,16 @@ func (rec Table) Diff(obj Table, opts ...eqdiff.GoMethodGenOptions) map[string][
 		diff["Type"] = []interface{}{rec.Type, obj.Type}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TypeLen, obj.TypeLen, opts...) {
-		diff["TypeLen."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TypeLen"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.WriteTo, obj.WriteTo, opts...) {
-		diff["WriteTo."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["WriteTo"+diffKey] = diffValue
 	}
 	return diff
 }

@@ -27,10 +27,16 @@ func (rec PerformanceOptions) Diff(obj PerformanceOptions, opts ...eqdiff.GoMeth
 		diff["BusyPolling"] = []interface{}{rec.BusyPolling, obj.BusyPolling}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.FdHardLimit, obj.FdHardLimit, opts...) {
-		diff["FdHardLimit."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["FdHardLimit"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSpreadChecks, obj.MaxSpreadChecks, opts...) {
-		diff["MaxSpreadChecks."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxSpreadChecks"+diffKey] = diffValue
 	}
 	if rec.Maxcompcpuusage != obj.Maxcompcpuusage {
 		diff["Maxcompcpuusage"] = []interface{}{rec.Maxcompcpuusage, obj.Maxcompcpuusage}
@@ -93,7 +99,10 @@ func (rec PerformanceOptions) Diff(obj PerformanceOptions, opts ...eqdiff.GoMeth
 		diff["SpreadChecks"] = []interface{}{rec.SpreadChecks, obj.SpreadChecks}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ThreadHardLimit, obj.ThreadHardLimit, opts...) {
-		diff["ThreadHardLimit."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ThreadHardLimit"+diffKey] = diffValue
 	}
 	return diff
 }

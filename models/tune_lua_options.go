@@ -60,6 +60,9 @@ type TuneLuaOptions struct {
 	// maxmem
 	Maxmem *int64 `json:"maxmem,omitempty"`
 
+	// Selects which Lua standard libraries are loaded. Accepts "all", "none", or a comma-separated list of: table, io, os, string, math, utf8, package, debug.
+	Openlibs string `json:"openlibs,omitempty"`
+
 	// service timeout
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0

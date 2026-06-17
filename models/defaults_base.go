@@ -247,11 +247,6 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPDropResponseTrailers string `json:"http-drop-response-trailers,omitempty"`
 
-	// http use htx
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPUseHtx string `json:"http-use-htx,omitempty"`
-
 	// http connection mode
 	// Enum: ["httpclose","http-server-close","http-keep-alive"]
 	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
@@ -508,6 +503,9 @@ type DefaultsBase struct {
 
 	// unique id header
 	UniqueIDHeader string `json:"unique_id_header,omitempty"`
+
+	// use small buffers
+	UseSmallBuffers *UseSmallBuffers `json:"use_small_buffers,omitempty"`
 }
 
 // Validate validates this defaults base
@@ -671,10 +669,6 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPDropResponseTrailers(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPUseHtx(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -859,6 +853,10 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTunnelTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUseSmallBuffers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2075,48 +2073,6 @@ func (m *DefaultsBase) validateHTTPDropResponseTrailers(formats strfmt.Registry)
 
 	// value enum
 	if err := m.validateHTTPDropResponseTrailersEnum("http-drop-response-trailers", "body", m.HTTPDropResponseTrailers); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var defaultsBaseTypeHTTPUseHtxPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		defaultsBaseTypeHTTPUseHtxPropEnum = append(defaultsBaseTypeHTTPUseHtxPropEnum, v)
-	}
-}
-
-const (
-
-	// DefaultsBaseHTTPUseHtxEnabled captures enum value "enabled"
-	DefaultsBaseHTTPUseHtxEnabled string = "enabled"
-
-	// DefaultsBaseHTTPUseHtxDisabled captures enum value "disabled"
-	DefaultsBaseHTTPUseHtxDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *DefaultsBase) validateHTTPUseHtxEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, defaultsBaseTypeHTTPUseHtxPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *DefaultsBase) validateHTTPUseHtx(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPUseHtx) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPUseHtxEnum("http-use-htx", "body", m.HTTPUseHtx); err != nil {
 		return err
 	}
 
@@ -3572,6 +3528,25 @@ func (m *DefaultsBase) validateTunnelTimeout(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *DefaultsBase) validateUseSmallBuffers(formats strfmt.Registry) error {
+	if swag.IsZero(m.UseSmallBuffers) { // not required
+		return nil
+	}
+
+	if m.UseSmallBuffers != nil {
+		if err := m.UseSmallBuffers.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this defaults base based on the context it is used
 func (m *DefaultsBase) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -3657,6 +3632,10 @@ func (m *DefaultsBase) ContextValidate(ctx context.Context, formats strfmt.Regis
 	}
 
 	if err := m.contextValidateStatsOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateUseSmallBuffers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -4104,6 +4083,27 @@ func (m *DefaultsBase) contextValidateStatsOptions(ctx context.Context, formats 
 				return ve.ValidateName("stats_options")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("stats_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *DefaultsBase) contextValidateUseSmallBuffers(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.UseSmallBuffers != nil {
+
+		if swag.IsZero(m.UseSmallBuffers) { // not required
+			return nil
+		}
+
+		if err := m.UseSmallBuffers.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
 			}
 			return err
 		}

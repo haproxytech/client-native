@@ -23,12 +23,14 @@ import (
 
 func (rec MailersSectionBase) Diff(obj MailersSectionBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Timeout, obj.Timeout, opts...) {
-		diff["Timeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Timeout"+diffKey] = diffValue
 	}
 	return diff
 }

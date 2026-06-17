@@ -24,76 +24,148 @@ import (
 func (rec StickTableEntry) Diff(obj StickTableEntry, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.BytesInCnt, obj.BytesInCnt, opts...) {
-		diff["BytesInCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BytesInCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.BytesInRate, obj.BytesInRate, opts...) {
-		diff["BytesInRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BytesInRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.BytesOutCnt, obj.BytesOutCnt, opts...) {
-		diff["BytesOutCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BytesOutCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.BytesOutRate, obj.BytesOutRate, opts...) {
-		diff["BytesOutRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["BytesOutRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ConnCnt, obj.ConnCnt, opts...) {
-		diff["ConnCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ConnCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ConnCur, obj.ConnCur, opts...) {
-		diff["ConnCur."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ConnCur"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ConnRate, obj.ConnRate, opts...) {
-		diff["ConnRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ConnRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Exp, obj.Exp, opts...) {
-		diff["Exp."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Exp"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.GlitchCnt, obj.GlitchCnt, opts...) {
-		diff["GlitchCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["GlitchCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.GlitchRate, obj.GlitchRate, opts...) {
-		diff["GlitchRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["GlitchRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerStickTableEntryGpc(rec.Gpc, obj.Gpc, opts...) {
-		diff["Gpc."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Gpc"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Gpc0, obj.Gpc0, opts...) {
-		diff["Gpc0."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Gpc0"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Gpc0Rate, obj.Gpc0Rate, opts...) {
-		diff["Gpc0Rate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Gpc0Rate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Gpc1, obj.Gpc1, opts...) {
-		diff["Gpc1."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Gpc1"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Gpc1Rate, obj.Gpc1Rate, opts...) {
-		diff["Gpc1Rate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Gpc1Rate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerStickTableEntryGpcRate(rec.GpcRate, obj.GpcRate, opts...) {
-		diff["GpcRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["GpcRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerStickTableEntryGpt(rec.Gpt, obj.Gpt, opts...) {
-		diff["Gpt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Gpt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Gpt0, obj.Gpt0, opts...) {
-		diff["Gpt0."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Gpt0"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPErrCnt, obj.HTTPErrCnt, opts...) {
-		diff["HTTPErrCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HTTPErrCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPErrRate, obj.HTTPErrRate, opts...) {
-		diff["HTTPErrRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HTTPErrRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPFailCnt, obj.HTTPFailCnt, opts...) {
-		diff["HTTPFailCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HTTPFailCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPFailRate, obj.HTTPFailRate, opts...) {
-		diff["HTTPFailRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HTTPFailRate"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPReqCnt, obj.HTTPReqCnt, opts...) {
-		diff["HTTPReqCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HTTPReqCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.HTTPReqRate, obj.HTTPReqRate, opts...) {
-		diff["HTTPReqRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HTTPReqRate"+diffKey] = diffValue
 	}
 	if rec.ID != obj.ID {
 		diff["ID"] = []interface{}{rec.ID, obj.ID}
@@ -102,13 +174,22 @@ func (rec StickTableEntry) Diff(obj StickTableEntry, opts ...eqdiff.GoMethodGenO
 		diff["Key"] = []interface{}{rec.Key, obj.Key}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ServerID, obj.ServerID, opts...) {
-		diff["ServerID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ServerID"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SessCnt, obj.SessCnt, opts...) {
-		diff["SessCnt."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SessCnt"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SessRate, obj.SessRate, opts...) {
-		diff["SessRate."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SessRate"+diffKey] = diffValue
 	}
 	if rec.Use != obj.Use {
 		diff["Use"] = []interface{}{rec.Use, obj.Use}
@@ -122,19 +203,20 @@ func DiffPointerStickTableEntryGpc(x, y *StickTableEntryGpc, opts ...eqdiff.GoMe
 		return diff
 	}
 
-	key := "Gpc"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -146,19 +228,20 @@ func DiffPointerStickTableEntryGpcRate(x, y *StickTableEntryGpcRate, opts ...eqd
 		return diff
 	}
 
-	key := "GpcRate"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -170,19 +253,20 @@ func DiffPointerStickTableEntryGpt(x, y *StickTableEntryGpt, opts ...eqdiff.GoMe
 		return diff
 	}
 
-	key := "Gpt"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

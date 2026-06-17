@@ -102,6 +102,7 @@ func TestGlobalBaseEqualFalse(t *testing.T) {
 		result.InsecureSetuidWanted = !sample.InsecureSetuidWanted
 		result.LimitedQuic = !sample.LimitedQuic
 		result.MasterWorker = !sample.MasterWorker
+		result.MaxThreadsPerGroup = Ptr(*sample.MaxThreadsPerGroup + 1)
 		result.MworkerMaxReloads = Ptr(*sample.MworkerMaxReloads + 1)
 		result.Nbthread = sample.Nbthread + 1
 		result.NoQuic = !sample.NoQuic
@@ -211,6 +212,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 		result.InsecureSetuidWanted = !sample.InsecureSetuidWanted
 		result.LimitedQuic = !sample.LimitedQuic
 		result.MasterWorker = !sample.MasterWorker
+		result.MaxThreadsPerGroup = Ptr(*sample.MaxThreadsPerGroup + 1)
 		result.MworkerMaxReloads = Ptr(*sample.MworkerMaxReloads + 1)
 		result.Nbthread = sample.Nbthread + 1
 		result.NoQuic = !sample.NoQuic
@@ -233,7 +235,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 74 {
+		if len(listDiffFields) != 77 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -243,7 +245,166 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalBase to be different in 74 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalBase to be different in 77 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestGlobalBaseCPUAffinityEqual(t *testing.T) {
+	samples := []struct {
+		a, b GlobalBaseCPUAffinity
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalBaseCPUAffinity
+		var result GlobalBaseCPUAffinity
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalBaseCPUAffinity
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected GlobalBaseCPUAffinity to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalBaseCPUAffinityEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalBaseCPUAffinity
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalBaseCPUAffinity
+		var result GlobalBaseCPUAffinity
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		samples = append(samples, struct {
+			a, b GlobalBaseCPUAffinity
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected GlobalBaseCPUAffinity to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalBaseCPUAffinityDiff(t *testing.T) {
+	samples := []struct {
+		a, b GlobalBaseCPUAffinity
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalBaseCPUAffinity
+		var result GlobalBaseCPUAffinity
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalBaseCPUAffinity
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected GlobalBaseCPUAffinity to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestGlobalBaseCPUAffinityDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalBaseCPUAffinity
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalBaseCPUAffinity
+		var result GlobalBaseCPUAffinity
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		samples = append(samples, struct {
+			a, b GlobalBaseCPUAffinity
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected GlobalBaseCPUAffinity to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

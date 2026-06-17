@@ -33,19 +33,20 @@ func DiffPointerHTTPRequestRule(x, y *HTTPRequestRule, opts ...eqdiff.GoMethodGe
 		return diff
 	}
 
-	key := "*HTTPRequestRule"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -79,7 +80,10 @@ func DiffSlicePointerHTTPRequestRule(x, y []*HTTPRequestRule, opts ...eqdiff.GoM
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerHTTPRequestRule(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

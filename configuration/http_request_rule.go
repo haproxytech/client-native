@@ -277,6 +277,33 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			CondTest:  v.CondTest,
 			Metadata:  misc.ParseMetadata(v.Comment),
 		}
+	case *http_actions.AddHeadersBin:
+		rule = &models.HTTPRequestRule{
+			Type:      "add-headers-bin",
+			HdrExpr:   v.Expr,
+			HdrPrefix: v.Prefix,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+			Metadata:  misc.ParseMetadata(v.Comment),
+		}
+	case *http_actions.DelHeadersBin:
+		rule = &models.HTTPRequestRule{
+			Type:      "del-headers-bin",
+			HdrExpr:   v.Expr,
+			HdrMethod: v.Method,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+			Metadata:  misc.ParseMetadata(v.Comment),
+		}
+	case *http_actions.SetHeadersBin:
+		rule = &models.HTTPRequestRule{
+			Type:      "set-headers-bin",
+			HdrExpr:   v.Expr,
+			HdrPrefix: v.Prefix,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+			Metadata:  misc.ParseMetadata(v.Comment),
+		}
 	case *http_actions.Allow:
 		rule = &models.HTTPRequestRule{
 			Type:     "allow",
@@ -886,10 +913,11 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 		}
 	case *actions.DoLog:
 		rule = &models.HTTPRequestRule{
-			Type:     models.HTTPRequestRuleTypeDoDashLog,
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
-			Metadata: misc.ParseMetadata(v.Comment),
+			Type:       models.HTTPRequestRuleTypeDoDashLog,
+			LogProfile: v.Profile,
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+			Metadata:   misc.ParseMetadata(v.Comment),
 		}
 	}
 
@@ -915,6 +943,30 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 		rule = &http_actions.AddHeader{
 			Name:     f.HdrName,
 			Fmt:      f.HdrFormat,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "add-headers-bin":
+		rule = &http_actions.AddHeadersBin{
+			Expr:     f.HdrExpr,
+			Prefix:   f.HdrPrefix,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "del-headers-bin":
+		rule = &http_actions.DelHeadersBin{
+			Expr:     f.HdrExpr,
+			Method:   f.HdrMethod,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "set-headers-bin":
+		rule = &http_actions.SetHeadersBin{
+			Expr:     f.HdrExpr,
+			Prefix:   f.HdrPrefix,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,
@@ -1469,6 +1521,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 		}
 	case "do-log":
 		rule = &actions.DoLog{
+			Profile:  f.LogProfile,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,

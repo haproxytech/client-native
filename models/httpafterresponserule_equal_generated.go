@@ -29,15 +29,17 @@ func (rec HTTPAfterResponseRule) Equal(obj HTTPAfterResponseRule, opts ...eqdiff
 		rec.CaptureSample == obj.CaptureSample &&
 		rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
+		rec.HdrExpr == obj.HdrExpr &&
 		rec.HdrFormat == obj.HdrFormat &&
 		rec.HdrMatch == obj.HdrMatch &&
 		rec.HdrMethod == obj.HdrMethod &&
 		rec.HdrName == obj.HdrName &&
+		rec.HdrPrefix == obj.HdrPrefix &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.MapFile == obj.MapFile &&
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.ScExpr == obj.ScExpr &&
 		rec.ScID == obj.ScID &&
 		rec.ScIdx == obj.ScIdx &&

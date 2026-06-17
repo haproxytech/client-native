@@ -24,10 +24,16 @@ import (
 func (rec SslEngine) Diff(obj SslEngine, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Algorithms, obj.Algorithms, opts...) {
-		diff["Algorithms."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Algorithms"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	return diff
 }

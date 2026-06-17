@@ -89,6 +89,7 @@ func TestTuneBufferOptionsEqualFalse(t *testing.T) {
 		result.BuffersLimit = Ptr(*sample.BuffersLimit + 1)
 		result.BuffersReserve = sample.BuffersReserve + 1
 		result.Bufsize = sample.Bufsize + 1
+		result.BufsizeLarge = Ptr(*sample.BufsizeLarge + 1)
 		result.BufsizeSmall = Ptr(*sample.BufsizeSmall + 1)
 		result.Pipesize = sample.Pipesize + 1
 		result.RcvbufBackend = Ptr(*sample.RcvbufBackend + 1)
@@ -182,6 +183,7 @@ func TestTuneBufferOptionsDiffFalse(t *testing.T) {
 		result.BuffersLimit = Ptr(*sample.BuffersLimit + 1)
 		result.BuffersReserve = sample.BuffersReserve + 1
 		result.Bufsize = sample.Bufsize + 1
+		result.BufsizeLarge = Ptr(*sample.BufsizeLarge + 1)
 		result.BufsizeSmall = Ptr(*sample.BufsizeSmall + 1)
 		result.Pipesize = sample.Pipesize + 1
 		result.RcvbufBackend = Ptr(*sample.RcvbufBackend + 1)
@@ -201,7 +203,7 @@ func TestTuneBufferOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 14 {
+		if len(listDiffFields) != 15 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -211,7 +213,7 @@ func TestTuneBufferOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneBufferOptions to be different in 14 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneBufferOptions to be different in 15 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

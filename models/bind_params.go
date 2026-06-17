@@ -250,6 +250,11 @@ type BindParams struct {
 	// +kubebuilder:validation:Enum=none;number;string;
 	SeverityOutput string `json:"severity_output,omitempty"`
 
+	// shards
+	// Pattern: ^(by-thread|by-group|[0-9]+)$
+	// +kubebuilder:validation:Pattern=`^(by-thread|by-group|[0-9]+)$`
+	Shards string `json:"shards,omitempty"`
+
 	// sigalgs
 	Sigalgs string `json:"sigalgs,omitempty"`
 
@@ -402,6 +407,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSeverityOutput(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateShards(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -805,6 +814,18 @@ func (m *BindParams) validateSeverityOutput(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSeverityOutputEnum("severity_output", "body", m.SeverityOutput); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateShards(formats strfmt.Registry) error {
+	if swag.IsZero(m.Shards) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("shards", "body", m.Shards, `^(by-thread|by-group|[0-9]+)$`); err != nil {
 		return err
 	}
 

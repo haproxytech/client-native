@@ -24,7 +24,6 @@ import (
 func (rec StickRule) Equal(obj StickRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Pattern == obj.Pattern &&
 		rec.Table == obj.Table &&
 		rec.Type == obj.Type

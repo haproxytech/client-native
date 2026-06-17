@@ -53,6 +53,8 @@ func (h *Responses) Parse(line string, parts []string, comment string) (string, 
 		switch parts[1] {
 		case "add-header":
 			err = h.ParseHTTPResponse(&httpActions.AddHeader{}, parts, comment)
+		case "add-headers-bin":
+			err = h.ParseHTTPResponse(&httpActions.AddHeadersBin{}, parts, comment)
 		case "allow":
 			err = h.ParseHTTPResponse(&httpActions.Allow{}, parts, comment)
 		case "cache-store":
@@ -61,6 +63,8 @@ func (h *Responses) Parse(line string, parts []string, comment string) (string, 
 			err = h.ParseHTTPResponse(&httpActions.Capture{}, parts, comment)
 		case "del-header":
 			err = h.ParseHTTPResponse(&httpActions.DelHeader{}, parts, comment)
+		case "del-headers-bin":
+			err = h.ParseHTTPResponse(&httpActions.DelHeadersBin{}, parts, comment)
 		case "deny":
 			err = h.ParseHTTPResponse(&httpActions.Deny{}, parts, comment)
 		case "pause":
@@ -77,6 +81,8 @@ func (h *Responses) Parse(line string, parts []string, comment string) (string, 
 			err = h.ParseHTTPResponse(&actions.SendSpoeGroup{}, parts, comment)
 		case "set-header":
 			err = h.ParseHTTPResponse(&httpActions.SetHeader{}, parts, comment)
+		case "set-headers-bin":
+			err = h.ParseHTTPResponse(&httpActions.SetHeadersBin{}, parts, comment)
 		case "set-log-level":
 			err = h.ParseHTTPResponse(&actions.SetLogLevel{}, parts, comment)
 		case "set-mark":

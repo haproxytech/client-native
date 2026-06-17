@@ -28,7 +28,6 @@ func (rec LogTarget) Equal(obj LogTarget, opts ...eqdiff.GoMethodGenOptions) boo
 		rec.Global == obj.Global &&
 		rec.Length == obj.Length &&
 		rec.Level == obj.Level &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Minlevel == obj.Minlevel &&
 		rec.Nolog == obj.Nolog &&
 		rec.Profile == obj.Profile &&

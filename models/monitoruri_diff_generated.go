@@ -28,7 +28,7 @@ func (x MonitorURI) Diff(y MonitorURI, opts ...eqdiff.GoMethodGenOptions) map[st
 func DiffMonitorURI(x, y MonitorURI, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x != y {
-		diff["MonitorURI"] = []interface{}{x, y}
+		diff[""] = []interface{}{x, y}
 	}
 	return diff
 }

@@ -1,7 +1,7 @@
 ---
 backend:
   type: object
-  description: Backend with all it's children resources
+  description: Backend with all its children resources
   x-go-name: Backend
   allOf:
     - $ref: "#/definitions/backend_base"
@@ -19,6 +19,9 @@ backend:
         filter_list:
           $ref: "#/definitions/filters"
           x-go-name: FilterList
+        filter_sequence_list:
+          $ref: "#/definitions/filter_sequences"
+          x-go-name: FilterSequenceList
         log_target_list:
           $ref: "#/definitions/log_targets"
           x-go-name: LogTargetList
@@ -96,13 +99,6 @@ backend_base:
       type: string
       enum: [enabled, disabled]
       x-display-name: HTTP low interactive delays
-      x-dependency:
-        mode:
-          value: http
-    http_proxy:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: HTTP proxy mode
       x-dependency:
         mode:
           value: http
@@ -282,13 +278,6 @@ backend_base:
           value: http
     stick_table:
       $ref: "#/definitions/config_stick_table"
-    http-use-htx:
-      type: string
-      enum: [enabled, disabled]
-      x-dependency:
-        mode:
-          value: http
-      pattern: '^[^\s]+$'
     accept_invalid_http_response:
       type: string
       enum: [enabled, disabled]
@@ -326,6 +315,8 @@ backend_base:
       x-display-name: Nolinger
     originalto:
       $ref: "#/definitions/originalto"
+    use_small_buffers:
+      $ref: "#/definitions/use_small_buffers"
     persist:
       type: string
       enum: [enabled, disabled]

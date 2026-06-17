@@ -29,43 +29,73 @@ func (rec AwsRegion) Diff(obj AwsRegion, opts ...eqdiff.GoMethodGenOptions) map[
 		diff["AccessKeyID"] = []interface{}{rec.AccessKeyID, obj.AccessKeyID}
 	}
 	for diffKey, diffValue := range DiffSlicePointerAwsFilters(rec.Allowlist, obj.Allowlist, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Allowlist"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffSlicePointerAwsFilters(rec.Denylist, obj.Denylist, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Denylist"+diffKey] = diffValue
 	}
 	if rec.Description != obj.Description {
 		diff["Description"] = []interface{}{rec.Description, obj.Description}
 	}
 	for diffKey, diffValue := range DiffPointerBool(rec.Enabled, obj.Enabled, opts...) {
-		diff["Enabled."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Enabled"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.ID, obj.ID, opts...) {
-		diff["ID."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ID"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.IPV4Address, obj.IPV4Address, opts...) {
-		diff["IPV4Address."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["IPV4Address"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Region, obj.Region, opts...) {
-		diff["Region."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Region"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.RetryTimeout, obj.RetryTimeout, opts...) {
-		diff["RetryTimeout."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RetryTimeout"+diffKey] = diffValue
 	}
 	if rec.SecretAccessKey != obj.SecretAccessKey {
 		diff["SecretAccessKey"] = []interface{}{rec.SecretAccessKey, obj.SecretAccessKey}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ServerSlotsBase, obj.ServerSlotsBase, opts...) {
-		diff["ServerSlotsBase."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ServerSlotsBase"+diffKey] = diffValue
 	}
 	if rec.ServerSlotsGrowthIncrement != obj.ServerSlotsGrowthIncrement {
 		diff["ServerSlotsGrowthIncrement"] = []interface{}{rec.ServerSlotsGrowthIncrement, obj.ServerSlotsGrowthIncrement}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.ServerSlotsGrowthType, obj.ServerSlotsGrowthType, opts...) {
-		diff["ServerSlotsGrowthType."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ServerSlotsGrowthType"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -76,19 +106,20 @@ func DiffPointerAwsFilters(x, y *AwsFilters, opts ...eqdiff.GoMethodGenOptions) 
 		return diff
 	}
 
-	key := "*AwsFilters"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -100,19 +131,17 @@ func DiffPointerBool(x, y *bool, opts ...eqdiff.GoMethodGenOptions) map[string][
 		return diff
 	}
 
-	key := "Enabled"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	if *x != *y {
-		diff[key] = []interface{}{x, y}
+		diff[""] = []interface{}{*x, *y}
 	}
 
 	return diff
@@ -146,7 +175,10 @@ func DiffSlicePointerAwsFilters(x, y []*AwsFilters, opts ...eqdiff.GoMethodGenOp
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerAwsFilters(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

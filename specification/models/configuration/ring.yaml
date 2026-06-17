@@ -1,7 +1,7 @@
 ---
 ring:
   type: object
-  description: Ring with all it's children resources
+  description: Ring with all its children resources
   x-go-name: Ring
   allOf:
     - $ref: "#/definitions/ring_base"

@@ -18,6 +18,7 @@ package params
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -187,6 +188,98 @@ func (s *ServerOptionOnOff) String() string {
 	return s.Name + " " + s.Value
 }
 
+// ServerOptionParams handles options of the form `name value[(arg1,arg2,...)]`.
+type ServerOptionParams struct {
+	Name   string
+	Value  string
+	Params []string
+}
+
+// ServerOptionParamsValidation holds the allowed values for a ServerOptionParams option.
+type ServerOptionParamsValidation struct {
+	AllowedValues []string
+}
+
+//nolint:gochecknoglobals
+var serverOptionParamsValidation = map[string]ServerOptionParamsValidation{
+	"quic-cc-algo": {
+		AllowedValues: []string{"cubic", "newreno", "bbr", "nocc"},
+	},
+}
+
+func (b *ServerOptionParams) Parse(options []string, currentIndex int) (int, error) {
+	if currentIndex+1 < len(options) {
+		name := options[currentIndex]
+		if name == b.Name {
+			value, params, err := b.splitParams(options[currentIndex+1])
+			if err != nil {
+				return 0, err
+			}
+			b.Value = value
+			b.Params = params
+			if err = b.validateAllowedValues(); err != nil {
+				return 0, err
+			}
+			return 2, nil
+		}
+		return 0, &NotFoundError{Have: name, Want: b.Name}
+	}
+	return 0, &NotEnoughParamsError{}
+}
+
+func (b *ServerOptionParams) validateAllowedValues() error {
+	if optionValuesValidation, ok := serverOptionParamsValidation[b.Name]; ok {
+		if !slices.Contains(optionValuesValidation.AllowedValues, b.Value) {
+			return &NotAllowedValuesError{
+				Have: b.Value,
+				Want: optionValuesValidation.AllowedValues,
+			}
+		}
+	}
+	return nil
+}
+
+func (b *ServerOptionParams) splitParams(value string) (string, []string, error) {
+	if !strings.HasSuffix(value, ")") {
+		return value, nil, nil
+	}
+
+	value = strings.TrimSuffix(value, ")")
+	parts := strings.Split(value, "(")
+	if len(parts) != 2 {
+		return "", nil, &NotEnoughParamsError{}
+	}
+
+	if len(parts[1]) == 0 {
+		return "", nil, &NotEnoughParamsError{}
+	}
+
+	params := strings.Split(parts[1], ",")
+	return parts[0], params, nil
+}
+
+func (b *ServerOptionParams) Valid() bool {
+	return b.Value != ""
+}
+
+func (b *ServerOptionParams) String() string {
+	if b.Name == "" || b.Value == "" {
+		return ""
+	}
+
+	var result strings.Builder
+	result.WriteString(b.Name)
+	result.WriteString(" ")
+	result.WriteString(b.Value)
+	if len(b.Params) > 0 {
+		result.WriteString("(")
+		result.WriteString(strings.Join(b.Params, ","))
+		result.WriteString(")")
+	}
+
+	return result.String()
+}
+
 var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochecknoglobals
 	"agent-check":             func() ServerOption { return &ServerOptionWord{Name: "agent-check"} },
 	"no-agent-check":          func() ServerOption { return &ServerOptionWord{Name: "no-agent-check"} },
@@ -313,6 +406,7 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"pool-conn-name":          func() ServerOption { return &ServerOptionValue{Name: "pool-conn-name"} },
 	"hash-key":                func() ServerOption { return &ServerOptionValue{Name: "hash-key"} },
 	"ktls":                    func() ServerOption { return &ServerOptionOnOff{Name: "ktls"} },
+	"quic-cc-algo":            func() ServerOption { return &ServerOptionParams{Name: "quic-cc-algo"} },
 }
 
 var serverParamOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochecknoglobals

@@ -30,19 +30,31 @@ func (rec RingBase) Diff(obj RingBase, opts ...eqdiff.GoMethodGenOptions) map[st
 		diff["Format"] = []interface{}{rec.Format, obj.Format}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxlen, obj.Maxlen, opts...) {
-		diff["Maxlen."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Maxlen"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
-		diff["Size."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Size"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect, opts...) {
-		diff["TimeoutConnect."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TimeoutConnect"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutServer, obj.TimeoutServer, opts...) {
-		diff["TimeoutServer."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TimeoutServer"+diffKey] = diffValue
 	}
 	return diff
 }

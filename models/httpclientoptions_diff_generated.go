@@ -39,10 +39,16 @@ func (rec HTTPClientOptions) Diff(obj HTTPClientOptions, opts ...eqdiff.GoMethod
 		diff["SslCaFile"] = []interface{}{rec.SslCaFile, obj.SslCaFile}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.SslVerify, obj.SslVerify, opts...) {
-		diff["SslVerify."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SslVerify"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TimeoutConnect, obj.TimeoutConnect, opts...) {
-		diff["TimeoutConnect."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TimeoutConnect"+diffKey] = diffValue
 	}
 	return diff
 }

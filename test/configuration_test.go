@@ -54,18 +54,27 @@ global
   tune.buffers.limit 11
   tune.buffers.reserve 12
   tune.bufsize 13
+  tune.bufsize.large 64k
   tune.bufsize.small 8k
+  tune.cli.max-payload-size 256k
   tune.comp.maxlevel 14
+  tune.defaults.purge
   tune.disable-fast-forward
   tune.disable-zero-copy-forwarding
   tune.events.max-events-at-once 10
   tune.fail-alloc
   tune.glitches.kill.cpu-usage 75
   tune.fd.edge-triggered on
+  tune.h1.be.glitches-threshold 2
+  tune.h1.fe.glitches-threshold 15
   tune.h1.zero-copy-fwd-recv on
   tune.h1.zero-copy-fwd-send on
+  tune.h2.be.max-frames-at-once 32
+  tune.h2.fe.max-frames-at-once 64
+  tune.h2.fe.max-rst-at-once 5
   tune.h2.header-table-size 15
   tune.h2.initial-window-size 16
+  tune.h2.log-errors connection
   tune.h2.max-concurrent-streams 17
   tune.h2.max-frame-size 18
   tune.h2.zero-copy-fwd-send on
@@ -81,6 +90,7 @@ global
   tune.lua.log.loggers on
   tune.lua.log.stderr auto
   tune.lua.maxmem 65536
+  tune.lua.openlibs string,math,table,utf8
   tune.lua.session-timeout 25
   tune.lua.task-timeout 26
   tune.lua.service-timeout 27
@@ -106,6 +116,7 @@ global
   tune.sndbuf.frontend 2048
   tune.sndbuf.server 40
   tune.ssl.cachesize 41
+  tune.ssl.certificate-compression off
   tune.ssl.force-private-cache
   tune.ssl.keylog on
   tune.ssl.lifetime 43
@@ -122,6 +133,7 @@ global
   tune.vars.reqres-max-size 53
   tune.vars.sess-max-size 54
   tune.vars.txn-max-size 55
+  tune.quic.fe.stream.max-total 1000
   tune.quic.frontend.conn-tx-buffers.limit 10
   tune.quic.frontend.max-idle-timeout 10000
   tune.quic.frontend.max-streams-bidi 100
@@ -194,6 +206,8 @@ global
   user thomas
   group anderson
   nbthread 128
+  max-threads-per-group 16
+  cpu-affinity per-group auto
   pidfile pidfile.text
   ssl-default-bind-ciphers ECDH+AESGCM:ECDH+CHACHA20
   ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384
@@ -202,6 +216,7 @@ global
   thread-group first 1-16
   stats-file /var/haproxy/my-stats
   stats maxconn 20
+  stats calculate-max-counters on
   ssl-load-extra-files bundle
   deviceatlas-json-file atlas.json
   deviceatlas-log-level 1
@@ -329,6 +344,8 @@ defaults test_defaults # testing_defaults
   balance roundrobin
   hash-balance-factor 150
   hash-preserve-affinity maxconn
+  option use-small-buffers queue l7-retries
+  stats show-version
   default-server fall 2000 rise 4000 inter 5s port 8888 sni-auto check-sni-auto ktls off
 
 defaults test_defaults_2 from test_defaults
@@ -346,7 +363,6 @@ defaults unnamed_defaults_1
   option clitcpka
   option dontlognull
   option forwardfor header X-Forwarded-For
-  option http-use-htx
   option httpclose
   option httplog
   option disable-h2-upgrade
@@ -465,7 +481,7 @@ frontend test
   acl waf_wafTest_drop var(txn.wafTest.drop),bool
   monitor-uri /healthz
   monitor fail if site_dead
-  filter trace name BEFORE-HTTP-COMP random-parsing hexdump
+  filter trace name BEFORE-HTTP-COMP random-parsing max-fwd 100 hexdump
   filter compression
   filter trace name AFTER-HTTP-COMP random-forwarding
   filter fcgi-app my-app
@@ -512,6 +528,9 @@ frontend test
   http-request set-timeout server 20
   http-request set-timeout tunnel 20
   http-request set-timeout client 20
+  http-request set-timeout connect 10
+  http-request set-timeout queue 15
+  http-request set-timeout tarpit 30
   http-request set-bandwidth-limit my-limit limit 1m period 10s
   http-request set-bandwidth-limit my-limit-reverse period 20s limit 2m
   http-request set-bandwidth-limit my-limit-cond limit 3m if FALSE
@@ -528,6 +547,7 @@ frontend test
   http-request set-retries var(txn.retries) if TRUE
   http-request do-log
   http-request do-log if FALSE
+  http-request do-log profile my-prof if TRUE
   http-request pause 20s
   http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 } # delay according to conn rate
   http-response allow if src 192.168.0.0/16
@@ -580,6 +600,9 @@ frontend test
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
   http-after-response sc-set-gpt0(1) 20 if FALSE
   http-after-response set-header Strict-Transport-Security "max-age=31536000"
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response set-log-level silent if FALSE
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \1;ip=%bi;\2
   http-after-response replace-value Cache-control ^public$ private
@@ -706,6 +729,8 @@ frontend test
   declare capture request len 1
   ssl-f-use crt foobar.pem.rsa sigalgs "RSA-PSS+SHA256"
   ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
+  force-be-switch if internal_acl
+  force-be-switch unless public_acl
 
 frontend test_2 from test_defaults
   mode http
@@ -740,7 +765,13 @@ frontend test_2 from test_defaults
   option clitcpka
   http-request capture req.cook_cnt(FirstVisit),bool len 10
   http-request capture req.cook_cnt(FirstVisit),bool id 0
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-response capture res.header id 0
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders)
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt
   unique-id-header X-Unique-ID-test-2
   clitcpka-cnt 10
@@ -750,6 +781,10 @@ frontend test_2 from test_defaults
   stats auth admin2:AdMiN1234
   stats show-modules
   stats realm HAProxy\\ Statistics
+  filter comp-req
+  filter comp-res
+  filter-sequence request comp-req
+  filter-sequence response comp-res
 
 backend test # my comment
   mode http
@@ -819,7 +854,7 @@ backend test # my comment
   use-server webserv if TRUE # my comment
   use-server webserv2 unless TRUE
   server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 no-renegotiate log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up idle-ping 10s check-reuse-pool strict-maxconn tcp-md5sig secretpass sni-auto check-sni-auto ktls on # my comment
-  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 hash-key akey pool-conn-name apoolconnname no-check-reuse-pool check-pool-conn-name foo renegotiate cc cubic # {"comment": "my structured comment", "id": "my_random_id_for_server"}
+  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 hash-key akey pool-conn-name apoolconnname no-check-reuse-pool check-pool-conn-name foo renegotiate cc cubic quic-cc-algo bbr(1m) # {"comment": "my structured comment", "id": "my_random_id_for_server"}
   server webserv_noport 192.168.1.2 check
   http-request set-dst hdr(x-dst) # my comment
   http-request set-dst-port int(4000)
@@ -1023,7 +1058,7 @@ mailers localmailer1
 
 acme test
   contact me@example.com
-  acme-provider gandy
+  provider-name gandy
   acme-vars "ApiKey=ple744587,Zone=example.com"
   bits 4096
   challenge http-01
@@ -1033,6 +1068,7 @@ acme test
   dns-timeout 10m
   keytype ECDSA
   map acme@t
+  profile shortlived
   reuse-key on
 
 crt-store cert-bunker1
@@ -1190,7 +1226,8 @@ func deleteTestFile(path string) error {
 }
 
 func prepareClient(path string) (c configuration.Configuration, err error) {
-	c, err = configuration.New(context.Background(),
+	c, err = configuration.New(
+		context.Background(),
 		options.ConfigurationFile(path),
 		options.HAProxyBin("echo"),
 		options.UseModelsValidation,

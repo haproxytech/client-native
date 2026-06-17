@@ -32,9 +32,15 @@ func (rec LogForward) Diff(obj LogForward, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["LogTargetList"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Binds"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringDgramBind(rec.DgramBinds, obj.DgramBinds, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["DgramBinds"+diffKey] = diffValue
 	}
 	return diff
@@ -70,7 +76,10 @@ func DiffMapStringDgramBind(x, y map[string]DgramBind, opts ...eqdiff.GoMethodGe
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -83,7 +92,10 @@ func DiffMapStringDgramBind(x, y map[string]DgramBind, opts ...eqdiff.GoMethodGe
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

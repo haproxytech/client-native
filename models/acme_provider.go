@@ -47,14 +47,12 @@ type AcmeProvider struct {
 	// List of variables passed to the dns-01 provider (typically API keys)
 	AcmeVars map[string]string `json:"acme_vars,omitempty"`
 
-	// Number of bits to generate an RSA certificate
-	// Minimum: 1024
-	// +kubebuilder:validation:Minimum=1024
+	// Number of bits used when generating an RSA certificate. Ignored when keytype is ECDSA (curves is used instead).
 	Bits *int64 `json:"bits,omitempty"`
 
-	// ACME challenge type. Only http-01 and dns-01 are supported.
-	// Enum: ["http-01","dns-01"]
-	// +kubebuilder:validation:Enum=http-01;dns-01;
+	// ACME challenge type.
+	// Enum: ["http-01","dns-01","dns-persist-01"]
+	// +kubebuilder:validation:Enum=http-01;dns-01;dns-persist-01;
 	Challenge string `json:"challenge,omitempty"`
 
 	// How to wait for the DNS propagation: either wait for a CLI event on
@@ -103,6 +101,12 @@ type AcmeProvider struct {
 	// Required: true
 	Name string `json:"name"`
 
+	// Request a specific certificate profile from the CA by including a 'profile'
+	// field in the newOrder request (draft-ietf-acme-profiles). Profile names
+	// are CA-specific short identifiers (e.g. 'classic', 'shortlived').
+	//
+	Profile string `json:"profile,omitempty"`
+
 	// Try to reuse the private key instead of generating a new one.
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -112,10 +116,6 @@ type AcmeProvider struct {
 // Validate validates this acme provider
 func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	var res []error
-
-	if err := m.validateBits(formats); err != nil {
-		res = append(res, err)
-	}
 
 	if err := m.validateChallenge(formats); err != nil {
 		res = append(res, err)
@@ -147,23 +147,11 @@ func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *AcmeProvider) validateBits(formats strfmt.Registry) error {
-	if swag.IsZero(m.Bits) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("bits", "body", *m.Bits, 1024, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var acmeProviderTypeChallengePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http-01","dns-01"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-01","dns-01","dns-persist-01"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -178,6 +166,9 @@ const (
 
 	// AcmeProviderChallengeDNSDash01 captures enum value "dns-01"
 	AcmeProviderChallengeDNSDash01 string = "dns-01"
+
+	// AcmeProviderChallengeDNSDashPersistDash01 captures enum value "dns-persist-01"
+	AcmeProviderChallengeDNSDashPersistDash01 string = "dns-persist-01"
 )
 
 // prop value enum

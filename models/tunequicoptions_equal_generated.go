@@ -26,6 +26,7 @@ func (rec TuneQuicOptions) Equal(obj TuneQuicOptions, opts ...eqdiff.GoMethodGen
 		EqualPointerInt64(rec.FrontendMaxIdleTimeout, obj.FrontendMaxIdleTimeout, opts...) &&
 		EqualPointerInt64(rec.FrontendMaxStreamsBidi, obj.FrontendMaxStreamsBidi, opts...) &&
 		EqualPointerInt64(rec.FrontendMaxTxMemory, obj.FrontendMaxTxMemory, opts...) &&
+		EqualPointerInt64(rec.FrontendStreamMaxTotal, obj.FrontendStreamMaxTotal, opts...) &&
 		EqualPointerInt64(rec.MaxFrameLoss, obj.MaxFrameLoss, opts...) &&
 		EqualPointerInt64(rec.ReorderRatio, obj.ReorderRatio, opts...) &&
 		EqualPointerInt64(rec.RetryThreshold, obj.RetryThreshold, opts...) &&

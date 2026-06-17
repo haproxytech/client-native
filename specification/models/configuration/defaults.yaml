@@ -1,7 +1,7 @@
 ---
 defaults:
   type: object
-  description: Defaults with all it's children resources
+  description: Defaults with all its children resources
   x-go-name: Defaults
   allOf:
     - $ref: "#/definitions/defaults_base"
@@ -119,10 +119,6 @@ defaults_base:
     abortonclose:
       type: string
       enum: [enabled, disabled]
-    http-use-htx:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: HTTP Use HTX
     dontlognull:
       type: string
       enum: [enabled, disabled]
@@ -388,6 +384,8 @@ defaults_base:
       x-display-name: Nolinger
     originalto:
       $ref: "#/definitions/originalto"
+    use_small_buffers:
+      $ref: "#/definitions/use_small_buffers"
     persist:
       type: string
       enum: [enabled, disabled]

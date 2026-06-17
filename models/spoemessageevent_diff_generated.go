@@ -30,7 +30,10 @@ func (rec SpoeMessageEvent) Diff(obj SpoeMessageEvent, opts ...eqdiff.GoMethodGe
 		diff["CondTest"] = []interface{}{rec.CondTest, obj.CondTest}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	return diff
 }

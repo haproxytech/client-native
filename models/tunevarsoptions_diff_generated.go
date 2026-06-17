@@ -24,19 +24,34 @@ import (
 func (rec TuneVarsOptions) Diff(obj TuneVarsOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.GlobalMaxSize, obj.GlobalMaxSize, opts...) {
-		diff["GlobalMaxSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["GlobalMaxSize"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ProcMaxSize, obj.ProcMaxSize, opts...) {
-		diff["ProcMaxSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ProcMaxSize"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ReqresMaxSize, obj.ReqresMaxSize, opts...) {
-		diff["ReqresMaxSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ReqresMaxSize"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.SessMaxSize, obj.SessMaxSize, opts...) {
-		diff["SessMaxSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["SessMaxSize"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.TxnMaxSize, obj.TxnMaxSize, opts...) {
-		diff["TxnMaxSize."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TxnMaxSize"+diffKey] = diffValue
 	}
 	return diff
 }

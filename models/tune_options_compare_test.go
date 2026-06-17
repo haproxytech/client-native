@@ -86,19 +86,26 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.CliMaxPayloadSize = Ptr(*sample.CliMaxPayloadSize + 1)
 		result.CompMaxlevel = sample.CompMaxlevel + 1
+		result.DefaultsPurge = !sample.DefaultsPurge
 		result.DisableFastForward = !sample.DisableFastForward
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.GlitchesKillCPUUsage = Ptr(*sample.GlitchesKillCPUUsage + 1)
+		result.H1BeGlitchesThreshold = Ptr(*sample.H1BeGlitchesThreshold + 1)
+		result.H1FeGlitchesThreshold = Ptr(*sample.H1FeGlitchesThreshold + 1)
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
+		result.H2BeMaxFramesAtOnce = sample.H2BeMaxFramesAtOnce + 1
 		result.H2BeRxbuf = Ptr(*sample.H2BeRxbuf + 1)
 		result.H2FeGlitchesThreshold = Ptr(*sample.H2FeGlitchesThreshold + 1)
 		result.H2FeInitialWindowSize = sample.H2FeInitialWindowSize + 1
 		result.H2FeMaxConcurrentStreams = sample.H2FeMaxConcurrentStreams + 1
+		result.H2FeMaxFramesAtOnce = sample.H2FeMaxFramesAtOnce + 1
+		result.H2FeMaxRstAtOnce = sample.H2FeMaxRstAtOnce + 1
 		result.H2FeMaxTotalStreams = Ptr(*sample.H2FeMaxTotalStreams + 1)
 		result.H2FeRxbuf = Ptr(*sample.H2FeRxbuf + 1)
 		result.H2HeaderTableSize = sample.H2HeaderTableSize + 1
@@ -205,19 +212,26 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.CliMaxPayloadSize = Ptr(*sample.CliMaxPayloadSize + 1)
 		result.CompMaxlevel = sample.CompMaxlevel + 1
+		result.DefaultsPurge = !sample.DefaultsPurge
 		result.DisableFastForward = !sample.DisableFastForward
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.GlitchesKillCPUUsage = Ptr(*sample.GlitchesKillCPUUsage + 1)
+		result.H1BeGlitchesThreshold = Ptr(*sample.H1BeGlitchesThreshold + 1)
+		result.H1FeGlitchesThreshold = Ptr(*sample.H1FeGlitchesThreshold + 1)
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
+		result.H2BeMaxFramesAtOnce = sample.H2BeMaxFramesAtOnce + 1
 		result.H2BeRxbuf = Ptr(*sample.H2BeRxbuf + 1)
 		result.H2FeGlitchesThreshold = Ptr(*sample.H2FeGlitchesThreshold + 1)
 		result.H2FeInitialWindowSize = sample.H2FeInitialWindowSize + 1
 		result.H2FeMaxConcurrentStreams = sample.H2FeMaxConcurrentStreams + 1
+		result.H2FeMaxFramesAtOnce = sample.H2FeMaxFramesAtOnce + 1
+		result.H2FeMaxRstAtOnce = sample.H2FeMaxRstAtOnce + 1
 		result.H2FeMaxTotalStreams = Ptr(*sample.H2FeMaxTotalStreams + 1)
 		result.H2FeRxbuf = Ptr(*sample.H2FeRxbuf + 1)
 		result.H2HeaderTableSize = sample.H2HeaderTableSize + 1
@@ -253,7 +267,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 52 {
+		if len(listDiffFields) != 60 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -263,7 +277,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneOptions to be different in 52 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 60 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

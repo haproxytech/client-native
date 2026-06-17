@@ -26,6 +26,7 @@ global test
   cpu-map 1/all 0-3
   cpu-map auto:1-4 0-3
   cpu-map auto:1-4 0-1 2-3
+  cpu-affinity per-core
   cpu-set reset
   cpu-set reset # some comment
   cpu-set drop-cpu 1 # some comment
@@ -109,6 +110,8 @@ backend test
   balance roundrobin
   persist rdp-cookie
   cookie test
+  filter-sequence request lua.my-filter,comp-req
+  filter-sequence response lua.my-filter,comp-res
   default-server addr 127.0.0.1
   default-server addr ::1
   default-server agent-check
@@ -295,6 +298,7 @@ backend test
   log 127.0.0.1:1515 sample 1:6 local2
   option forwardfor
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+  option use-small-buffers
   option mysql-check
   option pgsql-check user john
   option redispatch
@@ -486,6 +490,14 @@ backend test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request add-acl(map.lst) [src]
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+  http-request del-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+  http-request set-headers-bin var(txn.oldheaders)
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
@@ -685,6 +697,12 @@ backend test
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response add-acl(map.lst) [src]
   http-response add-header X-value value
+  http-response add-headers-bin var(txn.oldheaders)
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+  http-response set-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
   http-response del-acl(map.lst) [src]
   http-response allow
   http-response cache-store cache-name
@@ -807,6 +825,12 @@ backend test
   http-after-response del-header X-Value -m GET
   http-after-response del-header X-Value -m GET if acl
   http-after-response del-header X-Value -m GET unless acl
+  http-after-response add-headers-bin var(txn.oldheaders)
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders)
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders)
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2 if acl
   http-after-response replace-value Cache-control ^public$ private
@@ -1135,6 +1159,7 @@ backend test
   stats hide-version
   stats show-legends
   stats show-modules
+  stats show-version
   stats maxconn 10
   stats realm HAProxy\\ Statistics
   stats refresh 10s
@@ -1372,6 +1397,7 @@ defaults test
   log 127.0.0.1:1515 format rfc5424 sample 1-5:6 local2
   log 127.0.0.1:1515 sample 1:6 local2
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+  option use-small-buffers
   unique-id-format %{+X}o_%ci:%cp_%fi:%fp_%Ts_%rt:%pid
   unique-id-header X-Unique-ID
   load-server-state-from-file global
@@ -1383,6 +1409,14 @@ defaults test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request add-acl(map.lst) [src]
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+  http-request del-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+  http-request set-headers-bin var(txn.oldheaders)
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
@@ -1582,6 +1616,12 @@ defaults test
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response add-acl(map.lst) [src]
   http-response add-header X-value value
+  http-response add-headers-bin var(txn.oldheaders)
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+  http-response set-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
   http-response del-acl(map.lst) [src]
   http-response allow
   http-response cache-store cache-name
@@ -1704,6 +1744,12 @@ defaults test
   http-after-response del-header X-Value -m GET
   http-after-response del-header X-Value -m GET if acl
   http-after-response del-header X-Value -m GET unless acl
+  http-after-response add-headers-bin var(txn.oldheaders)
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders)
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders)
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2 if acl
   http-after-response replace-value Cache-control ^public$ private
@@ -2002,6 +2048,7 @@ defaults test
   stats hide-version
   stats show-legends
   stats show-modules
+  stats show-version
   stats maxconn 10
   stats realm HAProxy\\ Statistics
   stats refresh 10s
@@ -2181,6 +2228,9 @@ frontend test
   bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
   bind :443 idle-ping 10s
   bind :443 idle-ping 10
+  bind :443 shards 4
+  bind :443 shards by-thread
+  bind :443 shards by-group
   bind :443 ssl tls-tickets
   bind :443 ssl no-strict-sni
   bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem
@@ -2189,6 +2239,8 @@ frontend test
   bind :443 ktls off
   bind :443 tcp-ss 1
   bind-process all
+  filter-sequence request lua.my-filter,comp-req
+  filter-sequence response lua.my-filter,comp-res
   email-alert from admin@example.com
   email-alert to a@z,x@y
   email-alert level warning
@@ -2231,6 +2283,8 @@ frontend test
   monitor fail if no_db01 no_db02
   declare capture request len 1
   declare capture response len 2
+  force-be-switch if acl-name
+  force-be-switch unless acl-name
   option http-restrict-req-hdr-names preserve
   option originalto
   ssl-f-use crt test.foobar.pem
@@ -2239,6 +2293,14 @@ frontend test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request add-acl(map.lst) [src]
+  http-request add-headers-bin var(txn.oldheaders)
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+  http-request del-headers-bin var(txn.oldheaders)
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+  http-request set-headers-bin var(txn.oldheaders)
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
@@ -2440,6 +2502,12 @@ frontend test
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response add-acl(map.lst) [src]
   http-response add-header X-value value
+  http-response add-headers-bin var(txn.oldheaders)
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-response del-headers-bin var(txn.oldheaders)
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+  http-response set-headers-bin var(txn.oldheaders)
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
   http-response del-acl(map.lst) [src]
   http-response allow
   http-response cache-store cache-name
@@ -2563,6 +2631,12 @@ frontend test
   http-after-response del-header X-Value -m GET
   http-after-response del-header X-Value -m GET if acl
   http-after-response del-header X-Value -m GET unless acl
+  http-after-response add-headers-bin var(txn.oldheaders)
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+  http-after-response del-headers-bin var(txn.oldheaders)
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+  http-after-response set-headers-bin var(txn.oldheaders)
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2 if acl
   http-after-response replace-value Cache-control ^public$ private
@@ -2830,6 +2904,7 @@ frontend test
   stats hide-version
   stats show-legends
   stats show-modules
+  stats show-version
   stats maxconn 10
   stats realm HAProxy\\ Statistics
   stats refresh 10s
@@ -3366,6 +3441,12 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 1},
 	{`  bind :443 idle-ping 10
 `, 1},
+	{`  bind :443 shards 4
+`, 1},
+	{`  bind :443 shards by-thread
+`, 1},
+	{`  bind :443 shards by-group
+`, 1},
 	{`  bind :443 ssl tls-tickets
 `, 1},
 	{`  bind :443 ssl no-strict-sni
@@ -3410,6 +3491,12 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 1},
 	{`  cpu-map auto:1-4 0-1 2-3
 `, 1},
+	{`  cpu-affinity per-core
+`, 1},
+	{`  filter-sequence request lua.my-filter,comp-req
+`, 2},
+	{`  filter-sequence response lua.my-filter,comp-res
+`, 2},
 	{`  cpu-set reset
 `, 1},
 	{`  cpu-set reset # some comment
@@ -3854,6 +3941,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 2},
 	{`  option httplog
 `, 1},
+	{`  option use-small-buffers
+`, 2},
 	{`  option mysql-check
 `, 1},
 	{`  option pgsql-check user john
@@ -4282,6 +4371,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 1},
 	{`  ignore-persist unless acl-name
 `, 1},
+	{`  force-be-switch if acl-name
+`, 1},
+	{`  force-be-switch unless acl-name
+`, 1},
 	{`  unix-bind prefix pre
 `, 1},
 	{`  thread-group name 1-10
@@ -4373,6 +4466,22 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
 `, 3},
 	{`  http-request add-acl(map.lst) [src]
+`, 3},
+	{`  http-request add-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-request add-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
+	{`  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+`, 3},
+	{`  http-request del-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-request del-headers-bin var(txn.oldheaders) -m beg
+`, 3},
+	{`  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+`, 3},
+	{`  http-request set-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-request set-headers-bin var(txn.oldheaders) prefix x-
 `, 3},
 	{`  http-request add-header X-value value
 `, 3},
@@ -4750,6 +4859,18 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-response add-header X-value value
 `, 3},
+	{`  http-response add-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-response add-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
+	{`  http-response del-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-response del-headers-bin var(txn.oldheaders) -m beg
+`, 3},
+	{`  http-response set-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-response set-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
 	{`  http-response del-acl(map.lst) [src]
 `, 3},
 	{`  http-response allow
@@ -4975,6 +5096,18 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  http-after-response del-header X-Value -m GET if acl
 `, 3},
 	{`  http-after-response del-header X-Value -m GET unless acl
+`, 3},
+	{`  http-after-response add-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+`, 3},
+	{`  http-after-response del-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+`, 3},
+	{`  http-after-response set-headers-bin var(txn.oldheaders)
+`, 3},
+	{`  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
 `, 3},
 	{`  http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \\1;ip=%bi;\\2
 `, 3},
@@ -5595,6 +5728,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  stats show-legends
 `, 3},
 	{`  stats show-modules
+`, 3},
+	{`  stats show-version
 `, 3},
 	{`  stats maxconn 10
 `, 3},

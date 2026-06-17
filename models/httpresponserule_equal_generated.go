@@ -35,18 +35,20 @@ func (rec HTTPResponseRule) Equal(obj HTTPResponseRule, opts ...eqdiff.GoMethodG
 		rec.CondTest == obj.CondTest &&
 		EqualPointerInt64(rec.DenyStatus, obj.DenyStatus, opts...) &&
 		rec.Expr == obj.Expr &&
+		rec.HdrExpr == obj.HdrExpr &&
 		rec.HdrFormat == obj.HdrFormat &&
 		rec.HdrMatch == obj.HdrMatch &&
 		rec.HdrMethod == obj.HdrMethod &&
 		rec.HdrName == obj.HdrName &&
+		rec.HdrPrefix == obj.HdrPrefix &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MapFile == obj.MapFile &&
 		rec.MapKeyfmt == obj.MapKeyfmt &&
 		rec.MapValuefmt == obj.MapValuefmt &&
 		rec.MarkValue == obj.MarkValue &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NiceValue == obj.NiceValue &&
 		EqualPointerInt64(rec.RedirCode, obj.RedirCode, opts...) &&
 		rec.RedirOption == obj.RedirOption &&

@@ -66,7 +66,10 @@ func (rec SpoeAgent) Diff(obj SpoeAgent, opts ...eqdiff.GoMethodGenOptions) map[
 		diff["Messages"] = []interface{}{rec.Messages, obj.Messages}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Name, obj.Name, opts...) {
-		diff["Name."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Name"+diffKey] = diffValue
 	}
 	if rec.OptionSetOnError != obj.OptionSetOnError {
 		diff["OptionSetOnError"] = []interface{}{rec.OptionSetOnError, obj.OptionSetOnError}

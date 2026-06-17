@@ -189,13 +189,6 @@ type BackendBase struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPNoDelay string `json:"http-no-delay,omitempty"`
 
-	// http use htx
-	// Pattern: ^[^\s]+$
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPUseHtx string `json:"http-use-htx,omitempty"`
-
 	// http connection mode
 	// Enum: ["httpclose","http-server-close","http-keep-alive"]
 	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
@@ -210,11 +203,6 @@ type BackendBase struct {
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
-
-	// http proxy
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPProxy string `json:"http_proxy,omitempty"`
 
 	// http request timeout
 	// Minimum: 0
@@ -408,6 +396,9 @@ type BackendBase struct {
 
 	// use fcgi app
 	UseFCGIApp string `json:"use_fcgi_app,omitempty"`
+
+	// use small buffers
+	UseSmallBuffers *UseSmallBuffers `json:"use_small_buffers,omitempty"`
 }
 
 // Validate validates this backend base
@@ -542,10 +533,6 @@ func (m *BackendBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPUseHtx(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateHTTPConnectionMode(formats); err != nil {
 		res = append(res, err)
 	}
@@ -555,10 +542,6 @@ func (m *BackendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPProxy(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -703,6 +686,10 @@ func (m *BackendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTunnelTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUseSmallBuffers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1603,52 +1590,6 @@ func (m *BackendBase) validateHTTPNoDelay(formats strfmt.Registry) error {
 	return nil
 }
 
-var backendBaseTypeHTTPUseHtxPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendBaseTypeHTTPUseHtxPropEnum = append(backendBaseTypeHTTPUseHtxPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendBaseHTTPUseHtxEnabled captures enum value "enabled"
-	BackendBaseHTTPUseHtxEnabled string = "enabled"
-
-	// BackendBaseHTTPUseHtxDisabled captures enum value "disabled"
-	BackendBaseHTTPUseHtxDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *BackendBase) validateHTTPUseHtxEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendBaseTypeHTTPUseHtxPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendBase) validateHTTPUseHtx(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPUseHtx) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("http-use-htx", "body", m.HTTPUseHtx, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateHTTPUseHtxEnum("http-use-htx", "body", m.HTTPUseHtx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var backendBaseTypeHTTPConnectionModePropEnum []interface{}
 
 func init() {
@@ -1742,48 +1683,6 @@ func (m *BackendBase) validateHTTPPretendKeepalive(formats strfmt.Registry) erro
 
 	// value enum
 	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendBaseTypeHTTPProxyPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendBaseTypeHTTPProxyPropEnum = append(backendBaseTypeHTTPProxyPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendBaseHTTPProxyEnabled captures enum value "enabled"
-	BackendBaseHTTPProxyEnabled string = "enabled"
-
-	// BackendBaseHTTPProxyDisabled captures enum value "disabled"
-	BackendBaseHTTPProxyDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *BackendBase) validateHTTPProxyEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendBaseTypeHTTPProxyPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendBase) validateHTTPProxy(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPProxy) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPProxyEnum("http_proxy", "body", m.HTTPProxy); err != nil {
 		return err
 	}
 
@@ -2825,6 +2724,25 @@ func (m *BackendBase) validateTunnelTimeout(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *BackendBase) validateUseSmallBuffers(formats strfmt.Registry) error {
+	if swag.IsZero(m.UseSmallBuffers) { // not required
+		return nil
+	}
+
+	if m.UseSmallBuffers != nil {
+		if err := m.UseSmallBuffers.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this backend base based on the context it is used
 func (m *BackendBase) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -2926,6 +2844,10 @@ func (m *BackendBase) ContextValidate(ctx context.Context, formats strfmt.Regist
 	}
 
 	if err := m.contextValidateStickTable(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateUseSmallBuffers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3468,6 +3390,27 @@ func (m *BackendBase) contextValidateStickTable(ctx context.Context, formats str
 				return ve.ValidateName("stick_table")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("stick_table")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *BackendBase) contextValidateUseSmallBuffers(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.UseSmallBuffers != nil {
+
+		if swag.IsZero(m.UseSmallBuffers) { // not required
+			return nil
+		}
+
+		if err := m.UseSmallBuffers.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("use_small_buffers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("use_small_buffers")
 			}
 			return err
 		}

@@ -40,6 +40,12 @@ func (rec Frontend) Diff(obj Frontend, opts ...eqdiff.GoMethodGenOptions) map[st
 	for diffKey, diffValue := range rec.FilterList.Diff(obj.FilterList, opts...) {
 		diff["FilterList"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range rec.FilterSequenceList.Diff(obj.FilterSequenceList, opts...) {
+		diff["FilterSequenceList"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range rec.ForceBeSwitchList.Diff(obj.ForceBeSwitchList, opts...) {
+		diff["ForceBeSwitchList"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList, opts...) {
 		diff["HTTPAfterResponseRuleList"+diffKey] = diffValue
 	}
@@ -65,6 +71,9 @@ func (rec Frontend) Diff(obj Frontend, opts ...eqdiff.GoMethodGenOptions) map[st
 		diff["TCPRequestRuleList"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffMapStringBind(rec.Binds, obj.Binds, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Binds"+diffKey] = diffValue
 	}
 	return diff
@@ -100,7 +109,10 @@ func DiffMapStringBind(x, y map[string]Bind, opts ...eqdiff.GoMethodGenOptions) 
 		vy := y[kx]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}
@@ -113,7 +125,10 @@ func DiffMapStringBind(x, y map[string]Bind, opts ...eqdiff.GoMethodGenOptions) 
 		vx := x[ky]
 
 		for diffKey, diffValue := range vx.Diff(vy) {
-			diff[key+"."+diffKey] = []interface{}{diffValue[1], diffValue[0]}
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = []interface{}{diffValue[1], diffValue[0]}
 		}
 
 	}

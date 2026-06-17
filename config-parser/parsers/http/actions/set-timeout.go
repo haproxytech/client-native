@@ -19,12 +19,22 @@ package actions
 import (
 	stderrors "errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
+
+var setTimeoutTypes = []string{ //nolint:gochecknoglobals
+	"client",
+	"connect",
+	"queue",
+	"server",
+	"tarpit",
+	"tunnel",
+}
 
 type SetTimeout struct {
 	Type     string
@@ -43,7 +53,7 @@ func (f *SetTimeout) Parse(parts []string, parserType types.ParserType, comment 
 		if len(command) < 2 {
 			return errors.ErrInvalidData
 		}
-		if command[0] != "server" && command[0] != "tunnel" && command[0] != "client" {
+		if !slices.Contains(setTimeoutTypes, command[0]) {
 			return fmt.Errorf("unknown timeout type: %s", command[0])
 		}
 		f.Type = command[0]

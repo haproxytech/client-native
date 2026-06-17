@@ -17,22 +17,24 @@ limitations under the License.
 package filters
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 )
 
-type Trace struct { // filter trace [name <name>] [random-parsing] [random-forwarding] [hexdump]
+type Trace struct { // filter trace [name <name>] [random-parsing] [random-forwarding] [max-fwd <max>] [hexdump]
 	Name             string
 	RandomParsing    bool
 	RandomForwarding bool
+	MaxFwd           *int64
 	Hexdump          bool
 	Comment          string
 }
 
 func (f *Trace) Parse(parts []string, comment string) error {
-	// we have filter trace [name <name>] [random-parsing] [random-forwarding] [hexdump]
+	// we have filter trace [name <name>] [random-parsing] [random-forwarding] [max-fwd <max>] [hexdump]
 	if comment != "" {
 		f.Comment = comment
 	}
@@ -52,6 +54,16 @@ func (f *Trace) Parse(parts []string, comment string) error {
 			f.RandomParsing = true
 		case "random-forwarding":
 			f.RandomForwarding = true
+		case "max-fwd":
+			index++
+			if index == len(parts) {
+				return errors.ErrInvalidData
+			}
+			n, err := strconv.ParseInt(parts[index], 10, 64)
+			if err != nil {
+				return errors.ErrInvalidData
+			}
+			f.MaxFwd = &n
 		case "hexdump":
 			f.Hexdump = true
 		default:
@@ -74,6 +86,10 @@ func (f *Trace) Result() common.ReturnResultLine {
 	}
 	if f.RandomForwarding {
 		result.WriteString(" random-forwarding")
+	}
+	if f.MaxFwd != nil {
+		result.WriteString(" max-fwd ")
+		result.WriteString(strconv.FormatInt(*f.MaxFwd, 10))
 	}
 	if f.Hexdump {
 		result.WriteString(" hexdump")

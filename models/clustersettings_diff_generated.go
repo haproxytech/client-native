@@ -27,7 +27,10 @@ func (rec ClusterSettings) Diff(obj ClusterSettings, opts ...eqdiff.GoMethodGenO
 		diff["BootstrapKey"] = []interface{}{rec.BootstrapKey, obj.BootstrapKey}
 	}
 	for diffKey, diffValue := range DiffPointerClusterSettingsCluster(rec.Cluster, obj.Cluster, opts...) {
-		diff["Cluster."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Cluster"+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
 		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}
@@ -44,19 +47,20 @@ func DiffPointerClusterSettingsCluster(x, y *ClusterSettingsCluster, opts ...eqd
 		return diff
 	}
 
-	key := "Cluster"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

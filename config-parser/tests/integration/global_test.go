@@ -30,6 +30,13 @@ func TestWholeConfigsSectionsGlobal(t *testing.T) {
 	tests := []struct {
 		Name, Config string
 	}{
+		{"global_cpuaffinityauto", global_cpuaffinityauto},
+		{"global_cpuaffinityperccx", global_cpuaffinityperccx},
+		{"global_cpuaffinitypercore", global_cpuaffinitypercore},
+		{"global_cpuaffinitypergroup", global_cpuaffinitypergroup},
+		{"global_cpuaffinitypergroupauto", global_cpuaffinitypergroupauto},
+		{"global_cpuaffinitypergrouploose", global_cpuaffinitypergrouploose},
+		{"global_cpuaffinityperthread", global_cpuaffinityperthread},
 		{"global_cpumap1403", global_cpumap1403},
 		{"global_cpumap1all03", global_cpumap1all03},
 		{"global_cpumapauto140123", global_cpumapauto140123},

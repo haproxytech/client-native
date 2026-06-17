@@ -1,4 +1,5 @@
 {{ range .TestType}}
+{{- if gt $.FieldCount 0 }}
 func Test{{$.Name}}{{.}}(t *testing.T) {
 	samples := []struct {
 		a, b {{$.Name}}
@@ -138,7 +139,7 @@ func Test{{$.Name}}{{.}}False(t *testing.T) {
 		}
 	}
 }
-
+{{end -}}
 {{if eq . "Diffs" -}}
 */
 {{end}}

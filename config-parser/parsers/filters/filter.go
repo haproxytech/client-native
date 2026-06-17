@@ -49,6 +49,10 @@ func (h *Filters) Parse(line string, parts []string, comment string) (string, er
 			err = h.ParseFilter(&Trace{}, parts, comment)
 		case "compression":
 			err = h.ParseFilter(&Compression{}, parts, comment)
+		case "comp-req":
+			err = h.ParseFilter(&CompReq{}, parts, comment)
+		case "comp-res":
+			err = h.ParseFilter(&CompRes{}, parts, comment)
 		case "cache":
 			err = h.ParseFilter(&Cache{}, parts, comment)
 		case "spoe":

@@ -1,7 +1,7 @@
 ---
 frontend:
   type: object
-  description: Frontend with all it's children resources
+  description: Frontend with all its children resources
   x-go-name: Frontend
   allOf:
     - $ref: "#/definitions/frontend_base"
@@ -22,6 +22,9 @@ frontend:
         filter_list:
           $ref: "#/definitions/filters"
           x-go-name: FilterList
+        filter_sequence_list:
+          $ref: "#/definitions/filter_sequences"
+          x-go-name: FilterSequenceList
         log_target_list:
           $ref: "#/definitions/log_targets"
           x-go-name: LogTargetList
@@ -46,6 +49,9 @@ frontend:
         ssl_front_use_list:
           $ref: "#/definitions/ssl_front_uses"
           x-go-name: SSLFrontUses
+        force_be_switch_list:
+          $ref: "#/definitions/force_be_switches"
+          x-go-name: ForceBeSwitchList
 frontend_base:
   title: Frontend Base
   description: HAProxy frontend configuration
@@ -92,7 +98,7 @@ frontend_base:
       x-display-name: Log Format SD
     log_tag:
       type: string
-      pattern: '^[A-Za-z0-9-_.:]+$'
+      pattern: '^[A-Za-z0-9-_.:${}"]+$'
     log_steps:
       type: array
       x-omitempty: true
@@ -200,13 +206,6 @@ frontend_base:
           value: tcp
     stick_table:
       $ref: "#/definitions/config_stick_table"
-    http-use-htx:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: HTTP Use HTX
-      x-dependency:
-        mode:
-          value: http
     abortonclose:
       type: string
       enum: [enabled, disabled]

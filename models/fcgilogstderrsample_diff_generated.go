@@ -24,10 +24,16 @@ import (
 func (rec FCGILogStderrSample) Diff(obj FCGILogStderrSample, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.Ranges, obj.Ranges, opts...) {
-		diff["Ranges."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Ranges"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
-		diff["Size."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Size"+diffKey] = diffValue
 	}
 	return diff
 }

@@ -25,7 +25,6 @@ func (rec Cache) Equal(obj Cache, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.MaxAge == obj.MaxAge &&
 		rec.MaxObjectSize == obj.MaxObjectSize &&
 		rec.MaxSecondaryEntries == obj.MaxSecondaryEntries &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		EqualPointerString(rec.Name, obj.Name, opts...) &&
 		EqualPointerBool(rec.ProcessVary, obj.ProcessVary, opts...) &&
 		rec.TotalMaxSize == obj.TotalMaxSize

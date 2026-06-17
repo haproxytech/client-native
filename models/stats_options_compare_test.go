@@ -94,6 +94,7 @@ func TestStatsOptionsEqualFalse(t *testing.T) {
 		result.StatsRefreshDelay = Ptr(*sample.StatsRefreshDelay + 1)
 		result.StatsShowLegends = !sample.StatsShowLegends
 		result.StatsShowModules = !sample.StatsShowModules
+		result.StatsShowVersion = !sample.StatsShowVersion
 		samples = append(samples, struct {
 			a, b StatsOptions
 		}{sample, result})
@@ -181,6 +182,7 @@ func TestStatsOptionsDiffFalse(t *testing.T) {
 		result.StatsRefreshDelay = Ptr(*sample.StatsRefreshDelay + 1)
 		result.StatsShowLegends = !sample.StatsShowLegends
 		result.StatsShowModules = !sample.StatsShowModules
+		result.StatsShowVersion = !sample.StatsShowVersion
 		samples = append(samples, struct {
 			a, b StatsOptions
 		}{sample, result})
@@ -189,7 +191,7 @@ func TestStatsOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 16 {
+		if len(listDiffFields) != 17 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -199,7 +201,7 @@ func TestStatsOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StatsOptions to be different in 16 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StatsOptions to be different in 17 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

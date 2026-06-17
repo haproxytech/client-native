@@ -28,7 +28,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Global Frontend with all it's children resources
+// Global Frontend with all its children resources
 //
 // swagger:model Global
 type Global struct {

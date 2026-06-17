@@ -28,7 +28,7 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Defaults Defaults with all it's children resources
+// Defaults Defaults with all its children resources
 //
 // swagger:model Defaults
 type Defaults struct {

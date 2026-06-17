@@ -23,7 +23,6 @@ import (
 
 func (rec Table) Equal(obj Table, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerString(rec.Expire, obj.Expire, opts...) &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Name == obj.Name &&
 		rec.NoPurge == obj.NoPurge &&
 		rec.RecvOnly == obj.RecvOnly &&

@@ -16,66 +16,42 @@
 package runtime
 
 import (
-	"fmt"
-	"strconv"
 	"strings"
+
+	"github.com/Masterminds/semver/v3"
 )
 
 type HAProxyVersion struct {
-	Commit  string
-	Version string
-	Major   int
-	Minor   int
-	Patch   int
+	*semver.Version
+
+	Commit string
 }
 
 func (v *HAProxyVersion) ParseHAProxyVersion(version string) error {
-	v.Version = version
-
-	parts := strings.SplitN(version, "-", 2)
-	data := strings.SplitN(parts[0], ".", 3)
-	major, err := strconv.Atoi(data[0])
-	if err == nil {
-		v.Major = major
+	sv, err := semver.NewVersion(version)
+	if err != nil {
+		return err
 	}
-	if len(data) > 1 {
-		minor, err := strconv.Atoi(data[1])
-		if err == nil {
-			v.Minor = minor
+	v.Version = sv
+	// Commit lives in the prerelease tail: "dev6-2f6f36-13" → "2f6f36",
+	// "a42e6c-11" → "a42e6c", "34b2b10" → "34b2b10".
+	if pre := sv.Prerelease(); pre != "" {
+		parts := strings.Split(pre, "-")
+		if len(parts) < 2 {
+			v.Commit = parts[0]
+		} else {
+			v.Commit = parts[len(parts)-2]
 		}
-	}
-	if len(data) > 2 {
-		patch, err := strconv.Atoi(data[2])
-		if err == nil {
-			v.Patch = patch
-		}
-	}
-	if len(parts) < 2 {
-		return fmt.Errorf("version is not in correct format [%s]", version)
-	}
-	data = strings.Split(parts[1], "-")
-	if len(data) < 2 {
-		v.Commit = data[0]
-	} else {
-		v.Commit = data[len(data)-2]
 	}
 	return nil
 }
 
 func IsBiggerOrEqual(minimum, current *HAProxyVersion) bool {
-	if current == nil {
+	if current == nil || current.Version == nil {
 		return false
 	}
-	if current.Major > minimum.Major {
+	if minimum == nil || minimum.Version == nil {
 		return true
 	}
-	if current.Major == minimum.Major {
-		switch {
-		case current.Minor > minimum.Minor:
-			return true
-		case current.Minor == minimum.Minor:
-			return current.Patch >= minimum.Patch
-		}
-	}
-	return false
+	return current.GreaterThanEqual(minimum.Version)
 }

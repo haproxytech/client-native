@@ -24,7 +24,10 @@ import (
 func (rec GlobalHarden) Diff(obj GlobalHarden, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerGlobalHardenRejectPrivilegedPorts(rec.RejectPrivilegedPorts, obj.RejectPrivilegedPorts, opts...) {
-		diff["RejectPrivilegedPorts."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RejectPrivilegedPorts"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -35,19 +38,20 @@ func DiffPointerGlobalHardenRejectPrivilegedPorts(x, y *GlobalHardenRejectPrivil
 		return diff
 	}
 
-	key := "RejectPrivilegedPorts"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

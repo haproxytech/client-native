@@ -1,0 +1,25 @@
+---
+force_be_switch:
+  title: Force Backend Switch Rule
+  description: |
+    Allow content switching to select a backend instance even if it is
+    disabled or unpublished. May appear multiple times on a frontend.
+  type: object
+  x-go-name: ForceBeSwitch
+  required:
+    - cond
+    - cond_test
+  properties:
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dependency:
+        cond:
+          required: true
+    metadata:
+      additionalProperties:
+        type: object

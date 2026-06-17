@@ -416,6 +416,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 			rule.CondTest = a.CondTest
 		case *actions.DoLog:
 			rule.Action = models.TCPRequestRuleActionDoDashLog
+			rule.LogProfile = a.Profile
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
@@ -635,6 +636,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 			rule.CondTest = a.CondTest
 		case *actions.DoLog:
 			rule.Action = models.TCPRequestRuleActionDoDashLog
+			rule.LogProfile = a.Profile
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
@@ -774,6 +776,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 			rule.CondTest = a.CondTest
 		case *actions.DoLog:
 			rule.Action = models.TCPRequestRuleActionDoDashLog
+			rule.LogProfile = a.Profile
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
@@ -1038,6 +1041,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 		case models.TCPRequestRuleActionDoDashLog:
 			return &tcp_types.Connection{
 				Action: &actions.DoLog{
+					Profile:  f.LogProfile,
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -1391,6 +1395,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 		case models.TCPRequestRuleActionDoDashLog:
 			return &tcp_types.Content{
 				Action: &actions.DoLog{
+					Profile:  f.LogProfile,
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -1620,6 +1625,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 		case models.TCPRequestRuleActionDoDashLog:
 			return &tcp_types.Session{
 				Action: &actions.DoLog{
+					Profile:  f.LogProfile,
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

@@ -24,10 +24,16 @@ import (
 func (rec CPUMap) Diff(obj CPUMap, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.CPUSet, obj.CPUSet, opts...) {
-		diff["CPUSet."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["CPUSet"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Process, obj.Process, opts...) {
-		diff["Process."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Process"+diffKey] = diffValue
 	}
 	return diff
 }

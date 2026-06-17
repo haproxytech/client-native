@@ -26,6 +26,9 @@ import (
 func (rec ClusterSettingsCluster) Diff(obj ClusterSettingsCluster, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerClusterLogTarget(rec.ClusterLogTargets, obj.ClusterLogTargets, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ClusterLogTargets"+diffKey] = diffValue
 	}
 	if rec.Address != obj.Address {
@@ -44,7 +47,10 @@ func (rec ClusterSettingsCluster) Diff(obj ClusterSettingsCluster, opts ...eqdif
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	return diff
 }
@@ -55,19 +61,20 @@ func DiffPointerClusterLogTarget(x, y *ClusterLogTarget, opts ...eqdiff.GoMethod
 		return diff
 	}
 
-	key := "*ClusterLogTarget"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff
@@ -101,7 +108,10 @@ func DiffSlicePointerClusterLogTarget(x, y []*ClusterLogTarget, opts ...eqdiff.G
 		vx, vy := x[i], y[i]
 
 		for diffKey, diffValue := range DiffPointerClusterLogTarget(vx, vy) {
-			diff[key+"."+diffKey] = diffValue
+			if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+				diffKey = "." + diffKey
+			}
+			diff[key+diffKey] = diffValue
 		}
 
 	}

@@ -111,6 +111,10 @@ func Parents(childType string) []Parent {
 		return []Parent{
 			{PathParentType: "frontends", ParentType: "Frontend", IsGenericParent: true},
 		}
+	case ForceBeSwitchChildType:
+		return []Parent{
+			{PathParentType: "frontends", ParentType: "Frontend", IsGenericParent: true},
+		}
 	}
 	return nil
 }

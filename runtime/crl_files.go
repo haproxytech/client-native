@@ -225,7 +225,7 @@ func (s *SingleRuntime) SetCrlFile(crlFile string, payload string) error {
 	if payload == "" {
 		return fmt.Errorf("%s %w", "Argument payload empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("set ssl crl-file %s <<\n%s\n", crlFile, payload)
+	cmd := fmt.Sprintf("set ssl crl-file %s <<\n%s\n", crlFile, terminateHeredocPayload(payload))
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)

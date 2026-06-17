@@ -24,6 +24,9 @@ import (
 func (rec HTTPErrorsSection) Diff(obj HTTPErrorsSection, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["ErrorFiles"+diffKey] = diffValue
 	}
 	if rec.Name != obj.Name {

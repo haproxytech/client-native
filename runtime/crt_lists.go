@@ -189,6 +189,13 @@ func (s *SingleRuntime) AddCrtListEntry(crtList string, entry models.SslCrtListE
 		sb.WriteString(strings.Join(entry.SNIFilter, " "))
 	}
 	sb.WriteByte('\n')
+	if extended {
+		// HAProxy's `<<` heredoc terminates on a blank line; once the
+		// outer framing in runtime_single_client.go appends `;quit\n`,
+		// the lone `\n` above is consumed as the entry-line terminator
+		// and there is no blank line left, so the heredoc never ends.
+		sb.WriteByte('\n')
+	}
 
 	response, err := s.ExecuteWithResponse(sb.String())
 	if err != nil {

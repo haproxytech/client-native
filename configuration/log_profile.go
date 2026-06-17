@@ -188,8 +188,8 @@ func ParseLogProfile(p parser.Parser, name string) (*models.LogProfile, error) {
 		step := &models.LogProfileStep{
 			Step:     s.Step,
 			Drop:     models.LogProfileStepDropDisabled,
-			Format:   strings.Trim(s.Format, `"`),
-			Sd:       strings.Trim(s.Sd, `"`),
+			Format:   unquoteLogStepValue(s.Format),
+			Sd:       unquoteLogStepValue(s.Sd),
 			Metadata: misc.ParseMetadata(s.Comment),
 		}
 		if s.Drop {
@@ -212,7 +212,7 @@ func SerializeLogProfile(p parser.Parser, lp *models.LogProfile) error {
 		if err != nil {
 			return err
 		}
-		if err := p.SectionCommentSet(parser.LogForward, lp.Name, comment); err != nil {
+		if err := p.SectionCommentSet(parser.LogProfile, lp.Name, comment); err != nil {
 			return err
 		}
 	}
@@ -234,10 +234,25 @@ func SerializeLogProfile(p parser.Parser, lp *models.LogProfile) error {
 	return p.Set(parser.LogProfile, lp.Name, "on", newSteps)
 }
 
+// unquoteLogStepValue removes the surrounding double quotes from values
+// containing spaces: those are deterministically re-quoted when serialized.
+// Anything else is kept verbatim so the written configuration keeps the
+// exact form the value was read in (quote changes would be flagged as
+// modifications by consumers comparing configurations textually).
+func unquoteLogStepValue(s string) string {
+	if len(s) > 1 && s[0] == '"' && s[len(s)-1] == '"' && strings.ContainsRune(s, ' ') {
+		return s[1 : len(s)-1]
+	}
+	return s
+}
+
+func quotedLogStepValue(s string) bool {
+	return len(s) > 1 && ((s[0] == '"' && s[len(s)-1] == '"') || (s[0] == '\'' && s[len(s)-1] == '\''))
+}
+
 func SerializeLogProfileStep(step *models.LogProfileStep) *types.OnLogStep {
-	// This is way too simplistic.
 	q := func(s string) string {
-		if strings.ContainsRune(s, ' ') {
+		if strings.ContainsRune(s, ' ') && !quotedLogStepValue(s) {
 			return `"` + s + `"`
 		}
 		return s

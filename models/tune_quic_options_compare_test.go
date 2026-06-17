@@ -90,6 +90,7 @@ func TestTuneQuicOptionsEqualFalse(t *testing.T) {
 		result.FrontendMaxIdleTimeout = Ptr(*sample.FrontendMaxIdleTimeout + 1)
 		result.FrontendMaxStreamsBidi = Ptr(*sample.FrontendMaxStreamsBidi + 1)
 		result.FrontendMaxTxMemory = Ptr(*sample.FrontendMaxTxMemory + 1)
+		result.FrontendStreamMaxTotal = Ptr(*sample.FrontendStreamMaxTotal + 1)
 		result.MaxFrameLoss = Ptr(*sample.MaxFrameLoss + 1)
 		result.ReorderRatio = Ptr(*sample.ReorderRatio + 1)
 		result.RetryThreshold = Ptr(*sample.RetryThreshold + 1)
@@ -176,6 +177,7 @@ func TestTuneQuicOptionsDiffFalse(t *testing.T) {
 		result.FrontendMaxIdleTimeout = Ptr(*sample.FrontendMaxIdleTimeout + 1)
 		result.FrontendMaxStreamsBidi = Ptr(*sample.FrontendMaxStreamsBidi + 1)
 		result.FrontendMaxTxMemory = Ptr(*sample.FrontendMaxTxMemory + 1)
+		result.FrontendStreamMaxTotal = Ptr(*sample.FrontendStreamMaxTotal + 1)
 		result.MaxFrameLoss = Ptr(*sample.MaxFrameLoss + 1)
 		result.ReorderRatio = Ptr(*sample.ReorderRatio + 1)
 		result.RetryThreshold = Ptr(*sample.RetryThreshold + 1)
@@ -187,7 +189,7 @@ func TestTuneQuicOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 9 {
+		if len(listDiffFields) != 10 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -197,7 +199,7 @@ func TestTuneQuicOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneQuicOptions to be different in 9 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneQuicOptions to be different in 10 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

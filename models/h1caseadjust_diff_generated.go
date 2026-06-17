@@ -24,10 +24,16 @@ import (
 func (rec H1CaseAdjust) Diff(obj H1CaseAdjust, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerString(rec.From, obj.From, opts...) {
-		diff["From."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["From"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.To, obj.To, opts...) {
-		diff["To."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["To"+diffKey] = diffValue
 	}
 	return diff
 }

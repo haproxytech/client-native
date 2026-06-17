@@ -209,7 +209,7 @@ func (s *SingleRuntime) SetCertificate(storageName string, payload string) error
 	if payload == "" {
 		return fmt.Errorf("%s %w", "Argument payload empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("set ssl cert %s <<\n%s\n", storageName, payload)
+	cmd := fmt.Sprintf("set ssl cert %s <<\n%s\n", storageName, terminateHeredocPayload(payload))
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)

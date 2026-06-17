@@ -1,7 +1,7 @@
 ---
 global:
   type: object
-  description: Frontend with all it's children resources
+  description: Frontend with all its children resources
   x-go-name: Global
   allOf:
     - $ref: "#/definitions/global_base"
@@ -99,6 +99,14 @@ global_base:
     nbthread:
       type: integer
       x-display-name: Number of Threads
+    max_threads_per_group:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      x-display-name: Max Threads Per Group
+      description: |
+        Defines the maximum number of threads in a thread group. The minimum value is
+        1 and the maximum value is 64 on 64-bit systems (32 on 32-bit systems).
     master-worker:
       type: boolean
       x-display-name: Master Worker Mode
@@ -128,6 +136,13 @@ global_base:
       type: integer
       x-nullable: true
       x-display-name: Stats maxconn
+    stats_calculate_max_counters:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Stats Calculate Max Counters
+      description: |
+        Activates or deactivates the calculation of stats max counters.
+        Defaults to enabled in HAProxy.
     stats_file:
       type: string
     warn_blocked_traffic_after:
@@ -192,6 +207,23 @@ global_base:
           "resource",
         ]
       x-display-name: CPU Policy
+    cpu_affinity:
+      type: object
+      x-display-name: CPU Affinity
+      description: |
+        Defines how threads are bound to cpus. Mirrors the HAProxy 3.4 cpu-affinity directive.
+      required:
+        - affinity
+      properties:
+        affinity:
+          type: string
+          enum: [per-core, per-group, auto, per-thread, per-ccx]
+          x-display-name: Affinity
+        argument:
+          type: string
+          enum: [auto, loose]
+          x-display-name: Argument
+          description: Optional argument used together with the per-group affinity.
     cpu_set:
       type: array
       x-go-name: CPUSets
@@ -502,9 +534,18 @@ tune_options:
       type: string
       enum: [enabled, disabled]
       description: Enables of disabled the zero-copy forwarding of data for the applets
+    cli_max_payload_size:
+      type: integer
+      x-display-name: CLI Maximum Payload Size
+      description: Maximum size in bytes allowed for the payload passed to a command on the CLI
+      x-nullable: true
+      x-size: true
     comp_maxlevel:
       type: integer
       x-display-name: Maximum Compression Level
+    defaults_purge:
+      type: boolean
+      x-display-name: Force deletion of defaults section after parsing to save memory
     disable_fast_forward:
       type: boolean
       x-display-name: Disable fast-forwarding
@@ -530,6 +571,14 @@ tune_options:
       maximum: 100
       x-nullable: true
       x-display-name: CPU Usage Kill glitched Connections
+    h1_be_glitches_threshold:
+      type: integer
+      minimum: 0
+      x-display-name: Number of connection glitches before killing the connection with the backend
+    h1_fe_glitches_threshold:
+      type: integer
+      minimum: 0
+      x-display-name: Number of connection glitches before killing the connection with the frontend
     h1_zero_copy_fwd_recv:
       type: string
       enum: [enabled, disabled]
@@ -562,6 +611,9 @@ tune_options:
     h2_be_max_concurrent_streams:
       type: integer
       description: Maximum number of concurrent streams per outgoing connection
+    h2_be_max_frames_at_once:
+      type: integer
+      description: Maximum number of HTTP/2 incoming frames processed at once on a backend connection
     h2_be_rxbuf:
       type: integer
       description: HTTP/2 receive buffer size for outgoing connections
@@ -577,6 +629,12 @@ tune_options:
     h2_fe_max_concurrent_streams:
       type: integer
       description: Maximum number of concurrent streams per incoming connection
+    h2_fe_max_frames_at_once:
+      type: integer
+      description: Maximum number of HTTP/2 incoming frames processed at once on a frontend connection
+    h2_fe_max_rst_at_once:
+      type: integer
+      description: Maximum number of HTTP/2 incoming RST_STREAM frames processed at once on a frontend connection
     h2_fe_max_total_streams:
       type: integer
       description: Maximum number of total streams processed per incoming HTTP/2 connection
@@ -586,6 +644,10 @@ tune_options:
       description: HTTP/2 receive buffer size for incoming connections
       x-nullable: true
       x-size: true
+    h2_log_errors:
+      type: string
+      enum: [none, connection, stream]
+      description: Level of HTTP/2 demultiplexer errors that will generate a log
     h2_zero_copy_fwd_send:
       type: string
       enum: [enabled, disabled]
@@ -723,6 +785,11 @@ tune_quic_options:
       type: integer
       x-display-name: QUIC Max Number of Bidirectional Streams
       x-nullable: true
+    frontend_stream_max_total:
+      type: integer
+      x-display-name: QUIC Frontend Stream Max Total
+      description: Maximum number of requests handled by a single QUIC frontend connection before graceful shutdown
+      x-nullable: true
     frontend_max_tx_memory:
       type: integer
       x-size: true
@@ -798,6 +865,10 @@ tune_ssl_options:
       type: integer
       x-display-name: SSL Cache Size
       x-nullable: true
+    certificate_compression:
+      type: string
+      enum: [auto, disabled]
+      x-display-name: Force SSL compression off, or let the SSL library decide
     force_private_cache:
       type: boolean
       x-display-name: SSL Force Private Cache
@@ -856,6 +927,10 @@ tune_lua_options:
       type: integer
       x-display-name: Lua Maximum Memory Usage
       x-nullable: true
+    openlibs:
+      type: string
+      x-display-name: Lua Open Libraries
+      description: 'Selects which Lua standard libraries are loaded. Accepts "all", "none", or a comma-separated list of: table, io, os, string, math, utf8, package, debug.'
     session_timeout:
       type: integer
       minimum: 0
@@ -898,6 +973,11 @@ tune_buffer_options:
     bufsize:
       type: integer
       x-display-name: Buffer Size
+      x-size: true
+    bufsize_large:
+      type: integer
+      description: Size in bytes of large buffers. By default, support for large buffers is not enabled.
+      x-nullable: true
       x-size: true
     bufsize_small:
       type: integer

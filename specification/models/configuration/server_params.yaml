@@ -444,3 +444,15 @@ server_params:
         Enables or disables ktls for those sockets. If enabled, kTLS will be used if the kernel supports it and the cipher is compatible.
         This is only available on Linux kernel 4.17 and above.
         EXPERIMENTAL OPTION.
+    quic-cc-algo:
+      type: string
+      enum: [cubic, newreno, bbr, nocc]
+    quic_cc_algo_max_window:
+      type: integer
+      minimum: 10
+      maximum: 4194304
+      x-nullable: true
+      x-size: true
+      x-default-unit: k
+      x-dependency:
+        quic-cc-algo:

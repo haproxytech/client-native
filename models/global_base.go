@@ -72,6 +72,9 @@ type GlobalBase struct {
 	// cluster secret
 	ClusterSecret string `json:"cluster_secret,omitempty"`
 
+	// cpu affinity
+	CPUAffinity *GlobalBaseCPUAffinity `json:"cpu_affinity,omitempty"`
+
 	// cpu policy
 	// Enum: ["none","efficiency","first-usable-node","group-by-2-ccx","group-by-2-clusters","group-by-3-ccx","group-by-3-clusters","group-by-4-ccx","group-by-4-cluster","group-by-ccx","group-by-cluster","performance","resource"]
 	// +kubebuilder:validation:Enum=none;efficiency;first-usable-node;group-by-2-ccx;group-by-2-clusters;group-by-3-ccx;group-by-3-clusters;group-by-4-ccx;group-by-4-cluster;group-by-ccx;group-by-cluster;performance;resource;
@@ -182,6 +185,13 @@ type GlobalBase struct {
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
 
+	// Defines the maximum number of threads in a thread group. The minimum value is
+	// 1 and the maximum value is 64 on 64-bit systems (32 on 32-bit systems).
+	//
+	// Minimum: 1
+	// +kubebuilder:validation:Minimum=1
+	MaxThreadsPerGroup *int64 `json:"max_threads_per_group,omitempty"`
+
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
@@ -240,6 +250,13 @@ type GlobalBase struct {
 
 	// ssl options
 	SslOptions *SslOptions `json:"ssl_options,omitempty"`
+
+	// Activates or deactivates the calculation of stats max counters.
+	// Defaults to enabled in HAProxy.
+	//
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	StatsCalculateMaxCounters string `json:"stats_calculate_max_counters,omitempty"`
 
 	// stats file
 	StatsFile string `json:"stats_file,omitempty"`
@@ -339,6 +356,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCPUAffinity(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCPUPolicy(formats); err != nil {
 		res = append(res, err)
 	}
@@ -411,6 +432,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateMaxThreadsPerGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateMworkerMaxReloads(formats); err != nil {
 		res = append(res, err)
 	}
@@ -440,6 +465,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsCalculateMaxCounters(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -694,6 +723,25 @@ func (m *GlobalBase) validateCloseSpreadTime(formats strfmt.Registry) error {
 
 	if err := validate.MinimumInt("close_spread_time", "body", *m.CloseSpreadTime, 0, false); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateCPUAffinity(formats strfmt.Registry) error {
+	if swag.IsZero(m.CPUAffinity) { // not required
+		return nil
+	}
+
+	if m.CPUAffinity != nil {
+		if err := m.CPUAffinity.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cpu_affinity")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cpu_affinity")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1069,6 +1117,18 @@ func (m *GlobalBase) validateLuaOptions(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *GlobalBase) validateMaxThreadsPerGroup(formats strfmt.Registry) error {
+	if swag.IsZero(m.MaxThreadsPerGroup) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("max_threads_per_group", "body", *m.MaxThreadsPerGroup, 1, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *GlobalBase) validateMworkerMaxReloads(formats strfmt.Registry) error {
 	if swag.IsZero(m.MworkerMaxReloads) { // not required
 		return nil
@@ -1211,6 +1271,48 @@ func (m *GlobalBase) validateSslOptions(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var globalBaseTypeStatsCalculateMaxCountersPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalBaseTypeStatsCalculateMaxCountersPropEnum = append(globalBaseTypeStatsCalculateMaxCountersPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalBaseStatsCalculateMaxCountersEnabled captures enum value "enabled"
+	GlobalBaseStatsCalculateMaxCountersEnabled string = "enabled"
+
+	// GlobalBaseStatsCalculateMaxCountersDisabled captures enum value "disabled"
+	GlobalBaseStatsCalculateMaxCountersDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalBase) validateStatsCalculateMaxCountersEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalBaseTypeStatsCalculateMaxCountersPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalBase) validateStatsCalculateMaxCounters(formats strfmt.Registry) error {
+	if swag.IsZero(m.StatsCalculateMaxCounters) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateStatsCalculateMaxCountersEnum("stats_calculate_max_counters", "body", m.StatsCalculateMaxCounters); err != nil {
+		return err
 	}
 
 	return nil
@@ -1433,6 +1535,10 @@ func (m *GlobalBase) ContextValidate(ctx context.Context, formats strfmt.Registr
 	}
 
 	if err := m.contextValidateThreadGroupLines(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateCPUAffinity(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1700,6 +1806,27 @@ func (m *GlobalBase) contextValidateThreadGroupLines(ctx context.Context, format
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateCPUAffinity(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.CPUAffinity != nil {
+
+		if swag.IsZero(m.CPUAffinity) { // not required
+			return nil
+		}
+
+		if err := m.CPUAffinity.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cpu_affinity")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cpu_affinity")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -2186,6 +2313,157 @@ func (m *GlobalBase) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *GlobalBase) UnmarshalBinary(b []byte) error {
 	var res GlobalBase
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalBaseCPUAffinity Defines how threads are bound to cpus. Mirrors the HAProxy 3.4 cpu-affinity directive.
+//
+// swagger:model GlobalBaseCPUAffinity
+type GlobalBaseCPUAffinity struct {
+	// affinity
+	// Required: true
+	// Enum: ["per-core","per-group","auto","per-thread","per-ccx"]
+	// +kubebuilder:validation:Enum=per-core;per-group;auto;per-thread;per-ccx;
+	Affinity *string `json:"affinity"`
+
+	// Optional argument used together with the per-group affinity.
+	// Enum: ["auto","loose"]
+	// +kubebuilder:validation:Enum=auto;loose;
+	Argument string `json:"argument,omitempty"`
+}
+
+// Validate validates this global base CPU affinity
+func (m *GlobalBaseCPUAffinity) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateAffinity(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateArgument(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var globalBaseCpuAffinityTypeAffinityPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["per-core","per-group","auto","per-thread","per-ccx"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalBaseCpuAffinityTypeAffinityPropEnum = append(globalBaseCpuAffinityTypeAffinityPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalBaseCPUAffinityAffinityPerDashCore captures enum value "per-core"
+	GlobalBaseCPUAffinityAffinityPerDashCore string = "per-core"
+
+	// GlobalBaseCPUAffinityAffinityPerDashGroup captures enum value "per-group"
+	GlobalBaseCPUAffinityAffinityPerDashGroup string = "per-group"
+
+	// GlobalBaseCPUAffinityAffinityAuto captures enum value "auto"
+	GlobalBaseCPUAffinityAffinityAuto string = "auto"
+
+	// GlobalBaseCPUAffinityAffinityPerDashThread captures enum value "per-thread"
+	GlobalBaseCPUAffinityAffinityPerDashThread string = "per-thread"
+
+	// GlobalBaseCPUAffinityAffinityPerDashCcx captures enum value "per-ccx"
+	GlobalBaseCPUAffinityAffinityPerDashCcx string = "per-ccx"
+)
+
+// prop value enum
+func (m *GlobalBaseCPUAffinity) validateAffinityEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalBaseCpuAffinityTypeAffinityPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalBaseCPUAffinity) validateAffinity(formats strfmt.Registry) error {
+
+	if err := validate.Required("cpu_affinity"+"."+"affinity", "body", m.Affinity); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateAffinityEnum("cpu_affinity"+"."+"affinity", "body", *m.Affinity); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalBaseCpuAffinityTypeArgumentPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["auto","loose"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalBaseCpuAffinityTypeArgumentPropEnum = append(globalBaseCpuAffinityTypeArgumentPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalBaseCPUAffinityArgumentAuto captures enum value "auto"
+	GlobalBaseCPUAffinityArgumentAuto string = "auto"
+
+	// GlobalBaseCPUAffinityArgumentLoose captures enum value "loose"
+	GlobalBaseCPUAffinityArgumentLoose string = "loose"
+)
+
+// prop value enum
+func (m *GlobalBaseCPUAffinity) validateArgumentEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalBaseCpuAffinityTypeArgumentPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalBaseCPUAffinity) validateArgument(formats strfmt.Registry) error {
+	if swag.IsZero(m.Argument) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateArgumentEnum("cpu_affinity"+"."+"argument", "body", m.Argument); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this global base CPU affinity based on context it is used
+func (m *GlobalBaseCPUAffinity) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalBaseCPUAffinity) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalBaseCPUAffinity) UnmarshalBinary(b []byte) error {
+	var res GlobalBaseCPUAffinity
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -62,7 +62,7 @@ definitions:
             $ref: '#/definitions/acls'
             x-go-name: AclList
         type: object
-    description: App with all it's children resources
+    description: App with all its children resources
     type: object
     x-go-name: FCGIApp
   fcgi_app_base:
@@ -508,6 +508,10 @@ definitions:
         example: none
         type: string
         x-display-name: Format
+      shards:
+        pattern: ^(by-thread|by-group|[0-9]+)$
+        type: string
+        x-display-name: Shards
       sigalgs:
         type: string
         x-dependency:
@@ -980,6 +984,22 @@ definitions:
           type: string
         type: array
         x-omitempty: true
+      quic-cc-algo:
+        enum:
+          - cubic
+          - newreno
+          - bbr
+          - nocc
+        type: string
+      quic_cc_algo_max_window:
+        maximum: 4194304
+        minimum: 10
+        type: integer
+        x-default-unit: k
+        x-dependency:
+          quic-cc-algo: null
+        x-nullable: true
+        x-size: true
       redir:
         type: string
         x-display-name: Prefix
@@ -1566,9 +1586,18 @@ definitions:
           - enabled
           - disabled
         type: string
+      cli_max_payload_size:
+        description: Maximum size in bytes allowed for the payload passed to a command on the CLI
+        type: integer
+        x-display-name: CLI Maximum Payload Size
+        x-nullable: true
+        x-size: true
       comp_maxlevel:
         type: integer
         x-display-name: Maximum Compression Level
+      defaults_purge:
+        type: boolean
+        x-display-name: Force deletion of defaults section after parsing to save memory
       disable_fast_forward:
         type: boolean
         x-display-name: Disable fast-forwarding
@@ -1603,6 +1632,14 @@ definitions:
         type: integer
         x-display-name: CPU Usage Kill glitched Connections
         x-nullable: true
+      h1_be_glitches_threshold:
+        minimum: 0
+        type: integer
+        x-display-name: Number of connection glitches before killing the connection with the backend
+      h1_fe_glitches_threshold:
+        minimum: 0
+        type: integer
+        x-display-name: Number of connection glitches before killing the connection with the frontend
       h1_zero_copy_fwd_recv:
         description: enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
         enum:
@@ -1625,6 +1662,9 @@ definitions:
       h2_be_max_concurrent_streams:
         description: Maximum number of concurrent streams per outgoing connection
         type: integer
+      h2_be_max_frames_at_once:
+        description: Maximum number of HTTP/2 incoming frames processed at once on a backend connection
+        type: integer
       h2_be_rxbuf:
         description: HTTP/2 receive buffer size for outgoing connections
         type: integer
@@ -1639,6 +1679,12 @@ definitions:
         type: integer
       h2_fe_max_concurrent_streams:
         description: Maximum number of concurrent streams per incoming connection
+        type: integer
+      h2_fe_max_frames_at_once:
+        description: Maximum number of HTTP/2 incoming frames processed at once on a frontend connection
+        type: integer
+      h2_fe_max_rst_at_once:
+        description: Maximum number of HTTP/2 incoming RST_STREAM frames processed at once on a frontend connection
         type: integer
       h2_fe_max_total_streams:
         description: Maximum number of total streams processed per incoming HTTP/2 connection
@@ -1657,6 +1703,13 @@ definitions:
         type: integer
         x-display-name: HTTP/2 Initial Window Size
         x-nullable: true
+      h2_log_errors:
+        description: Level of HTTP/2 demultiplexer errors that will generate a log
+        enum:
+          - none
+          - connection
+          - stream
+        type: string
       h2_max_concurrent_streams:
         type: integer
         x-display-name: HTTP/2 Maximum Number of Concurrent Streams
@@ -1817,6 +1870,11 @@ definitions:
         x-display-name: QUIC Frontend Max Tx Memory
         x-nullable: true
         x-size: true
+      frontend_stream_max_total:
+        description: Maximum number of requests handled by a single QUIC frontend connection before graceful shutdown
+        type: integer
+        x-display-name: QUIC Frontend Stream Max Total
+        x-nullable: true
       max_frame_loss:
         type: integer
         x-display-name: QUIC Max Limit for Frame Loss
@@ -1895,6 +1953,12 @@ definitions:
         type: integer
         x-display-name: SSL Maximum Size of Cipherlist Buffer
         x-nullable: true
+      certificate_compression:
+        enum:
+          - auto
+          - disabled
+        type: string
+        x-display-name: Force SSL compression off, or let the SSL library decide
       ctx_cache_size:
         type: integer
         x-display-name: SSL Number of Certificates in Cache
@@ -1965,6 +2029,10 @@ definitions:
         type: integer
         x-display-name: Lua Maximum Memory Usage
         x-nullable: true
+      openlibs:
+        description: 'Selects which Lua standard libraries are loaded. Accepts "all", "none", or a comma-separated list of: table, io, os, string, math, utf8, package, debug.'
+        type: string
+        x-display-name: Lua Open Libraries
       service_timeout:
         minimum: 0
         type: integer
@@ -2000,6 +2068,11 @@ definitions:
       bufsize:
         type: integer
         x-display-name: Buffer Size
+        x-size: true
+      bufsize_large:
+        description: Size in bytes of large buffers. By default, support for large buffers is not enabled.
+        type: integer
+        x-nullable: true
         x-size: true
       bufsize_small:
         description: Size of small buffers (for memory-restrained situations)
@@ -2245,7 +2318,7 @@ definitions:
             $ref: '#/definitions/log_targets'
             x-go-name: LogTargetList
         type: object
-    description: Frontend with all it's children resources
+    description: Frontend with all its children resources
     type: object
     x-go-name: Global
   global_base:
@@ -2265,6 +2338,30 @@ definitions:
       cluster_secret:
         type: string
         x-display-name: Cluster Secret
+      cpu_affinity:
+        description: |
+          Defines how threads are bound to cpus. Mirrors the HAProxy 3.4 cpu-affinity directive.
+        properties:
+          affinity:
+            enum:
+              - per-core
+              - per-group
+              - auto
+              - per-thread
+              - per-ccx
+            type: string
+            x-display-name: Affinity
+          argument:
+            description: Optional argument used together with the per-group affinity.
+            enum:
+              - auto
+              - loose
+            type: string
+            x-display-name: Argument
+        required:
+          - affinity
+        type: object
+        x-display-name: CPU Affinity
       cpu_maps:
         items:
           properties:
@@ -2484,6 +2581,14 @@ definitions:
       master-worker:
         type: boolean
         x-display-name: Master Worker Mode
+      max_threads_per_group:
+        description: |
+          Defines the maximum number of threads in a thread group. The minimum value is
+          1 and the maximum value is 64 on 64-bit systems (32 on 32-bit systems).
+        minimum: 1
+        type: integer
+        x-display-name: Max Threads Per Group
+        x-nullable: true
       metadata:
         additionalProperties:
           type: object
@@ -2592,6 +2697,15 @@ definitions:
         x-nullable: true
       ssl_options:
         $ref: '#/definitions/ssl_options'
+      stats_calculate_max_counters:
+        description: |
+          Activates or deactivates the calculation of stats max counters.
+          Defaults to enabled in HAProxy.
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Stats Calculate Max Counters
       stats_file:
         type: string
       stats_maxconn:
@@ -2699,7 +2813,7 @@ definitions:
             $ref: '#/definitions/tcp_response_rules'
             x-go-name: TCPResponseRuleList
         type: object
-    description: Defaults with all it's children resources
+    description: Defaults with all its children resources
     type: object
     x-go-name: Defaults
   defaults_base:
@@ -2938,12 +3052,6 @@ definitions:
           - disabled
         type: string
         x-display-name: Drop HTTP Response Trailers
-      http-use-htx:
-        enum:
-          - enabled
-          - disabled
-        type: string
-        x-display-name: HTTP Use HTX
       http_connection_mode:
         enum:
           - httpclose
@@ -3255,6 +3363,8 @@ definitions:
       unique_id_header:
         type: string
         x-display-name: Unique ID header
+      use_small_buffers:
+        $ref: '#/definitions/use_small_buffers'
     required:
       - name
     title: Defaults Base
@@ -3284,6 +3394,12 @@ definitions:
           filter_list:
             $ref: '#/definitions/filters'
             x-go-name: FilterList
+          filter_sequence_list:
+            $ref: '#/definitions/filter_sequences'
+            x-go-name: FilterSequenceList
+          force_be_switch_list:
+            $ref: '#/definitions/force_be_switches'
+            x-go-name: ForceBeSwitchList
           http_after_response_rule_list:
             $ref: '#/definitions/http_after_response_rules'
             x-go-name: HTTPAfterResponseRuleList
@@ -3309,7 +3425,7 @@ definitions:
             $ref: '#/definitions/tcp_request_rules'
             x-go-name: TCPRequestRuleList
         type: object
-    description: Frontend with all it's children resources
+    description: Frontend with all its children resources
     type: object
     x-go-name: Frontend
   frontend_base:
@@ -3472,15 +3588,6 @@ definitions:
           - disabled
         type: string
         x-display-name: Drop HTTP Response Trailers
-      http-use-htx:
-        enum:
-          - enabled
-          - disabled
-        type: string
-        x-dependency:
-          mode:
-            value: http
-        x-display-name: HTTP Use HTX
       http_connection_mode:
         enum:
           - httpclose
@@ -3585,7 +3692,7 @@ definitions:
         x-go-name: LogSteps
         x-omitempty: true
       log_tag:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}"]+$
         type: string
       logasap:
         enum:
@@ -3702,6 +3809,9 @@ definitions:
           filter_list:
             $ref: '#/definitions/filters'
             x-go-name: FilterList
+          filter_sequence_list:
+            $ref: '#/definitions/filter_sequences'
+            x-go-name: FilterSequenceList
           http_after_response_rule_list:
             $ref: '#/definitions/http_after_response_rules'
             x-go-name: HTTPAfterResponseRuleList
@@ -3742,7 +3852,7 @@ definitions:
             $ref: '#/definitions/tcp_response_rules'
             x-go-name: TCPResponseRuleList
         type: object
-    description: Backend with all it's children resources
+    description: Backend with all its children resources
     type: object
     x-go-name: Backend
   backend_base:
@@ -3971,15 +4081,6 @@ definitions:
           mode:
             value: http
         x-display-name: HTTP low interactive delays
-      http-use-htx:
-        enum:
-          - enabled
-          - disabled
-        pattern: ^[^\s]+$
-        type: string
-        x-dependency:
-          mode:
-            value: http
       http_connection_mode:
         enum:
           - httpclose
@@ -4006,15 +4107,6 @@ definitions:
         x-dependency:
           mode:
             value: http
-      http_proxy:
-        enum:
-          - enabled
-          - disabled
-        type: string
-        x-dependency:
-          mode:
-            value: http
-        x-display-name: HTTP proxy mode
       http_request_timeout:
         minimum: 0
         type: integer
@@ -4294,6 +4386,8 @@ definitions:
       use_fcgi_app:
         type: string
         x-display-name: FastCGI application
+      use_small_buffers:
+        $ref: '#/definitions/use_small_buffers'
     required:
       - name
     title: Backend Base
@@ -4312,7 +4406,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/server'
         type: object
-    description: Ring with all it's children resources
+    description: Ring with all its children resources
     type: object
     x-go-name: Ring
   ring_base:
@@ -4426,7 +4520,7 @@ definitions:
             $ref: '#/definitions/log_targets'
             x-go-name: LogTargetList
         type: object
-    description: LogForward with all it's children resources
+    description: LogForward with all its children resources
     type: object
     x-go-name: LogForward
   log_forward_base:
@@ -4480,7 +4574,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/user'
         type: object
-    description: Userlist with all it's children resources
+    description: Userlist with all its children resources
     type: object
     x-go-name: Userlist
   userlist_base:
@@ -4518,7 +4612,7 @@ definitions:
       secure_password:
         type: boolean
       username:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}"]+$
         type: string
         x-nullable: false
     required:
@@ -4540,7 +4634,7 @@ definitions:
         additionalProperties:
           type: object
       name:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}"]+$
         type: string
         x-nullable: false
       users:
@@ -4564,7 +4658,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/mailer_entry'
         type: object
-    description: MailersSection with all it's children resources
+    description: MailersSection with all its children resources
     type: object
     x-go-name: MailersSection
   mailers_section_base:
@@ -4606,7 +4700,7 @@ definitions:
         additionalProperties:
           type: object
       name:
-        pattern: ^[A-Za-z0-9-_]+$
+        pattern: ^[A-Za-z0-9-_${}"]+$
         type: string
         x-nullable: false
       port:
@@ -4646,7 +4740,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/table'
         type: object
-    description: Peer Section with all it's children resources
+    description: Peer Section with all its children resources
     type: object
     x-go-name: PeerSection
   peer_section_base:
@@ -4695,7 +4789,7 @@ definitions:
         additionalProperties:
           type: object
       name:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}"]+$
         type: string
         x-nullable: false
       port:
@@ -5056,6 +5150,16 @@ definitions:
               - set-src-port
               - set-retries
         x-display-name: Standard HAProxy expression
+      hdr_expr:
+        type: string
+        x-dependency:
+          type:
+            required: true
+            value:
+              - add-headers-bin
+              - del-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Expression
       hdr_format:
         type: string
         x-dependency:
@@ -5082,6 +5186,7 @@ definitions:
           type:
             value:
               - del-header
+              - del-headers-bin
         x-display-name: Header Match Method
       hdr_name:
         type: string
@@ -5095,6 +5200,14 @@ definitions:
               - set-header
               - replace-value
         x-display-name: Header Name
+      hdr_prefix:
+        type: string
+        x-dependency:
+          type:
+            value:
+              - add-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Prefix
       hint_format:
         pattern: ^[^\s]+$
         type: string
@@ -5127,6 +5240,12 @@ definitions:
           type:
             required: true
             value: set-log-level
+      log_profile:
+        type: string
+        x-dependency:
+          type:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -5455,9 +5574,12 @@ definitions:
             value: set-timeout
       timeout_type:
         enum:
-          - server
-          - tunnel
           - client
+          - connect
+          - queue
+          - server
+          - tarpit
+          - tunnel
         type: string
         x-dependency:
           type:
@@ -5497,12 +5619,14 @@ definitions:
         enum:
           - add-acl
           - add-header
+          - add-headers-bin
           - allow
           - auth
           - cache-use
           - capture
           - del-acl
           - del-header
+          - del-headers-bin
           - del-map
           - deny
           - disable-l7-retry
@@ -5533,6 +5657,7 @@ definitions:
           - set-fc-mark
           - set-fc-tos
           - set-header
+          - set-headers-bin
           - set-log-level
           - set-map
           - set-mark
@@ -5745,6 +5870,16 @@ definitions:
               - set-fc-mark
               - set-fc-tos
         x-display-name: Standard HAProxy expression
+      hdr_expr:
+        type: string
+        x-dependency:
+          type:
+            required: true
+            value:
+              - add-headers-bin
+              - del-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Expression
       hdr_format:
         type: string
         x-dependency:
@@ -5771,6 +5906,7 @@ definitions:
           type:
             value:
               - del-header
+              - del-headers-bin
         x-display-name: Header Match Method
       hdr_name:
         type: string
@@ -5784,6 +5920,14 @@ definitions:
               - set-header
               - replace-value
         x-display-name: Header Name
+      hdr_prefix:
+        type: string
+        x-dependency:
+          type:
+            value:
+              - add-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Prefix
       log_level:
         enum:
           - emerg
@@ -5800,6 +5944,12 @@ definitions:
           type:
             required: true
             value: set-log-level
+      log_profile:
+        type: string
+        x-dependency:
+          type:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -6050,9 +6200,12 @@ definitions:
             value: set-timeout
       timeout_type:
         enum:
-          - server
-          - tunnel
           - client
+          - connect
+          - queue
+          - server
+          - tarpit
+          - tunnel
         type: string
         x-dependency:
           type:
@@ -6092,11 +6245,13 @@ definitions:
         enum:
           - add-acl
           - add-header
+          - add-headers-bin
           - allow
           - cache-store
           - capture
           - del-acl
           - del-header
+          - del-headers-bin
           - del-map
           - deny
           - lua
@@ -6115,6 +6270,7 @@ definitions:
           - set-fc-mark
           - set-fc-tos
           - set-header
+          - set-headers-bin
           - set-log-level
           - set-map
           - set-mark
@@ -6258,6 +6414,16 @@ definitions:
           freeFormat: true
           operation: getACLs
           property: acl_name
+      hdr_expr:
+        type: string
+        x-dependency:
+          type:
+            required: true
+            value:
+              - add-headers-bin
+              - del-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Expression
       hdr_format:
         type: string
         x-dependency:
@@ -6284,6 +6450,7 @@ definitions:
           type:
             value:
               - del-header
+              - del-headers-bin
         x-display-name: Header Match Method
       hdr_name:
         type: string
@@ -6297,6 +6464,14 @@ definitions:
               - set-header
               - replace-value
         x-display-name: Header Name
+      hdr_prefix:
+        type: string
+        x-dependency:
+          type:
+            value:
+              - add-headers-bin
+              - set-headers-bin
+        x-display-name: Binary Headers Prefix
       log_level:
         enum:
           - emerg
@@ -6313,6 +6488,12 @@ definitions:
           type:
             required: true
             value: set-log-level
+      log_profile:
+        type: string
+        x-dependency:
+          type:
+            value: do-log
+        x-display-name: Log Profile
       map_file:
         pattern: ^[^\s]+$
         type: string
@@ -6409,10 +6590,12 @@ definitions:
       type:
         enum:
           - add-header
+          - add-headers-bin
           - allow
           - capture
           - del-acl
           - del-header
+          - del-headers-bin
           - del-map
           - replace-header
           - replace-value
@@ -6423,6 +6606,7 @@ definitions:
           - sc-set-gpt
           - sc-set-gpt0
           - set-header
+          - set-headers-bin
           - set-log-level
           - set-map
           - set-status
@@ -7029,6 +7213,12 @@ definitions:
             value: set-log-level
           type:
             value: content
+      log_profile:
+        type: string
+        x-dependency:
+          action:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -7453,6 +7643,12 @@ definitions:
             value: set-log-level
           type:
             value: content
+      log_profile:
+        type: string
+        x-dependency:
+          action:
+            value: do-log
+        x-display-name: Log Profile
       lua_action:
         pattern: ^[^\s]+$
         type: string
@@ -8146,6 +8342,13 @@ definitions:
         x-dependency:
           type:
             value: trace
+      trace_max_fwd:
+        type: integer
+        x-dependency:
+          type:
+            value: trace
+        x-display-name: Trace Max Forward
+        x-nullable: true
       trace_name:
         pattern: ^[^\s]+$
         type: string
@@ -8170,6 +8373,8 @@ definitions:
           - bwlim-out
           - cache
           - compression
+          - comp-req
+          - comp-res
           - fcgi-app
           - spoe
           - trace
@@ -8185,6 +8390,37 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/filter'
+  filter_sequence:
+    additionalProperties: false
+    description: |
+      Specifies in which order filters declared on the proxy should be executed
+      for the request or response path. Corresponds to the HAProxy filter-sequence directive.
+    properties:
+      direction:
+        enum:
+          - request
+          - response
+        type: string
+        x-display-name: Direction
+      filters:
+        items:
+          type: string
+        type: array
+        x-display-name: Filters
+      metadata:
+        additionalProperties:
+          type: object
+    required:
+      - direction
+      - filters
+    title: Filter Sequence
+    type: object
+  filter_sequences:
+    title: Filter Sequences Array
+    description: HAProxy filter sequences array (corresponds to filter-sequence directive)
+    type: array
+    items:
+      $ref: '#/definitions/filter_sequence'
   stick_rule:
     additionalProperties: false
     description: Define a pattern used to create an entry in a stickiness table or matching condition or associate a user to a server.
@@ -8999,6 +9235,9 @@ definitions:
         type: string
         x-nullable: true
         x-omitempty: false
+      stats_show_version:
+        type: boolean
+        x-display-name: Stats Show Version
       stats_uri_prefix:
         pattern: ^[^\s]+$
         type: string
@@ -10232,22 +10471,28 @@ definitions:
     description: A file containing one or more SSL/TLS certificates and keys
     properties:
       algorithm:
+        readOnly: true
         type: string
       authority_key_id:
+        readOnly: true
         type: string
       chain_issuer:
+        readOnly: true
         type: string
         x-omitempty: true
       chain_subject:
+        readOnly: true
         type: string
         x-omitempty: true
       description:
+        readOnly: true
         type: string
       domains:
         readOnly: true
         type: string
         x-omitempty: true
       file:
+        readOnly: true
         type: string
       ip_addresses:
         readOnly: true
@@ -10272,8 +10517,10 @@ definitions:
       serial:
         type: string
       sha1_finger_print:
+        readOnly: true
         type: string
       sha256_finger_print:
+        readOnly: true
         type: string
       size:
         description: File size in bytes.
@@ -10286,12 +10533,16 @@ definitions:
         type: string
         x-omitempty: true
       storage_name:
+        readOnly: true
         type: string
       subject:
+        readOnly: true
         type: string
       subject_alternative_names:
+        readOnly: true
         type: string
       subject_key_id:
+        readOnly: true
         type: string
     title: SSL File
     type: object
@@ -10944,7 +11195,7 @@ definitions:
             additionalProperties:
               $ref: '#/definitions/nameserver'
         type: object
-    description: Resolver with all it's children resources
+    description: Resolver with all its children resources
     type: object
     x-go-name: Resolver
   resolver_base:
@@ -11038,7 +11289,7 @@ definitions:
         additionalProperties:
           type: object
       name:
-        pattern: ^[A-Za-z0-9-_.:]+$
+        pattern: ^[A-Za-z0-9-_.:${}"]+$
         type: string
         x-nullable: false
       port:
@@ -11330,6 +11581,27 @@ definitions:
       - enabled
     type: object
     x-display-name: OriginalTo
+  use_small_buffers:
+    description: Enables support for small buffers for the given categories.
+    properties:
+      check:
+        type: boolean
+        x-display-name: Check
+      enabled:
+        enum:
+          - enabled
+          - disabled
+        type: string
+      l7_retries:
+        type: boolean
+        x-display-name: L7 Retries
+      queue:
+        type: boolean
+        x-display-name: Queue
+    required:
+      - enabled
+    type: object
+    x-display-name: Use Small Buffers
   smtpchk_params:
     properties:
       domain:
@@ -12056,6 +12328,38 @@ definitions:
       $ref: "#/definitions/ssl_front_use"
     x-omitempty: true
     x-go-name: SSLFrontUses
+  force_be_switch:
+    description: |
+      Allow content switching to select a backend instance even if it is
+      disabled or unpublished. May appear multiple times on a frontend.
+    properties:
+      cond:
+        enum:
+          - if
+          - unless
+        type: string
+        x-display-name: Condition
+      cond_test:
+        type: string
+        x-dependency:
+          cond:
+            required: true
+        x-display-name: Condition Test
+      metadata:
+        additionalProperties:
+          type: object
+    required:
+      - cond
+      - cond_test
+    title: Force Backend Switch Rule
+    type: object
+    x-go-name: ForceBeSwitch
+  force_be_switches:
+    type: array
+    items:
+      $ref: "#/definitions/force_be_switch"
+    x-omitempty: true
+    x-go-name: ForceBeSwitches
   acme_provider:
     additionalProperties: false
     description: Define an ACME provider to generate certificates automatically
@@ -12071,16 +12375,16 @@ definitions:
           type: string
         description: List of variables passed to the dns-01 provider (typically API keys)
       bits:
-        description: Number of bits to generate an RSA certificate
-        minimum: 1024
+        description: Number of bits used when generating an RSA certificate. Ignored when keytype is ECDSA (curves is used instead).
         type: integer
         x-nullable: true
         x-omitempty: true
       challenge:
-        description: ACME challenge type. Only http-01 and dns-01 are supported.
+        description: ACME challenge type.
         enum:
           - http-01
           - dns-01
+          - dns-persist-01
         type: string
       challenge_ready:
         description: |
@@ -12140,6 +12444,12 @@ definitions:
         description: ACME provider's name
         type: string
         x-nullable: false
+      profile:
+        description: |
+          Request a specific certificate profile from the CA by including a 'profile'
+          field in the newOrder request (draft-ietf-acme-profiles). Profile names
+          are CA-specific short identifiers (e.g. 'classic', 'shortlived').
+        type: string
       reuse_key:
         description: Try to reuse the private key instead of generating a new one.
         enum:
@@ -28478,6 +28788,159 @@ paths:
       summary: Replace an SSLFrontUse
       tags:
         - SSLFrontUse
+  /services/haproxy/configuration/frontends/{parent_name}/force_be_switches:
+    get:
+      description: Returns all force-be-switch rules configured on the specified frontend.
+      operationId: getAllForceBeSwitches
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switches'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of force-be-switch rules
+      tags:
+        - ForceBeSwitch
+    post:
+      description: Adds a new force-be-switch rule on the specified frontend.
+      operationId: createForceBeSwitch
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: ForceBeSwitch created
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new force-be-switch rule
+      tags:
+        - ForceBeSwitch
+  /services/haproxy/configuration/frontends/{parent_name}/force_be_switches/{index}:
+    delete:
+      description: Deletes a force-be-switch rule by its index on the specified frontend.
+      operationId: deleteForceBeSwitch
+      parameters:
+        - description: ForceBeSwitch index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: ForceBeSwitch deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a force-be-switch rule
+      tags:
+        - ForceBeSwitch
+    get:
+      description: Returns a single force-be-switch rule by its index on the specified frontend.
+      operationId: getForceBeSwitch
+      parameters:
+        - description: ForceBeSwitch index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "404":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one force-be-switch rule
+      tags:
+        - ForceBeSwitch
+    put:
+      description: Replaces a force-be-switch rule by its index on the specified frontend.
+      operationId: replaceForceBeSwitch
+      parameters:
+        - description: ForceBeSwitch index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: ForceBeSwitch replaced
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/force_be_switch'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a force-be-switch rule
+      tags:
+        - ForceBeSwitch
   /services/haproxy/configuration/acme:
     get:
       description: Returns an array of all the configured ACME providers

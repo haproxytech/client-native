@@ -24,10 +24,16 @@ import (
 func (rec ConfigStickTable) Diff(obj ConfigStickTable, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerInt64(rec.Expire, obj.Expire, opts...) {
-		diff["Expire."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Expire"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Keylen, obj.Keylen, opts...) {
-		diff["Keylen."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Keylen"+diffKey] = diffValue
 	}
 	if rec.Nopurge != obj.Nopurge {
 		diff["Nopurge"] = []interface{}{rec.Nopurge, obj.Nopurge}
@@ -39,10 +45,16 @@ func (rec ConfigStickTable) Diff(obj ConfigStickTable, opts ...eqdiff.GoMethodGe
 		diff["RecvOnly"] = []interface{}{rec.RecvOnly, obj.RecvOnly}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Size, obj.Size, opts...) {
-		diff["Size."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Size"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.Srvkey, obj.Srvkey, opts...) {
-		diff["Srvkey."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Srvkey"+diffKey] = diffValue
 	}
 	if rec.Store != obj.Store {
 		diff["Store"] = []interface{}{rec.Store, obj.Store}
@@ -51,7 +63,10 @@ func (rec ConfigStickTable) Diff(obj ConfigStickTable, opts ...eqdiff.GoMethodGe
 		diff["Type"] = []interface{}{rec.Type, obj.Type}
 	}
 	for diffKey, diffValue := range DiffPointerString(rec.WriteTo, obj.WriteTo, opts...) {
-		diff["WriteTo."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["WriteTo"+diffKey] = diffValue
 	}
 	return diff
 }

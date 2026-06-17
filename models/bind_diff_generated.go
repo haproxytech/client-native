@@ -33,10 +33,16 @@ func (rec Bind) Diff(obj Bind, opts ...eqdiff.GoMethodGenOptions) map[string][]i
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Port, obj.Port, opts...) {
-		diff["Port."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Port"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.PortRangeEnd, obj.PortRangeEnd, opts...) {
-		diff["PortRangeEnd."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["PortRangeEnd"+diffKey] = diffValue
 	}
 	return diff
 }

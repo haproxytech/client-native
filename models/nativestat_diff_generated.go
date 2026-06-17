@@ -30,7 +30,10 @@ func (rec NativeStat) Diff(obj NativeStat, opts ...eqdiff.GoMethodGenOptions) ma
 		diff["Name"] = []interface{}{rec.Name, obj.Name}
 	}
 	for diffKey, diffValue := range DiffPointerNativeStatStats(rec.Stats, obj.Stats, opts...) {
-		diff["Stats."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Stats"+diffKey] = diffValue
 	}
 	if rec.Type != obj.Type {
 		diff["Type"] = []interface{}{rec.Type, obj.Type}
@@ -44,19 +47,20 @@ func DiffPointerNativeStatStats(x, y *NativeStatStats, opts ...eqdiff.GoMethodGe
 		return diff
 	}
 
-	key := "Stats"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

@@ -24,6 +24,5 @@ import (
 func (rec ACL) Equal(obj ACL, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.ACLName == obj.ACLName &&
 		rec.Criterion == obj.Criterion &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.Value == obj.Value
 }

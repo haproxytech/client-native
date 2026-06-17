@@ -24,6 +24,5 @@ import (
 func (rec ServerSwitchingRule) Equal(obj ServerSwitchingRule, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.Cond == obj.Cond &&
 		rec.CondTest == obj.CondTest &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.TargetServer == obj.TargetServer
 }

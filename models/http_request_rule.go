@@ -100,6 +100,9 @@ type HTTPRequestRule struct {
 	// expr
 	Expr string `json:"expr,omitempty"`
 
+	// hdr expr
+	HdrExpr string `json:"hdr_expr,omitempty"`
+
 	// hdr format
 	HdrFormat string `json:"hdr_format,omitempty"`
 
@@ -111,6 +114,9 @@ type HTTPRequestRule struct {
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
+
+	// hdr prefix
+	HdrPrefix string `json:"hdr_prefix,omitempty"`
 
 	// hint format
 	// Pattern: ^[^\s]+$
@@ -126,6 +132,9 @@ type HTTPRequestRule struct {
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
+
+	// log profile
+	LogProfile string `json:"log_profile,omitempty"`
 
 	// lua action
 	// Pattern: ^[^\s]+$
@@ -276,8 +285,8 @@ type HTTPRequestRule struct {
 	Timeout string `json:"timeout,omitempty"`
 
 	// timeout type
-	// Enum: ["server","tunnel","client"]
-	// +kubebuilder:validation:Enum=server;tunnel;client;
+	// Enum: ["client","connect","queue","server","tarpit","tunnel"]
+	// +kubebuilder:validation:Enum=client;connect;queue;server;tarpit;tunnel;
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -300,8 +309,8 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: ["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","lua","normalize-uri","pause","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bc-mark","set-bc-tos","set-dst","set-dst-port","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","set-var-fmt","silent-drop","strict-mode","tarpit","track-sc","unset-var","use-service","wait-for-body","wait-for-handshake","set-bandwidth-limit","set-retries","do-log"]
-	// +kubebuilder:validation:Enum=add-acl;add-header;allow;auth;cache-use;capture;del-acl;del-header;del-map;deny;disable-l7-retry;do-resolve;early-hint;lua;normalize-uri;pause;redirect;reject;replace-header;replace-path;replace-pathq;replace-uri;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bc-mark;set-bc-tos;set-dst;set-dst-port;set-fc-mark;set-fc-tos;set-header;set-log-level;set-map;set-mark;set-method;set-nice;set-path;set-pathq;set-priority-class;set-priority-offset;set-query;set-src;set-src-port;set-timeout;set-tos;set-uri;set-var;set-var-fmt;silent-drop;strict-mode;tarpit;track-sc;unset-var;use-service;wait-for-body;wait-for-handshake;set-bandwidth-limit;set-retries;do-log;
+	// Enum: ["add-acl","add-header","add-headers-bin","allow","auth","cache-use","capture","del-acl","del-header","del-headers-bin","del-map","deny","disable-l7-retry","do-resolve","early-hint","lua","normalize-uri","pause","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bc-mark","set-bc-tos","set-dst","set-dst-port","set-fc-mark","set-fc-tos","set-header","set-headers-bin","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","set-var-fmt","silent-drop","strict-mode","tarpit","track-sc","unset-var","use-service","wait-for-body","wait-for-handshake","set-bandwidth-limit","set-retries","do-log"]
+	// +kubebuilder:validation:Enum=add-acl;add-header;add-headers-bin;allow;auth;cache-use;capture;del-acl;del-header;del-headers-bin;del-map;deny;disable-l7-retry;do-resolve;early-hint;lua;normalize-uri;pause;redirect;reject;replace-header;replace-path;replace-pathq;replace-uri;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bc-mark;set-bc-tos;set-dst;set-dst-port;set-fc-mark;set-fc-tos;set-header;set-headers-bin;set-log-level;set-map;set-mark;set-method;set-nice;set-path;set-pathq;set-priority-class;set-priority-offset;set-query;set-src;set-src-port;set-timeout;set-tos;set-uri;set-var;set-var-fmt;silent-drop;strict-mode;tarpit;track-sc;unset-var;use-service;wait-for-body;wait-for-handshake;set-bandwidth-limit;set-retries;do-log;
 	Type string `json:"type"`
 
 	// uri fmt
@@ -1175,7 +1184,7 @@ var httpRequestRuleTypeTimeoutTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["server","tunnel","client"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["client","connect","queue","server","tarpit","tunnel"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1185,14 +1194,23 @@ func init() {
 
 const (
 
+	// HTTPRequestRuleTimeoutTypeClient captures enum value "client"
+	HTTPRequestRuleTimeoutTypeClient string = "client"
+
+	// HTTPRequestRuleTimeoutTypeConnect captures enum value "connect"
+	HTTPRequestRuleTimeoutTypeConnect string = "connect"
+
+	// HTTPRequestRuleTimeoutTypeQueue captures enum value "queue"
+	HTTPRequestRuleTimeoutTypeQueue string = "queue"
+
 	// HTTPRequestRuleTimeoutTypeServer captures enum value "server"
 	HTTPRequestRuleTimeoutTypeServer string = "server"
 
+	// HTTPRequestRuleTimeoutTypeTarpit captures enum value "tarpit"
+	HTTPRequestRuleTimeoutTypeTarpit string = "tarpit"
+
 	// HTTPRequestRuleTimeoutTypeTunnel captures enum value "tunnel"
 	HTTPRequestRuleTimeoutTypeTunnel string = "tunnel"
-
-	// HTTPRequestRuleTimeoutTypeClient captures enum value "client"
-	HTTPRequestRuleTimeoutTypeClient string = "client"
 )
 
 // prop value enum
@@ -1256,7 +1274,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","lua","normalize-uri","pause","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bc-mark","set-bc-tos","set-dst","set-dst-port","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","set-var-fmt","silent-drop","strict-mode","tarpit","track-sc","unset-var","use-service","wait-for-body","wait-for-handshake","set-bandwidth-limit","set-retries","do-log"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","add-headers-bin","allow","auth","cache-use","capture","del-acl","del-header","del-headers-bin","del-map","deny","disable-l7-retry","do-resolve","early-hint","lua","normalize-uri","pause","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bc-mark","set-bc-tos","set-dst","set-dst-port","set-fc-mark","set-fc-tos","set-header","set-headers-bin","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","set-var-fmt","silent-drop","strict-mode","tarpit","track-sc","unset-var","use-service","wait-for-body","wait-for-handshake","set-bandwidth-limit","set-retries","do-log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1271,6 +1289,9 @@ const (
 
 	// HTTPRequestRuleTypeAddDashHeader captures enum value "add-header"
 	HTTPRequestRuleTypeAddDashHeader string = "add-header"
+
+	// HTTPRequestRuleTypeAddDashHeadersDashBin captures enum value "add-headers-bin"
+	HTTPRequestRuleTypeAddDashHeadersDashBin string = "add-headers-bin"
 
 	// HTTPRequestRuleTypeAllow captures enum value "allow"
 	HTTPRequestRuleTypeAllow string = "allow"
@@ -1289,6 +1310,9 @@ const (
 
 	// HTTPRequestRuleTypeDelDashHeader captures enum value "del-header"
 	HTTPRequestRuleTypeDelDashHeader string = "del-header"
+
+	// HTTPRequestRuleTypeDelDashHeadersDashBin captures enum value "del-headers-bin"
+	HTTPRequestRuleTypeDelDashHeadersDashBin string = "del-headers-bin"
 
 	// HTTPRequestRuleTypeDelDashMap captures enum value "del-map"
 	HTTPRequestRuleTypeDelDashMap string = "del-map"
@@ -1379,6 +1403,9 @@ const (
 
 	// HTTPRequestRuleTypeSetDashHeader captures enum value "set-header"
 	HTTPRequestRuleTypeSetDashHeader string = "set-header"
+
+	// HTTPRequestRuleTypeSetDashHeadersDashBin captures enum value "set-headers-bin"
+	HTTPRequestRuleTypeSetDashHeadersDashBin string = "set-headers-bin"
 
 	// HTTPRequestRuleTypeSetDashLogDashLevel captures enum value "set-log-level"
 	HTTPRequestRuleTypeSetDashLogDashLevel string = "set-log-level"

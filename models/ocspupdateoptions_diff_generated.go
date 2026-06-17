@@ -24,16 +24,28 @@ import (
 func (rec OcspUpdateOptions) Diff(obj OcspUpdateOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffPointerBool(rec.Disable, obj.Disable, opts...) {
-		diff["Disable."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Disable"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerOcspUpdateOptionsHttpproxy(rec.Httpproxy, obj.Httpproxy, opts...) {
-		diff["Httpproxy."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Httpproxy"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxdelay, obj.Maxdelay, opts...) {
-		diff["Maxdelay."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Maxdelay"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Mindelay, obj.Mindelay, opts...) {
-		diff["Mindelay."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Mindelay"+diffKey] = diffValue
 	}
 	if rec.Mode != obj.Mode {
 		diff["Mode"] = []interface{}{rec.Mode, obj.Mode}
@@ -47,19 +59,20 @@ func DiffPointerOcspUpdateOptionsHttpproxy(x, y *OcspUpdateOptionsHttpproxy, opt
 		return diff
 	}
 
-	key := "Httpproxy"
-
 	switch {
 	case x == nil:
-		diff[key] = []interface{}{x, *y}
+		diff[""] = []interface{}{x, *y}
 		return diff
 	case y == nil:
-		diff[key] = []interface{}{*x, y}
+		diff[""] = []interface{}{*x, y}
 		return diff
 	}
 
 	for diffKey, diffValue := range (*x).Diff(*y) {
-		diff[key+"."+diffKey] = diffValue
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
 	}
 
 	return diff

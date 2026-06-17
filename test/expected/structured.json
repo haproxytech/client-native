@@ -266,6 +266,11 @@
         "module-path": "/tmp/modules/path",
         "mworker_max_reloads": 5,
         "nbthread": 128,
+        "max_threads_per_group": 16,
+        "cpu_affinity": {
+            "affinity": "per-group",
+            "argument": "auto"
+        },
         "node": "node",
         "numa_cpu_mapping": "enabled",
         "pidfile": "pidfile.text",
@@ -276,11 +281,14 @@
         "setcap": "cap_net_raw,cap_net_bind_service",
         "stats_file": "/var/haproxy/my-stats",
         "stats_maxconn": 20,
+        "stats_calculate_max_counters": "enabled",
         "strict_limits": true,
         "thread_groups": 1,
         "tune_options": {
             "applet_zero_copy_forwarding": "disabled",
+            "cli_max_payload_size": 262144,
             "comp_maxlevel": 14,
+            "defaults_purge": true,
             "disable_fast_forward": true,
             "disable_zero_copy_forwarding": true,
             "epoll_mask_events": [
@@ -292,19 +300,25 @@
             "fail_alloc": true,
             "glitches_kill_cpu_usage": 75,
             "fd_edge_triggered": "enabled",
+            "h1_be_glitches_threshold": 2,
+            "h1_fe_glitches_threshold": 15,
             "h1_zero_copy_fwd_recv": "enabled",
             "h1_zero_copy_fwd_send": "enabled",
             "h2_be_glitches_threshold": 16,
             "h2_be_initial_window_size": 201,
             "h2_be_max_concurrent_streams": 202,
+            "h2_be_max_frames_at_once": 32,
             "h2_be_rxbuf": 16384,
             "h2_fe_glitches_threshold": 8,
             "h2_fe_initial_window_size": 203,
             "h2_fe_max_concurrent_streams": 204,
+            "h2_fe_max_frames_at_once": 64,
+            "h2_fe_max_rst_at_once": 5,
             "h2_fe_rxbuf": 8192,
             "h2_fe_max_total_streams": 8192,
             "h2_header_table_size": 15,
             "h2_initial_window_size": 16,
+            "h2_log_errors": "connection",
             "h2_max_concurrent_streams": 17,
             "h2_max_frame_size": 18,
             "h2_zero_copy_fwd_send": "enabled",
@@ -408,6 +422,7 @@
             "buffers_limit": 11,
             "buffers_reserve": 12,
             "bufsize": 13,
+            "bufsize_large": 65536,
             "bufsize_small": 8192
         },
         "tune_lua_options": {
@@ -417,6 +432,7 @@
             "log_loggers": "enabled",
             "log_stderr": "auto",
             "maxmem": 65536,
+            "openlibs": "string,math,table,utf8",
             "service_timeout": 27,
             "session_timeout": 25,
             "task_timeout": 26
@@ -425,6 +441,7 @@
             "frontend_conn_tx_buffers_limit": 10,
             "frontend_max_idle_timeout": 10000,
             "frontend_max_streams_bidi": 100,
+            "frontend_stream_max_total": 1000,
             "max_frame_loss": 5,
             "reorder_ratio": 75,
             "retry_threshold": 5,
@@ -434,6 +451,7 @@
         },
         "tune_ssl_options": {
             "cachesize": 41,
+            "certificate_compression": "disabled",
             "capture_buffer_size": 47,
             "ctx_cache_size": 46,
             "default_dh_param": 45,
@@ -1133,7 +1151,9 @@
                     "check-reuse-pool": "disabled",
                     "check-pool-conn-name": "foo",
                     "renegotiate": "enabled",
-                    "cc": "cubic"
+                    "cc": "cubic",
+                    "quic-cc-algo": "bbr",
+                    "quic_cc_algo_max_window": 1024
                 },
                 "webserv_noport": {
                     "check": "enabled",
@@ -1672,6 +1692,7 @@
                 {
                     "rule-files": null,
                     "trace_hexdump": true,
+                    "trace_max_fwd": 100,
                     "trace_name": "BEFORE-HTTP-COMP",
                     "trace_rnd_parsing": true,
                     "type": "trace"
@@ -1771,6 +1792,21 @@
                     "hdr_format": "\"max-age=31536000\"",
                     "hdr_name": "Strict-Transport-Security",
                     "type": "set-header"
+                },
+                {
+                    "type": "add-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)",
+                    "hdr_prefix": "x-"
+                },
+                {
+                    "type": "del-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)",
+                    "hdr_method": "beg"
+                },
+                {
+                    "type": "set-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)",
+                    "hdr_prefix": "x-"
                 },
                 {
                     "cond": "if",
@@ -2089,6 +2125,21 @@
                     "type": "set-timeout"
                 },
                 {
+                    "timeout": "10",
+                    "timeout_type": "connect",
+                    "type": "set-timeout"
+                },
+                {
+                    "timeout": "15",
+                    "timeout_type": "queue",
+                    "type": "set-timeout"
+                },
+                {
+                    "timeout": "30",
+                    "timeout_type": "tarpit",
+                    "type": "set-timeout"
+                },
+                {
                     "bandwidth_limit_limit": "1m",
                     "bandwidth_limit_name": "my-limit",
                     "bandwidth_limit_period": "10s",
@@ -2184,6 +2235,12 @@
                     "type": "do-log",
                     "cond": "if",
                     "cond_test": "FALSE"
+                },
+                {
+                    "type": "do-log",
+                    "log_profile": "my-prof",
+                    "cond": "if",
+                    "cond_test": "TRUE"
                 },
                 {
                     "type": "pause",
@@ -2978,6 +3035,16 @@
                     "ocsp": "test2.foobar.ocsp",
                     "ocsp_update": "enabled"
                 }
+            ],
+            "force_be_switch_list": [
+                {
+                    "cond": "if",
+                    "cond_test": "internal_acl"
+                },
+                {
+                    "cond": "unless",
+                    "cond_test": "public_acl"
+                }
             ]
         },
         "test_2": {
@@ -3048,6 +3115,20 @@
                     "capture_id": 0,
                     "capture_sample": "req.cook_cnt(FirstVisit),bool",
                     "type": "capture"
+                },
+                {
+                    "type": "add-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)"
+                },
+                {
+                    "type": "del-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)",
+                    "hdr_method": "beg"
+                },
+                {
+                    "type": "set-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)",
+                    "hdr_prefix": "x-"
                 }
             ],
             "http_response_rule_list": [
@@ -3055,6 +3136,39 @@
                     "capture_id": 0,
                     "capture_sample": "res.header",
                     "type": "capture"
+                },
+                {
+                    "type": "add-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)",
+                    "hdr_prefix": "x-"
+                },
+                {
+                    "type": "del-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)"
+                },
+                {
+                    "type": "set-headers-bin",
+                    "hdr_expr": "var(txn.oldheaders)"
+                }
+            ],
+            "filter_list": [
+                {
+                    "rule-files": null,
+                    "type": "comp-req"
+                },
+                {
+                    "rule-files": null,
+                    "type": "comp-res"
+                }
+            ],
+            "filter_sequence_list": [
+                {
+                    "direction": "request",
+                    "filters": ["comp-req"]
+                },
+                {
+                    "direction": "response",
+                    "filters": ["comp-res"]
                 }
             ],
             "waf_body_rule_list": [
@@ -3219,6 +3333,7 @@
             "dns_timeout": 600000,
             "keytype": "ECDSA",
             "map": "acme@t",
+            "profile": "shortlived",
             "reuse_key": "enabled"
         }
     },
@@ -3383,6 +3498,14 @@
             "hash_preserve_affinity": "maxconn",
             "maxconn": 2000,
             "mode": "http",
+            "use_small_buffers": {
+                "enabled": "enabled",
+                "queue": true,
+                "l7_retries": true
+            },
+            "stats_options": {
+                "stats_show_version": true
+            },
             "metadata": {
                 "comment": "testing_defaults"
             },
@@ -3472,7 +3595,6 @@
             "http-check": {
                 "type": "send-state"
             },
-            "http-use-htx": "enabled",
             "http_connection_mode": "httpclose",
             "http_ignore_probes": "disabled",
             "http_keep_alive_timeout": 3000,

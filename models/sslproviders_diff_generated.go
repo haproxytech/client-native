@@ -24,6 +24,9 @@ import (
 func (rec SslProviders) Diff(obj SslProviders, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	for diffKey, diffValue := range DiffSliceString(rec.Providers, obj.Providers, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
 		diff["Providers"+diffKey] = diffValue
 	}
 	return diff

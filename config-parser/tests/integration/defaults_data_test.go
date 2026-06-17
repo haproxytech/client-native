@@ -1069,6 +1069,34 @@ const defaults_optionhttpchkmethoduriversionhos = `
 defaults test
   option httpchk <method> <uri> <version> <host>
 `
+const defaults_optionusesmallbuffers = `
+defaults test
+  option use-small-buffers
+`
+const defaults_nooptionusesmallbuffers = `
+defaults test
+  no option use-small-buffers
+`
+const defaults_optionusesmallbuffersqueue = `
+defaults test
+  option use-small-buffers queue
+`
+const defaults_optionusesmallbuffersl7retries = `
+defaults test
+  option use-small-buffers l7-retries
+`
+const defaults_optionusesmallbufferscheck = `
+defaults test
+  option use-small-buffers check
+`
+const defaults_optionusesmallbuffersqueuel7retr = `
+defaults test
+  option use-small-buffers queue l7-retries check
+`
+const defaults_optionusesmallbuffersqueuel7retr_ = `
+defaults test
+  option use-small-buffers queue l7-retries check # comment
+`
 const defaults_uniqueidformatXocicpfifpTsrtpid = `
 defaults test
   unique-id-format %{+X}o_%ci:%cp_%fi:%fp_%Ts_%rt:%pid
@@ -1200,6 +1228,38 @@ defaults test
 const defaults_httprequestaddaclmaplstsrc = `
 defaults test
   http-request add-acl(map.lst) [src]
+`
+const defaults_httprequestaddheadersbinvartxnol = `
+defaults test
+  http-request add-headers-bin var(txn.oldheaders)
+`
+const defaults_httprequestaddheadersbinvartxnol_ = `
+defaults test
+  http-request add-headers-bin var(txn.oldheaders) prefix x-
+`
+const defaults_httprequestaddheadersbinvartxnol__ = `
+defaults test
+  http-request add-headers-bin var(txn.oldheaders) prefix x- if TRUE
+`
+const defaults_httprequestdelheadersbinvartxnol = `
+defaults test
+  http-request del-headers-bin var(txn.oldheaders)
+`
+const defaults_httprequestdelheadersbinvartxnol_ = `
+defaults test
+  http-request del-headers-bin var(txn.oldheaders) -m beg
+`
+const defaults_httprequestdelheadersbinvartxnol__ = `
+defaults test
+  http-request del-headers-bin var(txn.oldheaders) -m beg if TRUE
+`
+const defaults_httprequestsetheadersbinvartxnol = `
+defaults test
+  http-request set-headers-bin var(txn.oldheaders)
+`
+const defaults_httprequestsetheadersbinvartxnol_ = `
+defaults test
+  http-request set-headers-bin var(txn.oldheaders) prefix x-
 `
 const defaults_httprequestaddheaderXvaluevalue = `
 defaults test
@@ -1997,6 +2057,30 @@ const defaults_httpresponseaddheaderXvaluevalue = `
 defaults test
   http-response add-header X-value value
 `
+const defaults_httpresponseaddheadersbinvartxno = `
+defaults test
+  http-response add-headers-bin var(txn.oldheaders)
+`
+const defaults_httpresponseaddheadersbinvartxno_ = `
+defaults test
+  http-response add-headers-bin var(txn.oldheaders) prefix x-
+`
+const defaults_httpresponsedelheadersbinvartxno = `
+defaults test
+  http-response del-headers-bin var(txn.oldheaders)
+`
+const defaults_httpresponsedelheadersbinvartxno_ = `
+defaults test
+  http-response del-headers-bin var(txn.oldheaders) -m beg
+`
+const defaults_httpresponsesetheadersbinvartxno = `
+defaults test
+  http-response set-headers-bin var(txn.oldheaders)
+`
+const defaults_httpresponsesetheadersbinvartxno_ = `
+defaults test
+  http-response set-headers-bin var(txn.oldheaders) prefix x-
+`
 const defaults_httpresponsedelaclmaplstsrc = `
 defaults test
   http-response del-acl(map.lst) [src]
@@ -2484,6 +2568,30 @@ defaults test
 const defaults_httpafterresponsedelheaderXValue___ = `
 defaults test
   http-after-response del-header X-Value -m GET unless acl
+`
+const defaults_httpafterresponseaddheadersbinva = `
+defaults test
+  http-after-response add-headers-bin var(txn.oldheaders)
+`
+const defaults_httpafterresponseaddheadersbinva_ = `
+defaults test
+  http-after-response add-headers-bin var(txn.oldheaders) prefix x-
+`
+const defaults_httpafterresponsedelheadersbinva = `
+defaults test
+  http-after-response del-headers-bin var(txn.oldheaders)
+`
+const defaults_httpafterresponsedelheadersbinva_ = `
+defaults test
+  http-after-response del-headers-bin var(txn.oldheaders) -m beg
+`
+const defaults_httpafterresponsesetheadersbinva = `
+defaults test
+  http-after-response set-headers-bin var(txn.oldheaders)
+`
+const defaults_httpafterresponsesetheadersbinva_ = `
+defaults test
+  http-after-response set-headers-bin var(txn.oldheaders) prefix x-
 `
 const defaults_httpafterresponsereplaceheaderSe = `
 defaults test
@@ -3676,6 +3784,10 @@ defaults test
 const defaults_statsshowmodules = `
 defaults test
   stats show-modules
+`
+const defaults_statsshowversion = `
+defaults test
+  stats show-version
 `
 const defaults_statsmaxconn10 = `
 defaults test

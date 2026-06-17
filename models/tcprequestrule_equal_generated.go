@@ -33,10 +33,10 @@ func (rec TCPRequestRule) Equal(obj TCPRequestRule, opts ...eqdiff.GoMethodGenOp
 		rec.Expr == obj.Expr &&
 		rec.GptValue == obj.GptValue &&
 		rec.LogLevel == obj.LogLevel &&
+		rec.LogProfile == obj.LogProfile &&
 		rec.LuaAction == obj.LuaAction &&
 		rec.LuaParams == obj.LuaParams &&
 		rec.MarkValue == obj.MarkValue &&
-		EqualMapStringInterface(rec.Metadata, obj.Metadata, opts...) &&
 		rec.NiceValue == obj.NiceValue &&
 		rec.ResolveProtocol == obj.ResolveProtocol &&
 		rec.ResolveResolvers == obj.ResolveResolvers &&

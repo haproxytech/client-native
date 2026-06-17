@@ -59,6 +59,12 @@ func (rec Filter) Diff(obj Filter, opts ...eqdiff.GoMethodGenOptions) map[string
 	if rec.TraceHexdump != obj.TraceHexdump {
 		diff["TraceHexdump"] = []interface{}{rec.TraceHexdump, obj.TraceHexdump}
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.TraceMaxFwd, obj.TraceMaxFwd, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["TraceMaxFwd"+diffKey] = diffValue
+	}
 	if rec.TraceName != obj.TraceName {
 		diff["TraceName"] = []interface{}{rec.TraceName, obj.TraceName}
 	}

@@ -1,7 +1,7 @@
 ---
 mailers_section:
   type: object
-  description: MailersSection with all it's children resources
+  description: MailersSection with all its children resources
   x-go-name: MailersSection
   allOf:
     - $ref: "#/definitions/mailers_section_base"
@@ -43,7 +43,7 @@ mailer_entry:
   properties:
     name:
       type: string
-      pattern: '^[A-Za-z0-9-_]+$'
+      pattern: '^[A-Za-z0-9-_${}"]+$'
       x-nullable: false
     address:
       type: string
