@@ -91,10 +91,16 @@ func (f *Status) Parse(parts []string, parserType types.ParserType, comment stri
 			switch command[i] {
 			case "content-type":
 				i++
+				if i >= len(command) {
+					return stderrors.New("failed to parse content-type")
+				}
 				f.ContentType = command[i]
 			case "errorfile", "errorfiles", "file", "lf-file", "string", "lf-string":
 				f.ContentFormat = command[i]
 				i++
+				if i >= len(command) {
+					return stderrors.New("failed to parse content")
+				}
 				f.Content = command[i]
 			case "default-errorfiles":
 				f.ContentFormat = command[i]

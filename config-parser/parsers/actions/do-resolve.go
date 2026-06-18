@@ -54,6 +54,11 @@ func (f *DoResolve) Parse(parts []string, parserType types.ParserType, comment s
 	}
 	data = strings.TrimPrefix(data, "do-resolve(")
 	data = strings.TrimRight(data, ")")
+	if strings.ContainsAny(data, "\"'") {
+		// An unbalanced quote swallowed following tokens into the name; the
+		// result can't round-trip and grows by ") " on every save.
+		return stderrors.New("not enough params")
+	}
 	d := strings.SplitN(data, ",", 3)
 
 	if len(d) < 2 {

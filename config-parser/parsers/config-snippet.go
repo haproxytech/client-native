@@ -33,7 +33,10 @@ type ConfigSnippet struct {
 func (p *ConfigSnippet) Parse(line string, parts []string, comment string) (string, error) {
 	if comment != "" {
 		commentParts := strings.Fields(comment)
-		if len(commentParts) > 1 || commentParts[0] == "##_config-snippet_###" {
+		// Only a real "##_config-snippet_### BEGIN|END" marker may drive the
+		// switch; require the keyword too so other comments don't reach
+		// commentParts[1] or the BEGIN-only p.data.
+		if len(commentParts) > 1 && commentParts[0] == "##_config-snippet_###" {
 			switch commentParts[1] {
 			case "BEGIN":
 				p.active = true
@@ -42,13 +45,13 @@ func (p *ConfigSnippet) Parse(line string, parts []string, comment string) (stri
 			case "END":
 				p.active = false
 				return "snippet_end", nil
-			default:
-				p.data.Value = append(p.data.Value, strings.TrimSpace(line))
-				return "", nil
 			}
 		}
 	}
 	if p.active {
+		if p.data == nil {
+			p.data = &types.StringSliceC{}
+		}
 		p.data.Value = append(p.data.Value, strings.TrimSpace(line))
 		return "", nil
 	}

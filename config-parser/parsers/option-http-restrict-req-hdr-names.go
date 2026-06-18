@@ -31,10 +31,11 @@ func (o *OptionHTTPRestrictReqHdrNames) Parse(line string, parts []string, comme
 	if len(parts) != 3 {
 		return "", &errors.ParseError{Parser: "option http-restrict-req-hdr-names", Line: line}
 	}
-	o.data = &types.OptionHTTPRestrictReqHdrNames{Comment: comment}
+	// Set data only on a valid policy: a non-nil data after an error return
+	// would make Result() emit a spurious line.
 	switch parts[2] {
 	case "preserve", "delete", "reject":
-		o.data.Policy = parts[2]
+		o.data = &types.OptionHTTPRestrictReqHdrNames{Comment: comment, Policy: parts[2]}
 	default:
 		return "", &errors.ParseError{Parser: "option http-restrict-req-hdr-names", Line: line}
 	}

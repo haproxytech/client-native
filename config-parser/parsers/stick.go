@@ -32,6 +32,10 @@ type Stick struct {
 func (h *Stick) Parse(line string, parts []string, comment string) (string, error) {
 	if len(parts) >= 2 && parts[0] == "stick" {
 		command, condition := common.SplitRequest(parts[2:])
+		if len(command) == 0 {
+			// "stick <type>" with no pattern: nothing to match on.
+			return "", &errors.ParseError{Parser: "Stick", Line: line}
+		}
 		data := types.Stick{
 			Pattern: command[0],
 			Comment: comment,

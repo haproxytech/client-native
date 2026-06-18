@@ -31,6 +31,9 @@ type ArrayKeyValue struct {
 
 func (p *ArrayKeyValue) Parse(line string, parts []string, comment string) (string, error) {
 	if parts[0] == p.Name {
+		if len(parts) < 3 {
+			return "", &errors.ParseError{Parser: "ArrayKeyValue", Line: line}
+		}
 		p.data = append(p.data, types.StringKeyValueC{
 			Key:     parts[1],
 			Value:   parts[2],

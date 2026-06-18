@@ -233,3 +233,14 @@ allowed:
   - rehaul
   - rebase
   - XXXX
+  - bufio
+  - dereferences
+  - gosentry
+  - libafl
+  - reparse
+  - reparsing
+  - tokenization
+  - untrusted
+  - allowlist
+  - gocognit
+  - nolint

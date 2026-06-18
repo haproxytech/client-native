@@ -37,16 +37,21 @@ func (us *UseService) Parse(parts []string, parserType types.ParserType, comment
 	if comment != "" {
 		us.Comment = comment
 	}
-	if len(parts) < 3 {
-		return errors.New("not enough params")
-	}
 	var data string
 	var command []string
 	switch parserType {
 	case types.HTTP, types.QUIC:
+		if len(parts) < 3 {
+			return errors.New("not enough params")
+		}
 		data = parts[2]
 		command = parts[3:]
 	case types.TCP:
+		// TCP form is "tcp-request content use-service <name>": one token
+		// further right than the HTTP form, so it needs parts[3].
+		if len(parts) < 4 {
+			return errors.New("not enough params")
+		}
 		data = parts[3]
 		command = parts[4:]
 	}

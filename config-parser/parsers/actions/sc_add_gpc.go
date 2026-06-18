@@ -56,6 +56,9 @@ func (f *ScAddGpc) Parse(parts []string, parserType types.ParserType, comment st
 	idIdx := strings.TrimPrefix(data, "sc-add-gpc(")
 	idIdx = strings.TrimRight(idIdx, ")")
 	idIdxValues := strings.SplitN(idIdx, ",", 2)
+	if len(idIdxValues) < 2 {
+		return stderrors.New("not enough params")
+	}
 	f.Idx, f.ID = idIdxValues[0], idIdxValues[1]
 	if len(parts) < minLen {
 		return stderrors.New("not enough params")

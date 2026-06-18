@@ -74,7 +74,7 @@ func (c *CheckSend) Parse(parts []string, parserType types.ParserType, comment s
 		case "hdr":
 			if (i+1) < len(parts) && (i+2) < len(parts) {
 				c.Header = append(c.Header, CheckSendHeader{Name: parts[i+1], Format: parts[i+2]})
-				i++
+				i += 2 // skip <name> and <fmt>; +1 would rescan <fmt> as a keyword
 			}
 		case "body":
 			actions.CheckParsePair(parts, &i, &c.Body)

@@ -29,6 +29,9 @@ type HTTPReuse struct {
 
 func (p *HTTPReuse) Parse(line string, parts []string, comment string) (string, error) {
 	if parts[0] == "http-reuse" {
+		if len(parts) < 2 {
+			return "", &errors.ParseError{Parser: "HTTPReuse", Line: line}
+		}
 		switch parts[1] {
 		case "aggressive", "always", "never", "safe":
 			p.data = &types.HTTPReuse{ShareType: parts[1], Comment: comment}

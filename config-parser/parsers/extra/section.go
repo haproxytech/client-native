@@ -18,6 +18,7 @@ package extra
 
 import (
 	stderrors "errors"
+	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
@@ -38,6 +39,12 @@ func (s *Section) Init() {
 func (s *Section) Parse(line string, parts []string, comment string) (string, error) {
 	if parts[0] == s.Name {
 		if len(parts) > 1 {
+			// A section name is one bare token; a quote signals an unbalanced
+			// quote that swallowed following tokens (e.g. a "from <defaults>"
+			// clause), which then can't round-trip.
+			if strings.ContainsAny(parts[1], "\"'") {
+				return "", &errors.ParseError{Parser: "Section", Line: line}
+			}
 			s.data.Name = parts[1]
 		}
 		if len(parts) > 3 && parts[2] == "from" {

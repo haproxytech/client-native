@@ -37,7 +37,8 @@ func (f *Capture) Parse(parts []string, parserType types.ParserType, comment str
 	if f.Comment != "" {
 		f.Comment = comment
 	}
-	if len(parts) < 4 {
+	if len(parts) < 6 {
+		// capture <sample> len <length>: needs parts[3] (expr) and parts[5] (len)
 		return stderrors.New("not enough params")
 	}
 	expr := common.Expression{}

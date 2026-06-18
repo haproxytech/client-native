@@ -38,7 +38,7 @@ type Tarpit struct { // http-request deny [status <code>] [content-type <type>] 
 	CondTest      string
 }
 
-func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment string) error { //nolint:dupl
+func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment string) error { //nolint:dupl,gocognit
 	f.Hdrs = []*Hdr{}
 	if comment != "" {
 		f.Comment = comment
@@ -50,6 +50,9 @@ func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment stri
 				switch command[i] {
 				case "status", "deny_status":
 					i++
+					if i >= len(command) {
+						return stderrors.New("failed to parse status code")
+					}
 					code, err := strconv.ParseInt(command[i], 10, 64)
 					if err != nil {
 						return stderrors.New("failed to parse status code")
@@ -57,10 +60,16 @@ func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment stri
 					f.Status = &code
 				case "content-type":
 					i++
+					if i >= len(command) {
+						return stderrors.New("failed to parse content-type")
+					}
 					f.ContentType = command[i]
 				case "errorfile", "errorfiles", "file", "lf-file", "string", "lf-string":
 					f.ContentFormat = command[i]
 					i++
+					if i >= len(command) {
+						return stderrors.New("failed to parse content")
+					}
 					f.Content = command[i]
 				case "default-errorfiles":
 					f.ContentFormat = command[i]

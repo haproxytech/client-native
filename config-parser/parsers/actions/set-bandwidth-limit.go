@@ -53,6 +53,9 @@ func (f *SetBandwidthLimit) Parse(parts []string, parserType types.ParserType, c
 		command = parts[3:]
 	}
 	command, condition := common.SplitRequest(command)
+	if len(command) == 0 {
+		return stderrors.New("not enough params")
+	}
 	f.Name = command[0]
 
 	for i := 1; i < len(command); i++ {

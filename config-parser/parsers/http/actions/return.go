@@ -81,7 +81,7 @@ func allowedStatusCode(code int64) bool {
 	return code >= 200 && code <= 509
 }
 
-func (f *Return) Parse(parts []string, parserType types.ParserType, comment string) error {
+func (f *Return) Parse(parts []string, parserType types.ParserType, comment string) error { //nolint:gocognit
 	f.Hdrs = []*Hdr{}
 	if comment != "" {
 		f.Comment = comment
@@ -93,6 +93,9 @@ func (f *Return) Parse(parts []string, parserType types.ParserType, comment stri
 				switch command[i] {
 				case "status":
 					i++
+					if i >= len(command) {
+						return stderrors.New("failed to parse status code")
+					}
 					code, err := strconv.ParseInt(command[i], 10, 64)
 					if err != nil {
 						return stderrors.New("failed to parse status code")
@@ -100,10 +103,16 @@ func (f *Return) Parse(parts []string, parserType types.ParserType, comment stri
 					f.Status = &code
 				case "content-type":
 					i++
+					if i >= len(command) {
+						return stderrors.New("failed to parse content-type")
+					}
 					f.ContentType = command[i]
 				case "errorfile", "errorfiles", "file", "lf-file", "string", "lf-string":
 					f.ContentFormat = command[i]
 					i++
+					if i >= len(command) {
+						return stderrors.New("failed to parse content")
+					}
 					f.Content = command[i]
 				case "default-errorfiles":
 					f.ContentFormat = command[i]

@@ -79,6 +79,11 @@ func (o *OnLogStep) parse(line string, parts []string, comment string) (*types.O
 	}
 
 	for {
+		// Each keyword needs a value; an odd trailing token (a lone
+		// format/sd) would otherwise read parts[1] out of range.
+		if len(parts) < 2 {
+			return nil, &errors.ParseError{Parser: on, Line: line, Message: "Parse error: bad trailing argument"}
+		}
 		switch parts[0] {
 		case "format":
 			step.Format = parts[1]

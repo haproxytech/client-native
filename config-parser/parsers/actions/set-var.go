@@ -54,7 +54,15 @@ func (f *SetVar) Parse(parts []string, parserType types.ParserType, comment stri
 	}
 	data = strings.TrimPrefix(data, "set-var(")
 	data = strings.TrimRight(data, ")")
+	if strings.ContainsAny(data, "\"'") {
+		// An unbalanced quote swallowed following tokens into the name; the
+		// result can't round-trip and grows by ") " on every save.
+		return stderrors.New("not enough params")
+	}
 	d := strings.SplitN(data, ".", 2)
+	if len(d) < 2 {
+		return stderrors.New("not enough params")
+	}
 	f.VarScope = d[0]
 	f.VarName = d[1]
 	command, condition := common.SplitRequest(command)

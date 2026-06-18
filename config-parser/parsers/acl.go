@@ -56,8 +56,10 @@ func (h *ACL) Result() ([]common.ReturnResultLine, error) {
 		sb.WriteString(req.ACLName)
 		sb.WriteString(" ")
 		sb.WriteString(req.Criterion)
-		sb.WriteString(" ")
-		sb.WriteString(req.Value)
+		if req.Value != "" {
+			sb.WriteString(" ")
+			sb.WriteString(req.Value)
+		}
 
 		comment, err := misc.SerializeMetadata(req.Metadata)
 		if err != nil {

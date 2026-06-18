@@ -58,6 +58,10 @@ func (f *ScSetGpt) Parse(parts []string, parserType types.ParserType, comment st
 	// sc-get-gpt(sc-id,idx)
 	start := len("sc-set-gpt(")
 	end := len(data) - 1 // ignore ")"
+	if end < start {
+		// e.g. a truncated "sc-set-gpt(" with no "<sc-id>,<idx>)" body.
+		return stderrors.New("missing sc-id and/or idx")
+	}
 	idIdx := strings.Split(data[start:end], ",")
 	if len(idIdx) != 2 {
 		return stderrors.New("missing sc-id and/or idx")

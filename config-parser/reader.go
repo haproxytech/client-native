@@ -61,6 +61,9 @@ func (p *configParser) Process(reader io.Reader) error {
 	}
 	for bufferedScanner.Scan() {
 		line = bufferedScanner.Text()
+		// ScanLines strips only one trailing '\r'; drop the rest so they don't
+		// leak into comment/value text and bleed out one per save cycle.
+		line = strings.TrimRight(line, "\r")
 
 		if line == "" {
 			if parsers.State == "" {
@@ -117,13 +120,19 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 		}
 	}
 	parsers := make([]ParserInterface, 0, 2)
+	// Skip absent parsers: a missing key yields a nil the loop would
+	// dereference (the config-snippet section has no "" UnProcessed parser).
 	if !p.Options.DisableUnProcessed {
-		parsers = append(parsers, config.Active.Parsers[""])
+		if up, ok := config.Active.Parsers[""]; ok {
+			parsers = append(parsers, up)
+		}
 	}
 
-	if config.HasDefaultParser {
+	if config.HasDefaultParser && len(config.Active.ParserSequence) > 0 {
 		// Default parser name is given in position 0 of ParserSequence
-		parsers = append(parsers, config.Active.Parsers[string(config.Active.ParserSequence[0])])
+		if dp, ok := config.Active.Parsers[string(config.Active.ParserSequence[0])]; ok {
+			parsers = append(parsers, dp)
+		}
 	}
 	// We add iteratively the different parts to form a potential parser name
 	for i := 1; i <= len(parts) && !config.HasDefaultParser; i++ {
@@ -410,7 +419,11 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					}
 					config.HasDefaultParser = true
 				case "snippet_end":
-					config.Active = config.Previous
+					// A stray END without a matching BEGIN leaves Previous nil;
+					// restoring it would null out Active and nil-deref just below.
+					if config.Previous != nil {
+						config.Active = config.Previous
+					}
 					config.HasDefaultParser = false
 				}
 				if config.ActiveSectionComments != nil {

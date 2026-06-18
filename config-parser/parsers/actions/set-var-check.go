@@ -50,6 +50,9 @@ func (f *SetVarCheck) Parse(parts []string, parserType types.ParserType, comment
 	data = strings.TrimPrefix(data, "set-var(")
 	data = strings.TrimRight(data, ")")
 	d := strings.SplitN(data, ".", 2)
+	if len(d) < 2 {
+		return stderrors.New("not enough params")
+	}
 	f.VarScope = d[0]
 	f.VarName = d[1]
 	command, condition := common.SplitRequest(command)

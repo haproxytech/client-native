@@ -37,7 +37,7 @@ type Deny struct { // http-request deny [status <code>] [content-type <type>] [ 
 	CondTest      string
 }
 
-func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string) error {
+func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string) error { //nolint:gocognit
 	f.Hdrs = []*Hdr{}
 	if comment != "" {
 		f.Comment = comment
@@ -48,6 +48,9 @@ func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string
 			for i := 0; i < len(command); i++ {
 				switch command[i] {
 				case "status", "deny_status":
+					if len(command) < i+2 {
+						return stderrors.New("not enough params")
+					}
 					i++
 					code, err := strconv.ParseInt(command[i], 10, 64)
 					if err != nil {
@@ -55,9 +58,15 @@ func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string
 					}
 					f.Status = &code
 				case "content-type":
+					if len(command) < i+2 {
+						return stderrors.New("not enough params")
+					}
 					i++
 					f.ContentType = command[i]
 				case "errorfile", "errorfiles", "file", "lf-file", "string", "lf-string":
+					if len(command) < i+2 {
+						return stderrors.New("not enough params")
+					}
 					f.ContentFormat = command[i]
 					i++
 					f.Content = command[i]

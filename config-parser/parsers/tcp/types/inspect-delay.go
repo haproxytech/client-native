@@ -44,11 +44,8 @@ func (f *InspectDelay) String() string {
 	result.WriteString(" ")
 	result.WriteString(f.Timeout)
 
-	if f.Comment != "" {
-		result.WriteString(" # ")
-		result.WriteString(f.Comment)
-	}
-
+	// The comment is emitted by the section writer via Result()'s Comment
+	// field; appending it here too would double it on every round-trip.
 	return result.String()
 }
 
