@@ -30,7 +30,7 @@ type ForcePersist struct {
 }
 
 func (m *ForcePersist) parse(line string, parts []string, comment string) (*types.ForcePersist, error) {
-	if len(parts) != 3 {
+	if len(parts) < 3 {
 		return nil, &errors.ParseError{Parser: "ForcePersist", Line: line}
 	}
 	if parts[0] == "force-persist" {

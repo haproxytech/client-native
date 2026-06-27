@@ -30,7 +30,7 @@ type ForceBeSwitch struct {
 }
 
 func (m *ForceBeSwitch) parse(line string, parts []string, comment string) (*types.ForceBeSwitch, error) {
-	if len(parts) != 3 {
+	if len(parts) < 3 {
 		return nil, &errors.ParseError{Parser: "ForceBeSwitch", Line: line}
 	}
 	if parts[0] == "force-be-switch" {
