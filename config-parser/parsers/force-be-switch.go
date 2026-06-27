@@ -17,6 +17,7 @@ package parsers
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
@@ -33,15 +34,16 @@ func (m *ForceBeSwitch) parse(line string, parts []string, comment string) (*typ
 		return nil, &errors.ParseError{Parser: "ForceBeSwitch", Line: line}
 	}
 	if parts[0] == "force-be-switch" {
-		if parts[1] != "if" && parts[1] != "unless" {
-			return nil, &errors.ParseError{Parser: "ForceBeSwitch", Line: line}
+		_, condition := common.SplitRequest(parts)
+		if len(condition) > 1 {
+			data := &types.ForceBeSwitch{
+				Cond:     condition[0],
+				CondTest: strings.Join(condition[1:], " "),
+				Comment:  comment,
+			}
+			return data, nil
 		}
-		data := &types.ForceBeSwitch{
-			Cond:     parts[1],
-			CondTest: parts[2],
-			Comment:  comment,
-		}
-		return data, nil
+		return nil, &errors.ParseError{Parser: "ForceBeSwitch", Line: line}
 	}
 	return nil, &errors.ParseError{Parser: "ForceBeSwitch", Line: line}
 }
