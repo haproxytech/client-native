@@ -458,8 +458,6 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/stick_table_entry"
-  cluster_settings:
-    $ref: "models/cluster.yaml#/settings"
   map:
     $ref: "models/storage/map.yaml#/map"
   maps:
@@ -939,7 +937,6 @@ tags:
   - name: Ring
   - name: DgramBind
   - name: LogForward
-  - name: Cluster
   - name: Maps
   - name: SpecificationOpenapiv3
   - name: ServiceDiscovery
@@ -973,10 +970,6 @@ paths:
     $ref: "paths/general.yaml#/info"
   /health:
     $ref: "paths/general.yaml#/health"
-  /cluster:
-    $ref: "paths/cluster.yaml#/cluster"
-  /cluster/certificate:
-    $ref: "paths/cluster.yaml#/certificate"
   /service_discovery/aws:
     $ref: "paths/service-discovery.yaml#/aws"
   /service_discovery/aws/{id}:

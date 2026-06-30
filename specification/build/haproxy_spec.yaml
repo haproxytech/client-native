@@ -10420,75 +10420,6 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/stick_table_entry"
-  cluster_settings:
-    description: Settings related to a cluster.
-    properties:
-      bootstrap_key:
-        type: string
-      cluster:
-        properties:
-          address:
-            pattern: ^[^\s]+$
-            readOnly: true
-            type: string
-          api_base_path:
-            readOnly: true
-            type: string
-          cluster_id:
-            type: string
-          description:
-            readOnly: true
-            type: string
-          log_targets:
-            items:
-              properties:
-                address:
-                  type: string
-                log_format:
-                  type: string
-                port:
-                  maximum: 65535
-                  minimum: 1
-                  type: integer
-                protocol:
-                  enum:
-                    - tcp
-                    - udp
-                  type: string
-              required:
-                - address
-                - port
-                - protocol
-              type: object
-              x-go-name: ClusterLogTarget
-            type: array
-            x-go-name: ClusterLogTargets
-            x-omitempty: true
-          name:
-            readOnly: true
-            type: string
-          port:
-            maximum: 65535
-            minimum: 1
-            readOnly: true
-            type: integer
-            x-nullable: true
-        title: Cluster controller information
-        type: object
-      mode:
-        enum:
-          - single
-          - cluster
-        type: string
-      status:
-        enum:
-          - active
-          - unreachable
-          - waiting_approval
-        readOnly: true
-        type: string
-    title: Cluster Settings
-    type: object
   map:
     description: Map File
     properties:
@@ -12634,7 +12565,6 @@ tags:
   - name: Bind
     description: Managing frontend bind configurations (advanced mode)
   - name: Cache
-  - name: Cluster
   - name: Configuration
     description: Raw HAProxy configuration management (advanced mode)
   - name: CrtLoad
@@ -12791,119 +12721,6 @@ paths:
       summary: Return managed services health
       tags:
         - Health
-  /cluster:
-    delete:
-      description: Delete cluster settings and move the node back to single mode
-      operationId: deleteCluster
-      parameters:
-        - description: In case of moving to single mode do we keep or clean configuration
-          enum:
-            - keep
-          in: query
-          name: configuration
-          required: false
-          type: string
-        - $ref: '#/parameters/version'
-      responses:
-        "204":
-          description: Cluster settings deleted and node moved to single mode
-        default:
-          $ref: '#/responses/DefaultError'
-      summary: Delete cluster settings
-      tags:
-        - Cluster
-    get:
-      description: Returns cluster data
-      operationId: getCluster
-      produces:
-        - application/json
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/cluster_settings'
-        default:
-          $ref: '#/responses/DefaultError'
-      summary: Return cluster data
-      tags:
-        - Cluster
-    post:
-      description: Post cluster settings
-      operationId: postCluster
-      parameters:
-        - in: body
-          name: data
-          required: true
-          schema:
-            $ref: '#/definitions/cluster_settings'
-        - description: In case of moving to single mode do we keep or clean configuration
-          enum:
-            - keep
-          in: query
-          name: configuration
-          required: false
-          type: string
-        - description: Force the advertised address when joining a cluster
-          in: query
-          name: advertised_address
-          required: false
-          type: string
-        - description: Force the advertised port when joining a cluster
-          in: query
-          maximum: 65535
-          minimum: 1
-          name: advertised_port
-          required: false
-          type: integer
-        - $ref: '#/parameters/version'
-      responses:
-        "200":
-          description: Cluster settings changed
-          schema:
-            $ref: '#/definitions/cluster_settings'
-        "400":
-          $ref: '#/responses/BadRequest'
-        default:
-          $ref: '#/responses/DefaultError'
-      summary: Post cluster settings
-      tags:
-        - Cluster
-    put:
-      description: Edit cluster settings
-      operationId: editCluster
-      parameters:
-        - in: body
-          name: data
-          required: true
-          schema:
-            $ref: '#/definitions/cluster_settings'
-        - $ref: '#/parameters/version'
-      responses:
-        "200":
-          description: Cluster settings changed
-          schema:
-            $ref: '#/definitions/cluster_settings'
-        "400":
-          $ref: '#/responses/BadRequest'
-        default:
-          $ref: '#/responses/DefaultError'
-      summary: Edit cluster settings
-      tags:
-        - Cluster
-  /cluster/certificate:
-    post:
-      description: Initiates a certificate refresh
-      operationId: initiateCertificateRefresh
-      responses:
-        "200":
-          description: refresh activated
-        "403":
-          description: refresh not possible
-        default:
-          $ref: '#/responses/DefaultError'
-      summary: Initiates a certificate refresh
-      tags:
-        - Cluster
   /service_discovery/aws:
     get:
       description: Return all configured AWS regions.
@@ -25582,9 +25399,6 @@ paths:
         "200":
           description: Operation successful
           headers:
-            Cluster-Version:
-              description: Cluster configuration version
-              type: string
             Configuration-Checksum:
               description: Configuration file md5 checksum
               type: string
@@ -25646,9 +25460,6 @@ paths:
         "201":
           description: New HAProxy configuration pushed
           headers:
-            Cluster-Version:
-              description: Cluster configuration version
-              type: string
             Configuration-Checksum:
               description: Configuration file md5 checksum
               type: string
@@ -25660,9 +25471,6 @@ paths:
         "202":
           description: Configuration change accepted and reload requested
           headers:
-            Cluster-Version:
-              description: Cluster configuration version
-              type: string
             Configuration-Checksum:
               description: Configuration file md5 checksum
               type: string
