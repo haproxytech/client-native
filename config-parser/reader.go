@@ -321,17 +321,6 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					if p.Options.Log {
 						p.Options.Logger.Tracef("%scache section %s active", p.Options.LogPrefix, data.Name)
 					}
-				case "program":
-					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
-					rawData, _ := parserSectionName.Get(false)
-					data := rawData.(*types.Section) //nolint:forcetypeassert
-					config.Program = p.getProgramParser()
-					config.Program.Section = *data
-					p.Parsers[Program][data.Name] = config.Program
-					config.Active = config.Program
-					if p.Options.Log {
-						p.Options.Logger.Tracef("%sprogram section %s active", p.Options.LogPrefix, data.Name)
-					}
 				case "http-errors":
 					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
 					rawData, _ := parserSectionName.Get(false)

@@ -503,15 +503,6 @@ func StructuredToPeerSectionMap() map[string]models.PeerSections {
 	return res
 }
 
-func StructuredToProgramMap() map[string]models.Programs {
-	resources, _ := expectedResources[models.Program]("programs")
-	res := make(map[string]models.Programs)
-	keyRoot := ""
-	t := toResMap(keyRoot, resources)
-	res[keyRoot] = t[keyRoot]
-	return res
-}
-
 func StructuredToResolverMap() map[string]models.Resolvers {
 	resources, _ := expectedResources[models.Resolver]("resolvers")
 	res := make(map[string]models.Resolvers)

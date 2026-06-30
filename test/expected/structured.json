@@ -3760,20 +3760,6 @@
             }
         }
     },
-    "programs": {
-        "test": {
-            "command": "echo \"Hello, World!\"",
-            "group": "hapee",
-            "name": "test",
-            "start-on-reload": "enabled",
-            "user": "hapee-lb"
-        },
-        "test_2": {
-            "command": "echo \"Hello, World!\"",
-            "name": "test_2",
-            "start-on-reload": "disabled"
-        }
-    },
     "resolvers": {
         "test": {
             "accepted_payload_size": 8192,

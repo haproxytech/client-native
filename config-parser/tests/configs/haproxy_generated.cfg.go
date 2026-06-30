@@ -3180,9 +3180,6 @@ peers test
   table t1 type string len 1000 size 1m expire 5m write-to t2
   table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only
 
-program test
-  command spoa-mirror --runtime 0 --mirror-url http://test.local
-
 resolvers test
   nameserver dns1 10.0.0.1:53
   nameserver dns1 10.0.0.1:53 # comment
@@ -3199,9 +3196,7 @@ userlist test
   user platipus insecure-password saludos
 `
 
-var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url http://test.local
-`, 1},
-	{`  set-param name fmt if acl
+var configTests = []configTest{{`  set-param name fmt if acl
 `, 1},
 	{`  set-param name fmt unless acl
 `, 1},

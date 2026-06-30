@@ -44,7 +44,6 @@ func (p *configParser) createParsers(parser map[string]ParserInterface, sequence
 	addParser(parser, &sequence, &extra.Section{Name: "peers"})
 	addParser(parser, &sequence, &extra.Section{Name: "mailers"})
 	addParser(parser, &sequence, &extra.Section{Name: "cache"})
-	addParser(parser, &sequence, &extra.Section{Name: "program"})
 	addParser(parser, &sequence, &extra.Section{Name: "http-errors"})
 	addParser(parser, &sequence, &extra.Section{Name: "ring"})
 	addParser(parser, &sequence, &extra.Section{Name: "log-forward"})
@@ -980,16 +979,6 @@ func (p *configParser) getCacheParser() *Parsers {
 	addParser(parser, &sequence, &simple.Number{Name: "max-age"})
 	addParser(parser, &sequence, &simple.Number{Name: "max-secondary-entries"})
 	addParser(parser, &sequence, &parsers.ProcessVary{})
-	return p.createParsers(parser, sequence)
-}
-
-func (p *configParser) getProgramParser() *Parsers {
-	parser := map[string]ParserInterface{}
-	sequence := []Section{}
-	addParser(parser, &sequence, &parsers.Command{})
-	addParser(parser, &sequence, &simple.String{Name: "user"})
-	addParser(parser, &sequence, &simple.String{Name: "group"})
-	addParser(parser, &sequence, &simple.Option{Name: "start-on-reload"})
 	return p.createParsers(parser, sequence)
 }
 

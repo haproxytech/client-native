@@ -41,7 +41,6 @@ const (
 	Backends     Section = "backend"
 	Listen       Section = "listen"
 	Cache        Section = "cache"
-	Program      Section = "program"
 	HTTPErrors   Section = "http-errors"
 	HealthChecks Section = "healthcheck"
 	Ring         Section = "ring"

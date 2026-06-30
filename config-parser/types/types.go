@@ -21,16 +21,6 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/params"
 )
 
-//sections:program
-//name:command
-//test:ok:command spoa-mirror --runtime 0 --mirror-url http://test.local
-//test:ok:command echo \"Hello, World!\"
-//test:fail:command
-type Command struct {
-	Args    string
-	Comment string
-}
-
 //sections:fcgi-app
 //name:set-param
 //is:multiple

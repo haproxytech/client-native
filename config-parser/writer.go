@@ -60,7 +60,6 @@ func (p *configParser) String() string {
 		Frontends,
 		Backends,
 		Listen,
-		Program,
 	}
 
 	for _, section := range sections {

@@ -14,12 +14,6 @@ externalDocs:
   url: https://docs.haproxy.org/
   description: HAProxy Documentation
 definitions:
-  program:
-    $ref: "models/configuration/program.yaml#/program"
-  programs:
-    type: array
-    items:
-      $ref: "#/definitions/program"
   fcgi_app:
     $ref: "models/configuration/fcgi.yaml#/app"
   fcgi_app_base:
@@ -949,7 +943,6 @@ tags:
   - name: DeclareCapture
   - name: Userlist
   - name: FCGIApp
-  - name: ProcessManager
   - name: Table
   - name: CrtStore
   - name: CrtLoad
@@ -1046,10 +1039,6 @@ paths:
     $ref: "paths/configuration/http_errors.yaml#/http_errors_section"
   /services/haproxy/configuration/http_errors_sections/{name}:
     $ref: "paths/configuration/http_errors.yaml#/http_errors_section_one"
-  /services/haproxy/configuration/programs:
-    $ref: "paths/configuration/program.yaml#/programs"
-  /services/haproxy/configuration/programs/{name}:
-    $ref: "paths/configuration/program.yaml#/programs_one"
   /services/haproxy/configuration/fcgi_apps:
     $ref: "paths/configuration/fcgi-app.yaml#/apps"
   /services/haproxy/configuration/fcgi_apps/{name}:

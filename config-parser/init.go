@@ -39,7 +39,6 @@ type ConfiguredParsers struct {
 	Peers                 *Parsers
 	Mailers               *Parsers
 	Cache                 *Parsers
-	Program               *Parsers
 	HTTPErrors            *Parsers
 	HealthCheck           *Parsers
 	Ring                  *Parsers
@@ -93,7 +92,6 @@ func (p *configParser) initParserMaps() {
 	p.Parsers[Peers] = map[string]*Parsers{}
 	p.Parsers[Mailers] = map[string]*Parsers{}
 	p.Parsers[Cache] = map[string]*Parsers{}
-	p.Parsers[Program] = map[string]*Parsers{}
 	p.Parsers[HTTPErrors] = map[string]*Parsers{}
 	p.Parsers[HealthChecks] = map[string]*Parsers{}
 	p.Parsers[Ring] = map[string]*Parsers{}
