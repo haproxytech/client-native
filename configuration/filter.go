@@ -323,6 +323,13 @@ func ParseFilter(f types.Filter) *models.Filter {
 			CacheName: v.Name,
 			Metadata:  parseMetadata(v.Comment),
 		}
+	case *filters.Lua:
+		return &models.Filter{
+			Type:     models.FilterTypeLua,
+			LuaName:  v.Name,
+			LuaArgs:  append([]string{}, v.Args...),
+			Metadata: misc.ParseMetadata(v.Comment),
+		}
 	}
 	return nil
 }
@@ -388,6 +395,12 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 			Key:           f.Key,
 			Table:         &f.Table,
 			Comment:       comment,
+		}
+	case models.FilterTypeLua:
+		return &filters.Lua{
+			Name:    f.LuaName,
+			Args:    append([]string{}, f.LuaArgs...),
+			Comment: comment,
 		}
 	}
 	return nil
