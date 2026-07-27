@@ -2,8 +2,8 @@ PROJECT_PATH=${PWD}
 DOCKER_HAPROXY_VERSION?=3.3
 SWAGGER_VERSION=v0.32.3
 GO_VERSION:=${shell go mod edit -json | jq -r .Go}
-GOLANGCI_LINT_VERSION=2.8.0
-CHECK_COMMIT=5.2.0
+GOLANGCI_LINT_VERSION=2.12.2
+CHECK_COMMIT=5.7.1
 GO_METHOD_GEN_VERSION:=${shell go mod edit -json | jq -r '.Require[] | select(.Path == "github.com/haproxytech/go-method-gen") | .Version'}
 
 .PHONY: test

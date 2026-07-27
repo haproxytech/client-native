@@ -176,7 +176,7 @@ func ParseUser(u types.User) *models.User {
 
 func SerializeUser(u models.User) types.User {
 	if u.SecurePassword == nil {
-		u.SecurePassword = misc.BoolP(false)
+		u.SecurePassword = new(false)
 	}
 
 	var groups []string

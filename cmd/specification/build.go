@@ -82,16 +82,17 @@ func expandRef(refValue string, absPath string, prefix string) string {
 	}
 	retValStr := buf.String()
 
-	var indentedRetValStr string
+	var indentedRetValStr strings.Builder
 	var indentedLine string
 	for line := range strings.SplitSeq(retValStr, "\n") {
 		if strings.TrimSpace(line) != "" {
 			indentedLine = prefix + "" + line + "\n"
-			indentedRetValStr += indentedLine //nolint: perfsprint
+			indentedRetValStr.WriteString(indentedLine)
 		}
 	}
 
-	return indentedRetValStr[:len(indentedRetValStr)-1]
+	ret := indentedRetValStr.String()
+	return ret[:len(ret)-1]
 }
 
 //nolint:gocognit,modernize,perfsprint

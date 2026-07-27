@@ -1,7 +1,7 @@
 ---
 variables:
   DOCKER_HOST: tcp://docker:2375
-  GO_VERSION: "1.25"
+  GO_VERSION: "1.26"
   DOCKER_VERSION: "29.1"
 stages:
   - bots

@@ -18,6 +18,7 @@ linters:
     - goconst
     - godoclint
     - godot
+    - gomodguard
     - interfacebloat
     - ireturn
     - lll
@@ -39,6 +40,16 @@ linters:
       - legacy
       - std-error-handling
     rules:
+      # //go:fix is a valid Go 1.25+ directive not yet known to the linter
+      - linters:
+          - gocheckcompilerdirectives
+        text: 'compiler directive unrecognized: //go:fix'
+      # taint-analysis findings (path traversal, SSRF, log injection) in
+      # internal developer/CI tooling, where inputs are trusted
+      - linters:
+          - gosec
+        path: ^(cmd|config-parser/generate)/
+        text: 'G70[346]'
       - path: (.+)\.go$
         text: 'unused-parameter: parameter ''comment'' seems to be unused'
       - path: (.+)\.go$

@@ -319,10 +319,10 @@ func parseOcspUpdateOptions(p parser.Parser) (*models.OcspUpdateOptions, error) 
 	switch ocspUpdateDisable {
 	case "disabled":
 		isEmpty = false
-		options.Disable = misc.BoolP(false)
+		options.Disable = new(false)
 	case "enabled":
 		isEmpty = false
-		options.Disable = misc.BoolP(true)
+		options.Disable = new(true)
 	default:
 		options.Disable = nil
 	}
@@ -936,8 +936,8 @@ func parseEnvironmentOptions(p parser.Parser) (*models.EnvironmentOptions, error
 		}
 		for _, e := range envs {
 			env := &models.PresetEnv{
-				Name:  misc.Ptr(e.Key),
-				Value: misc.Ptr(e.Value),
+				Name:  new(e.Key),
+				Value: new(e.Value),
 			}
 			presetEnvs = append(presetEnvs, env)
 		}
@@ -2468,7 +2468,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 		for _, e := range errCodesParser {
 			errCode := &models.HTTPCodes{
-				Value: misc.Ptr(e.Value),
+				Value: new(e.Value),
 			}
 			errCodes = append(errCodes, errCode)
 		}
@@ -2484,7 +2484,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 		for _, f := range failCodesParser {
 			failCode := &models.HTTPCodes{
-				Value: misc.Ptr(f.Value),
+				Value: new(f.Value),
 			}
 			failCodes = append(failCodes, failCode)
 		}
