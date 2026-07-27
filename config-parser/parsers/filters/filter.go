@@ -17,6 +17,8 @@ limitations under the License.
 package filters
 
 import (
+	"strings"
+
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -64,7 +66,12 @@ func (h *Filters) Parse(line string, parts []string, comment string) (string, er
 		case "bwlim-in", "bwlim-out":
 			err = h.ParseFilter(&BandwidthLimit{}, parts, comment)
 		default:
-			return "", &errors.ParseError{Parser: "FilterLines", Line: line}
+			// Lua filters use a dynamic keyword "lua.<name>", so they can't be matched as a fixed case above.
+			if strings.HasPrefix(parts[1], "lua.") {
+				err = h.ParseFilter(&Lua{}, parts, comment)
+			} else {
+				return "", &errors.ParseError{Parser: "FilterLines", Line: line}
+			}
 		}
 		if err != nil {
 			return "", err
