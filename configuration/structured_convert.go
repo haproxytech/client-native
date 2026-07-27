@@ -45,7 +45,7 @@ func namedResourceArrayToMap[T any](namedResource []*T) (map[string]T, error) {
 func getKey(obj any, keyName string) (string, error) {
 	value := reflect.ValueOf(obj)
 	// If Pointer, first get the pointed value
-	if value.Kind() == reflect.Ptr {
+	if value.Kind() == reflect.Pointer {
 		value = value.Elem()
 	}
 	if value.Kind() != reflect.Struct {

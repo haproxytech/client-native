@@ -15,6 +15,7 @@
 
 package misc
 
+//go:fix inline
 func Ptr[V any](v V) *V {
-	return &v
+	return new(v)
 }

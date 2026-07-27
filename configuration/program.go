@@ -23,7 +23,6 @@ import (
 	parsererrors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 
-	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -193,7 +192,7 @@ func ParseProgram(p parser.Parser, name string) (*models.Program, error) {
 		}
 	}
 
-	program.Command = misc.StringP(data.(*types.Command).Args)
+	program.Command = new(data.(*types.Command).Args)
 
 	data, err = p.Get(parser.Program, name, "user")
 	if err == nil {

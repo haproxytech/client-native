@@ -190,8 +190,9 @@ func SerializeSize(n int64) string {
 	return str
 }
 
+//go:fix inline
 func StringP(s string) *string {
-	return &s
+	return new(s)
 }
 
 func Int64P(i int) *int64 {
@@ -199,8 +200,9 @@ func Int64P(i int) *int64 {
 	return &ret
 }
 
+//go:fix inline
 func BoolP(b bool) *bool {
-	return &b
+	return new(b)
 }
 
 func RandomString(n int) string {

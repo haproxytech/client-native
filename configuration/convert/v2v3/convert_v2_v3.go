@@ -6,8 +6,6 @@ import (
 	"errors"
 	"reflect"
 	"slices"
-
-	"github.com/haproxytech/client-native/v6/misc"
 )
 
 // V2Tov3 converts a Structured type from v2 to v3
@@ -78,7 +76,7 @@ func NamedResourceArrayToMapWithKey[T any](namedResource []*T, key string) (map[
 func getKey(obj any, keyName string) (string, error) {
 	value := reflect.ValueOf(obj)
 	// If Pointer, first get the pointed value
-	if value.Kind() == reflect.Ptr {
+	if value.Kind() == reflect.Pointer {
 		value = value.Elem()
 	}
 	if value.Kind() != reflect.Struct {
@@ -107,15 +105,15 @@ func SortListByIndex[T any](list []*T) {
 func getIndex(obj any) (*int64, error) {
 	value := reflect.ValueOf(obj)
 	// If Pointer, first get the pointed value
-	if value.Kind() == reflect.Ptr {
+	if value.Kind() == reflect.Pointer {
 		value = value.Elem()
 	}
 	if value.Kind() != reflect.Struct {
-		return misc.Ptr[int64](-1), errors.New("object is not a struct")
+		return new(int64(-1)), errors.New("object is not a struct")
 	}
 	nameField := value.FieldByName("Index")
 	if !nameField.IsValid() || !nameField.CanInterface() {
-		return misc.Ptr[int64](-1), errors.New("object does not have an exportable 'Index' field")
+		return new(int64(-1)), errors.New("object does not have an exportable 'Index' field")
 	}
 	index := nameField.Interface().(*int64)
 	return index, nil

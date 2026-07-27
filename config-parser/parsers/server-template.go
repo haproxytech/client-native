@@ -55,7 +55,7 @@ func (h *ServerTemplate) Result() ([]common.ReturnResultLine, error) {
 		sb.WriteString(" ")
 		sb.WriteString(template.Fqdn)
 		if template.Port != 0 {
-			sb.WriteString(fmt.Sprintf(":%d", template.Port))
+			fmt.Fprintf(&sb, ":%d", template.Port)
 		}
 		params := params.ServerOptionsString(template.Params)
 		if params != "" {
