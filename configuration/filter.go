@@ -434,7 +434,7 @@ func ParseFilterSequences(t, pName string, p parser.Parser) ([]*models.FilterSeq
 	out := make([]*models.FilterSequence, 0, len(entries))
 	for _, entry := range entries {
 		out = append(out, &models.FilterSequence{
-			Direction: misc.StringP(entry.Direction),
+			Direction: new(entry.Direction),
 			Filters:   append([]string(nil), entry.Filters...),
 			Metadata:  misc.ParseMetadata(entry.Comment),
 		})

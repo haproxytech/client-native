@@ -94,7 +94,7 @@ func logStderr(p parser.Parser, name string) ([]*models.FCGILogStderr, error) {
 
 		if len(log.SampleRange) > 0 && log.SampleSize > 0 {
 			l.Sample = &models.FCGILogStderrSample{
-				Ranges: misc.StringP(log.SampleRange),
+				Ranges: new(log.SampleRange),
 				Size:   misc.Int64P(int(log.SampleSize)),
 			}
 		}

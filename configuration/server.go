@@ -579,7 +579,7 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			if v.Name == "quic-cc-algo" {
 				serverParams.QuicCcAlgo = v.Value
 				if len(v.Params) >= 1 && len(v.Params[0]) > 0 {
-					serverParams.QuicCcAlgoMaxWindow = misc.Ptr(*misc.ParseSize(v.Params[0]) / 1024)
+					serverParams.QuicCcAlgoMaxWindow = new(*misc.ParseSize(v.Params[0]) / 1024)
 				}
 			}
 		}

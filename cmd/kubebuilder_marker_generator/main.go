@@ -52,7 +52,8 @@ func generate(fileName string) error { //nolint:gocognit
 							for _, comment := range comments {
 								if strings.HasPrefix(comment, "// Enum: [") {
 									field.Decorations().Before = dst.NewLine
-									newComment := kubebuilderValidationMarker + `Enum=`
+									var newComment strings.Builder
+									newComment.WriteString(kubebuilderValidationMarker + `Enum=`)
 									comment = strings.TrimPrefix(comment, "// Enum: [")
 									comment = strings.TrimSuffix(comment, "]")
 									// We must keep empty strings:
@@ -61,13 +62,13 @@ func generate(fileName string) error { //nolint:gocognit
 									for enum := range strings.SplitSeq(comment, ",") {
 										enum = strings.Trim(enum, "\"")
 										if enum == "" {
-											newComment += `""`
+											newComment.WriteString(`""`)
 										}
-										newComment += enum //nolint: perfsprint
-										newComment += ";"
+										newComment.WriteString(enum)
+										newComment.WriteString(";")
 									}
-									field.Decorations().Start.Append(newComment)
-									log.Printf("Adding comment for: %s: %s %s\n", fileName, field.Names[0].Name, newComment)
+									field.Decorations().Start.Append(newComment.String())
+									log.Printf("Adding comment for: %s: %s %s\n", fileName, field.Names[0].Name, newComment.String())
 								}
 								if strings.HasPrefix(comment, "// Pattern: ") {
 									addSimpleMarker(field, fileName, comment, "Pattern", "string")
