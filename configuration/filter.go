@@ -317,6 +317,12 @@ func ParseFilter(f types.Filter) *models.Filter {
 			Type:      "cache",
 			CacheName: v.Name,
 		}
+	case *filters.Lua:
+		return &models.Filter{
+			Type:    models.FilterTypeLua,
+			LuaName: v.Name,
+			LuaArgs: append([]string{}, v.Args...),
+		}
 	}
 	return nil
 }
@@ -366,6 +372,11 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 			Limit:         misc.SerializeSize(f.Limit),
 			Key:           f.Key,
 			Table:         &f.Table,
+		}
+	case models.FilterTypeLua:
+		return &filters.Lua{
+			Name: f.LuaName,
+			Args: append([]string{}, f.LuaArgs...),
 		}
 	}
 	return nil

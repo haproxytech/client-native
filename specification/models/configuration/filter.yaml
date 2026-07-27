@@ -16,6 +16,7 @@ filter:
         - fcgi-app
         - spoe
         - trace
+        - lua
       x-nullable: false
     trace_name:
       type: string
@@ -146,6 +147,23 @@ filter:
         type:
           value: cache
           required: true
+    lua_name:
+      type: string
+      pattern: '^[^\s]+$'
+      description: Name of the Lua filter as registered by core.register_filter(), used in the 'filter lua.<name>' directive.
+      x-dependency:
+        type:
+          value: lua
+          required: true
+    lua_args:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+      description: Optional arguments passed to the Lua filter constructor.
+      x-dependency:
+        type:
+          value: lua
   additionalProperties: false
   example:
     type: trace

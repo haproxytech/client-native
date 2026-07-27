@@ -7419,6 +7419,23 @@ definitions:
               - bwlim-in
               - bwlim-out
         x-size: true
+      lua_args:
+        description: Optional arguments passed to the Lua filter constructor.
+        items:
+          type: string
+        type: array
+        x-dependency:
+          type:
+            value: lua
+        x-omitempty: true
+      lua_name:
+        description: Name of the Lua filter as registered by core.register_filter(), used in the 'filter lua.<name>' directive.
+        pattern: ^[^\s]+$
+        type: string
+        x-dependency:
+          type:
+            required: true
+            value: lua
       min_size:
         description: |-
           The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
@@ -7490,6 +7507,7 @@ definitions:
           - fcgi-app
           - spoe
           - trace
+          - lua
         type: string
         x-nullable: false
     required:
