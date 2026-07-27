@@ -189,7 +189,7 @@ func TestFilterDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 17 {
+		if len(listDiffFields) != 19 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -199,7 +199,7 @@ func TestFilterDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Filter to be different in 17 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Filter to be different in 19 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

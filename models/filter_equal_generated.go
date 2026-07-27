@@ -29,6 +29,8 @@ func (rec Filter) Equal(obj Filter, opts ...eqdiff.GoMethodGenOptions) bool {
 		rec.DefaultPeriod == obj.DefaultPeriod &&
 		rec.Key == obj.Key &&
 		rec.Limit == obj.Limit &&
+		EqualSliceString(rec.LuaArgs, obj.LuaArgs, opts...) &&
+		rec.LuaName == obj.LuaName &&
 		rec.MinSize == obj.MinSize &&
 		rec.SpoeConfig == obj.SpoeConfig &&
 		rec.SpoeEngine == obj.SpoeEngine &&
