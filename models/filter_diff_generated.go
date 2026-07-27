@@ -44,6 +44,15 @@ func (rec Filter) Diff(obj Filter, opts ...eqdiff.GoMethodGenOptions) map[string
 	if rec.Limit != obj.Limit {
 		diff["Limit"] = []interface{}{rec.Limit, obj.Limit}
 	}
+	for diffKey, diffValue := range DiffSliceString(rec.LuaArgs, obj.LuaArgs, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["LuaArgs"+diffKey] = diffValue
+	}
+	if rec.LuaName != obj.LuaName {
+		diff["LuaName"] = []interface{}{rec.LuaName, obj.LuaName}
+	}
 	if rec.MinSize != obj.MinSize {
 		diff["MinSize"] = []interface{}{rec.MinSize, obj.MinSize}
 	}

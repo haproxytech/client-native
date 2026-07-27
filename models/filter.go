@@ -72,6 +72,14 @@ type Filter struct {
 	// It follows the HAProxy size format and is expressed in bytes.
 	Limit int64 `json:"limit,omitempty"`
 
+	// Optional arguments passed to the Lua filter constructor.
+	LuaArgs []string `json:"lua_args,omitempty"`
+
+	// Name of the Lua filter as registered by core.register_filter(), used in the 'filter lua.<name>' directive.
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	LuaName string `json:"lua_name,omitempty"`
+
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
@@ -111,8 +119,8 @@ type Filter struct {
 
 	// type
 	// Required: true
-	// Enum: ["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace"]
-	// +kubebuilder:validation:Enum=bwlim-in;bwlim-out;cache;compression;fcgi-app;spoe;trace;
+	// Enum: ["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace","lua"]
+	// +kubebuilder:validation:Enum=bwlim-in;bwlim-out;cache;compression;fcgi-app;spoe;trace;lua;
 	Type string `json:"type"`
 }
 
@@ -129,6 +137,10 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCacheName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -190,6 +202,18 @@ func (m *Filter) validateCacheName(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Filter) validateLuaName(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("lua_name", "body", m.LuaName, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Filter) validateSpoeConfig(formats strfmt.Registry) error {
 	if swag.IsZero(m.SpoeConfig) { // not required
 		return nil
@@ -230,7 +254,7 @@ var filterTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace","lua"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -260,6 +284,9 @@ const (
 
 	// FilterTypeTrace captures enum value "trace"
 	FilterTypeTrace string = "trace"
+
+	// FilterTypeLua captures enum value "lua"
+	FilterTypeLua string = "lua"
 )
 
 // prop value enum
