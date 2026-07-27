@@ -1080,7 +1080,7 @@ func (s *SectionParser) statsOptions() any { //nolint:gocognit
 			}
 		case *stats.ShowDesc:
 			if v.Desc != "" {
-				opt.StatsShowDesc = misc.StringP(v.Desc)
+				opt.StatsShowDesc = new(v.Desc)
 			}
 		case *stats.MaxConn:
 			d, err := v.Maxconn.Get(false)
@@ -1094,7 +1094,7 @@ func (s *SectionParser) statsOptions() any { //nolint:gocognit
 				opt.StatsRefreshDelay = misc.ParseTimeoutDefaultSeconds(v.Delay)
 			}
 		case *stats.ShowNode:
-			opt.StatsShowNodeName = misc.StringP(v.Name)
+			opt.StatsShowNodeName = new(v.Name)
 		case *stats.URI:
 			if v.Prefix != "" {
 				opt.StatsURIPrefix = v.Prefix
@@ -1110,20 +1110,20 @@ func (s *SectionParser) statsOptions() any { //nolint:gocognit
 		case *stats.Realm:
 			if v != nil {
 				opt.StatsRealm = true
-				opt.StatsRealmRealm = misc.StringP(v.Realm)
+				opt.StatsRealmRealm = new(v.Realm)
 			}
 		case *stats.Auth:
 			if v != nil {
 				opt.StatsAuths = append(opt.StatsAuths, &models.StatsAuth{
-					User:   misc.StringP(v.User),
-					Passwd: misc.StringP(v.Password),
+					User:   new(v.User),
+					Passwd: new(v.Password),
 				})
 			}
 		case *stats.HTTPRequest:
 			if v != nil && s.Section == parser.Backends {
 				parts := strings.Split(v.Type, " ")
 				httpRequest := &models.StatsHTTPRequest{
-					Type: misc.StringP(parts[0]),
+					Type: new(parts[0]),
 				}
 				if len(parts) > 2 && parts[0] == "auth" && parts[1] == "realm" {
 					httpRequest.Realm = strings.Join(parts[2:], " ")
@@ -1157,7 +1157,7 @@ func (s *SectionParser) monitorFail() any {
 		d := data.(*types.MonitorFail)
 		return &models.MonitorFail{
 			Cond:     &d.Condition,
-			CondTest: misc.StringP(strings.Join(d.ACLList, " ")),
+			CondTest: new(strings.Join(d.ACLList, " ")),
 		}
 	}
 	return nil
@@ -1576,7 +1576,7 @@ func CreateEditSection(object any, section parser.Section, pName string, p parse
 // CreateEditSection creates or updates a section in the parser based on the provided object
 func (s *SectionObject) CreateEditSection() error {
 	objValue := reflect.ValueOf(s.Object)
-	if objValue.Kind() == reflect.Ptr {
+	if objValue.Kind() == reflect.Pointer {
 		objValue = reflect.ValueOf(s.Object).Elem()
 	}
 	for i := range objValue.NumField() {
@@ -2800,7 +2800,7 @@ func (s *SectionObject) clitcpkaIdle(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("clitcpka-idle", nil)
 	}
-	if field.Kind() == reflect.Ptr {
+	if field.Kind() == reflect.Pointer {
 		field = field.Elem()
 	}
 	v := field.Int()
@@ -2812,7 +2812,7 @@ func (s *SectionObject) clitcpkaIntvl(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("clitcpka-intvl", nil)
 	}
-	if field.Kind() == reflect.Ptr {
+	if field.Kind() == reflect.Pointer {
 		field = field.Elem()
 	}
 	v := field.Int()
@@ -2824,7 +2824,7 @@ func (s *SectionObject) srvtcpkaIdle(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("srvtcpka-idle", nil)
 	}
-	if field.Kind() == reflect.Ptr {
+	if field.Kind() == reflect.Pointer {
 		field = field.Elem()
 	}
 	v := field.Int()
@@ -2836,7 +2836,7 @@ func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("srvtcpka-intvl", nil)
 	}
-	if field.Kind() == reflect.Ptr {
+	if field.Kind() == reflect.Pointer {
 		field = field.Elem()
 	}
 	v := field.Int()
@@ -2845,7 +2845,7 @@ func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
 }
 
 func (s *SectionObject) serverStateFileName(field reflect.Value) error {
-	if field.Kind() == reflect.Ptr {
+	if field.Kind() == reflect.Pointer {
 		field = field.Elem()
 	}
 	v := field.String()
@@ -2856,7 +2856,7 @@ func (s *SectionObject) serverStateFileName(field reflect.Value) error {
 }
 
 func (s *SectionObject) description(field reflect.Value) error {
-	if field.Kind() == reflect.Ptr {
+	if field.Kind() == reflect.Pointer {
 		field = field.Elem()
 	}
 	v := field.String()
@@ -2926,7 +2926,7 @@ func (s *SectionObject) defaultBind(field reflect.Value) error {
 }
 
 func (s *SectionObject) httpSendNameHeader(field reflect.Value) error {
-	if field.Kind() == reflect.Ptr {
+	if field.Kind() == reflect.Pointer {
 		if field.IsNil() {
 			return s.set("http-send-name-header", nil)
 		}
@@ -3017,7 +3017,7 @@ func (s *SectionObject) shard(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("shards", nil)
 		}
-		if field.Kind() == reflect.Ptr {
+		if field.Kind() == reflect.Pointer {
 			field = field.Elem()
 		}
 		v := field.Int()
@@ -3183,7 +3183,7 @@ func valueIsNil(v reflect.Value) bool {
 		return v.String() == ""
 	case reflect.Bool:
 		return !v.Bool()
-	case reflect.Ptr, reflect.Map, reflect.Slice, reflect.Interface, reflect.Chan, reflect.Func:
+	case reflect.Pointer, reflect.Map, reflect.Slice, reflect.Interface, reflect.Chan, reflect.Func:
 		return v.IsNil()
 	default:
 		return false
@@ -3196,7 +3196,7 @@ func translateToParserData(field reflect.Value) common.ParserData {
 		return types.Int64C{Value: field.Int()}
 	case reflect.String:
 		return types.StringC{Value: field.String()}
-	case reflect.Ptr:
+	case reflect.Pointer:
 		return types.Int64C{Value: field.Elem().Int()}
 	case reflect.Bool:
 		return types.Enabled{}

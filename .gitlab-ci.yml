@@ -1,7 +1,7 @@
 ---
 variables:
   DOCKER_HOST: tcp://docker:2375
-  GO_VERSION: "1.25"
+  GO_VERSION: "1.26"
   DOCKER_VERSION: "29.1"
 stages:
   - bots
@@ -218,7 +218,7 @@ test-equal:
     - docker image tag $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION haproxytech/haproxy-alpine:$HAPROXY_VERSION
   script:
     - DOCKER_HAPROXY_VERSION=$HAPROXY_VERSION make e2e-docker
-HAProxy-3.3:
+HAProxy-3.4:
   extends: .e2e
   variables:
-    HAPROXY_VERSION: "3.3"
+    HAPROXY_VERSION: "3.4"

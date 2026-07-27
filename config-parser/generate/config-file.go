@@ -190,16 +190,16 @@ func (c *ConfigFile) AddParserData(parser Data) { //nolint:gocognit
 	}
 	if !parser.NoSections {
 		for _, line := range lines {
-			c.Tests.WriteString(fmt.Sprintf("  {`  %s\n`, %d},\n", line, len(sections)))
+			fmt.Fprintf(&c.Tests, "  {`  %s\n`, %d},\n", line, len(sections))
 		}
 		for _, line := range linesDefaults {
-			c.Tests.WriteString(fmt.Sprintf("  {`  %s\n`, 1},\n", line))
+			fmt.Fprintf(&c.Tests, "  {`  %s\n`, 1},\n", line)
 		}
 		for _, line := range linesFrontend {
-			c.Tests.WriteString(fmt.Sprintf("  {`  %s\n`, 1},\n", line))
+			fmt.Fprintf(&c.Tests, "  {`  %s\n`, 1},\n", line)
 		}
 		for _, line := range linesBackend {
-			c.Tests.WriteString(fmt.Sprintf("  {`  %s\n`, 1},\n", line))
+			fmt.Fprintf(&c.Tests, "  {`  %s\n`, 1},\n", line)
 		}
 	}
 }
@@ -318,7 +318,7 @@ func (c *ConfigFile) StringFiles(baseFolder string) {
 		}
 		sort.Strings(sortedNames)
 		for _, name := range sortedNames {
-			testFile.WriteString(fmt.Sprintf("		{\"%s\", %s},\n", name, name))
+			fmt.Fprintf(&testFile, "		{\"%s\", %s},\n", name, name)
 		}
 		testFile.WriteString(testFooter)
 		saveFile(path.Join(baseFolder, sectionName+"_test.go"), testFile.String())

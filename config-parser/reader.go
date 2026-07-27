@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -159,8 +160,8 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 		}
 	}
 
-	for i := len(parsers) - 1; i >= 0; i-- {
-		parser := parsers[i]
+	for _, v := range slices.Backward(parsers) {
+		parser := v
 		if p.Options.Log {
 			p.Options.Logger.Tracef("%susing parser [%s]", p.Options.LogPrefix, parser.GetParserName())
 		}

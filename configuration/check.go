@@ -69,7 +69,7 @@ func parseHAProxyCheckError(output string, transactionID ...string) string { //n
 	var b strings.Builder
 
 	if len(transactionID) > 0 && transactionID[0] != "" {
-		b.WriteString(fmt.Sprintf("err transactionId=%s \n", transactionID[0]))
+		fmt.Fprintf(&b, "err transactionId=%s \n", transactionID[0])
 	}
 
 	for lineWhole := range strings.SplitSeq(output, "\n") {
@@ -93,9 +93,9 @@ func parseHAProxyCheckError(output string, transactionID ...string) string { //n
 				if len(fParts) > 1 {
 					lNo, err := strconv.ParseInt(strings.TrimSuffix(fParts[1], "]"), 10, 64)
 					if err == nil {
-						b.WriteString(fmt.Sprintf("line=%d msg=\"%s\"\n", lNo, strings.TrimSpace(msgB.String())))
+						fmt.Fprintf(&b, "line=%d msg=\"%s\"\n", lNo, strings.TrimSpace(msgB.String()))
 					} else {
-						b.WriteString(fmt.Sprintf("msg=\"%s\"\n", strings.TrimSpace(msgB.String())))
+						fmt.Fprintf(&b, "msg=\"%s\"\n", strings.TrimSpace(msgB.String()))
 					}
 				}
 			} else if len(parts) > 1 {
@@ -104,7 +104,7 @@ func parseHAProxyCheckError(output string, transactionID ...string) string { //n
 					msgB.WriteString(parts[i])
 					msgB.WriteString(" ")
 				}
-				b.WriteString(fmt.Sprintf("msg=\"%s\"\n", strings.TrimSpace(msgB.String())))
+				fmt.Fprintf(&b, "msg=\"%s\"\n", strings.TrimSpace(msgB.String()))
 			}
 		}
 	}
