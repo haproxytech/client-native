@@ -417,10 +417,10 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 				b.QuicCcAlgo = v.Value
 				switch len(v.Params) {
 				case 1:
-					b.QuicCcAlgoMaxWindow = misc.Ptr(*misc.ParseSize(v.Params[0]) / 1024)
+					b.QuicCcAlgoMaxWindow = new(*misc.ParseSize(v.Params[0]) / 1024)
 				case 2:
 					if len(v.Params[0]) > 0 {
-						b.QuicCcAlgoMaxWindow = misc.Ptr(*misc.ParseSize(v.Params[0]) / 1024)
+						b.QuicCcAlgoMaxWindow = new(*misc.ParseSize(v.Params[0]) / 1024)
 					}
 					n, err := strconv.ParseInt(v.Params[1], 10, 64)
 					if err == nil {

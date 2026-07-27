@@ -123,7 +123,7 @@ func (p *configParser) StringWithHash() (string, error) {
 	content := p.String()
 	//nolint:gosec
 	hash := md5.Sum([]byte(content))
-	result.WriteString(fmt.Sprintf("# _md5hash=%x\n", hash))
+	fmt.Fprintf(&result, "# _md5hash=%x\n", hash)
 	result.WriteString(content)
 	if err := p.Set(Comments, CommentsSectionName, "# _md5hash", &types.ConfigHash{Value: hex.EncodeToString(hash[:])}); err != nil {
 		return "", err

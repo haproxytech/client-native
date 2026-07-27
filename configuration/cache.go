@@ -25,7 +25,6 @@ import (
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 
-	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -83,7 +82,7 @@ func (c *client) GetCache(name string, transactionID string) (int64, *models.Cac
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Cache %s does not exist", name))
 	}
 
-	cache := &models.Cache{Name: misc.StringP(name)}
+	cache := &models.Cache{Name: new(name)}
 	if err = ParseCacheSection(p, cache); err != nil {
 		return 0, nil, err
 	}
@@ -208,7 +207,7 @@ func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
 	if data, err = p.Get(parser.Cache, name, "process-vary", false); err == nil {
 		d, ok := data.(*types.ProcessVary)
 		if ok && d != nil {
-			cache.ProcessVary = misc.BoolP(d.On)
+			cache.ProcessVary = new(d.On)
 		}
 	}
 

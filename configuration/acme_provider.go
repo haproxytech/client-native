@@ -204,7 +204,7 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		if !ok {
 			return nil, misc.CreateTypeAssertError("bits")
 		}
-		acme.Bits = misc.Ptr(ic.Value)
+		acme.Bits = new(ic.Value)
 	}
 
 	// acme-vars

@@ -303,7 +303,7 @@ func (s *Service) loadNodes() (bool, error) {
 			modified: false,
 		}
 		if server.Port != nil {
-			sNode.port = misc.Ptr(*server.Port)
+			sNode.port = new(*server.Port)
 		}
 		if server.Maintenance == "enabled" {
 			sNode.disabled = true
@@ -329,7 +329,7 @@ func (s *Service) updateConfig() (bool, error) {
 				},
 			}
 			if node.port != nil {
-				server.Port = misc.Ptr(*node.port)
+				server.Port = new(*node.port)
 			} else {
 				server.Port = nil
 			}
@@ -376,7 +376,7 @@ func (s *Service) setServer(server ServiceServer) error {
 			sNode.disabled = false
 			sNode.address = server.Address
 			if server.Port != nil {
-				sNode.port = misc.Ptr(*server.Port)
+				sNode.port = new(*server.Port)
 			} else {
 				sNode.port = nil
 			}
@@ -435,7 +435,7 @@ func (s *Service) swapDisabledNode(index int) {
 			s.nodes[i].modified = true
 			s.nodes[index].address = s.nodes[i].address
 			if s.nodes[i].port != nil {
-				s.nodes[index].port = misc.Ptr(*s.nodes[i].port)
+				s.nodes[index].port = new(*s.nodes[i].port)
 			}
 			s.nodes[index].disabled = false
 			s.nodes[index].modified = true

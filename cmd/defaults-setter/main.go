@@ -169,32 +169,32 @@ func generateAssignments(properties map[string]Property, structName string, file
 					assignment.WriteString("m.")
 					assignment.WriteString(goFieldName)
 					assignment.WriteString(` = misc.Ptr("`)
-					assignment.WriteString(fmt.Sprintf("%v", prop.Default))
+					fmt.Fprintf(&assignment, "%v", prop.Default)
 					assignment.WriteString(`")`)
 				case "integer":
 					assignment.WriteString("m.")
 					assignment.WriteString(goFieldName)
 					assignment.WriteString(" = misc.Ptr(int64(")
-					assignment.WriteString(fmt.Sprintf("%v", prop.Default))
+					fmt.Fprintf(&assignment, "%v", prop.Default)
 					assignment.WriteString("))")
 				case "number":
 					assignment.WriteString("m.")
 					assignment.WriteString(goFieldName)
 					assignment.WriteString(" = misc.Ptr(float64(")
-					assignment.WriteString(fmt.Sprintf("%v", prop.Default))
+					fmt.Fprintf(&assignment, "%v", prop.Default)
 					assignment.WriteString("))")
 				case "boolean":
 					assignment.WriteString("m.")
 					assignment.WriteString(goFieldName)
 					assignment.WriteString(" = misc.Ptr(")
-					assignment.WriteString(fmt.Sprintf("%v", prop.Default))
+					fmt.Fprintf(&assignment, "%v", prop.Default)
 					assignment.WriteString(")")
 				default:
 					log.Printf("unhandled pointer type for field %s", goFieldName)
 					assignment.WriteString("m.")
 					assignment.WriteString(goFieldName)
 					assignment.WriteString(" = misc.Ptr(")
-					assignment.WriteString(fmt.Sprintf("%v", prop.Default))
+					fmt.Fprintf(&assignment, "%v", prop.Default)
 					assignment.WriteString(")")
 				}
 			} else {
@@ -203,13 +203,13 @@ func generateAssignments(properties map[string]Property, structName string, file
 					assignment.WriteString("m.")
 					assignment.WriteString(goFieldName)
 					assignment.WriteString(` = "`)
-					assignment.WriteString(fmt.Sprintf("%v", prop.Default))
+					fmt.Fprintf(&assignment, "%v", prop.Default)
 					assignment.WriteString(`"`)
 				default:
 					assignment.WriteString("m.")
 					assignment.WriteString(goFieldName)
 					assignment.WriteString(" = ")
-					assignment.WriteString(fmt.Sprintf("%v", prop.Default))
+					fmt.Fprintf(&assignment, "%v", prop.Default)
 				}
 			}
 			assignment.WriteString("\n\t}")
