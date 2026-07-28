@@ -180,6 +180,29 @@ frontend test_delete
 				t.Errorf("Edit of an existing declare capture failed")
 			}
 
+			// re-read the edited declare captures to verify the edits were persisted
+			_, declareCapture, err = c.GetDeclareCapture(0, "test_replace", "")
+			if err != nil {
+				t.Error(err.Error())
+			}
+			if declareCapture.Type != "request" {
+				t.Errorf("Edited declare capture type %v returned, expected %v", declareCapture.Type, "request")
+			}
+			if declareCapture.Length != 12345 {
+				t.Errorf("Edited declare capture length %v returned, expected %v", declareCapture.Length, 12345)
+			}
+
+			_, declareCapture, err = c.GetDeclareCapture(1, "test_replace", "")
+			if err != nil {
+				t.Error(err.Error())
+			}
+			if declareCapture.Type != "response" {
+				t.Errorf("Edited declare capture type %v returned, expected %v", declareCapture.Type, "response")
+			}
+			if declareCapture.Length != 12345 {
+				t.Errorf("Edited declare capture length %v returned, expected %v", declareCapture.Length, 12345)
+			}
+
 			// add tests
 			index = int64(0)
 			add := models.Capture{

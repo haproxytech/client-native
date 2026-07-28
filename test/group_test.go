@@ -253,6 +253,22 @@ userlist delete_test
 				t.Errorf("Replacing an existing group request failed")
 			}
 
+			// re-read the edited group to verify the edit was persisted
+			_, edited, err := c.GetGroup("zion", "replace_test", "")
+			if err != nil {
+				t.Error(err.Error())
+			}
+			if edited == nil {
+				t.Errorf("Expected the edited group instead of nil")
+			} else {
+				if edited.Name != edit.Name {
+					t.Errorf("Edited group name %v returned, expected %v", edited.Name, edit.Name)
+				}
+				if edited.Users != edit.Users {
+					t.Errorf("Edited group users %v returned, expected %v", edited.Users, edit.Users)
+				}
+			}
+
 			// test delete
 			if c.DeleteGroup("G0", "delete_test", "", 3) == nil {
 				t.Errorf("Attempt to delete a non existing group didn't throw and error")
