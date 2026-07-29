@@ -49,6 +49,7 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		rec.ErrorLogFormat == obj.ErrorLogFormat &&
 		EqualPointerErrorloc(rec.Errorloc302, obj.Errorloc302, opts...) &&
 		EqualPointerErrorloc(rec.Errorloc303, obj.Errorloc303, opts...) &&
+		EqualPointerForwarded(rec.Forwarded, obj.Forwarded, opts...) &&
 		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) &&
 		rec.From == obj.From &&
 		rec.GUID == obj.GUID &&

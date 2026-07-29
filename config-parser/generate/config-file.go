@@ -78,6 +78,7 @@ type Data struct {
 	HasTable           bool
 	Model              string // model name for swagger
 	Doc                string // url to docs
+	SetValidator       string // function used to validate data before Set stores it
 }
 
 type ConfigFile struct {

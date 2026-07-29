@@ -147,6 +147,12 @@ backend_base:
       x-dependency:
         mode:
           value: http
+    forwarded:
+      $ref: "#/definitions/forwarded"
+      x-omitempty: true
+      x-dependency:
+        mode:
+          value: http
     cookie:
       $ref: '#/definitions/cookie'
       x-dependency:

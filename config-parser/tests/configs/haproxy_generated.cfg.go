@@ -297,6 +297,7 @@ backend test
   log 127.0.0.1:1515 format rfc5424 sample 1-5:6 local2
   log 127.0.0.1:1515 sample 1:6 local2
   option forwardfor
+  option forwarded
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
   option use-small-buffers
   option mysql-check
@@ -1396,6 +1397,7 @@ defaults test
   log 127.0.0.1:1515 format rfc5424 sample 1,2-5:6 local2 info
   log 127.0.0.1:1515 format rfc5424 sample 1-5:6 local2
   log 127.0.0.1:1515 sample 1:6 local2
+  option forwarded
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
   option use-small-buffers
   unique-id-format %{+X}o_%ci:%cp_%fi:%fp_%Ts_%rt:%pid
@@ -2272,6 +2274,7 @@ frontend test
   log 127.0.0.1:1515 format rfc5424 sample 1-5:6 local2
   log 127.0.0.1:1515 sample 1:6 local2
   option forwardfor
+  option forwarded
   option httplog
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
   use_backend test if TRUE
@@ -4000,6 +4003,8 @@ var configTests = []configTest{{`  set-param name fmt if acl
 `, 1},
 	{`  option forwardfor
 `, 2},
+	{`  option forwarded
+`, 3},
 	{`  option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
 `, 2},
 	{`  type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
