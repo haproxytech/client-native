@@ -1076,7 +1076,8 @@ func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 			opt.StatsMaxconn = mc.Value
 		case *stats.Refresh:
 			if v.Delay != "" {
-				opt.StatsRefreshDelay = misc.ParseTimeout(v.Delay)
+				// the keyword defaults to seconds, not milliseconds
+				opt.StatsRefreshDelay = misc.ParseTimeoutDefaultSeconds(v.Delay)
 			}
 		case *stats.ShowNode:
 			opt.StatsShowNodeName = misc.StringP(v.Name)
@@ -2605,7 +2606,9 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 	}
 	if opt.StatsRefreshDelay != nil {
 		s := &stats.Refresh{
-			Delay: strconv.FormatInt(*opt.StatsRefreshDelay, 10),
+			// the model holds milliseconds while the keyword defaults to
+			// seconds, so the suffix must be explicit
+			Delay: fmt.Sprintf("%dms", *opt.StatsRefreshDelay),
 		}
 		ss = append(ss, s)
 	}
