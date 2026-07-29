@@ -131,6 +131,12 @@ func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["Errorloc303"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerForwarded(rec.Forwarded, obj.Forwarded, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Forwarded"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

@@ -129,6 +129,9 @@ type FrontendBase struct {
 	// errorloc303
 	Errorloc303 *Errorloc `json:"errorloc303,omitempty"`
 
+	// forwarded
+	Forwarded *Forwarded `json:"forwarded,omitempty"`
+
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
@@ -374,6 +377,10 @@ func (m *FrontendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateErrorloc303(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForwarded(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -924,6 +931,25 @@ func (m *FrontendBase) validateErrorloc303(formats strfmt.Registry) error {
 				return ve.ValidateName("errorloc303")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("errorloc303")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *FrontendBase) validateForwarded(formats strfmt.Registry) error {
+	if swag.IsZero(m.Forwarded) { // not required
+		return nil
+	}
+
+	if m.Forwarded != nil {
+		if err := m.Forwarded.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("forwarded")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("forwarded")
 			}
 			return err
 		}
@@ -2045,6 +2071,10 @@ func (m *FrontendBase) ContextValidate(ctx context.Context, formats strfmt.Regis
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateForwarded(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateForwardfor(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2201,6 +2231,27 @@ func (m *FrontendBase) contextValidateErrorloc303(ctx context.Context, formats s
 				return ve.ValidateName("errorloc303")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("errorloc303")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *FrontendBase) contextValidateForwarded(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Forwarded != nil {
+
+		if swag.IsZero(m.Forwarded) { // not required
+			return nil
+		}
+
+		if err := m.Forwarded.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("forwarded")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("forwarded")
 			}
 			return err
 		}

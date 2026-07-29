@@ -59,6 +59,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.ExternalCheck == obj.ExternalCheck &&
 		rec.ExternalCheckCommand == obj.ExternalCheckCommand &&
 		rec.ExternalCheckPath == obj.ExternalCheckPath &&
+		EqualPointerForwarded(rec.Forwarded, obj.Forwarded, opts...) &&
 		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) &&
 		rec.From == obj.From &&
 		EqualPointerInt64(rec.Fullconn, obj.Fullconn, opts...) &&

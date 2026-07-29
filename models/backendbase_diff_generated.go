@@ -145,6 +145,12 @@ func (rec BackendBase) Diff(obj BackendBase, opts ...eqdiff.GoMethodGenOptions) 
 		}
 		diff["ForcePersist"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerForwarded(rec.Forwarded, obj.Forwarded, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Forwarded"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey
@@ -691,6 +697,31 @@ func DiffPointerErrorloc(x, y *Errorloc, opts ...eqdiff.GoMethodGenOptions) map[
 }
 
 func DiffPointerForcePersist(x, y *ForcePersist, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	switch {
+	case x == nil:
+		diff[""] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[""] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerForwarded(x, y *Forwarded, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

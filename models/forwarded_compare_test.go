@@ -29,13 +29,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestFrontendBaseEqual(t *testing.T) {
+func TestForwardedEqual(t *testing.T) {
 	samples := []struct {
-		a, b FrontendBase
+		a, b Forwarded
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FrontendBase
-		var result FrontendBase
+		var sample Forwarded
+		var result Forwarded
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -50,7 +50,7 @@ func TestFrontendBaseEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b FrontendBase
+			a, b Forwarded
 		}{sample, result})
 	}
 
@@ -66,18 +66,18 @@ func TestFrontendBaseEqual(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FrontendBase to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected Forwarded to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendBaseEqualFalse(t *testing.T) {
+func TestForwardedEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b FrontendBase
+		a, b Forwarded
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FrontendBase
-		var result FrontendBase
+		var sample Forwarded
+		var result Forwarded
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -86,24 +86,14 @@ func TestFrontendBaseEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.Backlog = Ptr(*sample.Backlog + 1)
-		result.Clflog = !sample.Clflog
-		result.ClientFinTimeout = Ptr(*sample.ClientFinTimeout + 1)
-		result.ClientTimeout = Ptr(*sample.ClientTimeout + 1)
-		result.ClitcpkaCnt = Ptr(*sample.ClitcpkaCnt + 1)
-		result.ClitcpkaIdle = Ptr(*sample.ClitcpkaIdle + 1)
-		result.ClitcpkaIntvl = Ptr(*sample.ClitcpkaIntvl + 1)
-		result.Disabled = !sample.Disabled
-		result.Enabled = !sample.Enabled
-		result.HTTPKeepAliveTimeout = Ptr(*sample.HTTPKeepAliveTimeout + 1)
-		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
-		result.Httplog = !sample.Httplog
-		result.ID = Ptr(*sample.ID + 1)
-		result.Maxconn = Ptr(*sample.Maxconn + 1)
-		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
-		result.Tcplog = !sample.Tcplog
+		result.For = !sample.For
+		result.By = !sample.By
+		result.ByPort = !sample.ByPort
+		result.ForPort = !sample.ForPort
+		result.Host = !sample.Host
+		result.Proto = !sample.Proto
 		samples = append(samples, struct {
-			a, b FrontendBase
+			a, b Forwarded
 		}{sample, result})
 	}
 
@@ -119,18 +109,18 @@ func TestFrontendBaseEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FrontendBase to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected Forwarded to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendBaseDiff(t *testing.T) {
+func TestForwardedDiff(t *testing.T) {
 	samples := []struct {
-		a, b FrontendBase
+		a, b Forwarded
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FrontendBase
-		var result FrontendBase
+		var sample Forwarded
+		var result Forwarded
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -145,7 +135,7 @@ func TestFrontendBaseDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b FrontendBase
+			a, b Forwarded
 		}{sample, result})
 	}
 
@@ -161,18 +151,18 @@ func TestFrontendBaseDiff(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FrontendBase to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected Forwarded to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestFrontendBaseDiffFalse(t *testing.T) {
+func TestForwardedDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b FrontendBase
+		a, b Forwarded
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FrontendBase
-		var result FrontendBase
+		var sample Forwarded
+		var result Forwarded
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -181,31 +171,21 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.Backlog = Ptr(*sample.Backlog + 1)
-		result.Clflog = !sample.Clflog
-		result.ClientFinTimeout = Ptr(*sample.ClientFinTimeout + 1)
-		result.ClientTimeout = Ptr(*sample.ClientTimeout + 1)
-		result.ClitcpkaCnt = Ptr(*sample.ClitcpkaCnt + 1)
-		result.ClitcpkaIdle = Ptr(*sample.ClitcpkaIdle + 1)
-		result.ClitcpkaIntvl = Ptr(*sample.ClitcpkaIntvl + 1)
-		result.Disabled = !sample.Disabled
-		result.Enabled = !sample.Enabled
-		result.HTTPKeepAliveTimeout = Ptr(*sample.HTTPKeepAliveTimeout + 1)
-		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
-		result.Httplog = !sample.Httplog
-		result.ID = Ptr(*sample.ID + 1)
-		result.Maxconn = Ptr(*sample.Maxconn + 1)
-		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
-		result.Tcplog = !sample.Tcplog
+		result.For = !sample.For
+		result.By = !sample.By
+		result.ByPort = !sample.ByPort
+		result.ForPort = !sample.ForPort
+		result.Host = !sample.Host
+		result.Proto = !sample.Proto
 		samples = append(samples, struct {
-			a, b FrontendBase
+			a, b Forwarded
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 67 {
+		if len(listDiffFields) != 12 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -215,7 +195,7 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FrontendBase to be different in 67 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Forwarded to be different in 12 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

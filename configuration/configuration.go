@@ -320,6 +320,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, any) { //nol
 		return true, s.statsOptions()
 	case "Forwardfor":
 		return true, s.forwardfor()
+	case "Forwarded":
+		return true, s.forwarded()
 	case "Redispatch":
 		return true, s.redispatch()
 	case "Balance":
@@ -1006,6 +1008,32 @@ func (s *SectionParser) forwardfor() any {
 	return bff
 }
 
+func (s *SectionParser) forwarded() any {
+	data, err := s.get("option forwarded", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionForwarded)
+	enabled := models.ForwardedEnabledEnabled
+	if d.NoOption {
+		enabled = models.ForwardedEnabledDisabled
+	}
+	return &models.Forwarded{
+		Enabled:     &enabled,
+		Proto:       d.Proto,
+		Host:        d.Host,
+		HostExpr:    d.HostExpr,
+		By:          d.By,
+		ByExpr:      d.ByExpr,
+		ByPort:      d.ByPort,
+		ByPortExpr:  d.ByPortExpr,
+		For:         d.For,
+		ForExpr:     d.ForExpr,
+		ForPort:     d.ForPort,
+		ForPortExpr: d.ForPortExpr,
+	}
+}
+
 func (s *SectionParser) emailAlert() any {
 	data, err := s.get("email-alert", false)
 	if err != nil {
@@ -1552,6 +1580,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.statsOptions(field)
 	case "Forwardfor":
 		return true, s.forwardfor(field)
+	case "Forwarded":
+		return true, s.forwarded(field)
 	case "Redispatch":
 		return true, s.redispatch(field)
 	case "Balance":
@@ -2377,6 +2407,78 @@ func (s *SectionObject) forwardfor(field reflect.Value) error {
 		IfNone: ff.Ifnone,
 	}
 	return s.set("option forwardfor", d)
+}
+
+func (s *SectionObject) forwarded(field reflect.Value) error {
+	if valueIsNil(field) {
+		return s.set("option forwarded", nil)
+	}
+	ff, ok := field.Elem().Interface().(models.Forwarded)
+	if !ok {
+		return misc.CreateTypeAssertError("option forwarded")
+	}
+	d, err := optionForwardedFromModel(ff)
+	if err != nil {
+		return err
+	}
+	return s.set("option forwarded", d)
+}
+
+func optionForwardedFromModel(ff models.Forwarded) (*types.OptionForwarded, error) {
+	if ff.Enabled == nil {
+		return nil, fmt.Errorf("option forwarded enabled must be %q or %q", models.ForwardedEnabledEnabled, models.ForwardedEnabledDisabled)
+	}
+	switch *ff.Enabled {
+	case models.ForwardedEnabledDisabled:
+		if hasOptionForwardedAttributes(ff) {
+			return nil, errors.New("disabled option forwarded cannot have attributes")
+		}
+		return &types.OptionForwarded{NoOption: true}, nil
+	case models.ForwardedEnabledEnabled:
+		if err := validateOptionForwardedModelAttributes(ff); err != nil {
+			return nil, err
+		}
+		return &types.OptionForwarded{
+			Proto:       ff.Proto,
+			Host:        ff.Host,
+			HostExpr:    ff.HostExpr,
+			By:          ff.By,
+			ByExpr:      ff.ByExpr,
+			ByPort:      ff.ByPort,
+			ByPortExpr:  ff.ByPortExpr,
+			For:         ff.For,
+			ForExpr:     ff.ForExpr,
+			ForPort:     ff.ForPort,
+			ForPortExpr: ff.ForPortExpr,
+		}, nil
+	default:
+		return nil, fmt.Errorf("option forwarded enabled must be %q or %q", models.ForwardedEnabledEnabled, models.ForwardedEnabledDisabled)
+	}
+}
+
+func hasOptionForwardedAttributes(ff models.Forwarded) bool {
+	return ff.Proto || ff.Host || ff.HostExpr != "" || ff.By || ff.ByExpr != "" ||
+		ff.ByPort || ff.ByPortExpr != "" || ff.For || ff.ForExpr != "" ||
+		ff.ForPort || ff.ForPortExpr != ""
+}
+
+func validateOptionForwardedModelAttributes(ff models.Forwarded) error {
+	if ff.Host && ff.HostExpr != "" {
+		return errors.New("option forwarded host and host_expr cannot both be set")
+	}
+	if ff.By && ff.ByExpr != "" {
+		return errors.New("option forwarded by and by_expr cannot both be set")
+	}
+	if ff.ByPort && ff.ByPortExpr != "" {
+		return errors.New("option forwarded by_port and by_port_expr cannot both be set")
+	}
+	if ff.For && ff.ForExpr != "" {
+		return errors.New("option forwarded for and for_expr cannot both be set")
+	}
+	if ff.ForPort && ff.ForPortExpr != "" {
+		return errors.New("option forwarded for_port and for_port_expr cannot both be set")
+	}
+	return nil
 }
 
 func (s *SectionObject) monitorURI(field reflect.Value) error {

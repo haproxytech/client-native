@@ -1017,6 +1017,66 @@ const defaults_log1270011515sample16local2 = `
 defaults test
   log 127.0.0.1:1515 sample 1:6 local2
 `
+const defaults_optionforwarded = `
+defaults test
+  option forwarded
+`
+const defaults_optionforwardedproto = `
+defaults test
+  option forwarded proto
+`
+const defaults_optionforwardedhost = `
+defaults test
+  option forwarded host
+`
+const defaults_optionforwardedhostexprreqhdrhos = `
+defaults test
+  option forwarded host-expr %[req.hdr(host)]
+`
+const defaults_optionforwardedby = `
+defaults test
+  option forwarded by
+`
+const defaults_optionforwardedbyexprsrc = `
+defaults test
+  option forwarded by-expr %[src]
+`
+const defaults_optionforwardedbyport = `
+defaults test
+  option forwarded by_port
+`
+const defaults_optionforwardedbyportexprsrcport = `
+defaults test
+  option forwarded by_port-expr %[src_port]
+`
+const defaults_optionforwardedfor = `
+defaults test
+  option forwarded for
+`
+const defaults_optionforwardedforexprsrc = `
+defaults test
+  option forwarded for-expr %[src]
+`
+const defaults_optionforwardedforport = `
+defaults test
+  option forwarded for_port
+`
+const defaults_optionforwardedforportexprsrcpor = `
+defaults test
+  option forwarded for_port-expr %[src_port]
+`
+const defaults_optionforwardedprotohostexprreqh = `
+defaults test
+  option forwarded proto host-expr %[req.hdr(host)] by-expr %[src] by_port-expr %[src_port] for-expr %[src] for_port-expr %[src_port]
+`
+const defaults_optionforwardedcomment = `
+defaults test
+  option forwarded # comment
+`
+const defaults_nooptionforwarded = `
+defaults test
+  no option forwarded
+`
 const defaults_optionhttpchkOPTIONSHTTP11rnHost = `
 defaults test
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www

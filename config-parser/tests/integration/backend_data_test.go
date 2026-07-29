@@ -1041,6 +1041,66 @@ const backend_optionforwardforexceptAcomment = `
 backend test
   option forwardfor except A # comment
 `
+const backend_optionforwarded = `
+backend test
+  option forwarded
+`
+const backend_optionforwardedproto = `
+backend test
+  option forwarded proto
+`
+const backend_optionforwardedhost = `
+backend test
+  option forwarded host
+`
+const backend_optionforwardedhostexprreqhdrhos = `
+backend test
+  option forwarded host-expr %[req.hdr(host)]
+`
+const backend_optionforwardedby = `
+backend test
+  option forwarded by
+`
+const backend_optionforwardedbyexprsrc = `
+backend test
+  option forwarded by-expr %[src]
+`
+const backend_optionforwardedbyport = `
+backend test
+  option forwarded by_port
+`
+const backend_optionforwardedbyportexprsrcport = `
+backend test
+  option forwarded by_port-expr %[src_port]
+`
+const backend_optionforwardedfor = `
+backend test
+  option forwarded for
+`
+const backend_optionforwardedforexprsrc = `
+backend test
+  option forwarded for-expr %[src]
+`
+const backend_optionforwardedforport = `
+backend test
+  option forwarded for_port
+`
+const backend_optionforwardedforportexprsrcpor = `
+backend test
+  option forwarded for_port-expr %[src_port]
+`
+const backend_optionforwardedprotohostexprreqh = `
+backend test
+  option forwarded proto host-expr %[req.hdr(host)] by-expr %[src] by_port-expr %[src_port] for-expr %[src] for_port-expr %[src_port]
+`
+const backend_optionforwardedcomment = `
+backend test
+  option forwarded # comment
+`
+const backend_nooptionforwarded = `
+backend test
+  no option forwarded
+`
 const backend_optionhttpchkOPTIONSHTTP11rnHost = `
 backend test
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www

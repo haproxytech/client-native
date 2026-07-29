@@ -185,6 +185,12 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 	if rec.ExternalCheckPath != obj.ExternalCheckPath {
 		diff["ExternalCheckPath"] = []interface{}{rec.ExternalCheckPath, obj.ExternalCheckPath}
 	}
+	for diffKey, diffValue := range DiffPointerForwarded(rec.Forwarded, obj.Forwarded, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Forwarded"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey
