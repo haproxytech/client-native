@@ -16,6 +16,51 @@ forwardfor:
       pattern: '^[^\s]+$'
     ifnone:
       type: boolean
+forwarded:
+  type: object
+  x-display-name: Forwarded
+  description: Controls insertion of the HTTP Forwarded header field.
+  required:
+    - enabled
+  properties:
+    enabled:
+      type: string
+      description: Enables or disables insertion of the HTTP Forwarded header field.
+      enum: [enabled, disabled]
+    proto:
+      type: boolean
+      description: Adds the proto parameter using the incoming request protocol.
+    host:
+      type: boolean
+      description: Adds the host parameter using the request authority.
+    host_expr:
+      type: string
+      description: Adds the host parameter using the specified log-format expression.
+    by:
+      type: boolean
+      description: Adds the by parameter using the local address.
+    by_expr:
+      type: string
+      description: Adds the by parameter using the specified log-format expression.
+    by_port:
+      type: boolean
+      description: Adds the by parameter port using the local port.
+    by_port_expr:
+      type: string
+      description: Adds the by parameter port using the specified log-format expression.
+    for:
+      type: boolean
+      x-go-name: For
+      description: Adds the for parameter using the client address.
+    for_expr:
+      type: string
+      description: Adds the for parameter using the specified log-format expression.
+    for_port:
+      type: boolean
+      description: Adds the for parameter port using the client port.
+    for_port_expr:
+      type: string
+      description: Adds the for parameter port using the specified log-format expression.
 persist_rule:
   type: object
   required:

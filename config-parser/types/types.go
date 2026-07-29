@@ -879,6 +879,65 @@ type OptionForwardFor struct {
 	Comment string
 }
 
+// OptionForwarded enables insertion of the RFC 7239 Forwarded header
+//
+// swagger:model option_forwarded
+//
+//go:generate go run ../types_struct_equal/main.go OptionForwarded
+//sections:defaults,frontend,backend
+//name:option forwarded
+//no:parse
+//set:validate:validateOptionForwarded
+//test:ok:option forwarded
+//test:ok:option forwarded proto
+//test:ok:option forwarded host
+//test:ok:option forwarded host-expr %[req.hdr(host)]
+//test:ok:option forwarded by
+//test:ok:option forwarded by-expr %[src]
+//test:ok:option forwarded by_port
+//test:ok:option forwarded by_port-expr %[src_port]
+//test:ok:option forwarded for
+//test:ok:option forwarded for-expr %[src]
+//test:ok:option forwarded for_port
+//test:ok:option forwarded for_port-expr %[src_port]
+//test:ok:option forwarded proto host-expr %[req.hdr(host)] by-expr %[src] by_port-expr %[src_port] for-expr %[src] for_port-expr %[src_port]
+//test:ok:option forwarded # comment
+//test:ok:no option forwarded
+//test:fail:option forwarded host-expr
+//test:fail:option forwarded by-expr
+//test:fail:option forwarded by_port-expr
+//test:fail:option forwarded for-expr
+//test:fail:option forwarded for_port-expr
+//test:fail:option forwarded proto-expr
+//test:fail:option forwarded unexpected
+//test:fail:option forwarded proto proto
+//test:fail:option forwarded host host
+//test:fail:option forwarded host host-expr %[req.hdr(host)]
+//test:fail:option forwarded by by
+//test:fail:option forwarded by by-expr %[src]
+//test:fail:option forwarded by_port by_port
+//test:fail:option forwarded by_port by_port-expr %[src_port]
+//test:fail:option forwarded for for
+//test:fail:option forwarded for for-expr %[src]
+//test:fail:option forwarded for_port for_port
+//test:fail:option forwarded for_port for_port-expr %[src_port]
+//test:fail:no option forwarded unexpected
+type OptionForwarded struct {
+	NoOption    bool   `json:"noOption,omitempty"    yaml:"noOption,omitempty"`
+	Proto       bool   `json:"proto,omitempty"       yaml:"proto,omitempty"`
+	Host        bool   `json:"host,omitempty"        yaml:"host,omitempty"`
+	HostExpr    string `json:"hostExpr,omitempty"    yaml:"hostExpr,omitempty"`
+	By          bool   `json:"by,omitempty"          yaml:"by,omitempty"`
+	ByExpr      string `json:"byExpr,omitempty"      yaml:"byExpr,omitempty"`
+	ByPort      bool   `json:"byPort,omitempty"      yaml:"byPort,omitempty"`
+	ByPortExpr  string `json:"byPortExpr,omitempty"  yaml:"byPortExpr,omitempty"`
+	For         bool   `json:"for,omitempty"         yaml:"for,omitempty"`
+	ForExpr     string `json:"forExpr,omitempty"     yaml:"forExpr,omitempty"`
+	ForPort     bool   `json:"forPort,omitempty"     yaml:"forPort,omitempty"`
+	ForPortExpr string `json:"forPortExpr,omitempty" yaml:"forPortExpr,omitempty"`
+	Comment     string `json:"comment,omitempty"     yaml:"comment,omitempty"`
+}
+
 //sections:defaults,backend
 //name:option httpchk
 //no:parse

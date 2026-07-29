@@ -187,6 +187,9 @@ defaults_base:
       x-display-name: Server TCP Keep Alive
     forwardfor:
       $ref: "#/definitions/forwardfor"
+    forwarded:
+      $ref: "#/definitions/forwarded"
+      x-omitempty: true
     check_timeout:
       type: integer
       x-nullable: true
