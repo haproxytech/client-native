@@ -76,6 +76,7 @@ type Data struct {
 	HasAlias           bool
 	HasDefault         bool
 	HasTable           bool
+	SetValidator       string // function used to validate data before Set stores it
 }
 
 type ConfigFile struct {

@@ -2822,6 +2822,9 @@ definitions:
         pattern: ^[^\s]+$
         type: string
         x-display-name: External Check Path
+      forwarded:
+        $ref: '#/definitions/forwarded'
+        x-omitempty: true
       forwardfor:
         $ref: '#/definitions/forwardfor'
       from:
@@ -3368,6 +3371,12 @@ definitions:
         $ref: '#/definitions/errorloc'
       errorloc303:
         $ref: '#/definitions/errorloc'
+      forwarded:
+        $ref: '#/definitions/forwarded'
+        x-dependency:
+          mode:
+            value: http
+        x-omitempty: true
       forwardfor:
         $ref: '#/definitions/forwardfor'
         x-dependency:
@@ -3837,6 +3846,12 @@ definitions:
           x-go-name: ForcePersist
         type: array
         x-go-name: ForcePersistList
+        x-omitempty: true
+      forwarded:
+        $ref: '#/definitions/forwarded'
+        x-dependency:
+          mode:
+            value: http
         x-omitempty: true
       forwardfor:
         $ref: '#/definitions/forwardfor'
@@ -10615,6 +10630,53 @@ definitions:
       - enabled
     type: object
     x-display-name: ForwardFor
+  forwarded:
+    description: Controls insertion of the HTTP Forwarded header field.
+    properties:
+      by:
+        description: Adds the by parameter using the local address.
+        type: boolean
+      by_expr:
+        description: Adds the by parameter using the specified log-format expression.
+        type: string
+      by_port:
+        description: Adds the by parameter port using the local port.
+        type: boolean
+      by_port_expr:
+        description: Adds the by parameter port using the specified log-format expression.
+        type: string
+      enabled:
+        description: Enables or disables insertion of the HTTP Forwarded header field.
+        enum:
+          - enabled
+          - disabled
+        type: string
+      for:
+        description: Adds the for parameter using the client address.
+        type: boolean
+        x-go-name: For
+      for_expr:
+        description: Adds the for parameter using the specified log-format expression.
+        type: string
+      for_port:
+        description: Adds the for parameter port using the client port.
+        type: boolean
+      for_port_expr:
+        description: Adds the for parameter port using the specified log-format expression.
+        type: string
+      host:
+        description: Adds the host parameter using the request authority.
+        type: boolean
+      host_expr:
+        description: Adds the host parameter using the specified log-format expression.
+        type: string
+      proto:
+        description: Adds the proto parameter using the incoming request protocol.
+        type: boolean
+    required:
+      - enabled
+    type: object
+    x-display-name: Forwarded
   default_server:
     allOf:
       - $ref: '#/definitions/server_params'

@@ -184,8 +184,18 @@ func (p *{{ .StructName }}) Set(data common.ParserData, index int) error {
 {{- else }}
 	switch newValue := data.(type) {
 	case *types.{{ .ParserType }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(newValue); err != nil {
+			return err
+		}
+		{{- end }}
 		p.data = newValue
 	case types.{{ .ParserType }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(&newValue); err != nil {
+			return err
+		}
+		{{- end }}
 		p.data = &newValue
 	default:
 		return errors.ErrInvalidData

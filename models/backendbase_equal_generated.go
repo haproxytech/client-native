@@ -49,6 +49,7 @@ func (rec BackendBase) Equal(obj BackendBase, opts ...eqdiff.GoMethodGenOptions)
 		rec.ExternalCheckCommand == obj.ExternalCheckCommand &&
 		rec.ExternalCheckPath == obj.ExternalCheckPath &&
 		EqualPointerBackendForcePersist(rec.ForcePersist, obj.ForcePersist, opts...) &&
+		EqualPointerForwarded(rec.Forwarded, obj.Forwarded, opts...) &&
 		EqualPointerForwardfor(rec.Forwardfor, obj.Forwardfor, opts...) &&
 		rec.From == obj.From &&
 		EqualPointerInt64(rec.Fullconn, obj.Fullconn, opts...) &&
@@ -191,6 +192,13 @@ func EqualPointerErrorloc(x, y *Errorloc, opts ...eqdiff.GoMethodGenOptions) boo
 }
 
 func EqualPointerForcePersist(x, y *ForcePersist, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualPointerForwarded(x, y *Forwarded, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

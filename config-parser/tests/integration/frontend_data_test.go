@@ -789,6 +789,66 @@ const frontend_optionforwardforexceptAcomment = `
 frontend test
   option forwardfor except A # comment
 `
+const frontend_optionforwarded = `
+frontend test
+  option forwarded
+`
+const frontend_optionforwardedproto = `
+frontend test
+  option forwarded proto
+`
+const frontend_optionforwardedhost = `
+frontend test
+  option forwarded host
+`
+const frontend_optionforwardedhostexprreqhdrhos = `
+frontend test
+  option forwarded host-expr %[req.hdr(host)]
+`
+const frontend_optionforwardedby = `
+frontend test
+  option forwarded by
+`
+const frontend_optionforwardedbyexprsrc = `
+frontend test
+  option forwarded by-expr %[src]
+`
+const frontend_optionforwardedbyport = `
+frontend test
+  option forwarded by_port
+`
+const frontend_optionforwardedbyportexprsrcport = `
+frontend test
+  option forwarded by_port-expr %[src_port]
+`
+const frontend_optionforwardedfor = `
+frontend test
+  option forwarded for
+`
+const frontend_optionforwardedforexprsrc = `
+frontend test
+  option forwarded for-expr %[src]
+`
+const frontend_optionforwardedforport = `
+frontend test
+  option forwarded for_port
+`
+const frontend_optionforwardedforportexprsrcpor = `
+frontend test
+  option forwarded for_port-expr %[src_port]
+`
+const frontend_optionforwardedprotohostexprreqh = `
+frontend test
+  option forwarded proto host-expr %[req.hdr(host)] by-expr %[src] by_port-expr %[src_port] for-expr %[src] for_port-expr %[src_port]
+`
+const frontend_optionforwardedcomment = `
+frontend test
+  option forwarded # comment
+`
+const frontend_nooptionforwarded = `
+frontend test
+  no option forwarded
+`
 const frontend_optionhttplog = `
 frontend test
   option httplog

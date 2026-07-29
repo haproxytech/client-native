@@ -560,6 +560,8 @@ definitions:
     $ref: "models/configuration/misc.yaml#/persist_rule"
   forwardfor:
     $ref: "models/configuration/misc.yaml#/forwardfor"
+  forwarded:
+    $ref: "models/configuration/misc.yaml#/forwarded"
   default_server:
     $ref: "models/configuration/server.yaml#/default_server"
   httpchk_params:
