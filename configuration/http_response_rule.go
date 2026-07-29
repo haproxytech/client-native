@@ -612,6 +612,9 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			CondTest: f.CondTest,
 		}
 	case "deny":
+		if err = validateReturnContent(f.ReturnContentFormat, f.ReturnContent); err != nil {
+			return nil, err
+		}
 		contentType := ""
 		if f.ReturnContentType != nil {
 			contentType = *f.ReturnContentType
@@ -667,6 +670,9 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			CondTest:   f.CondTest,
 		}
 	case "return":
+		if err = validateReturnContent(f.ReturnContentFormat, f.ReturnContent); err != nil {
+			return nil, err
+		}
 		contentType := ""
 		if f.ReturnContentType != nil {
 			contentType = *f.ReturnContentType

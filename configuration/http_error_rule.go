@@ -265,6 +265,9 @@ func SerializeHTTPErrorRule(f models.HTTPErrorRule) (rule types.Action, err erro
 	if f.Type != "status" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action %s in http_error", f.Type))
 	}
+	if err := validateReturnContent(f.ReturnContentFormat, f.ReturnContent); err != nil {
+		return nil, err
+	}
 
 	contentType := ""
 	if f.ReturnContentType != nil {
