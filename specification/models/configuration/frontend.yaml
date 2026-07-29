@@ -180,6 +180,12 @@ frontend_base:
       x-dependency:
         mode:
           value: http
+    forwarded:
+      $ref: "#/definitions/forwarded"
+      x-omitempty: true
+      x-dependency:
+        mode:
+          value: http
     default_backend:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'

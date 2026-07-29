@@ -83,6 +83,9 @@ func generateTypes(dir string, dataDir string) { //nolint:gocognit
 		if strings.HasPrefix(line, "//no:parse") {
 			parserData.NoParse = true
 		}
+		if after, ok := strings.CutPrefix(line, "//set:validate:"); ok {
+			parserData.SetValidator = strings.TrimSpace(after)
+		}
 		if strings.HasPrefix(line, `//test:quote_ok`) && !parserData.Deprecated {
 			data := strings.SplitN(line, ":", 3)
 			parserData.TestOKEscaped = append(parserData.TestOKEscaped, data[2])

@@ -239,12 +239,22 @@ func (p *{{ .StructName }}) Set(data common.ParserData, index int) error {
 	case *models.{{ .Model }}:
 	{{- else }}
 	case *types.{{ .ParserType }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(newValue); err != nil {
+			return err
+		}
+		{{- end }}
 	{{- end }}
 		p.data = newValue
 	{{- if not (eq .Model "") }}
 	case models.{{ .Model }}:
 	{{- else }}
 	case types.{{ .ParserType }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(&newValue); err != nil {
+			return err
+		}
+		{{- end }}
 	{{- end }}
 		p.data = &newValue
 	default:
