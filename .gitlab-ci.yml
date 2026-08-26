@@ -70,7 +70,7 @@ yaml-lint:
 generate:
   stage: generate
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   services:
     - name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-dind
