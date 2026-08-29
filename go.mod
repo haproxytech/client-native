@@ -10,7 +10,7 @@ require (
 	github.com/go-openapi/swag v0.29.1
 	github.com/go-openapi/swag/mangling v0.29.1
 	github.com/go-openapi/validate v0.26.5
-	github.com/gofrs/flock v0.13.0
+	github.com/gofrs/flock v0.13.1
 	github.com/google/go-cmp v0.7.0
 	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.6.0
@@ -52,5 +52,6 @@ require (
 	golang.org/x/mod v0.40.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	mvdan.cc/gofumpt v0.11.0 // indirect
 )
