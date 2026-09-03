@@ -28,19 +28,24 @@ type HAProxyVersion struct {
 }
 
 func (v *HAProxyVersion) ParseHAProxyVersion(version string) error {
+	parts := strings.Split(version, "-")
 	sv, err := semver.NewVersion(version)
 	if err != nil {
-		return err
+		// Only use the first part.
+		sv, err = semver.NewVersion(parts[0])
+		if err != nil {
+			return err
+		}
 	}
 	v.Version = sv
-	// Commit lives in the prerelease tail: "dev6-2f6f36-13" → "2f6f36",
-	// "a42e6c-11" → "a42e6c", "34b2b10" → "34b2b10".
-	if pre := sv.Prerelease(); pre != "" {
-		parts := strings.Split(pre, "-")
-		if len(parts) < 2 {
-			v.Commit = parts[0]
-		} else {
-			v.Commit = parts[len(parts)-2]
+
+	// Look for a git commit hash.
+	if len(parts) > 1 {
+		for _, part := range parts[1:] {
+			if isGitTag(part) {
+				v.Commit = part
+				break
+			}
 		}
 	}
 	return nil
@@ -54,4 +59,19 @@ func IsBiggerOrEqual(minimum, current *HAProxyVersion) bool {
 		return true
 	}
 	return current.GreaterThanEqual(minimum.Version)
+}
+
+// Matches git tags between 6 and 8 characters long.
+func isGitTag(s string) bool {
+	n := len(s)
+	if n < 6 || n > 8 {
+		return false
+	}
+	for _, c := range s {
+		match := (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')
+		if !match {
+			return false
+		}
+	}
+	return true
 }
