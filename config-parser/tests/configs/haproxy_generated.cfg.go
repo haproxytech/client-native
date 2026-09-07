@@ -2236,6 +2236,7 @@ frontend test
   bind :443 ssl tls-tickets
   bind :443 ssl no-strict-sni
   bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem
+  bind :443 ssl crt-list list1.txt crt-list list2.txt
   bind :443 tcp-md5sig secretpass
   bind :443 ktls on
   bind :443 ktls off
@@ -3518,6 +3519,8 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  bind :443 ssl no-strict-sni
 `, 1},
 	{`  bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem
+`, 1},
+	{`  bind :443 ssl crt-list list1.txt crt-list list2.txt
 `, 1},
 	{`  bind :443 tcp-md5sig secretpass
 `, 1},

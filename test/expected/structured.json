@@ -3020,6 +3020,7 @@
                     "ssl": true,
                     "address": "192.168.1.1",
                     "port": 443,
+                    "crt_list": "list1.txt:list2.txt",
                     "ssl_certificate": "dummy1.pem:dummy2.pem:dummy3.pem:dummy4.pem",
                     "tcp_ss": 1
                 }
