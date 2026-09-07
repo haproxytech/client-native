@@ -80,6 +80,7 @@ bind_params:
           value: true
     crt_list:
       type: string
+      description: All of the certificate list files delimited by ':' as mentioned as a crt-list on the bind line.
       x-dependency:
         ssl:
           value: true

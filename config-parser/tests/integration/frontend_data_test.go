@@ -613,6 +613,10 @@ const frontend_bind443sslcrtmycert1pemcrtmycert = `
 frontend test
   bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem
 `
+const frontend_bind443sslcrtlistlist1txtcrtlist = `
+frontend test
+  bind :443 ssl crt-list list1.txt crt-list list2.txt
+`
 const frontend_bind443tcpmd5sigsecretpass = `
 frontend test
   bind :443 tcp-md5sig secretpass
