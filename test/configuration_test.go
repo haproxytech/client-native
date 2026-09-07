@@ -1035,6 +1035,8 @@ acme test
 crt-store cert-bunker1
   crt-base /secure/certs
   key-base /secure/keys
+  load crt example.com.pem alias example
+  load crt lol.pem key lol.key
 
 traces
   trace h1 sink buf1 level developer verbosity complete start now

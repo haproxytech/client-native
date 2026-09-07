@@ -35,6 +35,7 @@ type Structured interface {
 	StructuredMailersSection
 	StructuredTraces
 	StructuredAcmeProvider
+	StructuredCrtStore
 }
 
 type StructuredToParserArgs struct {
