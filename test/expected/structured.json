@@ -3342,7 +3342,17 @@
         "cert-bunker1": {
             "name": "cert-bunker1",
             "crt_base": "/secure/certs",
-            "key_base": "/secure/keys"
+            "key_base": "/secure/keys",
+            "crt_loads": {
+                "example.com.pem": {
+                    "certificate": "example.com.pem",
+                    "alias": "example"
+                },
+                "lol.pem": {
+                    "certificate": "lol.pem",
+                    "key": "lol.key"
+                }
+            }
         }
     },
     "traces": {

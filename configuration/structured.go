@@ -36,6 +36,7 @@ type Structured interface {
 	StructuredTraces
 	StructuredAcmeProvider
 	StructuredHealthcheck
+	StructuredCrtStore
 }
 
 type StructuredToParserArgs struct {
