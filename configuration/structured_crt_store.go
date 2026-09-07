@@ -183,7 +183,7 @@ func parseCrtStoreSection(name string, p parser.Parser) (*models.CrtStore, error
 	if err != nil {
 		return nil, err
 	}
-	crtLoads, err := convert.NamedResourceArrayToMap(loads)
+	crtLoads, err := convert.NamedResourceArrayToMapWithKey(loads, "Certificate")
 	if err != nil {
 		return nil, err
 	}

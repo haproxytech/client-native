@@ -50,7 +50,8 @@ func checkCrtStores(t *testing.T, got map[string]models.CrtStores) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					// non structured GET does not return child resources
+					require.True(t, g.CrtStoreBase.Equal(w.CrtStoreBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
