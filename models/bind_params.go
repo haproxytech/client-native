@@ -83,7 +83,7 @@ type BindParams struct {
 	// crt ignore err
 	CrtIgnoreErr string `json:"crt_ignore_err,omitempty"`
 
-	// crt list
+	// All of the certificate list files delimited by ':' as mentioned as a crt-list on the bind line.
 	CrtList string `json:"crt_list,omitempty"`
 
 	// curves

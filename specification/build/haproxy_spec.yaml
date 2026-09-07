@@ -294,6 +294,7 @@ definitions:
           ssl:
             value: true
       crt_list:
+        description: All of the certificate list files delimited by ':' as mentioned as a crt-list on the bind line.
         type: string
         x-dependency:
           ssl:

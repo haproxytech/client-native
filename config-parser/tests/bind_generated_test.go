@@ -161,6 +161,7 @@ func TestBind(t *testing.T) {
 		"bind :443 ssl tls-tickets":                                     true,
 		"bind :443 ssl no-strict-sni":                                   true,
 		"bind :443 ssl crt mycert1.pem crt mycert2.pem crt mycert3.pem": true,
+		"bind :443 ssl crt-list list1.txt crt-list list2.txt":           true,
 		"bind :443 tcp-md5sig secretpass":                               true,
 		"bind :443 ktls on":                                             true,
 		"bind :443 ktls off":                                            true,

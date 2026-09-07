@@ -115,6 +115,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Ssl:            true,
 			NoAlpn:         true,
 			SslCertificate: "dummy.crt:dummy2.crt",
+			CrtList:        "list1.txt:list2.txt",
 			Interface:      "eth0",
 			Verify:         "optional",
 			SslMinVer:      "TLSv1.3",
@@ -182,6 +183,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			ClientSigalgs:  "ECDSA+SHA256:RSA+SHA256",
 			IdlePing:       misc.Int64P(10000),
 			SslCertificate: "dummy.crt:dummy2.crt:dummy3.crt",
+			CrtList:        "list1.txt:list2.txt:list3.txt",
 		},
 	}
 

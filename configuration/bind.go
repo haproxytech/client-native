@@ -352,7 +352,11 @@ func parseBindParams(bindOptions []params.BindOption) (models.BindParams, string
 			case "crt-ignore-err":
 				b.CrtIgnoreErr = v.Value
 			case "crt-list":
-				b.CrtList = v.Value
+				if b.CrtList == "" {
+					b.CrtList = v.Value
+				} else {
+					b.CrtList = fmt.Sprintf("%s:%s", b.CrtList, v.Value)
+				}
 			case "default-crt":
 				if b.DefaultCrtList == nil {
 					b.DefaultCrtList = []string{}
@@ -555,7 +559,9 @@ func serializeBindParams(b models.BindParams, name string, path string, opt *opt
 		options = append(options, &params.BindOptionValue{Name: "crt-ignore-err", Value: b.CrtIgnoreErr})
 	}
 	if b.CrtList != "" {
-		options = append(options, &params.BindOptionValue{Name: "crt-list", Value: b.CrtList})
+		for crtList := range strings.SplitSeq(b.CrtList, ":") {
+			options = append(options, &params.BindOptionValue{Name: "crt-list", Value: crtList})
+		}
 	}
 	if b.DefaultCrtList != nil {
 		for _, dc := range b.DefaultCrtList {
