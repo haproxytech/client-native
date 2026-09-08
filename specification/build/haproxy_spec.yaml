@@ -1498,6 +1498,10 @@ definitions:
         x-omitempty: true
       issuers_chain_path:
         type: string
+      load_extra_del_ext:
+        description: Remove the certificate file extension before appending the extra file extension (foobar.crt loads foobar.key instead of foobar.crt.key)
+        type: boolean
+        x-display-name: SSL Load Extra Del Ext
       load_extra_files:
         type: string
         x-display-name: SSL Load Extra Files

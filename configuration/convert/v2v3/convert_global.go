@@ -159,6 +159,7 @@ func GlobalV2ToV3(v2g *v2.Global) (*v3.GlobalBase, error) { //nolint:maintidx
 		Propquery:                  v2g.SslPropquery,
 		Provider:                   v2g.SslProvider,
 		ProviderPath:               v2g.SslProviderPath,
+		// LoadExtraDelExt: not present in v2
 		// SecurityLevel: not present in v2
 		ServerVerify:     v2g.SslServerVerify,
 		SkipSelfIssuedCa: v2g.SslSkipSelfIssuedCa,
