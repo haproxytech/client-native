@@ -96,6 +96,7 @@ func TestPerformanceOptionsEqualFalse(t *testing.T) {
 		result.Maxpipes = sample.Maxpipes + 1
 		result.Maxsessrate = sample.Maxsessrate + 1
 		result.Maxzlibmem = sample.Maxzlibmem + 1
+		result.NoMemoryTrimming = !sample.NoMemoryTrimming
 		result.Noepoll = !sample.Noepoll
 		result.Noevports = !sample.Noevports
 		result.Nogetaddrinfo = !sample.Nogetaddrinfo
@@ -195,6 +196,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 		result.Maxpipes = sample.Maxpipes + 1
 		result.Maxsessrate = sample.Maxsessrate + 1
 		result.Maxzlibmem = sample.Maxzlibmem + 1
+		result.NoMemoryTrimming = !sample.NoMemoryTrimming
 		result.Noepoll = !sample.Noepoll
 		result.Noevports = !sample.Noevports
 		result.Nogetaddrinfo = !sample.Nogetaddrinfo
@@ -213,7 +215,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 24 {
+		if len(listDiffFields) != 25 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -223,7 +225,7 @@ func TestPerformanceOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected PerformanceOptions to be different in 24 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected PerformanceOptions to be different in 25 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

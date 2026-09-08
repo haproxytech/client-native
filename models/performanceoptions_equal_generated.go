@@ -32,6 +32,7 @@ func (rec PerformanceOptions) Equal(obj PerformanceOptions, opts ...eqdiff.GoMet
 		rec.Maxpipes == obj.Maxpipes &&
 		rec.Maxsessrate == obj.Maxsessrate &&
 		rec.Maxzlibmem == obj.Maxzlibmem &&
+		rec.NoMemoryTrimming == obj.NoMemoryTrimming &&
 		rec.Noepoll == obj.Noepoll &&
 		rec.Noevports == obj.Noevports &&
 		rec.Nogetaddrinfo == obj.Nogetaddrinfo &&
