@@ -520,6 +520,15 @@ func parsePerformanceOptions(p parser.Parser) (*models.PerformanceOptions, error
 		options.Nosplice = nosplice
 	}
 
+	noMemoryTrimming, err := parseBoolOption(p, "no-memory-trimming")
+	if err != nil {
+		return nil, err
+	}
+	if noMemoryTrimming {
+		isEmpty = false
+		options.NoMemoryTrimming = noMemoryTrimming
+	}
+
 	nogetaddrinfo, err := parseBoolOption(p, "nogetaddrinfo")
 	if err != nil {
 		return nil, err
@@ -3107,6 +3116,10 @@ func serializePerformanceOptions(p parser.Parser, options *models.PerformanceOpt
 	}
 
 	if err := serializeBoolOption(p, "nosplice", options.Nosplice); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "no-memory-trimming", options.NoMemoryTrimming); err != nil {
 		return err
 	}
 

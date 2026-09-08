@@ -415,6 +415,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Enabled{Name: "busy-polling"})
 	addParser(parser, &sequence, &simple.String{Name: "max-spread-checks"})
 	addParser(parser, &sequence, &simple.String{Name: "close-spread-time"})
+	addParser(parser, &sequence, &simple.Enabled{Name: "no-memory-trimming"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "noepoll"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "nokqueue"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "noevports"})

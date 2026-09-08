@@ -156,6 +156,7 @@ global
   nopoll
   nosplice
   nogetaddrinfo
+  no-memory-trimming
   noreuseport
   profiling.tasks on
   spread-checks 10

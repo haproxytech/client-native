@@ -59,6 +59,9 @@ func (rec PerformanceOptions) Diff(obj PerformanceOptions, opts ...eqdiff.GoMeth
 	if rec.Maxzlibmem != obj.Maxzlibmem {
 		diff["Maxzlibmem"] = []interface{}{rec.Maxzlibmem, obj.Maxzlibmem}
 	}
+	if rec.NoMemoryTrimming != obj.NoMemoryTrimming {
+		diff["NoMemoryTrimming"] = []interface{}{rec.NoMemoryTrimming, obj.NoMemoryTrimming}
+	}
 	if rec.Noepoll != obj.Noepoll {
 		diff["Noepoll"] = []interface{}{rec.Noepoll, obj.Noepoll}
 	}

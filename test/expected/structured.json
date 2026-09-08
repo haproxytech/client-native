@@ -36,6 +36,7 @@
             "nopoll": true,
             "noreuseport": true,
             "nosplice": true,
+            "no_memory_trimming": true,
             "profiling_tasks": "enabled",
             "server_state_base": "/path",
             "server_state_file": "serverstatefile",
