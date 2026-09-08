@@ -33,9 +33,9 @@ func TestLogStdErr(t *testing.T) {
 		"log-stderr global":                                                                  true,
 		"log-stderr":                                                                         false,
 		"log-stderr 127.0.0.1:1515":                                                          false,
-		"log-stderr 127.0.0.1:1515 len 8192 format rfc5424 sample 1,2-5 local2 info debug":   false,
-		"log-stderr 127.0.0.1:1515 len 8192 format sample 1,2-5:6 local2 info debug":         false,
-		"log-stderr 127.0.0.1:1515 len format rfc5424 sample 1,2-5:6 local2 info debug":      false,
+		"log-stderr 127.0.0.1:1515 len 8192 format rfc5424 sample 1,2-5 local2 info debug": false,
+		"log-stderr 127.0.0.1:1515 len 8192 format sample 1,2-5:6 local2 info debug":       false,
+		"log-stderr 127.0.0.1:1515 len format rfc5424 sample 1,2-5:6 local2 info debug":    false,
 		"---":     false,
 		"--- ---": false,
 	}
