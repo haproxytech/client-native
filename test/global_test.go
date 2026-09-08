@@ -129,9 +129,10 @@ func getGlobalBase() models.GlobalBase {
 			},
 		},
 		PerformanceOptions: &models.PerformanceOptions{
-			Maxconn:         1000,
-			ProfilingMemory: "enabled",
-			ThreadHardLimit: misc.Int64P(100),
+			Maxconn:          1000,
+			NoMemoryTrimming: true,
+			ProfilingMemory:  "enabled",
+			ThreadHardLimit:  misc.Int64P(100),
 		},
 		SslOptions: &models.SslOptions{
 			DefaultBindCiphers:         "test",

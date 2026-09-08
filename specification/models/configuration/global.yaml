@@ -1253,6 +1253,9 @@ performance_options:
     noevports:
       type: boolean
       description: Disable the use of the event ports event polling system on SunOS system derived from Solaris 10 and later
+    no_memory_trimming:
+      type: boolean
+      description: Disables memory trimming (malloc_trim) on memory shortage or reload
     nopoll:
       type: boolean
       description: Disable the use of the "poll" event polling system

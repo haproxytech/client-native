@@ -67,6 +67,9 @@ type PerformanceOptions struct {
 	// Maximum amount of RAM in megabytes per process usable by the zlib
 	Maxzlibmem int64 `json:"maxzlibmem,omitempty"`
 
+	// Disables memory trimming (malloc_trim) on memory shortage or reload
+	NoMemoryTrimming bool `json:"no_memory_trimming,omitempty"`
+
 	// Disable the use of the "epoll" event polling system on Linux
 	Noepoll bool `json:"noepoll,omitempty"`
 
