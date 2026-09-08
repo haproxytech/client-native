@@ -75,6 +75,7 @@
             "default_server_sigalgs": "RSA+SHA256",
             "dh_param_file": "ssl-dh-param-file.txt",
             "load_extra_files": "bundle",
+            "load_extra_del_ext": true,
             "mode_async": "enabled",
             "propquery": "provider",
             "provider": "default",

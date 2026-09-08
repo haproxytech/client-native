@@ -203,6 +203,7 @@ global
   stats-file /var/haproxy/my-stats
   stats maxconn 20
   ssl-load-extra-files bundle
+  ssl-load-extra-del-ext
   deviceatlas-json-file atlas.json
   deviceatlas-log-level 1
   deviceatlas-separator -

@@ -40,6 +40,7 @@ func (rec SslOptions) Equal(obj SslOptions, opts ...eqdiff.GoMethodGenOptions) b
 		rec.DefaultServerSigalgs == obj.DefaultServerSigalgs &&
 		rec.DhParamFile == obj.DhParamFile &&
 		rec.IssuersChainPath == obj.IssuersChainPath &&
+		rec.LoadExtraDelExt == obj.LoadExtraDelExt &&
 		rec.LoadExtraFiles == obj.LoadExtraFiles &&
 		rec.Maxsslconn == obj.Maxsslconn &&
 		rec.Maxsslrate == obj.Maxsslrate &&

@@ -70,6 +70,7 @@ allowed:
   - epoll
   - escaper
   - eslint
+  - ext
   - failsafe
   - fbt
   - fcgi

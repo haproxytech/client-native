@@ -977,6 +977,10 @@ ssl_options:
     load_extra_files:
       type: string
       x-display-name: SSL Load Extra Files
+    load_extra_del_ext:
+      type: boolean
+      x-display-name: SSL Load Extra Del Ext
+      description: Remove the certificate file extension before appending the extra file extension (foobar.crt loads foobar.key instead of foobar.crt.key)
     default_bind_options:
       type: string
       x-display-name: SSL Default Bind Options

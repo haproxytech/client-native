@@ -836,6 +836,15 @@ func parseSSLOptions(p parser.Parser) (*models.SslOptions, error) { //nolint:goc
 		options.LoadExtraFiles = sslLoadExtraFiles
 	}
 
+	sslLoadExtraDelExt, err := parseBoolOption(p, "ssl-load-extra-del-ext")
+	if err != nil {
+		return nil, err
+	}
+	if sslLoadExtraDelExt {
+		isEmpty = false
+		options.LoadExtraDelExt = sslLoadExtraDelExt
+	}
+
 	sslPassphraseCmd, err := parseStringOption(p, "ssl-passphrase-cmd")
 	if err != nil {
 		return nil, err
@@ -2974,6 +2983,10 @@ func serializeSSLOptions(p parser.Parser, options *models.SslOptions) error { //
 	}
 
 	if err := serializeStringOption(p, "ssl-load-extra-files", options.LoadExtraFiles); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "ssl-load-extra-del-ext", options.LoadExtraDelExt); err != nil {
 		return err
 	}
 
