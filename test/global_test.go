@@ -139,6 +139,7 @@ func getGlobalBase() models.GlobalBase {
 			DefaultServerCurves:        "secp384r1",
 			DefaultServerSigalgs:       "ECDSA+SHA256",
 			DefaultServerClientSigalgs: "ECDSA+SHA256",
+			LoadExtraDelExt:            true,
 			Propquery:                  "foo",
 			Provider:                   "my_provider",
 			ProviderPath:               "providers/",

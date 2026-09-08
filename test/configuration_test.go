@@ -218,6 +218,7 @@ global
   stats maxconn 20
   stats calculate-max-counters on
   ssl-load-extra-files bundle
+  ssl-load-extra-del-ext
   deviceatlas-json-file atlas.json
   deviceatlas-log-level 1
   deviceatlas-separator -

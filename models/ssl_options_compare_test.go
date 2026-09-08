@@ -86,6 +86,7 @@ func TestSslOptionsEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.LoadExtraDelExt = !sample.LoadExtraDelExt
 		result.Maxsslconn = sample.Maxsslconn + 1
 		result.Maxsslrate = sample.Maxsslrate + 1
 		result.SecurityLevel = Ptr(*sample.SecurityLevel + 1)
@@ -169,6 +170,7 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.LoadExtraDelExt = !sample.LoadExtraDelExt
 		result.Maxsslconn = sample.Maxsslconn + 1
 		result.Maxsslrate = sample.Maxsslrate + 1
 		result.SecurityLevel = Ptr(*sample.SecurityLevel + 1)
@@ -181,7 +183,7 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 29 {
+		if len(listDiffFields) != 30 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -191,7 +193,7 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslOptions to be different in 29 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SslOptions to be different in 30 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
