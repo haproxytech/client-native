@@ -23,6 +23,6 @@ import (
 
 func (rec HealthCheck) Equal(obj HealthCheck, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.HealthCheckBase.Equal(obj.HealthCheckBase, opts...) &&
-		rec.HTTPCheckRuleList.Equal(obj.HTTPCheckRuleList, opts...) &&
+		rec.HTTPCheckList.Equal(obj.HTTPCheckList, opts...) &&
 		rec.TCPCheckRuleList.Equal(obj.TCPCheckRuleList, opts...)
 }

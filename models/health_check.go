@@ -34,8 +34,8 @@ import (
 type HealthCheck struct {
 	HealthCheckBase `json:",inline"`
 
-	// HTTP check rule list
-	HTTPCheckRuleList HTTPChecks `json:"http_check_list,omitempty"`
+	// HTTP check list
+	HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
 
 	// TCP check rule list
 	TCPCheckRuleList TCPChecks `json:"tcp_check_list,omitempty"`
@@ -52,7 +52,7 @@ func (m *HealthCheck) UnmarshalJSON(raw []byte) error {
 
 	// AO1
 	var dataAO1 struct {
-		HTTPCheckRuleList HTTPChecks `json:"http_check_list,omitempty"`
+		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
 
 		TCPCheckRuleList TCPChecks `json:"tcp_check_list,omitempty"`
 	}
@@ -60,7 +60,7 @@ func (m *HealthCheck) UnmarshalJSON(raw []byte) error {
 		return err
 	}
 
-	m.HTTPCheckRuleList = dataAO1.HTTPCheckRuleList
+	m.HTTPCheckList = dataAO1.HTTPCheckList
 
 	m.TCPCheckRuleList = dataAO1.TCPCheckRuleList
 
@@ -77,12 +77,12 @@ func (m HealthCheck) MarshalJSON() ([]byte, error) {
 	}
 	_parts = append(_parts, aO0)
 	var dataAO1 struct {
-		HTTPCheckRuleList HTTPChecks `json:"http_check_list,omitempty"`
+		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
 
 		TCPCheckRuleList TCPChecks `json:"tcp_check_list,omitempty"`
 	}
 
-	dataAO1.HTTPCheckRuleList = m.HTTPCheckRuleList
+	dataAO1.HTTPCheckList = m.HTTPCheckList
 
 	dataAO1.TCPCheckRuleList = m.TCPCheckRuleList
 
@@ -103,7 +103,7 @@ func (m *HealthCheck) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPCheckRuleList(formats); err != nil {
+	if err := m.validateHTTPCheckList(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -117,13 +117,13 @@ func (m *HealthCheck) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HealthCheck) validateHTTPCheckRuleList(formats strfmt.Registry) error {
+func (m *HealthCheck) validateHTTPCheckList(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.HTTPCheckRuleList) { // not required
+	if swag.IsZero(m.HTTPCheckList) { // not required
 		return nil
 	}
 
-	if err := m.HTTPCheckRuleList.Validate(formats); err != nil {
+	if err := m.HTTPCheckList.Validate(formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("http_check_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
@@ -162,7 +162,7 @@ func (m *HealthCheck) ContextValidate(ctx context.Context, formats strfmt.Regist
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateHTTPCheckRuleList(ctx, formats); err != nil {
+	if err := m.contextValidateHTTPCheckList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -176,9 +176,9 @@ func (m *HealthCheck) ContextValidate(ctx context.Context, formats strfmt.Regist
 	return nil
 }
 
-func (m *HealthCheck) contextValidateHTTPCheckRuleList(ctx context.Context, formats strfmt.Registry) error {
+func (m *HealthCheck) contextValidateHTTPCheckList(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := m.HTTPCheckRuleList.ContextValidate(ctx, formats); err != nil {
+	if err := m.HTTPCheckList.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("http_check_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {

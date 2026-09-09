@@ -26,8 +26,8 @@ func (rec HealthCheck) Diff(obj HealthCheck, opts ...eqdiff.GoMethodGenOptions) 
 	for diffKey, diffValue := range rec.HealthCheckBase.Diff(obj.HealthCheckBase, opts...) {
 		diff["HealthCheckBase."+diffKey] = diffValue
 	}
-	for diffKey, diffValue := range rec.HTTPCheckRuleList.Diff(obj.HTTPCheckRuleList, opts...) {
-		diff["HTTPCheckRuleList"+diffKey] = diffValue
+	for diffKey, diffValue := range rec.HTTPCheckList.Diff(obj.HTTPCheckList, opts...) {
+		diff["HTTPCheckList"+diffKey] = diffValue
 	}
 	for diffKey, diffValue := range rec.TCPCheckRuleList.Diff(obj.TCPCheckRuleList, opts...) {
 		diff["TCPCheckRuleList"+diffKey] = diffValue
