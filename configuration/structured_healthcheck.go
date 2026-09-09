@@ -60,7 +60,7 @@ func (c *client) GetStructuredHealthcheck(name string, transactionID string) (in
 	if err != nil {
 		return v, nil, err
 	}
-	healthCheck.HTTPCheckRuleList = hchecks
+	healthCheck.HTTPCheckList = hchecks
 
 	// parse the TCP check rules for this health check
 	tchecks, err := ParseTCPChecks(HealthcheckParentName, name, p)
@@ -97,7 +97,7 @@ func (c *client) GetStructuredHealthchecks(transactionID string) (int64, models.
 			if err != nil {
 				return v, nil, err
 			}
-			healthCheck.HTTPCheckRuleList = hchecks
+			healthCheck.HTTPCheckList = hchecks
 
 			// parse the TCP check rules for this health check
 			tchecks, err := ParseTCPChecks(HealthcheckParentName, name, p)
@@ -190,7 +190,7 @@ func serializeHealthcheckSection(a StructuredToParserArgs, h *models.HealthCheck
 		return err
 	}
 
-	for i, httpCheck := range h.HTTPCheckRuleList {
+	for i, httpCheck := range h.HTTPCheckList {
 		var s types.Action
 		s, err = SerializeHTTPCheck(*httpCheck)
 		if err != nil {

@@ -4387,7 +4387,7 @@ definitions:
       - properties:
           http_check_list:
             $ref: '#/definitions/http_checks'
-            x-go-name: HTTPCheckRuleList
+            x-go-name: HTTPCheckList
           tcp_check_list:
             $ref: '#/definitions/tcp_checks'
             x-go-name: TCPCheckRuleList
