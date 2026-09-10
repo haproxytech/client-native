@@ -21,6 +21,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/config-parser/common"
 	parsererrors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 	"github.com/haproxytech/client-native/v6/misc"
@@ -256,7 +257,7 @@ func (c *client) CreateHealthcheck(data *models.HealthCheck, transactionID strin
 	}
 
 	if err = SerializeHealthCheckSection(p, data); err != nil {
-		return err
+		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -282,7 +283,7 @@ func (c *client) EditHealthcheck(name string, data *models.HealthCheck, transact
 	}
 
 	if err = SerializeHealthCheckSection(p, data); err != nil {
-		return err
+		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -329,103 +330,65 @@ func clearAllTypes(p parser.Parser, data *models.HealthCheck) error {
 	return nil
 }
 
-func SerializeHealthCheckSection(p parser.Parser, data *models.HealthCheck) error { //nolint:gocognit
+// serializeHealthCheckType returns the parser attribute and value of the
+// "type" line of a health check, or an empty attribute when no type is set.
+// The parameters of httpchk, smtpchk and mysql-check are optional in HAProxy
+// and the bare "type <check>" line is written when they are not given, while
+// pgsql-check requires a user.
+func serializeHealthCheckType(data *models.HealthCheck) (string, common.ParserData, error) {
+	switch data.Type {
+	case "":
+		return "", nil, nil
+	case "smtpchk":
+		smtpchk := types.TypeSmtpchk{}
+		if data.SmtpchkParams != nil {
+			smtpchk.Domain = data.SmtpchkParams.Domain
+			smtpchk.Hello = data.SmtpchkParams.Hello
+		}
+		return "type smtpchk", smtpchk, nil
+	case "mysql-check":
+		mysqlchk := types.TypeMysqlCheck{}
+		if data.MysqlCheckParams != nil {
+			mysqlchk.ClientVersion = data.MysqlCheckParams.ClientVersion
+			mysqlchk.User = data.MysqlCheckParams.Username
+		}
+		return "type mysql-check", mysqlchk, nil
+	case "pgsql-check":
+		if data.PgsqlCheckParams == nil || data.PgsqlCheckParams.Username == "" {
+			return "", nil, NewConfError(ErrValidationError, "pgsql_check_params.username is mandatory with type pgsql-check")
+		}
+		return "type pgsql-check", types.TypePgsqlCheck{User: data.PgsqlCheckParams.Username}, nil
+	case "httpchk":
+		httpchk := types.TypeHttpchk{}
+		if data.HttpchkParams != nil {
+			httpchk.Method = data.HttpchkParams.Method
+			httpchk.URI = data.HttpchkParams.URI
+			httpchk.Version = data.HttpchkParams.Version
+		}
+		return "type httpchk", httpchk, nil
+	case "ssl-hello-chk", "redis-check", "ldap-check", "spop-check", "tcp-check":
+		return "type " + data.Type, &types.SimpleType{}, nil
+	default:
+		return "", nil, NewConfError(ErrValidationError, "unknown health check type "+data.Type)
+	}
+}
+
+func SerializeHealthCheckSection(p parser.Parser, data *models.HealthCheck) error {
 	if data == nil {
 		return errors.New("empty health check")
 	}
 
-	var err error
-	err = clearAllTypes(p, data)
+	// validate before touching the section so that a rejected type leaves
+	// the existing configuration intact
+	attribute, value, err := serializeHealthCheckType(data)
 	if err != nil {
 		return err
 	}
-
-	switch data.Type {
-	case "smtpchk":
-		if data.SmtpchkParams != nil {
-			smtpchck := types.TypeSmtpchk{
-				Domain: data.SmtpchkParams.Domain,
-				Hello:  data.SmtpchkParams.Hello,
-				NoType: false,
-			}
-			if err := p.Set(parser.HealthChecks, data.Name, "type smtpchk", smtpchck); err != nil {
-				return err
-			}
-		} else {
-			if err = p.Set(parser.HealthChecks, data.Name, "type smtpchk", nil); err != nil {
-				return err
-			}
-		}
-	case "mysql-check":
-		if data.MysqlCheckParams != nil {
-			mysqlchk := types.TypeMysqlCheck{
-				ClientVersion: data.MysqlCheckParams.ClientVersion,
-				User:          data.MysqlCheckParams.Username,
-				NoType:        false,
-			}
-			if err := p.Set(parser.HealthChecks, data.Name, "type mysql-check", mysqlchk); err != nil {
-				return err
-			}
-		} else {
-			if err = p.Set(parser.HealthChecks, data.Name, "type mysql-check", nil); err != nil {
-				return err
-			}
-		}
-	case "pgsql-check":
-		if data.PgsqlCheckParams != nil {
-			pgsqlchk := types.TypePgsqlCheck{
-				User:   data.PgsqlCheckParams.Username,
-				NoType: false,
-			}
-			if err := p.Set(parser.HealthChecks, data.Name, "type pgsql-check", pgsqlchk); err != nil {
-				return err
-			}
-		} else {
-			if err = p.Set(parser.HealthChecks, data.Name, "type pgsql-check", nil); err != nil {
-				return err
-			}
-		}
-	case "httpchk":
-		if data.HttpchkParams != nil {
-			httpchk := types.TypeHttpchk{
-				Method:  data.HttpchkParams.Method,
-				URI:     data.HttpchkParams.URI,
-				Version: data.HttpchkParams.Version,
-				NoType:  false,
-			}
-			if err := p.Set(parser.HealthChecks, data.Name, "type httpchk", httpchk); err != nil {
-				return err
-			}
-		} else {
-			if err = p.Set(parser.HealthChecks, data.Name, "type httpchk", nil); err != nil {
-				return err
-			}
-		}
-	case "ssl-hello-chk":
-		if err = p.Set(parser.HealthChecks, data.Name, "type ssl-hello-chk", &types.SimpleType{}); err != nil {
-			return err
-		}
-	case "redis-check":
-		if err = p.Set(parser.HealthChecks, data.Name, "type redis-check", &types.SimpleType{}); err != nil {
-			return err
-		}
-	case "ldap-check":
-		if err = p.Set(parser.HealthChecks, data.Name, "type ldap-check", &types.SimpleType{}); err != nil {
-			return err
-		}
-	case "spop-check":
-		if err = p.Set(parser.HealthChecks, data.Name, "type spop-check", &types.SimpleType{}); err != nil {
-			return err
-		}
-	case "tcp-check":
-		if err = p.Set(parser.HealthChecks, data.Name, "type tcp-check", &types.SimpleType{}); err != nil {
-			return err
-		}
-	default:
-		if err = p.Set(parser.HealthChecks, data.Name, "type", nil); err != nil {
-			return err
-		}
+	if err = clearAllTypes(p, data); err != nil {
+		return err
 	}
-
-	return nil
+	if attribute == "" {
+		return nil
+	}
+	return p.Set(parser.HealthChecks, data.Name, attribute, value)
 }

@@ -93,6 +93,7 @@ func TestWholeConfigsSectionsHealthcheck(t *testing.T) {
 		{"healthcheck_tcpchecksetvarfmtchecknameH", healthcheck_tcpchecksetvarfmtchecknameH},
 		{"healthcheck_tcpchecksetvarfmttxnfromaddrsrcs", healthcheck_tcpchecksetvarfmttxnfromaddrsrcs},
 		{"healthcheck_tcpcheckunsetvartxnfrom", healthcheck_tcpcheckunsetvartxnfrom},
+		{"healthcheck_typehttpchk", healthcheck_typehttpchk},
 		{"healthcheck_typehttpchkOPTIONSHTTP11rnHostww", healthcheck_typehttpchkOPTIONSHTTP11rnHostww},
 		{"healthcheck_typehttpchkmethoduri", healthcheck_typehttpchkmethoduri},
 		{"healthcheck_typehttpchkmethoduriversion", healthcheck_typehttpchkmethoduriversion},

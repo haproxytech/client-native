@@ -335,3 +335,44 @@ func TestCreateEditDeleteHealthcheck(t *testing.T) { //nolint:gocognit,gocyclo
 		})
 	}
 }
+
+// A type without parameters must survive a create followed by an edit: the
+// type line used to be dropped on create, leaving a section without a type,
+// and the following edit then failed with "attribute not found".
+func TestCreateEditHealthcheckTypeWithoutParams(t *testing.T) {
+	name := fmt.Sprintf("created_bare_type_%d", version)
+	hc := &models.HealthCheck{HealthCheckBase: models.HealthCheckBase{Name: name, Type: "httpchk"}}
+
+	require.NoError(t, clientTest.CreateHealthcheck(hc, "", version))
+	version++
+
+	_, got, err := clientTest.GetHealthcheck(name, "")
+	require.NoError(t, err)
+	require.Equal(t, "httpchk", got.Type)
+	require.Equal(t, &models.HttpchkParams{}, got.HttpchkParams)
+
+	hc.Type = "smtpchk"
+	require.NoError(t, clientTest.EditHealthcheck(name, hc, "", version))
+	version++
+
+	_, got, err = clientTest.GetHealthcheck(name, "")
+	require.NoError(t, err)
+	require.Equal(t, "smtpchk", got.Type)
+	require.Nil(t, got.HttpchkParams)
+
+	require.NoError(t, clientTest.DeleteHealthcheck(name, "", version))
+	version++
+}
+
+func TestCreateHealthcheckPgsqlCheckWithoutUser(t *testing.T) {
+	name := fmt.Sprintf("created_pgsql_no_user_%d", version)
+	hc := &models.HealthCheck{HealthCheckBase: models.HealthCheckBase{Name: name, Type: "pgsql-check"}}
+
+	require.Error(t, clientTest.CreateHealthcheck(hc, "", version))
+
+	_, _, err := clientTest.GetHealthcheck(name, "")
+	require.Error(t, err)
+	v, err := clientTest.GetVersion("")
+	require.NoError(t, err)
+	require.Equal(t, version, v)
+}
