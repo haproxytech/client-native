@@ -21,6 +21,10 @@ const healthcheck_typehttpchkOPTIONSHTTP11rnHostww = `
 healthcheck test
   type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
 `
+const healthcheck_typehttpchk = `
+healthcheck test
+  type httpchk
+`
 const healthcheck_typehttpchkuri = `
 healthcheck test
   type httpchk <uri>

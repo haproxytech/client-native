@@ -187,7 +187,7 @@ func serializeHealthcheckSection(a StructuredToParserArgs, h *models.HealthCheck
 		return err
 	}
 	if err = SerializeHealthCheckSection(p, h); err != nil {
-		return err
+		return a.HandleError(h.Name, "", "", a.TID, a.TID == "", err)
 	}
 
 	for i, httpCheck := range h.HTTPCheckList {

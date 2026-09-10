@@ -28,6 +28,7 @@ import (
 func TestTypeHttpchk(t *testing.T) {
 	tests := map[string]bool{
 		"type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www": true,
+		"type httpchk":                                 true,
 		"type httpchk <uri>":                           true,
 		"type httpchk <method> <uri>":                  true,
 		"type httpchk <method> <uri> <version>":        true,

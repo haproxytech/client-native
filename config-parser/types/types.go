@@ -984,6 +984,7 @@ type OptionHttpchk struct {
 //name:type httpchk
 //no:parse
 //test:ok:type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+//test:ok:type httpchk
 //test:ok:type httpchk <uri>
 //test:ok:type httpchk <method> <uri>
 //test:ok:type httpchk <method> <uri> <version>
