@@ -216,15 +216,16 @@ func SerializeCrtStore(p parser.Parser, store *models.CrtStore) error {
 		}
 	}
 
-	crtBase := types.StringC{Value: store.CrtBase}
-	if err := p.Set(parser.CrtStore, store.Name, "crt-base", crtBase); err != nil {
+	// crt-base and key-base take a mandatory path: an empty value removes
+	// the line instead of writing a bare keyword HAProxy rejects
+	setBase := func(attribute, value string) error {
+		if value == "" {
+			return p.Set(parser.CrtStore, store.Name, attribute, nil)
+		}
+		return p.Set(parser.CrtStore, store.Name, attribute, types.StringC{Value: value})
+	}
+	if err := setBase("crt-base", store.CrtBase); err != nil {
 		return err
 	}
-
-	keyBase := types.StringC{Value: store.KeyBase}
-	if err := p.Set(parser.CrtStore, store.Name, "key-base", keyBase); err != nil {
-		return err
-	}
-
-	return nil
+	return setBase("key-base", store.KeyBase)
 }

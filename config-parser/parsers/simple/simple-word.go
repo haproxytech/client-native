@@ -45,7 +45,8 @@ func (s *Word) Parse(line string, parts []string, comment string) (string, error
 }
 
 func (s *Word) Result() ([]common.ReturnResultLine, error) {
-	if s.data == nil {
+	// a bare keyword is never parsed, so it is never written either
+	if s.data == nil || s.data.Value == "" {
 		return nil, errors.ErrFetch
 	}
 	return []common.ReturnResultLine{
