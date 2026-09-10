@@ -301,3 +301,33 @@ func TestCreateEditDeleteCrtLoads(t *testing.T) {
 		t.Fatal("DeleteCrtLoad() did not work correctly")
 	}
 }
+
+// crt-base and key-base are optional: a store created without them must be
+// readable back as is, and clearing a base on edit must drop its line.
+func TestCreateEditCrtStoreWithoutBases(t *testing.T) {
+	name := fmt.Sprintf("test-store-nobase-%d", version)
+	store := &models.CrtStore{CrtStoreBase: models.CrtStoreBase{Name: name}}
+
+	require.NoError(t, clientTest.CreateCrtStore(store, "", version))
+	version++
+
+	_, created, err := clientTest.GetCrtStore(name, "")
+	require.NoError(t, err)
+	require.True(t, created.Equal(*store), "diff %v", cmp.Diff(*created, *store))
+
+	store.CrtBase = "/secure/certs"
+	require.NoError(t, clientTest.EditCrtStore(name, store, "", version))
+	version++
+
+	store.CrtBase = ""
+	store.KeyBase = "/secure/keys"
+	require.NoError(t, clientTest.EditCrtStore(name, store, "", version))
+	version++
+
+	_, edited, err := clientTest.GetCrtStore(name, "")
+	require.NoError(t, err)
+	require.True(t, edited.Equal(*store), "diff %v", cmp.Diff(*edited, *store))
+
+	require.NoError(t, clientTest.DeleteCrtStore(name, "", version))
+	version++
+}
