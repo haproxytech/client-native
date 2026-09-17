@@ -34,6 +34,10 @@ type Parser struct {
 	LogPrefix                  string
 	NoNamedDefaultsFrom        bool
 	DefaultSectionsSkipOnWrite map[string]struct{}
+
+	// AllowMissingDefaults specifies default sections allowed to be missing in the parser's configuration.
+	// note: it is an array instead of a map because we don't expect to have many elements (in this case an array is more performant than a map)
+	AllowMissingDefaults []string
 }
 
 type ParserOption interface {
