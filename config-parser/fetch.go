@@ -18,6 +18,7 @@ package parser
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -275,7 +276,7 @@ func (p *configParser) SectionsDefaultsFromSet(sectionType Section, sectionName,
 		return errors.ErrSectionMissing
 	}
 	// if not set to empty, do extra validation
-	if defaultsSection != "" {
+	if defaultsSection != "" && !slices.Contains(p.Options.AllowMissingDefaults, defaultsSection) {
 		stDef, ok := p.Parsers[Defaults]
 		if !ok {
 			return errors.ErrSectionTypeMissing
