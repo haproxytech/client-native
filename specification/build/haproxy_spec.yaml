@@ -27273,6 +27273,129 @@ paths:
       summary: Renew ACME certificate
       tags:
         - AcmeRuntime
+  /services/haproxy/runtime/profiling:
+    get:
+      description: Returns the HAProxy profiling status, as reported by "show profiling status".
+      operationId: getProfiling
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/profiling'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return HAProxy profiling status
+      tags:
+        - Profiling
+    put:
+      description: Enables or disables profiling. Only the fields present in the body are applied; the response is the resulting status. Setting tasks or memory to "on" also discards the profiling data collected so far, even when that mode was already active.
+      operationId: setProfiling
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/profiling'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/profiling'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Change HAProxy profiling settings
+      tags:
+        - Profiling
+  /services/haproxy/runtime/profiling/tasks:
+    get:
+      description: Returns the raw text output of "show profiling tasks".
+      operationId: getProfilingTasks
+      parameters:
+        - default: usage
+          description: Sort order of the dump. usage is HAProxy's default order, address sorts by function address, time sorts by total time, context sorts by calling context.
+          enum:
+            - usage
+            - address
+            - time
+            - context
+          in: query
+          name: sort
+          required: false
+          type: string
+        - default: false
+          description: Aggregate output by callee
+          in: query
+          name: aggregate
+          required: false
+          type: boolean
+        - description: Maximum number of lines to output
+          in: query
+          minimum: 1
+          name: max_lines
+          required: false
+          type: integer
+      produces:
+        - text/plain
+      responses:
+        "200":
+          description: Operation successful
+          schema:
+            type: string
+        default:
+          description: General Error
+          schema:
+            type: string
+      summary: Dump per-task CPU profiling
+      tags:
+        - Profiling
+  /services/haproxy/runtime/profiling/memory:
+    get:
+      description: Returns the raw text output of "show profiling memory".
+      operationId: getProfilingMemory
+      parameters:
+        - default: usage
+          description: Sort order of the dump. usage is HAProxy's default order, address sorts by function address, time sorts by total time, context sorts by calling context.
+          enum:
+            - usage
+            - address
+            - time
+            - context
+          in: query
+          name: sort
+          required: false
+          type: string
+        - default: false
+          description: Aggregate output by callee
+          in: query
+          name: aggregate
+          required: false
+          type: boolean
+        - description: Maximum number of lines to output
+          in: query
+          minimum: 1
+          name: max_lines
+          required: false
+          type: integer
+      produces:
+        - text/plain
+      responses:
+        "200":
+          description: Operation successful
+          schema:
+            type: string
+        default:
+          description: General Error
+          schema:
+            type: string
+      summary: Dump memory usage profiling
+      tags:
+        - Profiling
   /services/haproxy/configuration/version:
     get:
       description: Returns configuration version.

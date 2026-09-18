@@ -1282,6 +1282,12 @@ paths:
     $ref: "paths/runtime/maps_entries.yaml#/maps_entries_one"
   /services/haproxy/runtime/acme:
     $ref: "paths/runtime/acme.yaml#/acme"
+  /services/haproxy/runtime/profiling:
+    $ref: "paths/runtime/profiling.yaml#/profiling"
+  /services/haproxy/runtime/profiling/tasks:
+    $ref: "paths/runtime/profiling.yaml#/profiling_tasks"
+  /services/haproxy/runtime/profiling/memory:
+    $ref: "paths/runtime/profiling.yaml#/profiling_memory"
   /services/haproxy/configuration/version:
     $ref: "paths/configuration/version.yaml#/version"
   /services/haproxy/storage:
