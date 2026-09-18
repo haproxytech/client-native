@@ -190,6 +190,21 @@ type Acme interface {
 	AcmeStatus() (models.AcmeStatus, error)
 }
 
+type Profiling interface {
+	// ShowProfilingStatus returns the profiling status, as reported by "show profiling status"
+	ShowProfilingStatus() (*models.Profiling, error)
+	// ShowProfilingTasks returns the verbatim output of "show profiling tasks"
+	ShowProfilingTasks(opts ProfilingDumpOptions) (string, error)
+	// ShowProfilingMemory returns the verbatim output of "show profiling memory"
+	ShowProfilingMemory(opts ProfilingDumpOptions) (string, error)
+	// SetProfilingTasks sets the per-task CPU profiling mode, one of "on", "auto" or "off"
+	SetProfilingTasks(mode string) error
+	// SetProfilingMemory sets the memory usage profiling mode, one of "on" or "off"
+	SetProfilingMemory(mode string) error
+	// SetProfiling applies the profiling settings present in p, tasks first then memory
+	SetProfiling(p *models.Profiling) error
+}
+
 type Runtime interface {
 	Info
 	Frontend
@@ -201,6 +216,7 @@ type Runtime interface {
 	Raw
 	SSL
 	Acme
+	Profiling
 	SocketPath() string
 	IsStatsSocket() bool
 }
