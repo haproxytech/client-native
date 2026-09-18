@@ -10801,6 +10801,30 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/acme_certificate_status"
+  profiling:
+    description: HAProxy runtime profiling state, as reported by "show profiling status".
+    properties:
+      memory:
+        description: Memory usage profiling mode ("set profiling memory {on|off}"). Reported as "off" when HAProxy was built without USE_MEMORY_PROFILING.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      tasks:
+        description: Per-task CPU profiling mode ("set profiling tasks {on|auto|off}").
+        enum:
+          - "on"
+          - "off"
+          - auto
+        type: string
+      tasks_active:
+        description: Whether per-task CPU profiling is currently collecting data. True for "on", and for "auto" once HAProxy has automatically enabled it.
+        readOnly: true
+        type: boolean
+        x-nullable: false
+        x-omitempty: false
+    title: Profiling
+    type: object
   acl_file:
     description: ACL File
     properties:
@@ -12645,6 +12669,7 @@ tags:
   - name: Nameserver
   - name: Peer
   - name: PeerEntry
+  - name: Profiling
   - name: Reloads
     description: |
       Checking reload success. To avoid constant reloading we reload in intervals that are configurable when

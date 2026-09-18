@@ -538,6 +538,8 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/acme_certificate_status"
+  profiling:
+    $ref: "models/runtime/profiling.yaml#/profiling"
   acl_file:
     $ref: "models/runtime/acl_file.yaml#/acl_file"
   acl_files:
@@ -951,6 +953,7 @@ tags:
   - name: Traces
   - name: LogProfile
   - name: Acme
+  - name: Profiling
   - name: HealthCheck
 security:
   - basic_auth: []

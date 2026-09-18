@@ -1511,3 +1511,72 @@ func (c *client) AcmeStatus() (models.AcmeStatus, error) {
 	}
 	return status, nil
 }
+
+// ShowProfilingStatus returns the HAProxy profiling status.
+func (c *client) ShowProfilingStatus() (*models.Profiling, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	profiling, err := c.runtime.ShowProfilingStatus()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return profiling, nil
+}
+
+// ShowProfilingTasks returns the raw output of "show profiling tasks".
+func (c *client) ShowProfilingTasks(opts ProfilingDumpOptions) (string, error) {
+	if !c.runtime.IsValid() {
+		return "", errors.New("no valid runtime found")
+	}
+	dump, err := c.runtime.ShowProfilingTasks(opts)
+	if err != nil {
+		return "", fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return dump, nil
+}
+
+// ShowProfilingMemory returns the raw output of "show profiling memory".
+func (c *client) ShowProfilingMemory(opts ProfilingDumpOptions) (string, error) {
+	if !c.runtime.IsValid() {
+		return "", errors.New("no valid runtime found")
+	}
+	dump, err := c.runtime.ShowProfilingMemory(opts)
+	if err != nil {
+		return "", fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return dump, nil
+}
+
+// SetProfilingTasks sets the per-task CPU profiling mode.
+func (c *client) SetProfilingTasks(mode string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetProfilingTasks(mode); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetProfilingMemory sets the memory usage profiling mode.
+func (c *client) SetProfilingMemory(mode string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetProfilingMemory(mode); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetProfiling applies the profiling settings present in p.
+func (c *client) SetProfiling(p *models.Profiling) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetProfiling(p); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}

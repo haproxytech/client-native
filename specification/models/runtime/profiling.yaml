@@ -1,0 +1,20 @@
+---
+profiling:
+  title: Profiling
+  description: HAProxy runtime profiling state, as reported by "show profiling status".
+  type: object
+  properties:
+    tasks:
+      type: string
+      enum: ["on", "off", "auto"]
+      description: Per-task CPU profiling mode ("set profiling tasks {on|auto|off}").
+    tasks_active:
+      type: boolean
+      readOnly: true
+      x-nullable: false
+      x-omitempty: false
+      description: Whether per-task CPU profiling is currently collecting data. True for "on", and for "auto" once HAProxy has automatically enabled it.
+    memory:
+      type: string
+      enum: ["on", "off"]
+      description: Memory usage profiling mode ("set profiling memory {on|off}"). Reported as "off" when HAProxy was built without USE_MEMORY_PROFILING.
