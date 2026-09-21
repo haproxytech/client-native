@@ -22,12 +22,16 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
 )
 
 type Raw interface {
 	GetRawConfigurationWithClusterData(transactionID string, version int64) (int64, int64, string, string, error)
 	GetRawConfiguration(transactionID string, version int64) (int64, string, error)
 	PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error
+	ValidateRawConfiguration(config string) (string, error)
 }
 
 func (c *client) GetRawConfiguration(transactionID string, version int64) (int64, string, error) {
@@ -125,20 +129,8 @@ func (c *client) getConfigurationMetaData(config string) (int64, int64, string, 
 // matches
 func (c *client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error {
 	if len(onlyValidate) > 0 && onlyValidate[0] {
-		f, err := os.CreateTemp("/tmp", "onlyvalidate")
-		if err != nil {
-			return NewConfError(ErrGeneralError, err.Error())
-		}
-		defer os.Remove(f.Name())
-		_, err = f.WriteString(*config)
-		if err != nil {
-			return NewConfError(ErrGeneralError, err.Error())
-		}
-		err = f.Sync()
-		if err != nil {
-			return NewConfError(ErrGeneralError, err.Error())
-		}
-		return checkHaproxyConfiguration(c.ConfigurationOptions, f.Name())
+		_, err := c.ValidateRawConfiguration(*config)
+		return err
 	}
 	var t string
 	if skipVersionCheck {
@@ -197,6 +189,55 @@ func (c *client) PostRawConfiguration(config *string, version int64, skipVersion
 	}
 
 	return nil
+}
+
+// ValidateRawConfiguration parses the given configuration, writes the parsed
+// result to a temporary file and validates that file with HAProxy. It returns
+// the parsed configuration, that is the data as rendered back by the parser,
+// which is the configuration that would be deployed and therefore the one served
+// back to the caller. The temporary file is removed before returning.
+func (c *client) ValidateRawConfiguration(config string) (string, error) {
+	parserOptions := []parser_options.ParserOption{
+		parser_options.Reader(strings.NewReader(config)),
+	}
+	if c.UseMd5Hash {
+		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
+	}
+	if c.noNamedDefaultsFrom {
+		parserOptions = append(parserOptions, parser_options.NoNamedDefaultsFrom)
+	}
+	p, err := parser.New(parserOptions...)
+	if err != nil {
+		return "", NewConfError(ErrCannotReadConfFile, err.Error())
+	}
+
+	parsed := p.String()
+	if c.UseMd5Hash {
+		parsed, err = p.StringWithHash()
+		if err != nil {
+			return "", NewConfError(ErrGeneralError, err.Error())
+		}
+	}
+
+	f, err := os.CreateTemp("/tmp", "onlyvalidate")
+	if err != nil {
+		return "", NewConfError(ErrGeneralError, err.Error())
+	}
+	defer os.Remove(f.Name())
+	defer f.Close()
+
+	if _, err = f.WriteString(parsed); err != nil {
+		return "", NewConfError(ErrGeneralError, err.Error())
+	}
+	if err = f.Sync(); err != nil {
+		return "", NewConfError(ErrGeneralError, err.Error())
+	}
+
+	if err = checkHaproxyConfiguration(c.ConfigurationOptions, f.Name()); err != nil {
+		return "", err
+	}
+
+	return parsed, nil
 }
 
 // dropVersionFromRaw is used when force pushing a raw configuration with version check:
