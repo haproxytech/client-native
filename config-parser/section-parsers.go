@@ -383,7 +383,6 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Size{Name: "tune.vars.sess-max-size"})
 	addParser(parser, &sequence, &simple.Size{Name: "tune.vars.txn-max-size"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.quic.fe.stream.max-total"})
-	addParser(parser, &sequence, &simple.Number{Name: "tune.quic.frontend.conn-tx-buffers.limit"})
 	addParser(parser, &sequence, &simple.Time{Name: "tune.quic.frontend.max-idle-timeout"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.quic.frontend.max-streams-bidi"})
 	addParser(parser, &sequence, &simple.Size{Name: "tune.quic.frontend.max-tx-mem"})

@@ -1818,10 +1818,6 @@ definitions:
     type: object
   tune_quic_options:
     properties:
-      frontend_conn_tx_buffers_limit:
-        type: integer
-        x-display-name: QUIC Frontend Connection TX Buffer Limit
-        x-nullable: true
       frontend_max_idle_timeout:
         minimum: 0
         type: integer

@@ -34,10 +34,6 @@ import (
 //
 // swagger:model tune_quic_options
 type TuneQuicOptions struct {
-
-	// frontend conn tx buffers limit
-	FrontendConnTxBuffersLimit *int64 `json:"frontend_conn_tx_buffers_limit,omitempty"`
-
 	// frontend max idle timeout
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0

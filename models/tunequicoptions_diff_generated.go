@@ -23,12 +23,6 @@ import (
 
 func (rec TuneQuicOptions) Diff(obj TuneQuicOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
-	for diffKey, diffValue := range DiffPointerInt64(rec.FrontendConnTxBuffersLimit, obj.FrontendConnTxBuffersLimit, opts...) {
-		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
-			diffKey = "." + diffKey
-		}
-		diff["FrontendConnTxBuffersLimit"+diffKey] = diffValue
-	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.FrontendMaxIdleTimeout, obj.FrontendMaxIdleTimeout, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

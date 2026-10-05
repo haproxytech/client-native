@@ -22,8 +22,7 @@ import (
 )
 
 func (rec TuneQuicOptions) Equal(obj TuneQuicOptions, opts ...eqdiff.GoMethodGenOptions) bool {
-	return EqualPointerInt64(rec.FrontendConnTxBuffersLimit, obj.FrontendConnTxBuffersLimit, opts...) &&
-		EqualPointerInt64(rec.FrontendMaxIdleTimeout, obj.FrontendMaxIdleTimeout, opts...) &&
+	return EqualPointerInt64(rec.FrontendMaxIdleTimeout, obj.FrontendMaxIdleTimeout, opts...) &&
 		EqualPointerInt64(rec.FrontendMaxStreamsBidi, obj.FrontendMaxStreamsBidi, opts...) &&
 		EqualPointerInt64(rec.FrontendMaxTxMemory, obj.FrontendMaxTxMemory, opts...) &&
 		EqualPointerInt64(rec.FrontendStreamMaxTotal, obj.FrontendStreamMaxTotal, opts...) &&
