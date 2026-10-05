@@ -47,9 +47,6 @@ type Frontend struct {
 	// filter list
 	FilterList Filters `json:"filter_list,omitempty"`
 
-	// filter sequence list
-	FilterSequenceList FilterSequences `json:"filter_sequence_list,omitempty"`
-
 	// force be switch list
 	ForceBeSwitchList ForceBeSwitches `json:"force_be_switch_list,omitempty"`
 
@@ -100,8 +97,6 @@ func (m *Frontend) UnmarshalJSON(raw []byte) error {
 
 		FilterList Filters `json:"filter_list,omitempty"`
 
-		FilterSequenceList FilterSequences `json:"filter_sequence_list,omitempty"`
-
 		ForceBeSwitchList ForceBeSwitches `json:"force_be_switch_list,omitempty"`
 
 		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
@@ -133,8 +128,6 @@ func (m *Frontend) UnmarshalJSON(raw []byte) error {
 	m.CaptureList = dataAO1.CaptureList
 
 	m.FilterList = dataAO1.FilterList
-
-	m.FilterSequenceList = dataAO1.FilterSequenceList
 
 	m.ForceBeSwitchList = dataAO1.ForceBeSwitchList
 
@@ -177,8 +170,6 @@ func (m Frontend) MarshalJSON() ([]byte, error) {
 
 		FilterList Filters `json:"filter_list,omitempty"`
 
-		FilterSequenceList FilterSequences `json:"filter_sequence_list,omitempty"`
-
 		ForceBeSwitchList ForceBeSwitches `json:"force_be_switch_list,omitempty"`
 
 		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
@@ -207,8 +198,6 @@ func (m Frontend) MarshalJSON() ([]byte, error) {
 	dataAO1.CaptureList = m.CaptureList
 
 	dataAO1.FilterList = m.FilterList
-
-	dataAO1.FilterSequenceList = m.FilterSequenceList
 
 	dataAO1.ForceBeSwitchList = m.ForceBeSwitchList
 
@@ -260,10 +249,6 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFilterList(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateFilterSequenceList(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -378,24 +363,6 @@ func (m *Frontend) validateFilterList(formats strfmt.Registry) error {
 			return ve.ValidateName("filter_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("filter_list")
-		}
-		return err
-	}
-
-	return nil
-}
-
-func (m *Frontend) validateFilterSequenceList(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.FilterSequenceList) { // not required
-		return nil
-	}
-
-	if err := m.FilterSequenceList.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("filter_sequence_list")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("filter_sequence_list")
 		}
 		return err
 	}
@@ -617,10 +584,6 @@ func (m *Frontend) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateFilterSequenceList(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateForceBeSwitchList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -716,20 +679,6 @@ func (m *Frontend) contextValidateFilterList(ctx context.Context, formats strfmt
 			return ve.ValidateName("filter_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("filter_list")
-		}
-		return err
-	}
-
-	return nil
-}
-
-func (m *Frontend) contextValidateFilterSequenceList(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := m.FilterSequenceList.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("filter_sequence_list")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("filter_sequence_list")
 		}
 		return err
 	}

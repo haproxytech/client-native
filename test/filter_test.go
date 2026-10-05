@@ -18,6 +18,7 @@ package test
 import (
 	_ "embed"
 	"fmt"
+	"os"
 	"reflect"
 	"testing"
 
@@ -183,5 +184,73 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existent filter")
 		version++
+	}
+}
+
+// TestCompressionFilterCRUD exercises the plain filter CRUD API with the two
+// compression direction filters on both parent types, checking type, order and
+// metadata across create, get, edit and replace.
+func TestCompressionFilterCRUD(t *testing.T) {
+	tests := []struct {
+		name       string
+		parentType string
+		parentName string
+	}{
+		{"frontend", configuration.FrontendParentName, "test"},
+		{"backend", configuration.BackendParentName, "test_2"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			clientTest, filename, err := getTestClient()
+			require.NoError(t, err)
+			defer os.Remove(filename)
+
+			ver := func() int64 {
+				v, err := clientTest.GetVersion("")
+				require.NoError(t, err)
+				return v
+			}
+
+			reqMeta := map[string]interface{}{"key": "req"}
+			resMeta := map[string]interface{}{"key": "res"}
+
+			// Start from a known empty filter list.
+			require.NoError(t, clientTest.ReplaceFilters(tt.parentType, tt.parentName, models.Filters{}, "", ver()))
+
+			// Create both compression types.
+			require.NoError(t, clientTest.CreateFilter(0, tt.parentType, tt.parentName, &models.Filter{Type: "comp-req", Metadata: reqMeta}, "", ver()))
+			require.NoError(t, clientTest.CreateFilter(1, tt.parentType, tt.parentName, &models.Filter{Type: "comp-res", Metadata: resMeta}, "", ver()))
+
+			_, filters, err := clientTest.GetFilters(tt.parentType, tt.parentName, "")
+			require.NoError(t, err)
+			requireCompressionFilterTypes(t, filters, "comp-req", "comp-res")
+
+			// Get a single filter back.
+			_, one, err := clientTest.GetFilter(0, tt.parentType, tt.parentName, "")
+			require.NoError(t, err)
+			require.Equal(t, "comp-req", one.Type)
+
+			// Edit one filter to the other compression type.
+			require.NoError(t, clientTest.EditFilter(1, tt.parentType, tt.parentName, &models.Filter{Type: "comp-req", Metadata: reqMeta}, "", ver()))
+			_, filters, err = clientTest.GetFilters(tt.parentType, tt.parentName, "")
+			require.NoError(t, err)
+			requireCompressionFilterTypes(t, filters, "comp-req", "comp-req")
+
+			// Replace the whole list and reorder; a whole-list write preserves
+			// the filter metadata.
+			require.NoError(t, clientTest.ReplaceFilters(tt.parentType, tt.parentName, models.Filters{
+				&models.Filter{Type: "comp-res", Metadata: resMeta},
+				&models.Filter{Type: "comp-req", Metadata: reqMeta},
+			}, "", ver()))
+			_, filters, err = clientTest.GetFilters(tt.parentType, tt.parentName, "")
+			require.NoError(t, err)
+			requireCompressionFilters(t, filters, []string{"comp-res", "comp-req"}, []map[string]interface{}{resMeta, reqMeta})
+
+			// Delete one filter.
+			require.NoError(t, clientTest.DeleteFilter(0, tt.parentType, tt.parentName, "", ver()))
+			_, filters, err = clientTest.GetFilters(tt.parentType, tt.parentName, "")
+			require.NoError(t, err)
+			requireCompressionFilterTypes(t, filters, "comp-req")
+		})
 	}
 }
