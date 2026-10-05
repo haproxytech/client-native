@@ -17,7 +17,9 @@ package test
 
 import (
 	_ "embed"
+	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -335,4 +337,128 @@ func TestCreateEditDeleteStructuredFrontend(t *testing.T) {
 
 	err = clientTest.DeleteFrontend("doesnotexist", "", version)
 	require.Error(t, err, "Should throw error, non existent frontend")
+}
+
+func requireCompressionFilterTypes(t *testing.T, filters models.Filters, wantTypes ...string) {
+	t.Helper()
+	require.Len(t, filters, len(wantTypes))
+	for i, wantType := range wantTypes {
+		require.NotNil(t, filters[i], "filter %d", i)
+		require.Equal(t, wantType, filters[i].Type, "filter %d type", i)
+	}
+}
+
+func requireCompressionFilters(t *testing.T, filters models.Filters, wantTypes []string, wantMetadata []map[string]interface{}) {
+	t.Helper()
+	require.Len(t, filters, len(wantTypes))
+	for i, wantType := range wantTypes {
+		require.NotNil(t, filters[i], "filter %d", i)
+		require.Equal(t, wantType, filters[i].Type, "filter %d type", i)
+		require.Equal(t, wantMetadata[i], filters[i].Metadata, "filter %d metadata", i)
+	}
+}
+
+// sectionByHeader returns the raw text of the section whose header line equals
+// header, up to the next top-level line.
+func sectionByHeader(raw, header string) string {
+	lines := strings.Split(raw, "\n")
+	start := -1
+	for i, line := range lines {
+		if strings.TrimSpace(line) == header {
+			start = i
+			break
+		}
+	}
+	if start == -1 {
+		return ""
+	}
+	end := len(lines)
+	for i := start + 1; i < len(lines); i++ {
+		line := lines[i]
+		if line != "" && !strings.HasPrefix(line, " ") && !strings.HasPrefix(line, "#") && !strings.HasPrefix(line, "\t") {
+			end = i
+			break
+		}
+	}
+	return strings.Join(lines[start:end], "\n")
+}
+
+// requireRawCompressionFilters asserts only the given section serializes exactly
+// the wanted compression directions, in order, with no filter-sequence line.
+func requireRawCompressionFilters(t *testing.T, filename, header string, wantTypes ...string) {
+	t.Helper()
+	raw, err := os.ReadFile(filename)
+	require.NoError(t, err)
+	block := sectionByHeader(string(raw), header)
+	require.Contains(t, block, header)
+	require.NotContains(t, block, "filter-sequence")
+	got := []string{}
+	for _, line := range strings.Split(block, "\n") {
+		line = strings.TrimSpace(line)
+		switch {
+		case strings.HasPrefix(line, "filter comp-req"):
+			got = append(got, "comp-req")
+		case strings.HasPrefix(line, "filter comp-res"):
+			got = append(got, "comp-res")
+		}
+	}
+	require.Equal(t, wantTypes, got, "raw filter directives in %s", header)
+}
+
+func requireNoFilterSequenceJSON(t *testing.T, v interface{}) {
+	t.Helper()
+	out, err := json.Marshal(v)
+	require.NoError(t, err)
+	require.Contains(t, string(out), "\"filter_list\"")
+	require.NotContains(t, string(out), "filter_sequence_list")
+}
+
+func TestStructuredCompressionFilterFrontend(t *testing.T) {
+	clientTest, filename, err := getTestClient()
+	require.NoError(t, err)
+	defer os.Remove(filename)
+	version := int64(1)
+
+	reqMeta := map[string]interface{}{"key": "req"}
+	resMeta := map[string]interface{}{"key": "res"}
+
+	frontend := &models.Frontend{
+		FrontendBase: models.FrontendBase{
+			Name: "compressionfilter",
+			Mode: "http",
+		},
+		FilterList: models.Filters{
+			&models.Filter{Type: "comp-req", Metadata: reqMeta},
+			&models.Filter{Type: "comp-res", Metadata: resMeta},
+		},
+	}
+
+	err = clientTest.CreateStructuredFrontend(frontend, "", version)
+	require.NoError(t, err)
+	version++
+
+	v, got, err := clientTest.GetStructuredFrontend("compressionfilter", "")
+	require.NoError(t, err)
+	require.Equal(t, version, v, "Version %v returned, expected %v", v, version)
+	requireCompressionFilters(t, got.FilterList, []string{"comp-req", "comp-res"}, []map[string]interface{}{reqMeta, resMeta})
+	requireRawCompressionFilters(t, filename, "frontend compressionfilter", "comp-req", "comp-res")
+	requireNoFilterSequenceJSON(t, got)
+
+	frontend.FilterList = models.Filters{
+		&models.Filter{Type: "comp-res", Metadata: resMeta},
+		&models.Filter{Type: "comp-req", Metadata: reqMeta},
+	}
+	err = clientTest.EditStructuredFrontend("compressionfilter", frontend, "", version)
+	require.NoError(t, err)
+	version++
+
+	v, got, err = clientTest.GetStructuredFrontend("compressionfilter", "")
+	require.NoError(t, err)
+	require.Equal(t, version, v, "Version %v returned, expected %v", v, version)
+	requireCompressionFilters(t, got.FilterList, []string{"comp-res", "comp-req"}, []map[string]interface{}{resMeta, reqMeta})
+	requireRawCompressionFilters(t, filename, "frontend compressionfilter", "comp-res", "comp-req")
+	requireNoFilterSequenceJSON(t, got)
+
+	err = clientTest.DeleteFrontend("compressionfilter", "", version)
+	require.NoError(t, err)
 }

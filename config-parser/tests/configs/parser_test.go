@@ -17,12 +17,16 @@ package configs //nolint:testpackage
 
 import (
 	"bytes"
+	"errors"
 	"os"
 	"strings"
 	"testing"
 
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/options"
+	"github.com/haproxytech/client-native/v6/config-parser/parsers/filters"
+	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
 
 func TestWholeConfigs(t *testing.T) {
@@ -196,5 +200,101 @@ func TestDefaultSectionsSkipOnWriteParsers(t *testing.T) {
 			compare(t, tt.Config, tt.Result)
 			t.Fatalf("configurations does not match")
 		}
+	}
+}
+
+// TestRemovedFilterSequence asserts that the standalone filter-sequence directive
+// no longer has a dedicated typed parser in frontend, backend and listen sections,
+// while the generic unprocessed parser keeps the raw lines and the ordinary
+// compression filters remain typed.
+func TestRemovedFilterSequence(t *testing.T) { //nolint:gocognit
+	wantSequence := []string{
+		"filter-sequence request lua.my-filter,comp-req",
+		"filter-sequence response lua.my-filter,comp-res",
+	}
+	tests := []struct {
+		name    string
+		section parser.Section
+	}{
+		{"frontend", parser.Frontends},
+		{"backend", parser.Backends},
+		{"listen", parser.Listen},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			config := tt.name + ` test
+  filter comp-req
+  filter comp-res
+  filter-sequence request lua.my-filter,comp-req
+  filter-sequence response lua.my-filter,comp-res
+`
+			p, err := parser.New(options.String(config), options.UseListenSectionParsers)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			// The dedicated filter-sequence parser must be gone.
+			if _, err = p.Get(tt.section, "test", "filter-sequence", false); !errors.Is(err, parser_errors.ErrParserMissing) {
+				t.Fatalf("filter-sequence parser must be missing, got err=%v", err)
+			}
+
+			// The generic unprocessed parser must retain exactly the two sequence lines.
+			data, err := p.Get(tt.section, "test", "", false)
+			if err != nil {
+				t.Fatalf("unprocessed fetch: %v", err)
+			}
+			unprocessed, ok := data.([]types.UnProcessed)
+			if !ok {
+				t.Fatalf("unexpected unprocessed type %T", data)
+			}
+			remaining := map[string]bool{}
+			for _, line := range wantSequence {
+				remaining[line] = true
+			}
+			got := []string{}
+			for _, entry := range unprocessed {
+				if !strings.HasPrefix(entry.Value, "filter-sequence ") {
+					continue
+				}
+				got = append(got, entry.Value)
+				if !remaining[entry.Value] {
+					t.Fatalf("unexpected unprocessed line %q", entry.Value)
+				}
+				delete(remaining, entry.Value)
+			}
+			if len(got) != len(wantSequence) || len(remaining) != 0 {
+				t.Fatalf("unprocessed filter-sequence lines = %v, want %v", got, wantSequence)
+			}
+
+			// Compression filters must remain typed.
+			fdata, err := p.Get(tt.section, "test", "filter", false)
+			if err != nil {
+				t.Fatalf("filter fetch: %v", err)
+			}
+			tsFilters, ok := fdata.([]types.Filter)
+			if !ok {
+				t.Fatalf("unexpected filter type %T", fdata)
+			}
+			typed := map[string]bool{}
+			for _, filter := range tsFilters {
+				switch filter.(type) {
+				case *filters.CompReq:
+					typed["comp-req"] = true
+				case *filters.CompRes:
+					typed["comp-res"] = true
+				}
+			}
+			if !typed["comp-req"] || !typed["comp-res"] {
+				t.Fatalf("expected typed comp-req and comp-res filters, got %v", typed)
+			}
+
+			// Serialized output must keep both the sequence lines and the filters.
+			result := p.String()
+			for _, want := range append([]string{"filter comp-req", "filter comp-res"}, wantSequence...) {
+				if !strings.Contains(result, want) {
+					t.Fatalf("serialized output missing %q:\n%s", want, result)
+				}
+			}
+		})
 	}
 }

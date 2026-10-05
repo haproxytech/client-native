@@ -610,3 +610,53 @@ func TestCreateEditDeleteStructuredBackendHTTPConnectionMode(t *testing.T) {
 	require.NoError(t, err)
 	version++
 }
+
+func TestStructuredCompressionFilterBackend(t *testing.T) {
+	clientTest, filename, err := getTestClient()
+	require.NoError(t, err)
+	defer os.Remove(filename)
+	version := int64(1)
+
+	reqMeta := map[string]interface{}{"key": "req"}
+	resMeta := map[string]interface{}{"key": "res"}
+
+	backend := &models.Backend{
+		BackendBase: models.BackendBase{
+			Name: "compressionfilter",
+			Mode: "http",
+		},
+		FilterList: models.Filters{
+			&models.Filter{Type: "comp-req", Metadata: reqMeta},
+			&models.Filter{Type: "comp-res", Metadata: resMeta},
+		},
+	}
+
+	err = clientTest.CreateStructuredBackend(backend, "", version)
+	require.NoError(t, err)
+	version++
+
+	v, got, err := clientTest.GetStructuredBackend("compressionfilter", "")
+	require.NoError(t, err)
+	require.Equal(t, version, v, "Version %v returned, expected %v", v, version)
+	requireCompressionFilters(t, got.FilterList, []string{"comp-req", "comp-res"}, []map[string]interface{}{reqMeta, resMeta})
+	requireRawCompressionFilters(t, filename, "backend compressionfilter", "comp-req", "comp-res")
+	requireNoFilterSequenceJSON(t, got)
+
+	backend.FilterList = models.Filters{
+		&models.Filter{Type: "comp-res", Metadata: resMeta},
+		&models.Filter{Type: "comp-req", Metadata: reqMeta},
+	}
+	err = clientTest.EditStructuredBackend("compressionfilter", backend, "", version)
+	require.NoError(t, err)
+	version++
+
+	v, got, err = clientTest.GetStructuredBackend("compressionfilter", "")
+	require.NoError(t, err)
+	require.Equal(t, version, v, "Version %v returned, expected %v", v, version)
+	requireCompressionFilters(t, got.FilterList, []string{"comp-res", "comp-req"}, []map[string]interface{}{resMeta, reqMeta})
+	requireRawCompressionFilters(t, filename, "backend compressionfilter", "comp-res", "comp-req")
+	requireNoFilterSequenceJSON(t, got)
+
+	err = clientTest.DeleteBackend("compressionfilter", "", version)
+	require.NoError(t, err)
+}
