@@ -2119,16 +2119,7 @@ func parseTuneLuaOptions(p parser.Parser) (*models.TuneLuaOptions, error) {
 func parseTuneQuicOptions(p parser.Parser) (*models.TuneQuicOptions, error) {
 	options := &models.TuneQuicOptions{}
 	isEmpty := true
-	intPOption, err := parseInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit")
-	if err != nil {
-		return nil, err
-	}
-	if intPOption != nil {
-		isEmpty = false
-		options.FrontendConnTxBuffersLimit = intPOption
-	}
-
-	intPOption, err = parseTimeoutOption(p, "tune.quic.frontend.max-idle-timeout")
+	intPOption, err := parseTimeoutOption(p, "tune.quic.frontend.max-idle-timeout")
 	if err != nil {
 		return nil, err
 	}
@@ -3931,9 +3922,6 @@ func serializeTuneLuaOptions(p parser.Parser, options *models.TuneLuaOptions, co
 func serializeTuneQuicOptions(p parser.Parser, options *models.TuneQuicOptions, configOptions *options.ConfigurationOptions) error {
 	if options == nil {
 		options = &models.TuneQuicOptions{}
-	}
-	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.FrontendConnTxBuffersLimit); err != nil {
-		return err
 	}
 	if err := serializeTimeoutOption(p, "tune.quic.frontend.max-idle-timeout", options.FrontendMaxIdleTimeout, configOptions); err != nil {
 		return err

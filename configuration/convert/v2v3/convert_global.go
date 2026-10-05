@@ -5,7 +5,7 @@ import (
 	v3 "github.com/haproxytech/client-native/v6/models"
 )
 
-func GlobalV2ToV3(v2g *v2.Global) (*v3.GlobalBase, error) { //nolint:maintidx
+func GlobalV2ToV3(v2g *v2.Global) (*v3.GlobalBase, error) {
 	var v3g *v3.GlobalBase
 	// Global
 	daemon := v2g.Daemon == "enabled"
@@ -42,12 +42,11 @@ func GlobalV2ToV3(v2g *v2.Global) (*v3.GlobalBase, error) { //nolint:maintidx
 	// TuneQuicOptions
 	if v2g.TuneOptions != nil {
 		tuneQuicOptions := &v3.TuneQuicOptions{
-			FrontendConnTxBuffersLimit: v2g.TuneOptions.QuicFrontendConnTxBuffersLimit,
-			FrontendMaxIdleTimeout:     v2g.TuneOptions.QuicFrontendMaxIdleTimeout,
-			FrontendMaxStreamsBidi:     v2g.TuneOptions.QuicFrontendMaxStreamsBidi,
-			MaxFrameLoss:               v2g.TuneOptions.QuicMaxFrameLoss,
-			RetryThreshold:             v2g.TuneOptions.QuicRetryThreshold,
-			SocketOwner:                v2g.TuneOptions.QuicSocketOwner,
+			FrontendMaxIdleTimeout: v2g.TuneOptions.QuicFrontendMaxIdleTimeout,
+			FrontendMaxStreamsBidi: v2g.TuneOptions.QuicFrontendMaxStreamsBidi,
+			MaxFrameLoss:           v2g.TuneOptions.QuicMaxFrameLoss,
+			RetryThreshold:         v2g.TuneOptions.QuicRetryThreshold,
+			SocketOwner:            v2g.TuneOptions.QuicSocketOwner,
 			// ReorderRatio: not present in v2
 			// ZeroCopyFwdSend: not present in v2
 		}

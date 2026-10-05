@@ -134,7 +134,6 @@ global
   tune.vars.sess-max-size 54
   tune.vars.txn-max-size 55
   tune.quic.fe.stream.max-total 1000
-  tune.quic.frontend.conn-tx-buffers.limit 10
   tune.quic.frontend.max-idle-timeout 10000
   tune.quic.frontend.max-streams-bidi 100
   tune.quic.frontend.max-tx-mem 1k

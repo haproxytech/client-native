@@ -770,10 +770,6 @@ tune_options:
 tune_quic_options:
   type: object
   properties:
-    frontend_conn_tx_buffers_limit:
-      type: integer
-      x-display-name: QUIC Frontend Connection TX Buffer Limit
-      x-nullable: true
     frontend_max_idle_timeout:
       type: integer
       minimum: 0
