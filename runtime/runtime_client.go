@@ -735,6 +735,11 @@ func (c *client) AddMapPayloadVersioned(name string, entries models.MapEntries) 
 		canAtomicUpdate = true
 	}
 	exceededSize, payload := parseMapPayload(entries, maxBufSize)
+	// No entries produces an empty payload; indexing it would panic, and
+	// there is nothing to send to HAProxy anyway.
+	if len(payload) == 0 {
+		return nil
+	}
 	if canAtomicUpdate && exceededSize {
 		var version string
 		version, err = c.runtime.PrepareMap(name)
