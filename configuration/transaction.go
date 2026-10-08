@@ -589,6 +589,10 @@ func (t *Transaction) GetTransactionFile(transactionID string) (string, error) {
 	if transactionID == "" {
 		return t.ConfigurationFile, nil
 	}
+	// the id is part of a file name in TransactionDir: no path separators
+	if strings.ContainsAny(transactionID, `/\`) {
+		return "", NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction file %v does not exist", transactionID))
+	}
 	// First find failed transaction file
 	transactionFileName := t.getTransactionFileName(transactionID)
 
