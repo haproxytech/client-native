@@ -22,6 +22,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/google/renameio"
@@ -100,7 +101,10 @@ func (c *spoeclient) GetAll() ([]string, error) {
 
 // Delete deletes one SPOE file by its name
 func (c *spoeclient) Delete(name string) error {
-	name = c.setFilePath(name)
+	name, err := c.setFilePath(name)
+	if err != nil {
+		return err
+	}
 	if err := os.Remove(name); err != nil {
 		if os.IsNotExist(err) {
 			return nil
@@ -113,7 +117,10 @@ func (c *spoeclient) Delete(name string) error {
 
 // Create creates a new SPOE file with its entries, returns an error if file already exists
 func (c *spoeclient) Create(name string, readCloser io.ReadCloser) (string, error) {
-	name = c.setFilePath(name)
+	name, err := c.setFilePath(name)
+	if err != nil {
+		return "", err
+	}
 	if _, err := os.Stat(name); err == nil {
 		return "", fmt.Errorf("file %s already exists. You should delete an existing file first", name)
 	}
@@ -180,8 +187,12 @@ func (c *spoeclient) getSpoeFiles(dir string) ([]string, error) {
 	return files, nil
 }
 
-func (c *spoeclient) setFilePath(name string) string {
-	return path.Join(c.initParams.SpoeDir, "/", name)
+// setFilePath returns the path of the SPOE file name in SpoeDir. name must be a plain file name.
+func (c *spoeclient) setFilePath(name string) (string, error) {
+	if name == "" || name == "." || name == ".." || strings.ContainsAny(name, `/\`) {
+		return "", conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("spoe file %s does not exist", name))
+	}
+	return path.Join(c.initParams.SpoeDir, name), nil
 }
 
 // getFileName returns file name
