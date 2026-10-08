@@ -357,7 +357,7 @@ func (s *Service) nodeRemoved(node *ServiceNode, servers []ServiceServer) bool {
 }
 
 func (s *Service) nodesMatch(sNode *ServiceNode, servers ServiceServer) bool {
-	return !sNode.disabled && sNode.address == servers.Address && ((sNode.port != nil && *sNode.port == *servers.Port) || sNode.port == nil && servers.Port == nil)
+	return !sNode.disabled && sNode.address == servers.Address && ((sNode.port != nil && servers.Port != nil && *sNode.port == *servers.Port) || sNode.port == nil && servers.Port == nil)
 }
 
 func (s *Service) serverExists(server ServiceServer) bool {
