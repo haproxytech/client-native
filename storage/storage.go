@@ -177,7 +177,7 @@ func (s storage) Replace(name string, config string) (string, error) {
 	case MapsType:
 	}
 
-	err = renameio.WriteFile(f, []byte(config), 0o644)
+	err = renameio.WriteFile(f, []byte(config), s.fileMode())
 	if err != nil {
 		return "", err
 	}
@@ -214,7 +214,7 @@ func (s *storage) createSSL(name string, readCloser io.ReadCloser) (string, int6
 	if err != nil {
 		return "", -1, err
 	}
-	err = renameio.WriteFile(name, b, 0o644)
+	err = renameio.WriteFile(name, b, s.fileMode())
 	if err != nil {
 		return "", -1, err
 	}
@@ -341,4 +341,12 @@ func parsePrivateKey(der []byte) (crypto.PrivateKey, error) {
 	}
 
 	return nil, errors.New("failed to parse private key")
+}
+
+// fileMode returns the mode of stored files: certificate bundles hold private keys.
+func (s *storage) fileMode() os.FileMode {
+	if s.fileType == SSLType {
+		return 0o600
+	}
+	return 0o644
 }
