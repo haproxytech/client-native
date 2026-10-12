@@ -77,7 +77,7 @@ func (c *client) GetTCPResponseRule(id int64, parentType, parentName string, tra
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("tcp-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-response", parentType, parentName)
 	if err != nil {
 		return v, nil, err
 	}
@@ -102,7 +102,7 @@ func (c *client) DeleteTCPResponseRule(id int64, parentType, parentName string, 
 	if err != nil {
 		return err
 	}
-	section, parentName, err := getParserFromParent("tcp-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -128,7 +128,7 @@ func (c *client) CreateTCPResponseRule(id int64, parentType, parentName string, 
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("tcp-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -157,7 +157,7 @@ func (c *client) EditTCPResponseRule(id int64, parentType, parentName string, da
 	if err != nil {
 		return err
 	}
-	section, parentName, err := getParserFromParent("tcp-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -191,7 +191,7 @@ func (c *client) ReplaceTCPResponseRules(parentType, parentName string, data mod
 	if err != nil {
 		return err
 	}
-	section, parentName, err := getParserFromParent("tcp-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -222,7 +222,7 @@ func (c *client) ReplaceTCPResponseRules(parentType, parentName string, data mod
 }
 
 func ParseTCPResponseRules(parentType, parentName string, p parser.Parser) (models.TCPResponseRules, error) {
-	section, pName, err := getParserFromParent("tcp-response", parentType, parentName)
+	section, pName, err := getParserFromParent(p, "tcp-response", parentType, parentName)
 	if err != nil {
 		return nil, err
 	}

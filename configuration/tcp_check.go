@@ -83,7 +83,7 @@ func (c *client) GetTCPCheck(id int64, parentType string, parentName string, tra
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -116,7 +116,7 @@ func (c *client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -151,7 +151,7 @@ func (c *client) CreateTCPCheck(id int64, parentType string, parentName string, 
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -188,7 +188,7 @@ func (c *client) EditTCPCheck(id int64, parentType string, parentName string, da
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -236,7 +236,7 @@ func (c *client) ReplaceTCPChecks(parentType string, parentName string, data mod
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -266,7 +266,7 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 	case DefaultsParentName:
 		section = parser.Defaults
 		if pName == "" {
-			pName = parser.DefaultSectionName
+			pName = parser.DefaultsSectionName(p)
 		}
 	case HealthcheckParentName:
 		section = parser.HealthChecks
