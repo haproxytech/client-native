@@ -48,7 +48,7 @@ func (c *client) GetDefaultsConfiguration(transactionID string) (int64, *models.
 	}
 
 	d := &models.Defaults{}
-	_ = ParseSection(d, parser.Defaults, parser.DefaultSectionName, p)
+	_ = ParseSection(d, parser.Defaults, parser.DefaultsSectionName(p), p)
 
 	return v, d, nil
 }
@@ -63,7 +63,12 @@ func (c *client) PushDefaultsConfiguration(data *models.Defaults, transactionID 
 		}
 	}
 
-	return c.editSection(parser.Defaults, parser.DefaultSectionName, data, transactionID, version)
+	p, err := c.GetParser(transactionID)
+	if err != nil {
+		return err
+	}
+
+	return c.editSection(parser.Defaults, parser.DefaultsSectionName(p), data, transactionID, version)
 }
 
 // GetDefaultsSections returns configuration version and an array of

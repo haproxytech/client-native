@@ -57,7 +57,38 @@ const (
 	GlobalSectionName   = "data"
 )
 
+// DefaultSectionName is deprecated. It is retained only for source
+// compatibility. The parser no longer reads or writes it, so parsing a
+// configuration no longer updates this variable and legacy readers will not
+// observe the selected defaults section. Use DefaultsSectionName to obtain the
+// defaults section selected by a particular parser instance. A process-wide
+// value cannot represent more than one parser, so concurrent parsers and
+// clients must not rely on it.
+//
+// Deprecated: use DefaultsSectionName instead.
 var DefaultSectionName = "" //nolint:gochecknoglobals
+
+// DefaultSectionNamer is an optional interface implemented by parsers that can
+// report the name of the defaults section they have selected. It is optional so
+// that foreign Parser implementations and wrappers remain source compatible.
+type DefaultSectionNamer interface {
+	DefaultSectionName() string
+}
+
+// DefaultsSectionName returns the name of the defaults section selected by the
+// given parser. Parsers that do not implement DefaultSectionNamer, such as
+// foreign implementations or wrappers that only embed Parser, return an empty
+// string. There is no process-wide fallback, so such callers cannot reach
+// another parser's selection.
+func DefaultsSectionName(p Parser) string {
+	if p == nil {
+		return ""
+	}
+	if namer, ok := p.(DefaultSectionNamer); ok {
+		return namer.DefaultSectionName()
+	}
+	return ""
+}
 
 type Parser interface {
 	LoadData(path string) error
@@ -92,6 +123,7 @@ type configParser struct {
 	Parsers                 map[Section]map[string]*Parsers
 	Options                 options.Parser
 	lastDefaultsSectionName string
+	defaultSectionName      string
 	mutex                   *sync.Mutex
 }
 
@@ -128,4 +160,12 @@ func New(opt ...options.ParserOption) (Parser, error) {
 		p.Options.Logger.Warningf("%sno configuration source provided", p.Options.LogPrefix)
 	}
 	return p, p.Process(strings.NewReader(""))
+}
+
+// DefaultSectionName returns the defaults section selected by this parser
+// instance. It implements DefaultSectionNamer.
+func (p *configParser) DefaultSectionName() string {
+	p.lock()
+	defer p.unLock()
+	return p.defaultSectionName
 }
