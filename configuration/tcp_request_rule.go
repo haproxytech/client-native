@@ -79,7 +79,7 @@ func (c *client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-request", parentType, parentName)
 	if err != nil {
 		return v, nil, err
 	}
@@ -104,7 +104,7 @@ func (c *client) DeleteTCPRequestRule(id int64, parentType string, parentName st
 	if err != nil {
 		return err
 	}
-	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -130,7 +130,7 @@ func (c *client) CreateTCPRequestRule(id int64, parentType string, parentName st
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -160,7 +160,7 @@ func (c *client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	if err != nil {
 		return err
 	}
-	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -198,7 +198,7 @@ func (c *client) ReplaceTCPRequestRules(parentType string, parentName string, da
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "tcp-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -229,7 +229,7 @@ func (c *client) ReplaceTCPRequestRules(parentType string, parentName string, da
 }
 
 func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRules, error) {
-	section, pName, err := getParserFromParent("tcp-request", t, pName)
+	section, pName, err := getParserFromParent(p, "tcp-request", t, pName)
 	if err != nil {
 		return nil, err
 	}

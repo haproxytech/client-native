@@ -73,7 +73,7 @@ func (c *client) GetQUICInitialRule(id int64, parentType, parentName string, tra
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("quic-initial", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "quic-initial", parentType, parentName)
 	if err != nil {
 		return v, nil, err
 	}
@@ -99,7 +99,7 @@ func (c *client) DeleteQUICInitialRule(id int64, parentType string, parentName s
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("quic-initial", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "quic-initial", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,7 @@ func (c *client) CreateQUICInitialRule(id int64, parentType string, parentName s
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("quic-initial", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "quic-initial", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -156,7 +156,7 @@ func (c *client) EditQUICInitialRule(id int64, parentType string, parentName str
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("quic-initial", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "quic-initial", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -193,7 +193,7 @@ func (c *client) ReplaceQUICInitialRules(parentType string, parentName string, d
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("quic-initial", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "quic-initial", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -224,7 +224,7 @@ func (c *client) ReplaceQUICInitialRules(parentType string, parentName string, d
 }
 
 func ParseQUICInitialRules(t, pName string, p parser.Parser) (models.QUICInitialRules, error) {
-	section, pName, err := getParserFromParent("quic-initial", t, pName)
+	section, pName, err := getParserFromParent(p, "quic-initial", t, pName)
 	if err != nil {
 		return nil, err
 	}

@@ -81,7 +81,7 @@ func (c *client) GetHTTPCheck(id int64, parentType string, parentName string, tr
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -112,7 +112,7 @@ func (c *client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -145,7 +145,7 @@ func (c *client) CreateHTTPCheck(id int64, parentType string, parentName string,
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -180,7 +180,7 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -226,7 +226,7 @@ func (c *client) ReplaceHTTPChecks(parentType string, parentName string, data mo
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	}
 
@@ -256,7 +256,7 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 	case DefaultsParentName:
 		section = parser.Defaults
 		if pName == "" {
-			pName = parser.DefaultSectionName
+			pName = parser.DefaultsSectionName(p)
 		}
 	case BackendParentName:
 		section = parser.Backends
