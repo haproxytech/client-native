@@ -34,7 +34,7 @@ type Parser interface {
 	Save(transactionFile, transactionID string) error
 }
 
-func getParserFromParent(attribute, parentType, parentName string) (parser.Section, string, error) {
+func getParserFromParent(p parser.Parser, attribute, parentType, parentName string) (parser.Section, string, error) {
 	switch attribute {
 	case "http-request", "http-response", "http-after-response", "tcp-request", "quic-initial":
 		switch parentType {
@@ -44,7 +44,7 @@ func getParserFromParent(attribute, parentType, parentName string) (parser.Secti
 			return parser.Frontends, parentName, nil
 		case DefaultsParentName:
 			if parentName == "" {
-				parentName = parser.DefaultSectionName
+				parentName = parser.DefaultsSectionName(p)
 			}
 			return parser.Defaults, parentName, nil
 
@@ -61,7 +61,7 @@ func getParserFromParent(attribute, parentType, parentName string) (parser.Secti
 			return parser.FCGIApp, parentName, nil
 		case DefaultsParentName:
 			if parentName == "" {
-				parentName = parser.DefaultSectionName
+				parentName = parser.DefaultsSectionName(p)
 			}
 			return parser.Defaults, parentName, nil
 
@@ -74,7 +74,7 @@ func getParserFromParent(attribute, parentType, parentName string) (parser.Secti
 			return parser.Backends, parentName, nil
 		case DefaultsParentName:
 			if parentName == "" {
-				parentName = parser.DefaultSectionName
+				parentName = parser.DefaultsSectionName(p)
 			}
 			return parser.Defaults, parentName, nil
 		default:
