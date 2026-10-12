@@ -49,7 +49,7 @@ func (c *client) GetACLs(parentType, parentName string, transactionID string, ac
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("acl", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "acl", parentType, parentName)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -75,7 +75,7 @@ func (c *client) GetACL(id int64, parentType, parentName string, transactionID s
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("acl", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "acl", parentType, parentName)
 	if err != nil {
 		return v, nil, err
 	}
@@ -98,7 +98,7 @@ func (c *client) DeleteACL(id int64, parentType string, parentName string, trans
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("acl", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "acl", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,7 @@ func (c *client) CreateACL(id int64, parentType string, parentName string, data 
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("acl", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "acl", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -151,7 +151,7 @@ func (c *client) EditACL(id int64, parentType string, parentName string, data *m
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("acl", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "acl", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -182,7 +182,7 @@ func (c *client) ReplaceAcls(parentType string, parentName string, data models.A
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("acl", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "acl", parentType, parentName)
 	if err != nil {
 		return err
 	}

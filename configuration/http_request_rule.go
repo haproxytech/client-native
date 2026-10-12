@@ -76,7 +76,7 @@ func (c *client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-request", parentType, parentName)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -102,7 +102,7 @@ func (c *client) DeleteHTTPRequestRule(id int64, parentType string, parentName s
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -129,7 +129,7 @@ func (c *client) CreateHTTPRequestRule(id int64, parentType string, parentName s
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -160,7 +160,7 @@ func (c *client) EditHTTPRequestRule(id int64, parentType string, parentName str
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -198,7 +198,7 @@ func (c *client) ReplaceHTTPRequestRules(parentType string, parentName string, d
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-request", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -229,7 +229,7 @@ func (c *client) ReplaceHTTPRequestRules(parentType string, parentName string, d
 }
 
 func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequestRules, error) {
-	section, pName, err := getParserFromParent("http-request", t, pName)
+	section, pName, err := getParserFromParent(p, "http-request", t, pName)
 	if err != nil {
 		return nil, err
 	}

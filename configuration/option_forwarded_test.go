@@ -167,7 +167,7 @@ func TestOptionForwardedRenderErrors(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := newOptionForwardedParser(t)
-			err := CreateEditSection(&models.DefaultsBase{Forwarded: tt.model}, parser.Defaults, parser.DefaultSectionName, p, nil)
+			err := CreateEditSection(&models.DefaultsBase{Forwarded: tt.model}, parser.Defaults, parser.DefaultsSectionName(p), p, nil)
 			if err == nil {
 				t.Fatal("CreateEditSection returned nil error")
 			}
@@ -193,7 +193,7 @@ func parseOptionForwardedSections(t *testing.T, line string) (*models.DefaultsBa
 	}
 
 	defaults := &models.DefaultsBase{}
-	if err := ParseSection(defaults, parser.Defaults, parser.DefaultSectionName, p); err != nil {
+	if err := ParseSection(defaults, parser.Defaults, parser.DefaultsSectionName(p), p); err != nil {
 		t.Fatalf("ParseSection defaults: %v", err)
 	}
 	frontend := &models.FrontendBase{}
@@ -210,7 +210,7 @@ func parseOptionForwardedSections(t *testing.T, line string) (*models.DefaultsBa
 func serializeOptionForwardedSections(t *testing.T, p parser.Parser, forwarded *models.Forwarded) {
 	t.Helper()
 
-	if err := CreateEditSection(&models.DefaultsBase{Forwarded: forwarded}, parser.Defaults, parser.DefaultSectionName, p, nil); err != nil {
+	if err := CreateEditSection(&models.DefaultsBase{Forwarded: forwarded}, parser.Defaults, parser.DefaultsSectionName(p), p, nil); err != nil {
 		t.Fatalf("CreateEditSection defaults: %v", err)
 	}
 	if err := CreateEditSection(&models.FrontendBase{Forwarded: forwarded}, parser.Frontends, "fe", p, nil); err != nil {

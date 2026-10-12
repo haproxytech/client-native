@@ -72,7 +72,7 @@ func (c *client) GetLogTarget(id int64, parentType, parentName string, transacti
 	}
 
 	var section parser.Section
-	section, parentName = logTargetSectionType(parentType, parentName)
+	section, parentName = logTargetSectionType(p, parentType, parentName)
 
 	data, err := p.GetOne(section, parentName, "log", int(id))
 	if err != nil {
@@ -93,7 +93,7 @@ func (c *client) DeleteLogTarget(id int64, parentType string, parentName string,
 	}
 
 	var section parser.Section
-	section, parentName = logTargetSectionType(parentType, parentName)
+	section, parentName = logTargetSectionType(p, parentType, parentName)
 
 	if err := p.Delete(section, parentName, "log", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
@@ -126,7 +126,7 @@ func (c *client) CreateLogTarget(id int64, parentType string, parentName string,
 	}
 
 	var section parser.Section
-	section, parentName = logTargetSectionType(parentType, parentName)
+	section, parentName = logTargetSectionType(p, parentType, parentName)
 
 	if err := p.Insert(section, parentName, "log", SerializeLogTarget(*data), int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
@@ -158,7 +158,7 @@ func (c *client) EditLogTarget(id int64, parentType string, parentName string, d
 	}
 
 	var section parser.Section
-	section, parentName = logTargetSectionType(parentType, parentName)
+	section, parentName = logTargetSectionType(p, parentType, parentName)
 
 	if _, err := p.GetOne(section, parentName, "log", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
@@ -186,7 +186,7 @@ func (c *client) ReplaceLogTargets(parentType string, parentName string, data mo
 		return err
 	}
 
-	section, parentName := logTargetSectionType(parentType, parentName)
+	section, parentName := logTargetSectionType(p, parentType, parentName)
 
 	logTargets, err := ParseLogTargets(parentType, parentName, p)
 	if err != nil {
@@ -211,7 +211,7 @@ func (c *client) ReplaceLogTargets(parentType string, parentName string, data mo
 
 func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error) {
 	var section parser.Section
-	section, pName = logTargetSectionType(t, pName)
+	section, pName = logTargetSectionType(p, t, pName)
 
 	var logTargets models.LogTargets
 	data, err := p.Get(section, pName, "log", false)
@@ -273,7 +273,7 @@ func SerializeLogTarget(l models.LogTarget) types.Log {
 	}
 }
 
-func logTargetSectionType(parentType string, parentName string) (parser.Section, string) {
+func logTargetSectionType(p parser.Parser, parentType string, parentName string) (parser.Section, string) {
 	var section parser.Section
 	switch parentType {
 	case GlobalParentName:
@@ -282,7 +282,7 @@ func logTargetSectionType(parentType string, parentName string) (parser.Section,
 	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
-			parentName = parser.DefaultSectionName
+			parentName = parser.DefaultsSectionName(p)
 		}
 	case BackendParentName:
 		section = parser.Backends

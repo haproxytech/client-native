@@ -76,7 +76,7 @@ func (c *client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("http-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-response", parentType, parentName)
 	if err != nil {
 		return v, nil, err
 	}
@@ -99,7 +99,7 @@ func (c *client) DeleteHTTPResponseRule(id int64, parentType string, parentName 
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,7 @@ func (c *client) CreateHTTPResponseRule(id int64, parentType string, parentName 
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -156,7 +156,7 @@ func (c *client) EditHTTPResponseRule(id int64, parentType string, parentName st
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -177,7 +177,7 @@ func (c *client) EditHTTPResponseRule(id int64, parentType string, parentName st
 }
 
 func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPResponseRules, error) {
-	section, pName, err := getParserFromParent("http-response", t, pName)
+	section, pName, err := getParserFromParent(p, "http-response", t, pName)
 	if err != nil {
 		return nil, err
 	}
@@ -222,7 +222,7 @@ func (c *client) ReplaceHTTPResponseRules(parentType string, parentName string, 
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-response", parentType, parentName)
 	if err != nil {
 		return err
 	}

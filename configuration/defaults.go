@@ -47,9 +47,9 @@ func (c *client) GetDefaultsConfiguration(transactionID string) (int64, *models.
 		return 0, nil, err
 	}
 
+	name := parser.DefaultsSectionName(p)
 	d := &models.Defaults{}
-	_ = ParseSection(&d.DefaultsBase, parser.Defaults, parser.DefaultSectionName, p)
-
+	_ = ParseSection(&d.DefaultsBase, parser.Defaults, name, p)
 	return v, d, nil
 }
 
@@ -63,7 +63,22 @@ func (c *client) PushDefaultsConfiguration(data *models.Defaults, transactionID 
 		}
 	}
 
-	return c.editSection(parser.Defaults, parser.DefaultSectionName, &data.DefaultsBase, transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	name := parser.DefaultsSectionName(p)
+	if !p.SectionExists(parser.Defaults, name) {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Defaults, name))
+		return c.HandleError(name, "", "", t, transactionID == "", e)
+	}
+
+	if err := CreateEditSection(&data.DefaultsBase, parser.Defaults, name, p, &c.ConfigurationOptions); err != nil {
+		return c.HandleError(name, "", "", t, transactionID == "", err)
+	}
+
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // GetDefaultsSections returns configuration version and an array of

@@ -196,7 +196,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					if !p.Options.NoNamedDefaultsFrom {
 						p.lastDefaultsSectionName = data.Name
 					}
-					DefaultSectionName = data.Name
+					p.defaultSectionName = data.Name
 				case "global":
 					config.Active = config.Global
 				case "frontend":
