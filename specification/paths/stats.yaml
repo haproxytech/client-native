@@ -33,8 +33,6 @@ native:
         schema:
           $ref: '#/definitions/native_stats'
       '500':
-        description: Internal Server Error
-        schema:
-          $ref: '#/definitions/native_stats'
+        $ref: '#/responses/DefaultError'
       'default':
         $ref: '#/responses/DefaultError'

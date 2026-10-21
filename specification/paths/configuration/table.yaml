@@ -80,7 +80,7 @@ table:
         schema:
           $ref: "#/definitions/table"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:

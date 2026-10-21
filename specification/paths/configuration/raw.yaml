@@ -27,13 +27,7 @@ configuration:
         schema:
           type: string
       'default':
-        description: General Error
-        headers:
-          Configuration-Version:
-            description: Configuration file version
-            type: string
-        schema:
-          type: string
+        $ref: '#/responses/DefaultError'
   post:
     summary: Push new haproxy configuration
     description: Push a new haproxy configuration file in plain text
@@ -108,18 +102,6 @@ configuration:
         schema:
           type: string
       '400':
-        description: Bad request
-        headers:
-          Configuration-Version:
-            description: Configuration file version
-            type: string
-        schema:
-          type: string
+        $ref: '#/responses/BadRequest'
       'default':
-        description: General Error
-        headers:
-          Configuration-Version:
-            description: Configuration file version
-            type: string
-        schema:
-          type: string
+        $ref: '#/responses/DefaultError'

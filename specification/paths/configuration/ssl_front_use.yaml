@@ -80,7 +80,7 @@ ssl_front_uses_one:
         schema:
           $ref: "#/definitions/ssl_front_use"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:
