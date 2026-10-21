@@ -80,7 +80,7 @@ force_be_switches_one:
         schema:
           $ref: "#/definitions/force_be_switch"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:

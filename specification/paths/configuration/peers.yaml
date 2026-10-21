@@ -204,7 +204,7 @@ peer_entries_one:
         schema:
           $ref: "#/definitions/peer_entry"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:

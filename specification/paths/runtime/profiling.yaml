@@ -73,9 +73,7 @@ profiling_tasks:
         schema:
           type: string
       'default':
-        description: General Error
-        schema:
-          type: string
+        $ref: '#/responses/DefaultError'
 profiling_memory:
   get:
     summary: Dump memory usage profiling
@@ -111,6 +109,4 @@ profiling_memory:
         schema:
           type: string
       'default':
-        description: General Error
-        schema:
-          type: string
+        $ref: '#/responses/DefaultError'

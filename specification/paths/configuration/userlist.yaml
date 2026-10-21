@@ -80,7 +80,7 @@ userlists_one:
         schema:
           $ref: "#/definitions/userlist"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   delete:
@@ -201,7 +201,7 @@ users_one:
         schema:
           $ref: "#/definitions/user"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:
@@ -369,7 +369,7 @@ groups_one:
         schema:
           $ref: "#/definitions/group"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:
