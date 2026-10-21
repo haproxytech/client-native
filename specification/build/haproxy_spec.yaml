@@ -12525,6 +12525,14 @@ responses:
         type: string
     schema:
       $ref: '#/definitions/error'
+  TooManyRequests:
+    description: Too many open transactions
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: string
+    schema:
+      $ref: '#/definitions/error'
   DefaultError:
     description: General Error
     headers:
@@ -13196,9 +13204,7 @@ paths:
           schema:
             $ref: '#/definitions/native_stats'
         "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/native_stats'
+          $ref: '#/responses/DefaultError'
         default:
           $ref: '#/responses/DefaultError'
       summary: Gets stats
@@ -13250,17 +13256,7 @@ paths:
           schema:
             $ref: '#/definitions/transaction'
         "429":
-          description: Too many open transactions
-          schema:
-            example:
-              code: 429
-              message: cannot start a new transaction, reached the maximum amount of 20 active transactions available
-            properties:
-              code:
-                type: integer
-              message:
-                type: string
-            type: object
+          $ref: '#/responses/TooManyRequests'
         default:
           $ref: '#/responses/DefaultError'
       summary: Start a new transaction
@@ -13396,17 +13392,7 @@ paths:
           schema:
             $ref: '#/definitions/spoe_transaction'
         "429":
-          description: Too many open transactions
-          schema:
-            example:
-              code: 429
-              message: cannot start a new transaction, reached the maximum amount of 20 active transactions available
-            properties:
-              code:
-                type: integer
-              message:
-                type: string
-            type: object
+          $ref: '#/responses/TooManyRequests'
         default:
           $ref: '#/responses/DefaultError'
       summary: Start a new transaction
@@ -14044,7 +14030,7 @@ paths:
           schema:
             $ref: '#/definitions/userlist'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one userlist
@@ -14169,7 +14155,7 @@ paths:
           schema:
             $ref: '#/definitions/user'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one userlist user
@@ -14337,7 +14323,7 @@ paths:
           schema:
             $ref: '#/definitions/group'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one userlist group
@@ -14670,7 +14656,7 @@ paths:
           schema:
             $ref: '#/definitions/mailer_entry'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one mailer_entry
@@ -14956,7 +14942,7 @@ paths:
           schema:
             $ref: '#/definitions/peer_entry'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one peer_entry
@@ -16288,7 +16274,7 @@ paths:
           schema:
             $ref: '#/definitions/bind'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one bind
@@ -16385,7 +16371,7 @@ paths:
           schema:
             $ref: '#/definitions/bind'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one bind
@@ -16482,7 +16468,7 @@ paths:
           schema:
             $ref: '#/definitions/bind'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one bind
@@ -16635,7 +16621,7 @@ paths:
           schema:
             $ref: '#/definitions/dgram_bind'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one dgram bind
@@ -20342,7 +20328,7 @@ paths:
           schema:
             $ref: '#/definitions/table'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one table
@@ -25286,13 +25272,7 @@ paths:
           schema:
             type: string
         default:
-          description: General Error
-          headers:
-            Configuration-Version:
-              description: Configuration file version
-              type: string
-          schema:
-            type: string
+          $ref: '#/responses/DefaultError'
       summary: Return HAProxy configuration
       tags:
         - Configuration
@@ -25361,21 +25341,9 @@ paths:
           schema:
             type: string
         "400":
-          description: Bad request
-          headers:
-            Configuration-Version:
-              description: Configuration file version
-              type: string
-          schema:
-            type: string
+          $ref: '#/responses/BadRequest'
         default:
-          description: General Error
-          headers:
-            Configuration-Version:
-              description: Configuration file version
-              type: string
-          schema:
-            type: string
+          $ref: '#/responses/DefaultError'
       summary: Push new haproxy configuration
       tags:
         - Configuration
@@ -27307,9 +27275,7 @@ paths:
           schema:
             type: string
         default:
-          description: General Error
-          schema:
-            type: string
+          $ref: '#/responses/DefaultError'
       summary: Dump per-task CPU profiling
       tags:
         - Profiling
@@ -27349,9 +27315,7 @@ paths:
           schema:
             type: string
         default:
-          description: General Error
-          schema:
-            type: string
+          $ref: '#/responses/DefaultError'
       summary: Dump memory usage profiling
       tags:
         - Profiling
@@ -28804,7 +28768,7 @@ paths:
           schema:
             $ref: '#/definitions/capture'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one declare capture
@@ -28997,7 +28961,7 @@ paths:
           schema:
             $ref: '#/definitions/ssl_front_use'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one SSLFrontUse
@@ -29150,7 +29114,7 @@ paths:
           schema:
             $ref: '#/definitions/force_be_switch'
         "404":
-          $ref: '#/responses/AlreadyExists'
+          $ref: '#/responses/NotFound'
         default:
           $ref: '#/responses/DefaultError'
       summary: Return one force-be-switch rule

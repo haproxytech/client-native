@@ -803,6 +803,14 @@ responses:
         type: string
     schema:
       $ref: '#/definitions/error'
+  TooManyRequests:
+    description: Too many open transactions
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: string
+    schema:
+      $ref: '#/definitions/error'
   DefaultError:
     description: General Error
     headers:

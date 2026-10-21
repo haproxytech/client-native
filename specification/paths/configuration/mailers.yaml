@@ -253,7 +253,7 @@ mailer_entries_one:
         schema:
           $ref: "#/definitions/mailer_entry"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:

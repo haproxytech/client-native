@@ -190,17 +190,7 @@ transactions:
         schema:
           $ref: "#/definitions/transaction"
       '429':
-        description: Too many open transactions
-        schema:
-          type: object
-          properties:
-            code:
-              type: integer
-            message:
-              type: string
-          example:
-            code: 429
-            message: cannot start a new transaction, reached the maximum amount of 20 active transactions available
+        $ref: '#/responses/TooManyRequests'
       'default':
         $ref: '#/responses/DefaultError'
 transactions_one:

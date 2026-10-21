@@ -80,7 +80,7 @@ dgram_binds_one:
         schema:
           $ref: "#/definitions/dgram_bind"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:
