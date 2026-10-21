@@ -1191,6 +1191,15 @@ crt-store test
   load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update on
   load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
   load crt foo.pem acme LE domains example.com,example.org
+  load crt foo.pem acme LE domains example.com,example.org ips 192.0.2.1,2001:db8::1
+  load crt foo.pem jwt on
+  load crt foo.pem jwt off
+  load crt foo.pem generate-dummy on
+  load crt foo.pem generate-dummy off
+  load crt foo.pem generate-dummy on keytype RSA bits 4096 curves P-384
+  load crt foo.pem generate-dummy on keytype ECDSA curves P-256
+  load crt foo.pem generate-dummy on bits 0
+  load crt foo.pem acme LE domains example.com ips 192.0.2.1,2001:db8::1 ocsp-update off jwt on generate-dummy on keytype RSA bits 4096 curves P-384 # certificate options
 
 defaults test
   acl url_stats path_beg /stats
@@ -4523,6 +4532,24 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
 `, 1},
 	{`  load crt foo.pem acme LE domains example.com,example.org
+`, 1},
+	{`  load crt foo.pem acme LE domains example.com,example.org ips 192.0.2.1,2001:db8::1
+`, 1},
+	{`  load crt foo.pem jwt on
+`, 1},
+	{`  load crt foo.pem jwt off
+`, 1},
+	{`  load crt foo.pem generate-dummy on
+`, 1},
+	{`  load crt foo.pem generate-dummy off
+`, 1},
+	{`  load crt foo.pem generate-dummy on keytype RSA bits 4096 curves P-384
+`, 1},
+	{`  load crt foo.pem generate-dummy on keytype ECDSA curves P-256
+`, 1},
+	{`  load crt foo.pem generate-dummy on bits 0
+`, 1},
+	{`  load crt foo.pem acme LE domains example.com ips 192.0.2.1,2001:db8::1 ocsp-update off jwt on generate-dummy on keytype RSA bits 4096 curves P-384 # certificate options
 `, 1},
 	{`  trace h1 sink buf1 level developer verbosity complete start now
 `, 1},

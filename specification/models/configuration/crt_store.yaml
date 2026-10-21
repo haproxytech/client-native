@@ -55,6 +55,33 @@ crt_load:
       description: List of domains used to generate the certificate with ACME
       x-omitempty: true
       x-go-name: Domains
+    ips:
+      type: array
+      items:
+        type: string
+      description: List of IP addresses included as IP SANs in the ACME certificate
+      x-omitempty: true
+      x-go-name: IPs
+    jwt:
+      type: string
+      enum: [enabled, disabled]
+      description: Allow this certificate to be used for JWT validation or decryption (default disabled)
+    generate_dummy:
+      type: string
+      enum: [enabled, disabled]
+      description: Generate a private key and self-signed certificate at configuration parsing time (default disabled)
+    keytype:
+      type: string
+      enum: [RSA, ECDSA]
+      description: Private key type used with generate-dummy (default RSA)
+    bits:
+      type: integer
+      x-omitempty: true
+      x-nullable: true
+      description: Number of bits used with generate-dummy and the RSA key type (default 2048)
+    curves:
+      type: string
+      description: Curves used with generate-dummy and the ECDSA key type (default P-384)
     key:
       type: string
       description: Private key filename

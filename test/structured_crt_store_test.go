@@ -79,8 +79,14 @@ func TestCreateEditStructuredCrtStore(t *testing.T) {
 	store := &models.CrtStore{
 		CrtStoreBase: models.CrtStoreBase{Name: "test-structured", CrtBase: "/certs", KeyBase: "/keys"},
 		CrtLoads: map[string]models.CrtLoad{
-			"c1.pem": {Certificate: "c1.pem", Key: "k1.pem", Alias: "c1"},
-			"c2.pem": {Certificate: "c2.pem", Ocsp: "ocsp.der", OcspUpdate: models.CrtLoadOcspUpdateEnabled},
+			"c1.pem": {
+				Certificate: "c1.pem", Key: "k1.pem", Alias: "c1",
+				Acme: "LE", IPs: []string{"192.0.2.1", "2001:db8::1"}, Jwt: models.CrtLoadJwtEnabled,
+			},
+			"c2.pem": {
+				Certificate: "c2.pem", Ocsp: "ocsp.der", OcspUpdate: models.CrtLoadOcspUpdateEnabled,
+				GenerateDummy: models.CrtLoadGenerateDummyEnabled, Keytype: "RSA", Bits: new(int64(4096)), Curves: "P-384",
+			},
 		},
 	}
 	require.NoError(t, clientTest.CreateStructuredCrtStore(store, "", version))

@@ -23,11 +23,17 @@ import (
 
 func (rec CrtLoad) Equal(obj CrtLoad, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualSliceString(rec.Domains, obj.Domains, opts...) &&
+		EqualSliceString(rec.IPs, obj.IPs, opts...) &&
 		rec.Acme == obj.Acme &&
 		rec.Alias == obj.Alias &&
+		EqualPointerInt64(rec.Bits, obj.Bits, opts...) &&
 		rec.Certificate == obj.Certificate &&
+		rec.Curves == obj.Curves &&
+		rec.GenerateDummy == obj.GenerateDummy &&
 		rec.Issuer == obj.Issuer &&
+		rec.Jwt == obj.Jwt &&
 		rec.Key == obj.Key &&
+		rec.Keytype == obj.Keytype &&
 		rec.Ocsp == obj.Ocsp &&
 		rec.OcspUpdate == obj.OcspUpdate &&
 		rec.Sctl == obj.Sctl

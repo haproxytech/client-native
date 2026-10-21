@@ -1952,19 +1952,45 @@ type HTTPFailCodes struct {
 //test:ok:load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update on
 //test:ok:load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
 //test:ok:load crt foo.pem acme LE domains example.com,example.org
+//test:ok:load crt foo.pem acme LE domains example.com,example.org ips 192.0.2.1,2001:db8::1
+//test:ok:load crt foo.pem jwt on
+//test:ok:load crt foo.pem jwt off
+//test:ok:load crt foo.pem generate-dummy on
+//test:ok:load crt foo.pem generate-dummy off
+//test:ok:load crt foo.pem generate-dummy on keytype RSA bits 4096 curves P-384
+//test:ok:load crt foo.pem generate-dummy on keytype ECDSA curves P-256
+//test:ok:load crt foo.pem generate-dummy on bits 0
+//test:ok:load crt foo.pem acme LE domains example.com ips 192.0.2.1,2001:db8::1 ocsp-update off jwt on generate-dummy on keytype RSA bits 4096 curves P-384 # certificate options
+//test:fail:load crt foo.pem ips
+//test:fail:load crt foo.pem jwt
+//test:fail:load crt foo.pem jwt enabled
+//test:fail:load crt foo.pem generate-dummy
+//test:fail:load crt foo.pem generate-dummy enabled
+//test:fail:load crt foo.pem keytype
+//test:fail:load crt foo.pem curves
+//test:fail:load crt foo.pem bits
+//test:fail:load crt foo.pem bits nope
+//test:fail:load crt foo.pem bits 2048x
+//test:fail:load crt foo.pem bits 9223372036854775808
 //test:fail:load alias foo.com key foo.priv.key
 //test:fail:load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem ocsp-update lol
 type LoadCert struct {
-	Certificate string
-	Acme        string
-	Alias       string
-	Domains     string
-	Key         string
-	Ocsp        string
-	Issuer      string
-	Sctl        string
-	Comment     string
-	OcspUpdate  *bool
+	Certificate   string
+	Acme          string
+	Alias         string
+	Domains       string
+	IPs           string
+	Key           string
+	Ocsp          string
+	Issuer        string
+	Sctl          string
+	Comment       string
+	OcspUpdate    *bool
+	JWT           *bool
+	GenerateDummy *bool
+	Keytype       string
+	Bits          *int64
+	Curves        string
 }
 
 //sections:traces

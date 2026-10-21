@@ -40,21 +40,45 @@ type CrtLoad struct {
 	// List of domains used to generate the certificate with ACME
 	Domains []string `json:"domains,omitempty"`
 
+	// List of IP addresses included as IP SANs in the ACME certificate
+	IPs []string `json:"ips,omitempty"`
+
 	// ACME section name to use
 	Acme string `json:"acme,omitempty"`
 
 	// Certificate alias
 	Alias string `json:"alias,omitempty"`
 
+	// Number of bits used with generate-dummy and the RSA key type (default 2048)
+	Bits *int64 `json:"bits,omitempty"`
+
 	// Certificate filename
 	// Required: true
 	Certificate string `json:"certificate"`
 
+	// Curves used with generate-dummy and the ECDSA key type (default P-384)
+	Curves string `json:"curves,omitempty"`
+
+	// Generate a private key and self-signed certificate at configuration parsing time (default disabled)
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	GenerateDummy string `json:"generate_dummy,omitempty"`
+
 	// OCSP issuer filename
 	Issuer string `json:"issuer,omitempty"`
 
+	// Allow this certificate to be used for JWT validation or decryption (default disabled)
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	Jwt string `json:"jwt,omitempty"`
+
 	// Private key filename
 	Key string `json:"key,omitempty"`
+
+	// Private key type used with generate-dummy (default RSA)
+	// Enum: ["RSA","ECDSA"]
+	// +kubebuilder:validation:Enum=RSA;ECDSA;
+	Keytype string `json:"keytype,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
@@ -80,6 +104,18 @@ func (m *CrtLoad) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateGenerateDummy(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateJwt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateKeytype(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateOcspUpdate(formats); err != nil {
 		res = append(res, err)
 	}
@@ -93,6 +129,132 @@ func (m *CrtLoad) Validate(formats strfmt.Registry) error {
 func (m *CrtLoad) validateCertificate(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("certificate", "body", m.Certificate); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var crtLoadTypeGenerateDummyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		crtLoadTypeGenerateDummyPropEnum = append(crtLoadTypeGenerateDummyPropEnum, v)
+	}
+}
+
+const (
+
+	// CrtLoadGenerateDummyEnabled captures enum value "enabled"
+	CrtLoadGenerateDummyEnabled string = "enabled"
+
+	// CrtLoadGenerateDummyDisabled captures enum value "disabled"
+	CrtLoadGenerateDummyDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *CrtLoad) validateGenerateDummyEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, crtLoadTypeGenerateDummyPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CrtLoad) validateGenerateDummy(formats strfmt.Registry) error {
+	if swag.IsZero(m.GenerateDummy) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateGenerateDummyEnum("generate_dummy", "body", m.GenerateDummy); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var crtLoadTypeJwtPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		crtLoadTypeJwtPropEnum = append(crtLoadTypeJwtPropEnum, v)
+	}
+}
+
+const (
+
+	// CrtLoadJwtEnabled captures enum value "enabled"
+	CrtLoadJwtEnabled string = "enabled"
+
+	// CrtLoadJwtDisabled captures enum value "disabled"
+	CrtLoadJwtDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *CrtLoad) validateJwtEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, crtLoadTypeJwtPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CrtLoad) validateJwt(formats strfmt.Registry) error {
+	if swag.IsZero(m.Jwt) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateJwtEnum("jwt", "body", m.Jwt); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var crtLoadTypeKeytypePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["RSA","ECDSA"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		crtLoadTypeKeytypePropEnum = append(crtLoadTypeKeytypePropEnum, v)
+	}
+}
+
+const (
+
+	// CrtLoadKeytypeRSA captures enum value "RSA"
+	CrtLoadKeytypeRSA string = "RSA"
+
+	// CrtLoadKeytypeECDSA captures enum value "ECDSA"
+	CrtLoadKeytypeECDSA string = "ECDSA"
+)
+
+// prop value enum
+func (m *CrtLoad) validateKeytypeEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, crtLoadTypeKeytypePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CrtLoad) validateKeytype(formats strfmt.Registry) error {
+	if swag.IsZero(m.Keytype) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateKeytypeEnum("keytype", "body", m.Keytype); err != nil {
 		return err
 	}
 

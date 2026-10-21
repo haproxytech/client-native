@@ -53,3 +53,39 @@ const crtstore_loadcrtfoopemacmeLEdomainsexampl = `
 crt-store test
   load crt foo.pem acme LE domains example.com,example.org
 `
+const crtstore_loadcrtfoopemacmeLEdomainsexampl_ = `
+crt-store test
+  load crt foo.pem acme LE domains example.com,example.org ips 192.0.2.1,2001:db8::1
+`
+const crtstore_loadcrtfoopemjwton = `
+crt-store test
+  load crt foo.pem jwt on
+`
+const crtstore_loadcrtfoopemjwtoff = `
+crt-store test
+  load crt foo.pem jwt off
+`
+const crtstore_loadcrtfoopemgeneratedummyon = `
+crt-store test
+  load crt foo.pem generate-dummy on
+`
+const crtstore_loadcrtfoopemgeneratedummyoff = `
+crt-store test
+  load crt foo.pem generate-dummy off
+`
+const crtstore_loadcrtfoopemgeneratedummyonkeyt = `
+crt-store test
+  load crt foo.pem generate-dummy on keytype RSA bits 4096 curves P-384
+`
+const crtstore_loadcrtfoopemgeneratedummyonkeyt_ = `
+crt-store test
+  load crt foo.pem generate-dummy on keytype ECDSA curves P-256
+`
+const crtstore_loadcrtfoopemgeneratedummyonbits = `
+crt-store test
+  load crt foo.pem generate-dummy on bits 0
+`
+const crtstore_loadcrtfoopemacmeLEdomainsexampl__ = `
+crt-store test
+  load crt foo.pem acme LE domains example.com ips 192.0.2.1,2001:db8::1 ocsp-update off jwt on generate-dummy on keytype RSA bits 4096 curves P-384 # certificate options
+`

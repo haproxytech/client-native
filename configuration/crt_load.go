@@ -187,23 +187,47 @@ func ParseCrtLoad(load types.LoadCert) *models.CrtLoad {
 	if len(domains) == 1 && domains[0] == "" {
 		domains = nil
 	}
+	ips := strings.Split(load.IPs, ",")
+	if len(ips) == 1 && ips[0] == "" {
+		ips = nil
+	}
 
 	l := &models.CrtLoad{
 		Acme:        load.Acme,
 		Alias:       load.Alias,
 		Certificate: load.Certificate,
 		Domains:     domains,
+		IPs:         ips,
+		Keytype:     load.Keytype,
+		Curves:      load.Curves,
 		Issuer:      load.Issuer,
 		Key:         load.Key,
 		Ocsp:        load.Ocsp,
 		Sctl:        load.Sctl,
 		Metadata:    misc.ParseMetadata(load.Comment),
 	}
+	if load.Bits != nil {
+		l.Bits = new(*load.Bits)
+	}
 	if load.OcspUpdate != nil {
 		if *load.OcspUpdate {
 			l.OcspUpdate = models.CrtLoadOcspUpdateEnabled
 		} else {
 			l.OcspUpdate = models.CrtLoadOcspUpdateDisabled
+		}
+	}
+	if load.JWT != nil {
+		if *load.JWT {
+			l.Jwt = models.CrtLoadJwtEnabled
+		} else {
+			l.Jwt = models.CrtLoadJwtDisabled
+		}
+	}
+	if load.GenerateDummy != nil {
+		if *load.GenerateDummy {
+			l.GenerateDummy = models.CrtLoadGenerateDummyEnabled
+		} else {
+			l.GenerateDummy = models.CrtLoadGenerateDummyDisabled
 		}
 	}
 	return l
@@ -215,10 +239,16 @@ func SerializeCrtLoad(load *models.CrtLoad) *types.LoadCert {
 		Alias:       load.Alias,
 		Certificate: load.Certificate,
 		Domains:     strings.Join(load.Domains, ","),
+		IPs:         strings.Join(load.IPs, ","),
+		Keytype:     load.Keytype,
+		Curves:      load.Curves,
 		Key:         load.Key,
 		Issuer:      load.Issuer,
 		Ocsp:        load.Ocsp,
 		Sctl:        load.Sctl,
+	}
+	if load.Bits != nil {
+		t.Bits = new(*load.Bits)
 	}
 	comment, err := misc.SerializeMetadata(load.Metadata)
 	if err == nil {
@@ -229,6 +259,12 @@ func SerializeCrtLoad(load *models.CrtLoad) *types.LoadCert {
 		if load.OcspUpdate == models.CrtLoadOcspUpdateEnabled {
 			*t.OcspUpdate = true
 		}
+	}
+	if load.Jwt != "" {
+		t.JWT = new(load.Jwt == models.CrtLoadJwtEnabled)
+	}
+	if load.GenerateDummy != "" {
+		t.GenerateDummy = new(load.GenerateDummy == models.CrtLoadGenerateDummyEnabled)
 	}
 	return t
 }
