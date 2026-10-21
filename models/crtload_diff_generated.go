@@ -29,20 +29,44 @@ func (rec CrtLoad) Diff(obj CrtLoad, opts ...eqdiff.GoMethodGenOptions) map[stri
 		}
 		diff["Domains"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffSliceString(rec.IPs, obj.IPs, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["IPs"+diffKey] = diffValue
+	}
 	if rec.Acme != obj.Acme {
 		diff["Acme"] = []interface{}{rec.Acme, obj.Acme}
 	}
 	if rec.Alias != obj.Alias {
 		diff["Alias"] = []interface{}{rec.Alias, obj.Alias}
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.Bits, obj.Bits, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["Bits"+diffKey] = diffValue
+	}
 	if rec.Certificate != obj.Certificate {
 		diff["Certificate"] = []interface{}{rec.Certificate, obj.Certificate}
+	}
+	if rec.Curves != obj.Curves {
+		diff["Curves"] = []interface{}{rec.Curves, obj.Curves}
+	}
+	if rec.GenerateDummy != obj.GenerateDummy {
+		diff["GenerateDummy"] = []interface{}{rec.GenerateDummy, obj.GenerateDummy}
 	}
 	if rec.Issuer != obj.Issuer {
 		diff["Issuer"] = []interface{}{rec.Issuer, obj.Issuer}
 	}
+	if rec.Jwt != obj.Jwt {
+		diff["Jwt"] = []interface{}{rec.Jwt, obj.Jwt}
+	}
 	if rec.Key != obj.Key {
 		diff["Key"] = []interface{}{rec.Key, obj.Key}
+	}
+	if rec.Keytype != obj.Keytype {
+		diff["Keytype"] = []interface{}{rec.Keytype, obj.Keytype}
 	}
 	if rec.Ocsp != obj.Ocsp {
 		diff["Ocsp"] = []interface{}{rec.Ocsp, obj.Ocsp}

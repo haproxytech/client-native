@@ -228,7 +228,14 @@ func TestCreateEditDeleteCrtLoads(t *testing.T) {
 	}
 
 	// Add a "load crt <filename>" entry
-	entry1 := &models.CrtLoad{Certificate: "c1.pem", Key: "k1.pem"}
+	entry1 := &models.CrtLoad{
+		Certificate: "c1.pem",
+		Key:         "k1.pem",
+		Acme:        "LE",
+		Domains:     []string{"example.com"},
+		IPs:         []string{"192.0.2.1", "2001:db8::1"},
+		Jwt:         models.CrtLoadJwtEnabled,
+	}
 	err = clientTest.CreateCrtLoad(name, entry1, "", v)
 	if err != nil {
 		t.Fatal(err)
@@ -251,7 +258,15 @@ func TestCreateEditDeleteCrtLoads(t *testing.T) {
 	}
 
 	// Add another one
-	entry2 := &models.CrtLoad{Certificate: "c2.pem", Ocsp: "ocsp.der", OcspUpdate: "enabled"}
+	entry2 := &models.CrtLoad{
+		Certificate:   "c2.pem",
+		Ocsp:          "ocsp.der",
+		OcspUpdate:    "enabled",
+		GenerateDummy: models.CrtLoadGenerateDummyEnabled,
+		Keytype:       "RSA",
+		Bits:          new(int64(4096)),
+		Curves:        "P-384",
+	}
 	err = clientTest.CreateCrtLoad(name, entry2, "", v)
 	if err != nil {
 		t.Fatal(err)
@@ -262,6 +277,10 @@ func TestCreateEditDeleteCrtLoads(t *testing.T) {
 
 	// Modify entry2
 	entry2.OcspUpdate = "disabled"
+	entry2.GenerateDummy = models.CrtLoadGenerateDummyDisabled
+	entry2.Keytype = ""
+	entry2.Bits = nil
+	entry2.Curves = ""
 	err = clientTest.EditCrtLoad("c2.pem", name, entry2, "", v)
 	if err != nil {
 		t.Fatal(err)

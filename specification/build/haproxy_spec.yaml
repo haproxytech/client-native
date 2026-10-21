@@ -12119,10 +12119,18 @@ definitions:
       alias:
         description: Certificate alias
         type: string
+      bits:
+        description: Number of bits used with generate-dummy and the RSA key type (default 2048)
+        type: integer
+        x-nullable: true
+        x-omitempty: true
       certificate:
         description: Certificate filename
         type: string
         x-nullable: false
+      curves:
+        description: Curves used with generate-dummy and the ECDSA key type (default P-384)
+        type: string
       domains:
         description: List of domains used to generate the certificate with ACME
         items:
@@ -12130,11 +12138,36 @@ definitions:
         type: array
         x-go-name: Domains
         x-omitempty: true
+      generate_dummy:
+        description: Generate a private key and self-signed certificate at configuration parsing time (default disabled)
+        enum:
+          - enabled
+          - disabled
+        type: string
+      ips:
+        description: List of IP addresses included as IP SANs in the ACME certificate
+        items:
+          type: string
+        type: array
+        x-go-name: IPs
+        x-omitempty: true
       issuer:
         description: OCSP issuer filename
         type: string
+      jwt:
+        description: Allow this certificate to be used for JWT validation or decryption (default disabled)
+        enum:
+          - enabled
+          - disabled
+        type: string
       key:
         description: Private key filename
+        type: string
+      keytype:
+        description: Private key type used with generate-dummy (default RSA)
+        enum:
+          - RSA
+          - ECDSA
         type: string
       metadata:
         additionalProperties:

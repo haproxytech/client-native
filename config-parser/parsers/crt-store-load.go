@@ -17,6 +17,7 @@ limitations under the License.
 package parsers
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -54,6 +55,28 @@ func (p *LoadCert) parse(line string, parts []string, comment string) (*types.Lo
 			CheckParsePair(parts, &i, &load.Alias)
 		case "domains":
 			CheckParsePair(parts, &i, &load.Domains)
+		case "ips", "keytype", "curves":
+			if i+1 >= len(parts) {
+				return nil, p.parseError(line)
+			}
+			switch element {
+			case "ips":
+				CheckParsePair(parts, &i, &load.IPs)
+			case "keytype":
+				CheckParsePair(parts, &i, &load.Keytype)
+			case "curves":
+				CheckParsePair(parts, &i, &load.Curves)
+			}
+		case "bits":
+			i++
+			if i >= len(parts) {
+				return nil, p.parseError(line)
+			}
+			bits, err := strconv.ParseInt(parts[i], 10, 64)
+			if err != nil {
+				return nil, p.parseError(line)
+			}
+			load.Bits = new(bits)
 		case "key":
 			CheckParsePair(parts, &i, &load.Key)
 		case "ocsp":
@@ -62,16 +85,19 @@ func (p *LoadCert) parse(line string, parts []string, comment string) (*types.Lo
 			CheckParsePair(parts, &i, &load.Issuer)
 		case "sctl":
 			CheckParsePair(parts, &i, &load.Sctl)
-		case "ocsp-update":
+		case "ocsp-update", "jwt", "generate-dummy":
 			i++
-			if i >= len(parts) {
+			if i >= len(parts) || (parts[i] != "on" && parts[i] != "off") {
 				return nil, p.parseError(line)
 			}
-			load.OcspUpdate = new(bool)
-			if parts[i] == "on" {
-				*load.OcspUpdate = true
-			} else if parts[i] != "off" {
-				return nil, p.parseError(line)
+			value := new(parts[i] == "on")
+			switch element {
+			case "ocsp-update":
+				load.OcspUpdate = value
+			case "jwt":
+				load.JWT = value
+			case "generate-dummy":
+				load.GenerateDummy = value
 			}
 		}
 	}
@@ -100,11 +126,19 @@ func (p *LoadCert) Result() ([]common.ReturnResultLine, error) {
 		CheckWritePair(sb, "acme", load.Acme)
 		CheckWritePair(sb, "alias", load.Alias)
 		CheckWritePair(sb, "domains", load.Domains)
+		CheckWritePair(sb, "ips", load.IPs)
 		CheckWritePair(sb, "key", load.Key)
 		CheckWritePair(sb, "ocsp", load.Ocsp)
 		CheckWritePair(sb, "issuer", load.Issuer)
 		CheckWritePair(sb, "sctl", load.Sctl)
 		CheckWritePair(sb, "ocsp-update", fmtOnOff(load.OcspUpdate))
+		CheckWritePair(sb, "jwt", fmtOnOff(load.JWT))
+		CheckWritePair(sb, "generate-dummy", fmtOnOff(load.GenerateDummy))
+		CheckWritePair(sb, "keytype", load.Keytype)
+		if load.Bits != nil {
+			CheckWritePair(sb, "bits", strconv.FormatInt(*load.Bits, 10))
+		}
+		CheckWritePair(sb, "curves", load.Curves)
 
 		result[i] = common.ReturnResultLine{
 			Data:    sb.String(),

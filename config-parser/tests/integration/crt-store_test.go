@@ -32,6 +32,8 @@ func TestWholeConfigsSectionsCrtstore(t *testing.T) {
 	}{
 		{"crtstore_loadcrtfoopem", crtstore_loadcrtfoopem},
 		{"crtstore_loadcrtfoopemacmeLEdomainsexampl", crtstore_loadcrtfoopemacmeLEdomainsexampl},
+		{"crtstore_loadcrtfoopemacmeLEdomainsexampl_", crtstore_loadcrtfoopemacmeLEdomainsexampl_},
+		{"crtstore_loadcrtfoopemacmeLEdomainsexampl__", crtstore_loadcrtfoopemacmeLEdomainsexampl__},
 		{"crtstore_loadcrtfoopemaliasfoocom", crtstore_loadcrtfoopemaliasfoocom},
 		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr", crtstore_loadcrtfoopemaliasfoocomkeyfoopr},
 		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr_", crtstore_loadcrtfoopemaliasfoocomkeyfoopr_},
@@ -39,6 +41,13 @@ func TestWholeConfigsSectionsCrtstore(t *testing.T) {
 		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr___", crtstore_loadcrtfoopemaliasfoocomkeyfoopr___},
 		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr____", crtstore_loadcrtfoopemaliasfoocomkeyfoopr____},
 		{"crtstore_loadcrtfoopemaliasfoocomkeyfoopr_____", crtstore_loadcrtfoopemaliasfoocomkeyfoopr_____},
+		{"crtstore_loadcrtfoopemgeneratedummyoff", crtstore_loadcrtfoopemgeneratedummyoff},
+		{"crtstore_loadcrtfoopemgeneratedummyon", crtstore_loadcrtfoopemgeneratedummyon},
+		{"crtstore_loadcrtfoopemgeneratedummyonbits", crtstore_loadcrtfoopemgeneratedummyonbits},
+		{"crtstore_loadcrtfoopemgeneratedummyonkeyt", crtstore_loadcrtfoopemgeneratedummyonkeyt},
+		{"crtstore_loadcrtfoopemgeneratedummyonkeyt_", crtstore_loadcrtfoopemgeneratedummyonkeyt_},
+		{"crtstore_loadcrtfoopemjwtoff", crtstore_loadcrtfoopemjwtoff},
+		{"crtstore_loadcrtfoopemjwton", crtstore_loadcrtfoopemjwton},
 	}
 	for _, config := range tests {
 		t.Run(config.Name, func(t *testing.T) {
