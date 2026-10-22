@@ -174,8 +174,8 @@ type TuneOptions struct {
 	HTTPMaxhdr int64 `json:"http_maxhdr,omitempty"`
 
 	// idle pool shared
-	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled","full"]
+	// +kubebuilder:validation:Enum=enabled;disabled;full;
 	IdlePoolShared string `json:"idle_pool_shared,omitempty"`
 
 	// idletimer
@@ -753,7 +753,7 @@ var tuneOptionsTypeIdlePoolSharedPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["enabled","disabled","full"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -768,6 +768,9 @@ const (
 
 	// TuneOptionsIdlePoolSharedDisabled captures enum value "disabled"
 	TuneOptionsIdlePoolSharedDisabled string = "disabled"
+
+	// TuneOptionsIdlePoolSharedFull captures enum value "full"
+	TuneOptionsIdlePoolSharedFull string = "full"
 )
 
 // prop value enum

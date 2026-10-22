@@ -1705,6 +1705,7 @@ definitions:
         enum:
           - enabled
           - disabled
+          - full
         type: string
         x-display-name: Share Idle Connections
       idletimer:
