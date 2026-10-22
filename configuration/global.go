@@ -4242,6 +4242,10 @@ func serializeOnOffOption(p parser.Parser, option, data string) error {
 		value = &types.StringC{Value: "on"}
 	case "disabled":
 		value = &types.StringC{Value: "off"}
+	case "full":
+		if option == "tune.idle-pool.shared" {
+			value = &types.StringC{Value: "full"}
+		}
 	default:
 		value = nil
 	}
@@ -4406,6 +4410,8 @@ func parseOnOffOption(p parser.Parser, option string) (string, error) {
 			return "enabled", nil
 		case "off":
 			return "disabled", nil
+		case "full":
+			return "full", nil
 		default:
 			return "", fmt.Errorf("unsupported value for %s: %s", option, value.Value)
 		}

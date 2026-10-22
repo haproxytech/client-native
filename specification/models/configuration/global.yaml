@@ -665,7 +665,7 @@ tune_options:
       maximum: 32767
     idle_pool_shared:
       type: string
-      enum: [enabled, disabled]
+      enum: [enabled, disabled, full]
       x-display-name: Share Idle Connections
     idletimer:
       type: integer

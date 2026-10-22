@@ -322,7 +322,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Number{Name: "tune.http.cookielen"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.http.logurilen"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.http.maxhdr"})
-	addParser(parser, &sequence, &simple.OnOff{Name: "tune.idle-pool.shared"})
+	addParser(parser, &sequence, &simple.OnOffFull{Name: "tune.idle-pool.shared"})
 	addParser(parser, &sequence, &simple.Time{Name: "tune.idletimer"})
 	addParser(parser, &sequence, &simple.String{Name: "tune.listener.default-shards"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.listener.multi-queue"})
