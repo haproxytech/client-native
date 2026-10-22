@@ -168,6 +168,9 @@ type GlobalBase struct {
 	// insecure setuid wanted
 	InsecureSetuidWanted bool `json:"insecure_setuid_wanted,omitempty"`
 
+	// jwt options
+	JwtOptions *JwtOptions `json:"jwt_options,omitempty"`
+
 	// limited quic
 	LimitedQuic bool `json:"limited_quic,omitempty"`
 
@@ -417,6 +420,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPFailCodes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateJwtOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1067,6 +1074,25 @@ func (m *GlobalBase) validateHTTPFailCodes(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *GlobalBase) validateJwtOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.JwtOptions) { // not required
+		return nil
+	}
+
+	if m.JwtOptions != nil {
+		if err := m.JwtOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("jwt_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("jwt_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *GlobalBase) validateLocalpeer(formats strfmt.Registry) error {
 	if swag.IsZero(m.Localpeer) { // not required
 		return nil
@@ -1578,6 +1604,10 @@ func (m *GlobalBase) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateJwtOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateLogSendHostname(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2024,6 +2054,27 @@ func (m *GlobalBase) contextValidateHTTPFailCodes(ctx context.Context, formats s
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateJwtOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.JwtOptions != nil {
+
+		if swag.IsZero(m.JwtOptions) { // not required
+			return nil
+		}
+
+		if err := m.JwtOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("jwt_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("jwt_options")
+			}
+			return err
+		}
 	}
 
 	return nil
