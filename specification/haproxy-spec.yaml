@@ -68,6 +68,8 @@ definitions:
     $ref: "models/configuration/global.yaml#/debug_options"
   http_client_options:
     $ref: "models/configuration/global.yaml#/http_client_options"
+  jwt_options:
+    $ref: "models/configuration/global.yaml#/jwt_options"
   ocsp_update_options:
     $ref: "models/configuration/global.yaml#/ocsp_update_options"
   lua_options:

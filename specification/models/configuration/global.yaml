@@ -433,6 +433,8 @@ global_base:
       $ref: "#/definitions/debug_options"
     http_client_options:
       $ref: "#/definitions/http_client_options"
+    jwt_options:
+      $ref: "#/definitions/jwt_options"
     ocsp_update_options:
       $ref: "#/definitions/ocsp_update_options"
     lua_options:
@@ -479,6 +481,21 @@ http_client_options:
       x-nullable: true
       x-duration: true
       x-default-unit: ms
+jwt_options:
+  type: object
+  properties:
+    allow_none_alg:
+      type: boolean
+      description: Allow unsigned JWTs using the none algorithm in the jwt_verify converter.
+      x-display-name: JWT Allow None Algorithm
+    decrypt_alg_list:
+      type: string
+      description: Colon-separated list of allowed JWT decryption algorithms; supports ALL and exclusions prefixed with !.
+      x-display-name: JWT Decrypt Algorithm List
+    decrypt_enc_list:
+      type: string
+      description: Colon-separated list of allowed JWT encryption algorithms; supports ALL and exclusions prefixed with !.
+      x-display-name: JWT Decrypt Encryption List
 wurfl_options:
   type: object
   properties:

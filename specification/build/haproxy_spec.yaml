@@ -2150,6 +2150,21 @@ definitions:
         x-duration: true
         x-nullable: true
     type: object
+  jwt_options:
+    properties:
+      allow_none_alg:
+        description: Allow unsigned JWTs using the none algorithm in the jwt_verify converter.
+        type: boolean
+        x-display-name: JWT Allow None Algorithm
+      decrypt_alg_list:
+        description: Colon-separated list of allowed JWT decryption algorithms; supports ALL and exclusions prefixed with !.
+        type: string
+        x-display-name: JWT Decrypt Algorithm List
+      decrypt_enc_list:
+        description: Colon-separated list of allowed JWT encryption algorithms; supports ALL and exclusions prefixed with !.
+        type: string
+        x-display-name: JWT Decrypt Encryption List
+    type: object
   ocsp_update_options:
     properties:
       disable:
@@ -2520,6 +2535,8 @@ definitions:
         type: boolean
       insecure_setuid_wanted:
         type: boolean
+      jwt_options:
+        $ref: '#/definitions/jwt_options'
       limited_quic:
         type: boolean
       localpeer:

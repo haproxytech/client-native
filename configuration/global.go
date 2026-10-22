@@ -1255,6 +1255,43 @@ func parseHTTPClientOptions(p parser.Parser) (*models.HTTPClientOptions, error) 
 	return options, nil
 }
 
+func parseJWTOptions(p parser.Parser) (*models.JwtOptions, error) {
+	options := &models.JwtOptions{}
+	isEmpty := true
+
+	allowNoneAlg, err := parseBoolOption(p, "jwt.allow_none_alg")
+	if err != nil {
+		return nil, err
+	}
+	if allowNoneAlg {
+		isEmpty = false
+		options.AllowNoneAlg = allowNoneAlg
+	}
+
+	decryptAlgList, err := parseStringOption(p, "jwt.decrypt_alg_list")
+	if err != nil {
+		return nil, err
+	}
+	if decryptAlgList != "" {
+		isEmpty = false
+		options.DecryptAlgList = decryptAlgList
+	}
+
+	decryptEncList, err := parseStringOption(p, "jwt.decrypt_enc_list")
+	if err != nil {
+		return nil, err
+	}
+	if decryptEncList != "" {
+		isEmpty = false
+		options.DecryptEncList = decryptEncList
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
 func parseWurflOptions(p parser.Parser) (*models.WurflOptions, error) {
 	options := &models.WurflOptions{}
 	isEmpty := true
@@ -2615,6 +2652,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.HTTPClientOptions = httpClientOptions
 
+	jwtOptions, err := parseJWTOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.JwtOptions = jwtOptions
+
 	var errCodes []*models.HTTPCodes
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "http-err-codes")
 	if err == nil {
@@ -3050,6 +3093,22 @@ func serializeHTTPClientOptions(p parser.Parser, options *models.HTTPClientOptio
 	}
 
 	return serializeTimeoutOption(p, "httpclient.timeout.connect", options.TimeoutConnect, configOptions)
+}
+
+func serializeJWTOptions(p parser.Parser, options *models.JwtOptions) error {
+	if options == nil {
+		options = &models.JwtOptions{}
+	}
+
+	if err := serializeBoolOption(p, "jwt.allow_none_alg", options.AllowNoneAlg); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "jwt.decrypt_alg_list", options.DecryptAlgList); err != nil {
+		return err
+	}
+
+	return serializeStringOption(p, "jwt.decrypt_enc_list", options.DecryptEncList)
 }
 
 func serializeSSLOptions(p parser.Parser, options *models.SslOptions) error { //nolint:gocognit
@@ -3543,6 +3602,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeHTTPClientOptions(p, data.HTTPClientOptions, opt); err != nil {
+		return err
+	}
+
+	if err := serializeJWTOptions(p, data.JwtOptions); err != nil {
 		return err
 	}
 

@@ -202,6 +202,12 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.InsecureSetuidWanted != obj.InsecureSetuidWanted {
 		diff["InsecureSetuidWanted"] = []interface{}{rec.InsecureSetuidWanted, obj.InsecureSetuidWanted}
 	}
+	for diffKey, diffValue := range DiffPointerJwtOptions(rec.JwtOptions, obj.JwtOptions, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["JwtOptions"+diffKey] = diffValue
+	}
 	if rec.LimitedQuic != obj.LimitedQuic {
 		diff["LimitedQuic"] = []interface{}{rec.LimitedQuic, obj.LimitedQuic}
 	}
@@ -680,6 +686,31 @@ func DiffPointerHTTPClientOptions(x, y *HTTPClientOptions, opts ...eqdiff.GoMeth
 }
 
 func DiffPointerHTTPCodes(x, y *HTTPCodes, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	switch {
+	case x == nil:
+		diff[""] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[""] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
+	}
+
+	return diff
+}
+
+func DiffPointerJwtOptions(x, y *JwtOptions, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if x == nil && y == nil {
 		return diff

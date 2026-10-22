@@ -60,6 +60,7 @@ func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) b
 		EqualSlicePointerHTTPCodes(rec.HTTPFailCodes, obj.HTTPFailCodes, opts...) &&
 		rec.InsecureForkWanted == obj.InsecureForkWanted &&
 		rec.InsecureSetuidWanted == obj.InsecureSetuidWanted &&
+		EqualPointerJwtOptions(rec.JwtOptions, obj.JwtOptions, opts...) &&
 		rec.LimitedQuic == obj.LimitedQuic &&
 		rec.Localpeer == obj.Localpeer &&
 		EqualPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname, opts...) &&
@@ -186,6 +187,13 @@ func EqualPointerHTTPClientOptions(x, y *HTTPClientOptions, opts ...eqdiff.GoMet
 }
 
 func EqualPointerHTTPCodes(x, y *HTTPCodes, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
+}
+
+func EqualPointerJwtOptions(x, y *JwtOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	if x == nil || y == nil {
 		return x == y
 	}

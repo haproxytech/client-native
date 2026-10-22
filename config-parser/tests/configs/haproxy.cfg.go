@@ -38,6 +38,9 @@ global
   stats socket /var/run/haproxy-runtime-api.2.sock level admin mode 777 expose-fd listeners process 2
   stats socket $PWD/haproxy-runtime-api.3.sock level admin mode 777 expose-fd listeners process 3
   stats timeout 120s
+  jwt.allow_none_alg
+  jwt.decrypt_alg_list ALL:!ECDH-ES
+  jwt.decrypt_enc_list A128GCM:A192GCM:A256GCM
   limited-quic
   tune.applet.zero-copy-forwarding off
   tune.buffers.limit 30

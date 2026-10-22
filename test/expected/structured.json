@@ -211,6 +211,11 @@
         },
         "insecure_fork_wanted": true,
         "insecure_setuid_wanted": true,
+        "jwt_options": {
+            "allow_none_alg": true,
+            "decrypt_alg_list": "ALL:!ECDH-ES",
+            "decrypt_enc_list": "A128GCM:A192GCM:A256GCM"
+        },
         "limited_quic": true,
         "localpeer": "test",
         "lua_options": {

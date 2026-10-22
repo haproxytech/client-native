@@ -236,6 +236,9 @@ global
   httpclient.ssl.ca-file my_test_file.ca
   httpclient.ssl.verify none
   httpclient.timeout.connect 2s
+  jwt.allow_none_alg
+  jwt.decrypt_alg_list ALL:!ECDH-ES
+  jwt.decrypt_enc_list A128GCM:A192GCM:A256GCM
   prealloc-fd
   ssl-engine first
   ssl-engine second RSA,DSA,DH,EC,RAND
