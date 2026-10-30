@@ -52,6 +52,8 @@ type Maps interface {
 	// ParseMapEntriesFromFile reads entries from file
 	ParseMapEntriesFromFile(inputFile io.Reader, hasID bool) models.MapEntries
 	AddMapPayloadVersioned(name string, entries models.MapEntries) error
+	// ReplaceMapPayload atomically replaces all entries in a map.
+	ReplaceMapPayload(name string, entries models.MapEntries) error
 	// PrepareMap allocates a new map version
 	PrepareMap(name string) (version string, err error)
 	// CommitMap commits all changes made to a map version
