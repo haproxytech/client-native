@@ -760,6 +760,38 @@ func (c *client) AddMapPayloadVersioned(name string, entries models.MapEntries) 
 	return nil
 }
 
+// ReplaceMapPayload atomically replaces all entries in a map using a prepared map version.
+func (c *client) ReplaceMapPayload(name string, entries models.MapEntries) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	v := HAProxyVersion{Version: semver.MustParse("2.4")}
+	if !c.IsVersionBiggerOrEqual(&v) {
+		return fmt.Errorf("not supported for HAProxy versions lower than 2.4 %w", native_errors.ErrGeneral)
+	}
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	_, payload := parseMapPayload(entries, maxBufSize)
+	version, err := c.runtime.PrepareMap(name)
+	if err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	if err = c.runtime.ClearMapVersioned(name, version); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	for i := range payload {
+		if err = c.runtime.AddMapPayloadVersioned(version, name, payload[i]); err != nil {
+			return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+		}
+	}
+	if err = c.runtime.CommitMap(version, name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
 // AddMapEntry adds an entry into the map file
 func (c *client) AddMapEntry(name, key, value string) error {
 	if !c.runtime.IsValid() {
