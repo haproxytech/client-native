@@ -266,6 +266,12 @@ func (rec TuneOptions) Diff(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions) 
 		}
 		diff["StickCounters"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.StreamsElasticity, obj.StreamsElasticity, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["StreamsElasticity"+diffKey] = diffValue
+	}
 	if rec.TakeoverOtherTgConnections != obj.TakeoverOtherTgConnections {
 		diff["TakeoverOtherTgConnections"] = []interface{}{rec.TakeoverOtherTgConnections, obj.TakeoverOtherTgConnections}
 	}

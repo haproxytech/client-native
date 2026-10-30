@@ -266,6 +266,11 @@ type TuneOptions struct {
 	// stick counters
 	StickCounters *int64 `json:"stick_counters,omitempty"`
 
+	// Target ratio of streams per frontend connection relative to the maximum number of concurrent connections
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	StreamsElasticity *int64 `json:"streams_elasticity,omitempty"`
+
 	// takeover other tg connections
 	// Enum: ["none","restricted","full"]
 	// +kubebuilder:validation:Enum=none;restricted;full;
@@ -361,6 +366,10 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSchedLowLatency(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStreamsElasticity(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1019,6 +1028,18 @@ func (m *TuneOptions) validateSchedLowLatency(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSchedLowLatencyEnum("sched_low_latency", "body", m.SchedLowLatency); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneOptions) validateStreamsElasticity(formats strfmt.Registry) error {
+	if swag.IsZero(m.StreamsElasticity) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("streams_elasticity", "body", *m.StreamsElasticity, 0, false); err != nil {
 		return err
 	}
 

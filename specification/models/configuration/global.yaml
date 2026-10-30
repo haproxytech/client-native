@@ -776,6 +776,12 @@ tune_options:
       type: integer
       x-display-name: Number of stick-counters
       x-nullable: true
+    streams_elasticity:
+      type: integer
+      minimum: 0
+      x-display-name: Streams Elasticity
+      description: Target ratio of streams per frontend connection relative to the maximum number of concurrent connections
+      x-nullable: true
     takeover_other_tg_connections:
       type: string
       enum: ["none", "restricted", "full"]

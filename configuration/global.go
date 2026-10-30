@@ -75,6 +75,12 @@ func ValidateGlobalSection(data *models.Global) error {
 			}
 		}
 	}
+
+	if data.TuneOptions != nil && data.TuneOptions.StreamsElasticity != nil {
+		if v := *data.TuneOptions.StreamsElasticity; v > 0 && v < 100 {
+			return fmt.Errorf("tune_options.streams_elasticity must be 0 or at least 100, got %d", v)
+		}
+	}
 	return nil
 }
 
@@ -1688,6 +1694,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 	if intPOption != nil {
 		isEmpty = false
 		options.StickCounters = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.streams-elasticity")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.StreamsElasticity = intPOption
 	}
 
 	strOption, err = parseStringOption(p, "tune.takeover-other-tg-connections")
@@ -4196,6 +4211,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.stick-counters", options.StickCounters); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.streams-elasticity", options.StreamsElasticity); err != nil {
 		return err
 	}
 	if err := serializeStringOption(p, "tune.takeover-other-tg-connections", options.TakeoverOtherTgConnections); err != nil {

@@ -1809,6 +1809,12 @@ definitions:
         type: integer
         x-display-name: Number of stick-counters
         x-nullable: true
+      streams_elasticity:
+        description: Target ratio of streams per frontend connection relative to the maximum number of concurrent connections
+        minimum: 0
+        type: integer
+        x-display-name: Streams Elasticity
+        x-nullable: true
       takeover_other_tg_connections:
         enum:
           - none
