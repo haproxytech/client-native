@@ -694,37 +694,27 @@ func (c *client) AddMapPayload(name, payload string) error {
 }
 
 func parseMapPayload(entries models.MapEntries, maxBufSize int) (bool, []string) {
-	prevKV := ""
-	currKV := ""
 	data := ""
 	var payload []string
 	var exceededSize bool
 	for _, d := range entries {
-		if prevKV != "" {
-			data += prevKV
-			prevKV = ""
-		}
 		kv := d.Key + " " + d.Value + "\n"
-		data += kv
-		switch {
-		case len(data) < maxBufSize:
-			currKV = data
-		case len(data) == maxBufSize:
+		if data != "" && len(data)+len(kv) > maxBufSize {
+			exceededSize = true
 			payload = append(payload, data)
 			data = ""
-		case len(data) > maxBufSize:
-			exceededSize = true
-			if currKV == "" {
-				currKV = kv
+		}
+		data += kv
+		if len(data) >= maxBufSize {
+			if len(data) > maxBufSize {
+				exceededSize = true
 			}
-			payload = append(payload, currKV)
-			prevKV = d.Key + " " + d.Value + "\n"
+			payload = append(payload, data)
 			data = ""
-			currKV = ""
 		}
 	}
-	if len(currKV) > 0 {
-		payload = append(payload, currKV)
+	if data != "" {
+		payload = append(payload, data)
 	}
 	return exceededSize, payload
 }
