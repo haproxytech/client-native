@@ -65,6 +65,43 @@ func Test_parseMapPayload(t *testing.T) {
 				"key2 val2\n",
 			},
 		},
+		{
+			name: "Keep final entry after crossing maxBufSize",
+			args: args{entries: models.MapEntries{
+				&models.MapEntry{Key: "a", Value: "bbbb"},
+				&models.MapEntry{Key: "b", Value: "bbbb"},
+			}, maxBufSize: 10},
+			wantExceededSize: true,
+			wantPayload: []string{
+				"a bbbb\n",
+				"b bbbb\n",
+			},
+		},
+		{
+			name: "Keep entries across repeated maxBufSize crossings",
+			args: args{entries: models.MapEntries{
+				&models.MapEntry{Key: "a", Value: "bbbb"},
+				&models.MapEntry{Key: "b", Value: "bbbb"},
+				&models.MapEntry{Key: "c", Value: "bbbb"},
+			}, maxBufSize: 10},
+			wantExceededSize: true,
+			wantPayload: []string{
+				"a bbbb\n",
+				"b bbbb\n",
+				"c bbbb\n",
+			},
+		},
+		{
+			name: "Do not repeat data after reaching maxBufSize exactly",
+			args: args{entries: models.MapEntries{
+				&models.MapEntry{Key: "a", Value: "b"},
+				&models.MapEntry{Key: "c", Value: "ddd"},
+			}, maxBufSize: 10},
+			wantExceededSize: false,
+			wantPayload: []string{
+				"a b\nc ddd\n",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
