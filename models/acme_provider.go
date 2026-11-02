@@ -85,6 +85,17 @@ type AcmeProvider struct {
 	// Timeout before DNS propagation check fails when using 'dns' in 'challenge_ready'.
 	DNSTimeout *int64 `json:"dns_timeout,omitempty"`
 
+	// Path where the EAB key id is stored
+	EabKeyID string `json:"eab_key_id,omitempty"`
+
+	// MAC algorithm used for EAB signing
+	// Enum: ["HS256","HS384","HS512"]
+	// +kubebuilder:validation:Enum=HS256;HS384;HS512;
+	EabMacAlg string `json:"eab_mac_alg,omitempty"`
+
+	// Path where the EAB MAC key is stored
+	EabMacKey string `json:"eab_mac_key,omitempty"`
+
 	// Type of key to generate
 	// Enum: ["RSA","ECDSA"]
 	// +kubebuilder:validation:Enum="RSA";"ECDSA";
@@ -126,6 +137,10 @@ func (m *AcmeProvider) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDirectory(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEabMacAlg(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -249,6 +264,51 @@ func (m *AcmeProvider) validateDirectory(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("directory", "body", m.Directory, `^https://[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var acmeProviderTypeEabMacAlgPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["HS256","HS384","HS512"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		acmeProviderTypeEabMacAlgPropEnum = append(acmeProviderTypeEabMacAlgPropEnum, v)
+	}
+}
+
+const (
+
+	// AcmeProviderEabMacAlgHS256 captures enum value "HS256"
+	AcmeProviderEabMacAlgHS256 string = "HS256"
+
+	// AcmeProviderEabMacAlgHS384 captures enum value "HS384"
+	AcmeProviderEabMacAlgHS384 string = "HS384"
+
+	// AcmeProviderEabMacAlgHS512 captures enum value "HS512"
+	AcmeProviderEabMacAlgHS512 string = "HS512"
+)
+
+// prop value enum
+func (m *AcmeProvider) validateEabMacAlgEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, acmeProviderTypeEabMacAlgPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *AcmeProvider) validateEabMacAlg(formats strfmt.Registry) error {
+	if swag.IsZero(m.EabMacAlg) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateEabMacAlgEnum("eab_mac_alg", "body", m.EabMacAlg); err != nil {
 		return err
 	}
 

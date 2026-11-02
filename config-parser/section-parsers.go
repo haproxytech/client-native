@@ -1063,6 +1063,9 @@ func (p *configParser) getAcmeParser() *Parsers {
 	addParser(parser, &sequence, &simple.Word{Name: "profile"})
 	addParser(parser, &sequence, &simple.Word{Name: "provider-name"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "reuse-key"})
+	addParser(parser, &sequence, &simple.Word{Name: "eab-key-id"})
+	addParser(parser, &sequence, &simple.Word{Name: "eab-mac-key"})
+	addParser(parser, &sequence, &simple.Word{Name: "eab-mac-alg"})
 	return p.createParsers(parser, sequence)
 }
 

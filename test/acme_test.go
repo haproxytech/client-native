@@ -111,6 +111,9 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 		Keytype:        "ECDSA",
 		Map:            "acme@virt",
 		ReuseKey:       models.AcmeProviderReuseKeyEnabled,
+		EabKeyID:       "ninja-eab.keyid",
+		EabMacAlg:      models.AcmeProviderEabMacAlgHS256,
+		EabMacKey:      "ninja-eab.mackey",
 	}
 
 	err := clientTest.CreateAcmeProvider(a, "", version)
@@ -138,6 +141,9 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 	a.Bits = misc.Int64P(4096)
 	a.DNSDelay = misc.Int64P(40000)
 	a.ReuseKey = ""
+	a.EabKeyID = ""
+	a.EabMacAlg = models.AcmeProviderEabMacAlgHS512
+	a.EabMacKey = ""
 	err = clientTest.EditAcmeProvider(a.Name, a, "", version)
 	require.NoError(err)
 	version++

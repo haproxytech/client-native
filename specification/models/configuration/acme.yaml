@@ -86,6 +86,16 @@ acme:
       type: string
       enum: [enabled, disabled]
       description: Try to reuse the private key instead of generating a new one.
+    eab_key_id:
+      type: string
+      description: Path where the EAB key id is stored
+    eab_mac_key:
+      type: string
+      description: Path where the EAB MAC key is stored
+    eab_mac_alg:
+      type: string
+      enum: [HS256, HS384, HS512]
+      description: MAC algorithm used for EAB signing
     metadata:
       additionalProperties:
         type: object
