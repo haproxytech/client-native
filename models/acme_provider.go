@@ -90,7 +90,7 @@ type AcmeProvider struct {
 
 	// MAC algorithm used for EAB signing
 	// Enum: ["HS256","HS384","HS512"]
-	// +kubebuilder:validation:Enum=HS256;HS384;HS512;
+	// +kubebuilder:validation:Enum="HS256";"HS384";"HS512";
 	EabMacAlg string `json:"eab_mac_alg,omitempty"`
 
 	// Path where the EAB MAC key is stored

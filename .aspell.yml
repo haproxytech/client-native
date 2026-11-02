@@ -65,6 +65,7 @@ allowed:
   - dropdowns
   - dsn
   - e2e
+  - eab
   - entrypoint
   - enum
   - env
