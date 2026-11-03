@@ -70,6 +70,7 @@ global
   tune.ring.queues 8
   tune.ssl.certificate-compression off
   tune.ssl.default-dh-param 2048
+  tune.streams-elasticity 120
   tune.quic.reorder-ratio 75
   tune.quic.zero-copy-fwd-send on
   ssl-default-bind-options no-sslv3 no-tls-tickets

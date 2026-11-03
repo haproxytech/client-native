@@ -133,6 +133,7 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 		result.RingQueues = Ptr(*sample.RingQueues + 1)
 		result.RunqueueDepth = sample.RunqueueDepth + 1
 		result.StickCounters = Ptr(*sample.StickCounters + 1)
+		result.StreamsElasticity = Ptr(*sample.StreamsElasticity + 1)
 		samples = append(samples, struct {
 			a, b TuneOptions
 		}{sample, result})
@@ -259,6 +260,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 		result.RingQueues = Ptr(*sample.RingQueues + 1)
 		result.RunqueueDepth = sample.RunqueueDepth + 1
 		result.StickCounters = Ptr(*sample.StickCounters + 1)
+		result.StreamsElasticity = Ptr(*sample.StreamsElasticity + 1)
 		samples = append(samples, struct {
 			a, b TuneOptions
 		}{sample, result})
@@ -267,7 +269,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 60 {
+		if len(listDiffFields) != 61 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -277,7 +279,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneOptions to be different in 60 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 61 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

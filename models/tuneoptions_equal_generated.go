@@ -81,5 +81,6 @@ func (rec TuneOptions) Equal(obj TuneOptions, opts ...eqdiff.GoMethodGenOptions)
 		rec.RunqueueDepth == obj.RunqueueDepth &&
 		rec.SchedLowLatency == obj.SchedLowLatency &&
 		EqualPointerInt64(rec.StickCounters, obj.StickCounters, opts...) &&
+		EqualPointerInt64(rec.StreamsElasticity, obj.StreamsElasticity, opts...) &&
 		rec.TakeoverOtherTgConnections == obj.TakeoverOtherTgConnections
 }

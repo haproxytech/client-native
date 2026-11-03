@@ -355,6 +355,7 @@
             "runqueue_depth": 38,
             "sched_low_latency": "enabled",
             "stick_counters": 50,
+            "streams_elasticity": 120,
             "takeover_other_tg_connections": "none"
         },
         "tune_ssl_default_dh_param": 45,
