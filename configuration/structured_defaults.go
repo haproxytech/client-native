@@ -49,7 +49,7 @@ func (c *client) GetStructuredDefaultsConfiguration(transactionID string) (int64
 		return 0, nil, err
 	}
 
-	d, err := parseDefaultsSection(parser.DefaultSectionName, p)
+	d, err := parseDefaultsSection(parser.DefaultsSectionName(p), p)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -113,16 +113,17 @@ func (c *client) PushStructuredDefaultsConfiguration(data *models.Defaults, tran
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Defaults, parser.DefaultSectionName, p) {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Defaults, parser.DefaultSectionName))
-		return c.HandleError(parser.DefaultSectionName, "", "", t, transactionID == "", e)
+	name := parser.DefaultsSectionName(p)
+	if !c.checkSectionExists(parser.Defaults, name, p) {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Defaults, name))
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if err = p.SectionsDelete(parser.Defaults, parser.DefaultSectionName); err != nil {
-		return c.HandleError(parser.DefaultSectionName, "", "", t, transactionID == "", err)
+	if err = p.SectionsDelete(parser.Defaults, name); err != nil {
+		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	data.Name = parser.DefaultSectionName
+	data.Name = name
 	if err = serializeDefaultsSection(StructuredToParserArgs{
 		TID:                transactionID,
 		Parser:             &p,
@@ -255,7 +256,7 @@ func serializeDefaultsSection(a StructuredToParserArgs, d *models.Defaults) erro
 
 	err = p.SectionsCreate(parser.Defaults, d.Name)
 	if err != nil {
-		if !errors.Is(err, parserErrors.ErrSectionAlreadyExists) || parser.DefaultSectionName != d.Name {
+		if !errors.Is(err, parserErrors.ErrSectionAlreadyExists) || parser.DefaultsSectionName(p) != d.Name {
 			return err
 		}
 	}

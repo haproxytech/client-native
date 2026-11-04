@@ -75,7 +75,7 @@ func (c *client) GetHTTPAfterResponseRule(id int64, parentType, parentName strin
 		return 0, nil, err
 	}
 
-	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-after-response", parentType, parentName)
 	if err != nil {
 		return v, nil, err
 	}
@@ -101,7 +101,7 @@ func (c *client) DeleteHTTPAfterResponseRule(id int64, parentType string, parent
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (c *client) CreateHTTPAfterResponseRule(id int64, parentType string, parent
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -158,7 +158,7 @@ func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentNa
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -193,7 +193,7 @@ func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName str
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
+	section, parentName, err := getParserFromParent(p, "http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -224,7 +224,7 @@ func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName str
 }
 
 func ParseHTTPAfterRules(t, pName string, p parser.Parser) (models.HTTPAfterResponseRules, error) {
-	section, pName, err := getParserFromParent("http-after-response", t, pName)
+	section, pName, err := getParserFromParent(p, "http-after-response", t, pName)
 	if err != nil {
 		return nil, err
 	}

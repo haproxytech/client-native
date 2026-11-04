@@ -58,7 +58,28 @@ const (
 	GlobalSectionName   = "data"
 )
 
+// DefaultSectionName is deprecated and retained only for source compatibility.
+// Parsing no longer writes the global, and this package no longer reads it; use
+// DefaultsSectionName with the parser you are working with instead.
 var DefaultSectionName = "" //nolint:gochecknoglobals
+
+// DefaultSectionNamer is an optional interface implemented by parsers that can
+// report the defaults section currently selected on that parser instance.
+// It is not part of Parser so that existing implementations keep compiling.
+type DefaultSectionNamer interface {
+	DefaultSectionName() string
+}
+
+// DefaultsSectionName returns the name of the defaults section selected on
+// parser p. It returns an empty string for parsers that do not implement the
+// optional DefaultSectionNamer interface. It never falls back to package-level
+// state, so independent parsers stay isolated.
+func DefaultsSectionName(p Parser) string {
+	if namer, ok := p.(DefaultSectionNamer); ok {
+		return namer.DefaultSectionName()
+	}
+	return ""
+}
 
 type Parser interface {
 	LoadData(path string) error
@@ -94,6 +115,7 @@ type configParser struct {
 	Parsers                 map[Section]map[string]*Parsers
 	Options                 options.Parser
 	lastDefaultsSectionName string
+	defaultSectionName      string
 	mutex                   *sync.Mutex
 }
 
@@ -101,6 +123,7 @@ func New(opt ...options.ParserOption) (Parser, error) {
 	p := &configParser{
 		Options:                 options.Parser{},
 		lastDefaultsSectionName: "",
+		defaultSectionName:      "",
 	}
 	var err error
 

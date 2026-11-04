@@ -33,6 +33,15 @@ func (p *configParser) unLock() {
 	p.mutex.Unlock()
 }
 
+// DefaultSectionName returns the name of the defaults section currently
+// selected on this parser instance. It implements the optional
+// DefaultSectionNamer interface.
+func (p *configParser) DefaultSectionName() string {
+	p.lock()
+	defer p.unLock()
+	return p.defaultSectionName
+}
+
 // Get get attribute from defaults section
 func (p *configParser) Get(sectionType Section, sectionName string, attribute string, createIfNotExist ...bool) (common.ParserData, error) {
 	p.lock()
