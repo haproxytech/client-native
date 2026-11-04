@@ -55,7 +55,7 @@ type HealthCheckBase struct {
 
 	// type
 	// Enum: ["httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","spop-check","ssl-hello-chk","tcp-check"]
-	// +kubebuilder:validation:Enum=httpchk;ldap-check;mysql-check;pgsql-check;redis-check;smtpchk;spop-check;ssl-hello-chk;tcp-check;
+	// +kubebuilder:validation:Enum="httpchk";"ldap-check";"mysql-check";"pgsql-check";"redis-check";"smtpchk";"spop-check";"ssl-hello-chk";"tcp-check";
 	Type string `json:"type,omitempty"`
 }
 

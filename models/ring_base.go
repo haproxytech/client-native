@@ -42,7 +42,7 @@ type RingBase struct {
 
 	// Format used to store events into the ring buffer
 	// Enum: ["iso","local","raw","rfc3164","rfc5424","short","priority","timed"]
-	// +kubebuilder:validation:Enum=iso;local;raw;rfc3164;rfc5424;short;priority;timed;
+	// +kubebuilder:validation:Enum="iso";"local";"raw";"rfc3164";"rfc5424";"short";"priority";"timed";
 	Format string `json:"format,omitempty"`
 
 	// The maximum length of an event message stored into the ring

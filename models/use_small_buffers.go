@@ -41,7 +41,7 @@ type UseSmallBuffers struct {
 	// enabled
 	// Required: true
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Enabled *string `json:"enabled"`
 
 	// l7 retries

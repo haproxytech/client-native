@@ -38,12 +38,12 @@ import (
 type Profiling struct {
 	// Memory usage profiling mode ("set profiling memory {on|off}"). Reported as "off" when HAProxy was built without USE_MEMORY_PROFILING.
 	// Enum: ["on","off"]
-	// +kubebuilder:validation:Enum=on;off;
+	// +kubebuilder:validation:Enum="on";"off";
 	Memory string `json:"memory,omitempty"`
 
 	// Per-task CPU profiling mode ("set profiling tasks {on|auto|off}").
 	// Enum: ["on","off","auto"]
-	// +kubebuilder:validation:Enum=on;off;auto;
+	// +kubebuilder:validation:Enum="on";"off";"auto";
 	Tasks string `json:"tasks,omitempty"`
 
 	// Whether per-task CPU profiling is currently collecting data. True for "on", and for "auto" once HAProxy has automatically enabled it.

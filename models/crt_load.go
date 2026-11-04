@@ -61,7 +61,7 @@ type CrtLoad struct {
 
 	// Generate a private key and self-signed certificate at configuration parsing time (default disabled)
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	GenerateDummy string `json:"generate_dummy,omitempty"`
 
 	// OCSP issuer filename
@@ -69,7 +69,7 @@ type CrtLoad struct {
 
 	// Allow this certificate to be used for JWT validation or decryption (default disabled)
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Jwt string `json:"jwt,omitempty"`
 
 	// Private key filename
@@ -77,7 +77,7 @@ type CrtLoad struct {
 
 	// Private key type used with generate-dummy (default RSA)
 	// Enum: ["RSA","ECDSA"]
-	// +kubebuilder:validation:Enum=RSA;ECDSA;
+	// +kubebuilder:validation:Enum="RSA";"ECDSA";
 	Keytype string `json:"keytype,omitempty"`
 
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -89,7 +89,7 @@ type CrtLoad struct {
 
 	// Automatic OCSP response update
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	OcspUpdate string `json:"ocsp_update,omitempty"`
 
 	// Signed Certificate Timestamp List filename

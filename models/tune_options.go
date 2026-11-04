@@ -37,7 +37,7 @@ import (
 type TuneOptions struct {
 	// Enables of disabled the zero-copy forwarding of data for the applets
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	AppletZeroCopyForwarding string `json:"applet_zero_copy_forwarding,omitempty"`
 
 	// Maximum size in bytes allowed for the payload passed to a command on the CLI
@@ -70,7 +70,7 @@ type TuneOptions struct {
 
 	// fd edge triggered
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
 
 	// glitches kill cpu usage
@@ -92,12 +92,12 @@ type TuneOptions struct {
 
 	// enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	H1ZeroCopyFwdRecv string `json:"h1_zero_copy_fwd_recv,omitempty"`
 
 	// enable or disable the zero-copy sends of data for the HTTP/1 multiplexer
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
 
 	// Automatically kill a backend connection past a number of glitches
@@ -146,7 +146,7 @@ type TuneOptions struct {
 
 	// Level of HTTP/2 demultiplexer errors that will generate a log
 	// Enum: ["none","connection","stream"]
-	// +kubebuilder:validation:Enum=none;connection;stream;
+	// +kubebuilder:validation:Enum="none";"connection";"stream";
 	H2LogErrors string `json:"h2_log_errors,omitempty"`
 
 	// h2 max concurrent streams
@@ -157,7 +157,7 @@ type TuneOptions struct {
 
 	// enable or disable the zero-copy sends of data for the HTTP/2 multiplexer
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	H2ZeroCopyFwdSend string `json:"h2_zero_copy_fwd_send,omitempty"`
 
 	// http cookielen
@@ -175,7 +175,7 @@ type TuneOptions struct {
 
 	// idle pool shared
 	// Enum: ["enabled","disabled","full"]
-	// +kubebuilder:validation:Enum=enabled;disabled;full;
+	// +kubebuilder:validation:Enum="enabled";"disabled";"full";
 	IdlePoolShared string `json:"idle_pool_shared,omitempty"`
 
 	// idletimer
@@ -187,12 +187,12 @@ type TuneOptions struct {
 
 	// listener default shards
 	// Enum: ["by-process","by-thread","by-group"]
-	// +kubebuilder:validation:Enum=by-process;by-thread;by-group;
+	// +kubebuilder:validation:Enum="by-process";"by-thread";"by-group";
 	ListenerDefaultShards string `json:"listener_default_shards,omitempty"`
 
 	// listener multi queue
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
 
 	// max checks per thread
@@ -235,7 +235,7 @@ type TuneOptions struct {
 
 	// enable or disable the zero-copy forwarding of data for the pass-through multiplexer
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
 
 	// Scheduling priority applied after the configuration parsing
@@ -260,7 +260,7 @@ type TuneOptions struct {
 
 	// sched low latency
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SchedLowLatency string `json:"sched_low_latency,omitempty"`
 
 	// stick counters
@@ -273,7 +273,7 @@ type TuneOptions struct {
 
 	// takeover other tg connections
 	// Enum: ["none","restricted","full"]
-	// +kubebuilder:validation:Enum=none;restricted;full;
+	// +kubebuilder:validation:Enum="none";"restricted";"full";
 	TakeoverOtherTgConnections string `json:"takeover_other_tg_connections,omitempty"`
 }
 
