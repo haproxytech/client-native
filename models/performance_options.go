@@ -96,12 +96,12 @@ type PerformanceOptions struct {
 
 	// Enable or disables per-function memory profiling
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ProfilingMemory string `json:"profiling_memory,omitempty"`
 
 	// Enable or disables per-task CPU profiling
 	// Enum: ["auto","enabled","disabled"]
-	// +kubebuilder:validation:Enum=auto;enabled;disabled;
+	// +kubebuilder:validation:Enum="auto";"enabled";"disabled";
 	ProfilingTasks string `json:"profiling_tasks,omitempty"`
 
 	// server state base

@@ -94,7 +94,7 @@ type SSLFrontUse struct {
 
 	// Automatic OCSP response update
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	OcspUpdate string `json:"ocsp_update,omitempty"`
 
 	// Signed Certificate Timestamp List filename
@@ -105,17 +105,17 @@ type SSLFrontUse struct {
 
 	// ssl max ver
 	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// +kubebuilder:validation:Enum="SSLv3";"TLSv1.0";"TLSv1.1";"TLSv1.2";"TLSv1.3";
 	SslMaxVer string `json:"ssl_max_ver,omitempty"`
 
 	// ssl min ver
 	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// +kubebuilder:validation:Enum="SSLv3";"TLSv1.0";"TLSv1.1";"TLSv1.2";"TLSv1.3";
 	SslMinVer string `json:"ssl_min_ver,omitempty"`
 
 	// verify
 	// Enum: ["none","optional","required"]
-	// +kubebuilder:validation:Enum=none;optional;required;
+	// +kubebuilder:validation:Enum="none";"optional";"required";
 	Verify string `json:"verify,omitempty"`
 }
 

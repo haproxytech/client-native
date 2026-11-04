@@ -40,7 +40,7 @@ type ForceBeSwitch struct {
 	// cond
 	// Required: true
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// +kubebuilder:validation:Enum="if";"unless";
 	Cond *string `json:"cond"`
 
 	// cond test

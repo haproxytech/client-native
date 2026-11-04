@@ -43,7 +43,7 @@ type TuneSslOptions struct {
 
 	// certificate compression
 	// Enum: ["auto","disabled"]
-	// +kubebuilder:validation:Enum=auto;disabled;
+	// +kubebuilder:validation:Enum="auto";"disabled";
 	CertificateCompression string `json:"certificate_compression,omitempty"`
 
 	// ctx cache size
@@ -57,7 +57,7 @@ type TuneSslOptions struct {
 
 	// keylog
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Keylog string `json:"keylog,omitempty"`
 
 	// lifetime

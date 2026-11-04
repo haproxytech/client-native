@@ -77,7 +77,7 @@ type GlobalBase struct {
 
 	// cpu policy
 	// Enum: ["none","efficiency","first-usable-node","group-by-2-ccx","group-by-2-clusters","group-by-3-ccx","group-by-3-clusters","group-by-4-ccx","group-by-4-cluster","group-by-ccx","group-by-cluster","performance","resource"]
-	// +kubebuilder:validation:Enum=none;efficiency;first-usable-node;group-by-2-ccx;group-by-2-clusters;group-by-3-ccx;group-by-3-clusters;group-by-4-ccx;group-by-4-cluster;group-by-ccx;group-by-cluster;performance;resource;
+	// +kubebuilder:validation:Enum="none";"efficiency";"first-usable-node";"group-by-2-ccx";"group-by-2-clusters";"group-by-3-ccx";"group-by-3-clusters";"group-by-4-ccx";"group-by-4-cluster";"group-by-ccx";"group-by-cluster";"performance";"resource";
 	CPUPolicy string `json:"cpu_policy,omitempty"`
 
 	// daemon
@@ -215,7 +215,7 @@ type GlobalBase struct {
 
 	// numa cpu mapping
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	NumaCPUMapping string `json:"numa_cpu_mapping,omitempty"`
 
 	// ocsp update options
@@ -258,7 +258,7 @@ type GlobalBase struct {
 	// Defaults to enabled in HAProxy.
 	//
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	StatsCalculateMaxCounters string `json:"stats_calculate_max_counters,omitempty"`
 
 	// stats file
@@ -2378,12 +2378,12 @@ type GlobalBaseCPUAffinity struct {
 	// affinity
 	// Required: true
 	// Enum: ["per-core","per-group","auto","per-thread","per-ccx"]
-	// +kubebuilder:validation:Enum=per-core;per-group;auto;per-thread;per-ccx;
+	// +kubebuilder:validation:Enum="per-core";"per-group";"auto";"per-thread";"per-ccx";
 	Affinity *string `json:"affinity"`
 
 	// Optional argument used together with the per-group affinity.
 	// Enum: ["auto","loose"]
-	// +kubebuilder:validation:Enum=auto;loose;
+	// +kubebuilder:validation:Enum="auto";"loose";
 	Argument string `json:"argument,omitempty"`
 }
 
@@ -2602,7 +2602,7 @@ type CPUSet struct {
 	// directive
 	// Required: true
 	// Enum: ["reset","drop-cpu","only-cpu","drop-node","only-node","drop-cluster","only-cluster","drop-core","only-core","drop-thread","only-thread"]
-	// +kubebuilder:validation:Enum=reset;drop-cpu;only-cpu;drop-node;only-node;drop-cluster;only-cluster;drop-core;only-core;drop-thread;only-thread;
+	// +kubebuilder:validation:Enum="reset";"drop-cpu";"only-cpu";"drop-node";"only-node";"drop-cluster";"only-cluster";"drop-core";"only-core";"drop-thread";"only-thread";
 	Directive *string `json:"directive"`
 
 	// set
@@ -2728,7 +2728,7 @@ type GlobalDefaultPath struct {
 	// type
 	// Required: true
 	// Enum: ["current","config","parent","origin"]
-	// +kubebuilder:validation:Enum=current;config;parent;origin;
+	// +kubebuilder:validation:Enum="current";"config";"parent";"origin";
 	Type string `json:"type"`
 }
 
@@ -3008,12 +3008,12 @@ func (m *GlobalHarden) UnmarshalBinary(b []byte) error {
 type GlobalHardenRejectPrivilegedPorts struct {
 	// quic
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Quic string `json:"quic,omitempty"`
 
 	// tcp
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	TCP string `json:"tcp,omitempty"`
 }
 
@@ -3149,7 +3149,7 @@ type GlobalLogSendHostname struct {
 	// enabled
 	// Required: true
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Enabled *string `json:"enabled"`
 
 	// param

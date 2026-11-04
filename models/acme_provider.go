@@ -52,7 +52,7 @@ type AcmeProvider struct {
 
 	// ACME challenge type.
 	// Enum: ["http-01","dns-01","dns-persist-01"]
-	// +kubebuilder:validation:Enum=http-01;dns-01;dns-persist-01;
+	// +kubebuilder:validation:Enum="http-01";"dns-01";"dns-persist-01";
 	Challenge string `json:"challenge,omitempty"`
 
 	// How to wait for the DNS propagation: either wait for a CLI event on
@@ -90,7 +90,7 @@ type AcmeProvider struct {
 
 	// MAC algorithm used for EAB signing
 	// Enum: ["HS256","HS384","HS512"]
-	// +kubebuilder:validation:Enum=HS256;HS384;HS512;
+	// +kubebuilder:validation:Enum="HS256";"HS384";"HS512";
 	EabMacAlg string `json:"eab_mac_alg,omitempty"`
 
 	// Path where the EAB MAC key is stored
@@ -98,7 +98,7 @@ type AcmeProvider struct {
 
 	// Type of key to generate
 	// Enum: ["RSA","ECDSA"]
-	// +kubebuilder:validation:Enum=RSA;ECDSA;
+	// +kubebuilder:validation:Enum="RSA";"ECDSA";
 	Keytype string `json:"keytype,omitempty"`
 
 	// The map which will be used to store the ACME token (key) and thumbprint
@@ -120,7 +120,7 @@ type AcmeProvider struct {
 
 	// Try to reuse the private key instead of generating a new one.
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ReuseKey string `json:"reuse_key,omitempty"`
 }
 

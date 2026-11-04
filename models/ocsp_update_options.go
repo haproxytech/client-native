@@ -50,7 +50,7 @@ type OcspUpdateOptions struct {
 
 	// mode
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Mode string `json:"mode,omitempty"`
 }
 

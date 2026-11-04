@@ -106,7 +106,7 @@ type BindParams struct {
 
 	// force strict sni
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ForceStrictSni string `json:"force_strict_sni,omitempty"`
 
 	// This field is deprecated in favor of tlsv10, and will be removed in a future release
@@ -148,7 +148,7 @@ type BindParams struct {
 
 	// ktls
 	// Enum: ["on","off"]
-	// +kubebuilder:validation:Enum=on;off;
+	// +kubebuilder:validation:Enum="on";"off";
 	Ktls string `json:"ktls,omitempty"`
 
 	// label
@@ -157,7 +157,7 @@ type BindParams struct {
 	// level
 	// Example: user
 	// Enum: ["user","operator","admin"]
-	// +kubebuilder:validation:Enum=user;operator;admin;
+	// +kubebuilder:validation:Enum="user";"operator";"admin";
 	Level string `json:"level,omitempty"`
 
 	// maxconn
@@ -219,7 +219,7 @@ type BindParams struct {
 
 	// quic cc algo
 	// Enum: ["cubic","newreno","bbr","nocc"]
-	// +kubebuilder:validation:Enum=cubic;newreno;bbr;nocc;
+	// +kubebuilder:validation:Enum="cubic";"newreno";"bbr";"nocc";
 	QuicCcAlgo string `json:"quic-cc-algo,omitempty"`
 
 	// quic force retry
@@ -227,7 +227,7 @@ type BindParams struct {
 
 	// quic socket
 	// Enum: ["connection","listener"]
-	// +kubebuilder:validation:Enum=connection;listener;
+	// +kubebuilder:validation:Enum="connection";"listener";
 	QuicSocket string `json:"quic-socket,omitempty"`
 
 	// quic cc algo burst size
@@ -247,7 +247,7 @@ type BindParams struct {
 	// severity output
 	// Example: none
 	// Enum: ["none","number","string"]
-	// +kubebuilder:validation:Enum=none;number;string;
+	// +kubebuilder:validation:Enum="none";"number";"string";
 	SeverityOutput string `json:"severity_output,omitempty"`
 
 	// shards
@@ -273,17 +273,17 @@ type BindParams struct {
 
 	// ssl max ver
 	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// +kubebuilder:validation:Enum="SSLv3";"TLSv1.0";"TLSv1.1";"TLSv1.2";"TLSv1.3";
 	SslMaxVer string `json:"ssl_max_ver,omitempty"`
 
 	// ssl min ver
 	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// +kubebuilder:validation:Enum="SSLv3";"TLSv1.0";"TLSv1.1";"TLSv1.2";"TLSv1.3";
 	SslMinVer string `json:"ssl_min_ver,omitempty"`
 
 	// sslv3
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Sslv3 string `json:"sslv3,omitempty"`
 
 	// strict sni
@@ -313,27 +313,27 @@ type BindParams struct {
 
 	// tls tickets
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	TLSTickets string `json:"tls_tickets,omitempty"`
 
 	// tlsv10
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv10 string `json:"tlsv10,omitempty"`
 
 	// tlsv11
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv11 string `json:"tlsv11,omitempty"`
 
 	// tlsv12
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv12 string `json:"tlsv12,omitempty"`
 
 	// tlsv13
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv13 string `json:"tlsv13,omitempty"`
 
 	// transparent
@@ -354,7 +354,7 @@ type BindParams struct {
 	// verify
 	// Example: none
 	// Enum: ["none","optional","required"]
-	// +kubebuilder:validation:Enum=none;optional;required;
+	// +kubebuilder:validation:Enum="none";"optional";"required";
 	Verify string `json:"verify,omitempty"`
 }
 

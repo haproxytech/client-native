@@ -63,12 +63,12 @@ type TuneQuicOptions struct {
 
 	// socket owner
 	// Enum: ["listener","connection"]
-	// +kubebuilder:validation:Enum=listener;connection;
+	// +kubebuilder:validation:Enum="listener";"connection";
 	SocketOwner string `json:"socket_owner,omitempty"`
 
 	// Enables or disables the zero-copy sends for the QUIC multiplexer
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ZeroCopyFwdSend string `json:"zero_copy_fwd_send,omitempty"`
 }
 
