@@ -42,7 +42,7 @@ type ServerParams struct {
 
 	// agent check
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	AgentCheck string `json:"agent-check,omitempty"`
 
 	// agent inter
@@ -70,7 +70,7 @@ type ServerParams struct {
 
 	// backup
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Backup string `json:"backup,omitempty"`
 
 	// cc
@@ -78,7 +78,7 @@ type ServerParams struct {
 
 	// check
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Check string `json:"check,omitempty"`
 
 	// check pool conn name
@@ -88,12 +88,12 @@ type ServerParams struct {
 
 	// check reuse pool
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	CheckReusePool string `json:"check-reuse-pool,omitempty"`
 
 	// check send proxy
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	CheckSendProxy string `json:"check-send-proxy,omitempty"`
 
 	// check sni
@@ -103,7 +103,7 @@ type ServerParams struct {
 
 	// check ssl
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	CheckSsl string `json:"check-ssl,omitempty"`
 
 	// check alpn
@@ -118,12 +118,12 @@ type ServerParams struct {
 
 	// check sni auto
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	CheckSniAuto string `json:"check_sni_auto,omitempty"`
 
 	// check via socks4
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	CheckViaSocks4 string `json:"check_via_socks4,omitempty"`
 
 	// ciphers
@@ -164,27 +164,27 @@ type ServerParams struct {
 
 	// This field is deprecated in favor of sslv3, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ForceSslv3 string `json:"force_sslv3,omitempty"`
 
 	// This field is deprecated in favor of tlsv10, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ForceTlsv10 string `json:"force_tlsv10,omitempty"`
 
 	// This field is deprecated in favor of tlsv11, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ForceTlsv11 string `json:"force_tlsv11,omitempty"`
 
 	// This field is deprecated in favor of tlsv12, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ForceTlsv12 string `json:"force_tlsv12,omitempty"`
 
 	// This field is deprecated in favor of tlsv13, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ForceTlsv13 string `json:"force_tlsv13,omitempty"`
 
 	// guid
@@ -221,7 +221,7 @@ type ServerParams struct {
 
 	// init state
 	// Enum: ["fully-up","up","down","fully-down"]
-	// +kubebuilder:validation:Enum=fully-up;up;down;fully-down;
+	// +kubebuilder:validation:Enum="fully-up";"up";"down";"fully-down";
 	InitState string `json:"init-state,omitempty"`
 
 	// inter
@@ -231,7 +231,7 @@ type ServerParams struct {
 
 	// ktls
 	// Enum: ["on","off"]
-	// +kubebuilder:validation:Enum=on;off;
+	// +kubebuilder:validation:Enum="on";"off";
 	Ktls string `json:"ktls,omitempty"`
 
 	// log bufsize
@@ -239,12 +239,12 @@ type ServerParams struct {
 
 	// log proto
 	// Enum: ["legacy","octet-count"]
-	// +kubebuilder:validation:Enum=legacy;octet-count;
+	// +kubebuilder:validation:Enum="legacy";"octet-count";
 	LogProto string `json:"log_proto,omitempty"`
 
 	// maintenance
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Maintenance string `json:"maintenance,omitempty"`
 
 	// max reuse
@@ -264,32 +264,32 @@ type ServerParams struct {
 
 	// This field is deprecated in favor of sslv3, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	NoSslv3 string `json:"no_sslv3,omitempty"`
 
 	// This field is deprecated in favor of tlsv10, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	NoTlsv10 string `json:"no_tlsv10,omitempty"`
 
 	// This field is deprecated in favor of tlsv11, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	NoTlsv11 string `json:"no_tlsv11,omitempty"`
 
 	// This field is deprecated in favor of tlsv12, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	NoTlsv12 string `json:"no_tlsv12,omitempty"`
 
 	// This field is deprecated in favor of force_tlsv13, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	NoTlsv13 string `json:"no_tlsv13,omitempty"`
 
 	// no verifyhost
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	NoVerifyhost string `json:"no_verifyhost,omitempty"`
 
 	// npn
@@ -297,22 +297,22 @@ type ServerParams struct {
 
 	// observe
 	// Enum: ["layer4","layer7"]
-	// +kubebuilder:validation:Enum=layer4;layer7;
+	// +kubebuilder:validation:Enum="layer4";"layer7";
 	Observe string `json:"observe,omitempty"`
 
 	// on error
 	// Enum: ["fastinter","fail-check","sudden-death","mark-down"]
-	// +kubebuilder:validation:Enum=fastinter;fail-check;sudden-death;mark-down;
+	// +kubebuilder:validation:Enum="fastinter";"fail-check";"sudden-death";"mark-down";
 	OnError string `json:"on-error,omitempty"`
 
 	// on marked down
 	// Enum: ["shutdown-sessions"]
-	// +kubebuilder:validation:Enum=shutdown-sessions;
+	// +kubebuilder:validation:Enum="shutdown-sessions";
 	OnMarkedDown string `json:"on-marked-down,omitempty"`
 
 	// on marked up
 	// Enum: ["shutdown-backup-sessions"]
-	// +kubebuilder:validation:Enum=shutdown-backup-sessions;
+	// +kubebuilder:validation:Enum="shutdown-backup-sessions";
 	OnMarkedUp string `json:"on-marked-up,omitempty"`
 
 	// pool conn name
@@ -344,7 +344,7 @@ type ServerParams struct {
 
 	// Toggles the secure renegotiation mechanism for an SSL backend.
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Renegotiate string `json:"renegotiate,omitempty"`
 
 	// resolve net
@@ -354,7 +354,7 @@ type ServerParams struct {
 
 	// resolve prefer
 	// Enum: ["ipv4","ipv6"]
-	// +kubebuilder:validation:Enum=ipv4;ipv6;
+	// +kubebuilder:validation:Enum="ipv4";"ipv6";
 	ResolvePrefer string `json:"resolve-prefer,omitempty"`
 
 	// resolve opts
@@ -372,22 +372,22 @@ type ServerParams struct {
 
 	// send proxy
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SendProxy string `json:"send-proxy,omitempty"`
 
 	// send proxy v2
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SendProxyV2 string `json:"send-proxy-v2,omitempty"`
 
 	// send proxy v2 ssl
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SendProxyV2Ssl string `json:"send_proxy_v2_ssl,omitempty"`
 
 	// send proxy v2 ssl cn
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SendProxyV2SslCn string `json:"send_proxy_v2_ssl_cn,omitempty"`
 
 	// set proxy v2 tlv fmt
@@ -411,7 +411,7 @@ type ServerParams struct {
 
 	// sni auto
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SniAuto string `json:"sni_auto,omitempty"`
 
 	// socks4
@@ -424,7 +424,7 @@ type ServerParams struct {
 
 	// ssl
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Ssl string `json:"ssl,omitempty"`
 
 	// ssl cafile
@@ -439,27 +439,27 @@ type ServerParams struct {
 
 	// ssl max ver
 	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// +kubebuilder:validation:Enum="SSLv3";"TLSv1.0";"TLSv1.1";"TLSv1.2";"TLSv1.3";
 	SslMaxVer string `json:"ssl_max_ver,omitempty"`
 
 	// ssl min ver
 	// Enum: ["SSLv3","TLSv1.0","TLSv1.1","TLSv1.2","TLSv1.3"]
-	// +kubebuilder:validation:Enum=SSLv3;TLSv1.0;TLSv1.1;TLSv1.2;TLSv1.3;
+	// +kubebuilder:validation:Enum="SSLv3";"TLSv1.0";"TLSv1.1";"TLSv1.2";"TLSv1.3";
 	SslMinVer string `json:"ssl_min_ver,omitempty"`
 
 	// ssl reuse
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SslReuse string `json:"ssl_reuse,omitempty"`
 
 	// sslv3
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Sslv3 string `json:"sslv3,omitempty"`
 
 	// stick
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Stick string `json:"stick,omitempty"`
 
 	// strict maxconn
@@ -477,32 +477,32 @@ type ServerParams struct {
 
 	// tfo
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tfo string `json:"tfo,omitempty"`
 
 	// tls tickets
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	TLSTickets string `json:"tls_tickets,omitempty"`
 
 	// tlsv10
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv10 string `json:"tlsv10,omitempty"`
 
 	// tlsv11
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv11 string `json:"tlsv11,omitempty"`
 
 	// tlsv12
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv12 string `json:"tlsv12,omitempty"`
 
 	// tlsv13
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Tlsv13 string `json:"tlsv13,omitempty"`
 
 	// track
@@ -510,7 +510,7 @@ type ServerParams struct {
 
 	// verify
 	// Enum: ["none","required"]
-	// +kubebuilder:validation:Enum=none;required;
+	// +kubebuilder:validation:Enum="none";"required";
 	Verify string `json:"verify,omitempty"`
 
 	// verifyhost
@@ -521,7 +521,7 @@ type ServerParams struct {
 
 	// ws
 	// Enum: ["auto","h1","h2"]
-	// +kubebuilder:validation:Enum=auto;h1;h2;
+	// +kubebuilder:validation:Enum="auto";"h1";"h2";
 	Ws string `json:"ws,omitempty"`
 }
 

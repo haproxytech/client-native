@@ -41,7 +41,7 @@ type SslOptions struct {
 
 	// acme scheduler
 	// Enum: ["auto","off"]
-	// +kubebuilder:validation:Enum=auto;off;
+	// +kubebuilder:validation:Enum="auto";"off";
 	AcmeScheduler string `json:"acme_scheduler,omitempty"`
 
 	// ca base
@@ -106,7 +106,7 @@ type SslOptions struct {
 
 	// mode async
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ModeAsync string `json:"mode_async,omitempty"`
 
 	// passphrase cmd
@@ -130,7 +130,7 @@ type SslOptions struct {
 
 	// server verify
 	// Enum: ["none","required"]
-	// +kubebuilder:validation:Enum=none;required;
+	// +kubebuilder:validation:Enum="none";"required";
 	ServerVerify string `json:"server_verify,omitempty"`
 
 	// skip self issued ca

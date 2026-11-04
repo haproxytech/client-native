@@ -84,7 +84,7 @@ type HTTPRequestRule struct {
 
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// +kubebuilder:validation:Enum="if";"unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -124,7 +124,7 @@ type HTTPRequestRule struct {
 
 	// log level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
-	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
+	// +kubebuilder:validation:Enum="emerg";"alert";"crit";"err";"warning";"notice";"info";"debug";"silent";
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -173,7 +173,7 @@ type HTTPRequestRule struct {
 
 	// normalizer
 	// Enum: ["fragment-encode","fragment-strip","path-merge-slashes","path-strip-dot","path-strip-dotdot","percent-decode-unreserved","percent-to-uppercase","query-sort-by-name"]
-	// +kubebuilder:validation:Enum=fragment-encode;fragment-strip;path-merge-slashes;path-strip-dot;path-strip-dotdot;percent-decode-unreserved;percent-to-uppercase;query-sort-by-name;
+	// +kubebuilder:validation:Enum="fragment-encode";"fragment-strip";"path-merge-slashes";"path-strip-dot";"path-strip-dotdot";"percent-decode-unreserved";"percent-to-uppercase";"query-sort-by-name";
 	Normalizer string `json:"normalizer,omitempty"`
 
 	// normalizer full
@@ -194,7 +194,7 @@ type HTTPRequestRule struct {
 
 	// protocol
 	// Enum: ["ipv4","ipv6"]
-	// +kubebuilder:validation:Enum=ipv4;ipv6;
+	// +kubebuilder:validation:Enum="ipv4";"ipv6";
 	Protocol string `json:"protocol,omitempty"`
 
 	// query fmt
@@ -210,7 +210,7 @@ type HTTPRequestRule struct {
 
 	// redir type
 	// Enum: ["location","prefix","scheme"]
-	// +kubebuilder:validation:Enum=location;prefix;scheme;
+	// +kubebuilder:validation:Enum="location";"prefix";"scheme";
 	RedirType string `json:"redir_type,omitempty"`
 
 	// redir value
@@ -226,7 +226,7 @@ type HTTPRequestRule struct {
 
 	// return content format
 	// Enum: ["default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string"]
-	// +kubebuilder:validation:Enum=default-errorfiles;errorfile;errorfiles;file;lf-file;string;lf-string;
+	// +kubebuilder:validation:Enum="default-errorfiles";"errorfile";"errorfiles";"file";"lf-file";"string";"lf-string";
 	ReturnContentFormat string `json:"return_content_format,omitempty"`
 
 	// return content type
@@ -269,7 +269,7 @@ type HTTPRequestRule struct {
 
 	// strict mode
 	// Enum: ["on","off"]
-	// +kubebuilder:validation:Enum=on;off;
+	// +kubebuilder:validation:Enum="on";"off";
 	StrictMode string `json:"strict_mode,omitempty"`
 
 	// timeout
@@ -277,7 +277,7 @@ type HTTPRequestRule struct {
 
 	// timeout type
 	// Enum: ["server","tunnel","client"]
-	// +kubebuilder:validation:Enum=server;tunnel;client;
+	// +kubebuilder:validation:Enum="server";"tunnel";"client";
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -301,7 +301,7 @@ type HTTPRequestRule struct {
 	// type
 	// Required: true
 	// Enum: ["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","lua","normalize-uri","pause","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bc-mark","set-bc-tos","set-dst","set-dst-port","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","set-var-fmt","silent-drop","strict-mode","tarpit","track-sc","unset-var","use-service","wait-for-body","wait-for-handshake","set-bandwidth-limit","set-retries","do-log"]
-	// +kubebuilder:validation:Enum=add-acl;add-header;allow;auth;cache-use;capture;del-acl;del-header;del-map;deny;disable-l7-retry;do-resolve;early-hint;lua;normalize-uri;pause;redirect;reject;replace-header;replace-path;replace-pathq;replace-uri;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bc-mark;set-bc-tos;set-dst;set-dst-port;set-fc-mark;set-fc-tos;set-header;set-log-level;set-map;set-mark;set-method;set-nice;set-path;set-pathq;set-priority-class;set-priority-offset;set-query;set-src;set-src-port;set-timeout;set-tos;set-uri;set-var;set-var-fmt;silent-drop;strict-mode;tarpit;track-sc;unset-var;use-service;wait-for-body;wait-for-handshake;set-bandwidth-limit;set-retries;do-log;
+	// +kubebuilder:validation:Enum="add-acl";"add-header";"allow";"auth";"cache-use";"capture";"del-acl";"del-header";"del-map";"deny";"disable-l7-retry";"do-resolve";"early-hint";"lua";"normalize-uri";"pause";"redirect";"reject";"replace-header";"replace-path";"replace-pathq";"replace-uri";"replace-value";"return";"sc-add-gpc";"sc-inc-gpc";"sc-inc-gpc0";"sc-inc-gpc1";"sc-set-gpt";"sc-set-gpt0";"send-spoe-group";"set-bc-mark";"set-bc-tos";"set-dst";"set-dst-port";"set-fc-mark";"set-fc-tos";"set-header";"set-log-level";"set-map";"set-mark";"set-method";"set-nice";"set-path";"set-pathq";"set-priority-class";"set-priority-offset";"set-query";"set-src";"set-src-port";"set-timeout";"set-tos";"set-uri";"set-var";"set-var-fmt";"silent-drop";"strict-mode";"tarpit";"track-sc";"unset-var";"use-service";"wait-for-body";"wait-for-handshake";"set-bandwidth-limit";"set-retries";"do-log";
 	Type string `json:"type"`
 
 	// uri fmt
