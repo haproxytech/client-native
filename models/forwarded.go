@@ -53,7 +53,7 @@ type Forwarded struct {
 	// Enables or disables insertion of the HTTP Forwarded header field.
 	// Required: true
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	Enabled *string `json:"enabled"`
 
 	// Adds the for parameter using the specified log-format expression.

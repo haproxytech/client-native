@@ -120,7 +120,7 @@ type Filter struct {
 	// type
 	// Required: true
 	// Enum: ["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace","lua"]
-	// +kubebuilder:validation:Enum=bwlim-in;bwlim-out;cache;compression;fcgi-app;spoe;trace;lua;
+	// +kubebuilder:validation:Enum="bwlim-in";"bwlim-out";"cache";"compression";"fcgi-app";"spoe";"trace";"lua";
 	Type string `json:"type"`
 }
 

@@ -76,7 +76,7 @@ type HTTPResponseRule struct {
 
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum=if;unless;
+	// +kubebuilder:validation:Enum="if";"unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -106,7 +106,7 @@ type HTTPResponseRule struct {
 
 	// log level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
-	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
+	// +kubebuilder:validation:Enum="emerg";"alert";"crit";"err";"warning";"notice";"info";"debug";"silent";
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -158,7 +158,7 @@ type HTTPResponseRule struct {
 
 	// redir type
 	// Enum: ["location","prefix","scheme"]
-	// +kubebuilder:validation:Enum=location;prefix;scheme;
+	// +kubebuilder:validation:Enum="location";"prefix";"scheme";
 	RedirType string `json:"redir_type,omitempty"`
 
 	// redir value
@@ -171,7 +171,7 @@ type HTTPResponseRule struct {
 
 	// return content format
 	// Enum: ["default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string"]
-	// +kubebuilder:validation:Enum=default-errorfiles;errorfile;errorfiles;file;lf-file;string;lf-string;
+	// +kubebuilder:validation:Enum="default-errorfiles";"errorfile";"errorfiles";"file";"lf-file";"string";"lf-string";
 	ReturnContentFormat string `json:"return_content_format,omitempty"`
 
 	// return content type
@@ -221,7 +221,7 @@ type HTTPResponseRule struct {
 
 	// strict mode
 	// Enum: ["on","off"]
-	// +kubebuilder:validation:Enum=on;off;
+	// +kubebuilder:validation:Enum="on";"off";
 	StrictMode string `json:"strict_mode,omitempty"`
 
 	// timeout
@@ -229,7 +229,7 @@ type HTTPResponseRule struct {
 
 	// timeout type
 	// Enum: ["server","tunnel","client"]
-	// +kubebuilder:validation:Enum=server;tunnel;client;
+	// +kubebuilder:validation:Enum="server";"tunnel";"client";
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -253,7 +253,7 @@ type HTTPResponseRule struct {
 	// type
 	// Required: true
 	// Enum: ["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]
-	// +kubebuilder:validation:Enum=add-acl;add-header;allow;cache-store;capture;del-acl;del-header;del-map;deny;lua;pause;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-fc-mark;set-fc-tos;set-header;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc;unset-var;wait-for-body;set-bandwidth-limit;do-log;
+	// +kubebuilder:validation:Enum="add-acl";"add-header";"allow";"cache-store";"capture";"del-acl";"del-header";"del-map";"deny";"lua";"pause";"redirect";"replace-header";"replace-value";"return";"sc-add-gpc";"sc-inc-gpc";"sc-inc-gpc0";"sc-inc-gpc1";"sc-set-gpt";"sc-set-gpt0";"send-spoe-group";"set-fc-mark";"set-fc-tos";"set-header";"set-log-level";"set-map";"set-mark";"set-nice";"set-status";"set-timeout";"set-tos";"set-var";"set-var-fmt";"silent-drop";"strict-mode";"track-sc";"unset-var";"wait-for-body";"set-bandwidth-limit";"do-log";
 	Type string `json:"type"`
 
 	// var expr

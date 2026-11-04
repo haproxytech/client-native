@@ -51,7 +51,7 @@ type HTTPErrorRule struct {
 
 	// return content format
 	// Enum: ["default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string"]
-	// +kubebuilder:validation:Enum=default-errorfiles;errorfile;errorfiles;file;lf-file;string;lf-string;
+	// +kubebuilder:validation:Enum="default-errorfiles";"errorfile";"errorfiles";"file";"lf-file";"string";"lf-string";
 	ReturnContentFormat string `json:"return_content_format,omitempty"`
 
 	// return content type
@@ -66,7 +66,7 @@ type HTTPErrorRule struct {
 	// type
 	// Required: true
 	// Enum: ["status"]
-	// +kubebuilder:validation:Enum=status;
+	// +kubebuilder:validation:Enum="status";
 	Type string `json:"type"`
 }
 

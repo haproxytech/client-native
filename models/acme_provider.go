@@ -51,7 +51,7 @@ type AcmeProvider struct {
 
 	// ACME challenge type. Only http-01 and dns-01 are supported.
 	// Enum: ["http-01","dns-01"]
-	// +kubebuilder:validation:Enum=http-01;dns-01;
+	// +kubebuilder:validation:Enum="http-01";"dns-01";
 	Challenge string `json:"challenge,omitempty"`
 
 	// Contact email for the ACME account
@@ -70,7 +70,7 @@ type AcmeProvider struct {
 
 	// Type of key to generate
 	// Enum: ["RSA","ECDSA"]
-	// +kubebuilder:validation:Enum=RSA;ECDSA;
+	// +kubebuilder:validation:Enum="RSA";"ECDSA";
 	Keytype string `json:"keytype,omitempty"`
 
 	// The map which will be used to store the ACME token (key) and thumbprint
@@ -86,7 +86,7 @@ type AcmeProvider struct {
 
 	// Try to reuse the private key instead of generating a new one.
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// +kubebuilder:validation:Enum="enabled";"disabled";
 	ReuseKey string `json:"reuse_key,omitempty"`
 }
 
