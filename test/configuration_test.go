@@ -1063,6 +1063,9 @@ acme test
   map acme@t
   profile shortlived
   reuse-key on
+  eab-key-id /etc/haproxy/eab.keyid
+  eab-mac-key /etc/haproxy/eab.mackey
+  eab-mac-alg HS256
 
 crt-store cert-bunker1
   crt-base /secure/certs

@@ -16,9 +16,15 @@
 package configuration
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
+	config_options "github.com/haproxytech/client-native/v6/configuration/options"
+	"github.com/haproxytech/client-native/v6/models"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_serializeAcmeVars(t *testing.T) {
@@ -62,6 +68,50 @@ func Test_ParseAcmeVars(t *testing.T) {
 			if !cmp.Equal(got, tt.want) {
 				t.Errorf("parseAcmeVars() = %#v, want %#v", got, tt.want)
 			}
+		})
+	}
+}
+
+func Test_AcmeEabOptionsRoundTrip(t *testing.T) {
+	const payload = `{
+		"name": "test",
+		"directory": "https://acme.example.com/directory",
+		"eab_key_id": "/etc/haproxy/eab.keyid",
+		"eab_mac_key": "/etc/haproxy/eab.mackey",
+		"eab_mac_alg": "HS512"
+	}`
+	var acmeProvider models.AcmeProvider
+	require.NoError(t, json.Unmarshal([]byte(payload), &acmeProvider))
+	p, err := parser.New(parser_options.String("acme test\n"))
+	require.NoError(t, err)
+	require.NoError(t, SerializeAcmeProvider(p, &acmeProvider, &config_options.ConfigurationOptions{}))
+	rendered := p.String()
+	require.Contains(t, rendered, "\n  eab-key-id /etc/haproxy/eab.keyid\n")
+	require.Contains(t, rendered, "\n  eab-mac-key /etc/haproxy/eab.mackey\n")
+	require.Contains(t, rendered, "\n  eab-mac-alg HS512\n")
+	fresh, err := parser.New(parser_options.String(rendered))
+	require.NoError(t, err)
+	reparsed, err := ParseAcmeProvider(fresh, "test")
+	require.NoError(t, err)
+	data, err := json.Marshal(reparsed)
+	require.NoError(t, err)
+	require.JSONEq(t, payload, string(data))
+}
+
+func Test_AcmeEabOptionsDeletion(t *testing.T) {
+	const config = `acme test
+  eab-key-id /etc/haproxy/eab.keyid
+  eab-mac-key /etc/haproxy/eab.mackey
+  eab-mac-alg HS512
+`
+	for _, payload := range []string{`{"name":"test"}`} {
+		t.Run(payload, func(t *testing.T) {
+			p, err := parser.New(parser_options.String(config))
+			require.NoError(t, err)
+			var acmeProvider models.AcmeProvider
+			require.NoError(t, json.Unmarshal([]byte(payload), &acmeProvider))
+			require.NoError(t, SerializeAcmeProvider(p, &acmeProvider, &config_options.ConfigurationOptions{}))
+			require.NotContains(t, p.String(), "eab-")
 		})
 	}
 }

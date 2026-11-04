@@ -3333,7 +3333,10 @@
             "keytype": "ECDSA",
             "map": "acme@t",
             "profile": "shortlived",
-            "reuse_key": "enabled"
+            "reuse_key": "enabled",
+            "eab_key_id": "/etc/haproxy/eab.keyid",
+            "eab_mac_alg": "HS256",
+            "eab_mac_key": "/etc/haproxy/eab.mackey"
         }
     },
     "crt_stores": {

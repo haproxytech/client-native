@@ -73,6 +73,15 @@ func (rec AcmeProvider) Diff(obj AcmeProvider, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["DNSTimeout"+diffKey] = diffValue
 	}
+	if rec.EabKeyID != obj.EabKeyID {
+		diff["EabKeyID"] = []interface{}{rec.EabKeyID, obj.EabKeyID}
+	}
+	if rec.EabMacAlg != obj.EabMacAlg {
+		diff["EabMacAlg"] = []interface{}{rec.EabMacAlg, obj.EabMacAlg}
+	}
+	if rec.EabMacKey != obj.EabMacKey {
+		diff["EabMacKey"] = []interface{}{rec.EabMacKey, obj.EabMacKey}
+	}
 	if rec.Keytype != obj.Keytype {
 		diff["Keytype"] = []interface{}{rec.Keytype, obj.Keytype}
 	}

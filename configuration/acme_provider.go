@@ -185,6 +185,9 @@ func ParseAcmeProvider(p parser.Parser, name string) (*models.AcmeProvider, erro
 		"profile":         &acme.Profile,
 		"provider-name":   &acme.AcmeProvider,
 		"reuse-key":       &acme.ReuseKey,
+		"eab-key-id":      &acme.EabKeyID,
+		"eab-mac-key":     &acme.EabMacKey,
+		"eab-mac-alg":     &acme.EabMacAlg,
 	}
 
 	for kw, dest := range stringAttr {
@@ -287,6 +290,9 @@ func SerializeAcmeProvider(p parser.Parser, acme *models.AcmeProvider, opt *opti
 		"profile":         acme.Profile,
 		"provider-name":   acme.AcmeProvider,
 		"reuse-key":       onOff(acme.ReuseKey),
+		"eab-key-id":      acme.EabKeyID,
+		"eab-mac-key":     acme.EabMacKey,
+		"eab-mac-alg":     acme.EabMacAlg,
 	}
 
 	for kw, val := range stringAttr {

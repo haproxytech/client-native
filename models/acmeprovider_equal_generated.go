@@ -33,6 +33,9 @@ func (rec AcmeProvider) Equal(obj AcmeProvider, opts ...eqdiff.GoMethodGenOption
 		rec.Directory == obj.Directory &&
 		EqualPointerInt64(rec.DNSDelay, obj.DNSDelay, opts...) &&
 		EqualPointerInt64(rec.DNSTimeout, obj.DNSTimeout, opts...) &&
+		rec.EabKeyID == obj.EabKeyID &&
+		rec.EabMacAlg == obj.EabMacAlg &&
+		rec.EabMacKey == obj.EabMacKey &&
 		rec.Keytype == obj.Keytype &&
 		rec.Map == obj.Map &&
 		rec.Name == obj.Name &&
