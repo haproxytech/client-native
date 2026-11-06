@@ -9,7 +9,7 @@ This is the [OpenAPI 2.0 (fka Swagger)](https://github.com/OAI/OpenAPI-Specifica
 When contributing, change files located in paths/ and models/ directories and the haproxy-spec.yaml, and then build the resulting one-file spec `build/haproxy_spec.yaml`.
 
 ```bash
-go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
+go -C specification/build run . -file ../haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 ```
 
 this is already integrated into [make models](../Makefile) command

@@ -24,7 +24,7 @@ gentypes:
 
 .PHONY: spec
 spec:
-	go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
+	go -C specification/build run . -file ../haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 
 .PHONY: models
 models: gentypes spec swagger-check
