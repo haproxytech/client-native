@@ -40,7 +40,7 @@ jobs:
           go-version-file: "go.mod"
           check-latest: true
       - name: clearing models
-        run: rm -rf models/*
+        run: find models -maxdepth 1 -type f -name "*.go" -exec rm -f {} \;
       - name: generating models
         run: make models
       - name: changes
