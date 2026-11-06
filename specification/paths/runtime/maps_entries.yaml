@@ -46,6 +46,35 @@ maps_entries:
         $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace all entries in a runtime map
+    description: Atomically replaces all entries in a runtime map.
+    operationId: replaceRuntimeMapEntries
+    tags:
+      - Maps
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/map_entries'
+    responses:
+      '200':
+        description: Runtime map entries replaced
+        schema:
+          $ref: '#/definitions/map_entries'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
 maps_entries_one:
   get:  # get map <map> <value>
     summary: Return one map runtime setting
