@@ -27231,6 +27231,35 @@ paths:
       summary: Adds an entry into the map file
       tags:
         - Maps
+    put:
+      description: Atomically replaces all entries in a runtime map.
+      operationId: replaceRuntimeMapEntries
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - default: false
+          description: If true, immediately syncs changes to disk
+          in: query
+          name: force_sync
+          type: boolean
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/map_entries'
+      responses:
+        "200":
+          description: Runtime map entries replaced
+          schema:
+            $ref: '#/definitions/map_entries'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace all entries in a runtime map
+      tags:
+        - Maps
   /services/haproxy/runtime/maps/{parent_name}/entries/{id}:
     delete:
       description: Delete all the map entries from the map by its id.
