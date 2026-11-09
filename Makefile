@@ -5,6 +5,8 @@ GO_VERSION:=${shell go mod edit -json | jq -r .Go}
 GOLANGCI_LINT_VERSION=2.12.2
 CHECK_COMMIT=5.7.1
 GO_METHOD_GEN_VERSION:=${shell go mod edit -json | jq -r '.Require[] | select(.Path == "github.com/haproxytech/go-method-gen") | .Version'}
+GOFUMPT_VERSION:=${shell go mod edit -json | jq -r '.Require[] | select(.Path == "mvdan.cc/gofumpt") | .Version'}
+GOTEST_VERSION=v1.0.4
 
 .PHONY: test
 test:
@@ -16,12 +18,12 @@ test-equal:
 
 .PHONY: e2e
 e2e:
-	go install github.com/oktalz/gotest@latest
+	go install github.com/oktalz/gotest@${GOTEST_VERSION}
 	gotest -t integration
 
 .PHONY: e2e-docker
 e2e-docker:
-	docker build -f e2e/Dockerfile --build-arg GO_VERSION=${GO_VERSION} --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
+	docker build -f e2e/Dockerfile --build-arg GO_VERSION=${GO_VERSION} --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} --build-arg GOTEST_VERSION=${GOTEST_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
 	docker run --rm -t client-native-test:${DOCKER_HAPROXY_VERSION}
 
 # config-parser auto-generated types
@@ -71,8 +73,12 @@ lint-yaml:
 
 .PHONY: gofumpt
 gofumpt:
-	go install mvdan.cc/gofumpt@latest
+	go install mvdan.cc/gofumpt@${GOFUMPT_VERSION}
 	gofumpt -l -w .
+
+.PHONY: go-licenses
+go-licenses:
+	go install github.com/google/go-licenses@v1.6.0
 
 .PHONY: check-commit
 check-commit:

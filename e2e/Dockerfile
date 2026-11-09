@@ -16,9 +16,12 @@ ARG HAPROXY_VERSION=2.7
 ARG DOCKER_URL=haproxytech
 ARG GO_VERSION=1.22
 
-FROM golang:${GO_VERSION}-alpine as go_image
+FROM golang:${GO_VERSION}-alpine AS go_image
 
 FROM ${DOCKER_URL}/haproxy-alpine:${HAPROXY_VERSION}
+
+ARG HAPROXY_VERSION
+ARG GOTEST_VERSION=v1.0.4
 
 RUN apk add --no-cache -U socat openssl util-linux htop tzdata bash gcc openssl wget git curl make bash jq git && \
     rm -f /usr/local/bin/dataplaneapi /usr/bin/dataplaneapi && \
@@ -31,7 +34,7 @@ COPY --from=go_image /usr/local/go/ /usr/local/go/
 ENV PATH=$PATH:/usr/local/go/bin \
     CGO_ENABLED=0 \
     HAPROXY_VERSION=$HAPROXY_VERSION
-RUN GOBIN=/usr/local/go/bin go install github.com/oktalz/gotest@latest
+RUN GOBIN=/usr/local/go/bin go install github.com/oktalz/gotest@${GOTEST_VERSION}
 
 WORKDIR /src
 

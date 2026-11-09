@@ -2,6 +2,7 @@
 variables:
   DOCKER_HOST: tcp://docker:2375
   GO_VERSION: "1.26"
+  GOTOOLCHAIN: "go1.26.0"
   DOCKER_VERSION: "29.1"
 stages:
   - bots
@@ -15,7 +16,7 @@ pipelines-check:
   stage: bots
   needs: []
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
@@ -27,7 +28,7 @@ mr-backport-question:
   stage: bots
   needs: []
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
@@ -39,7 +40,7 @@ build-specification:
   stage: build
   needs: []
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   tags:
     - go
@@ -97,7 +98,7 @@ generate:
 build:
   stage: build
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   needs: []
   tags:
@@ -143,11 +144,12 @@ license-check:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   tags:
     - go
   script:
+    - make go-licenses
     - PROJECT="$(go list -m)"
     - ALLOWED_LICENSES="$(<.allowed_license_types)"
     - go-licenses report --ignore "$PROJECT" .
@@ -160,7 +162,7 @@ lint-commit-msg:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/commit-check:latest
+    name: $CI_REGISTRY_GO/commit-check:5.7.1
     entrypoint: [""]
   tags:
     - go
@@ -173,7 +175,7 @@ test:
   stage: test
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   tags:
     - go
@@ -187,12 +189,12 @@ test-equal:
   stage: test
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:latest-alpine
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     entrypoint: [""]
   tags:
     - go
   script:
-    - gotest -v -t equal
+    - go test -tags equal -v ./...
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
