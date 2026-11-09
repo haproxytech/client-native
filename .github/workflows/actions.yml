@@ -1,5 +1,8 @@
 name: CI
 on: [push, pull_request]
+permissions:
+  contents: read
+  pull-requests: read
 jobs:
   check:
     if: ${{ github.event_name == 'pull_request' }}
@@ -7,20 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: commit-check
-        uses: docker://ghcr.io/haproxytech/commit-check:5.2.0
+        uses: docker://ghcr.io/haproxytech/commit-check:5.7.1
         env:
           API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   generate-specification:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7.0.1
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: "go.mod"
-        check-latest: true
-      id: go
     - name: Compare
       run: |
         go run cmd/specification/*.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec_to_compare.yaml
@@ -33,77 +34,59 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
-          check-latest: true
       - name: clearing models
         run: find models -maxdepth 1 -type f -name "*.go" -exec rm -f {} \;
       - name: generating models
         run: make models
       - name: changes
-        run: test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models equal\` and commit the result"
+        run: git diff --exit-code || { echo "::error::Models are not generated, run \`make models\` and commit the result"; exit 1; }
       - name: untracked files
-        run: test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
+        run: |
+          files="$(git ls-files --others --exclude-standard)"
+          if [ -n "$files" ]; then
+            echo "$files"
+            echo "::error::Models generation created untracked files, cannot proceed"
+            exit 1
+          fi
   lint:
     name: golangci-lint
-    needs: ["generate-specification","generate-models"]
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
-          check-latest: true
-      - uses: actions/cache@v4
-        id: go-cache
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
       - name: Lint
         run: |
           make lint
   lint-spec:
-    needs: ["generate-specification","generate-models"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v7.0.1
       - name: yaml-lint
-        uses: ibiqlik/action-yamllint@master
+        uses: ibiqlik/action-yamllint@v3.1.1
         with:
           file_or_dir: .
           config_file: .yamllint.yml
   license:
     name: license-check
-    needs: ["generate-specification","generate-models"]
     runs-on: ubuntu-latest
     steps:
       - name: Check out code into the Go module directory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
-          check-latest: true
-      - uses: actions/cache@v4
-        id: go-cache
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
       - name: go-licenses install
-        run: go install github.com/google/go-licenses@latest
+        run: make go-licenses
       - name: Check Licenses
         run: |
           PROJECT="$(go list -m)"
@@ -112,77 +95,66 @@ jobs:
           go-licenses check --allowed_licenses="$ALLOWED_LICENSES" --ignore "$PROJECT" .
   tidy:
     name: go mod tidy
-    needs: ["generate-specification","generate-models"]
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7.0.0
         with:
           go-version-file: "go.mod"
-          check-latest: true
       - name: tidy
         run: go mod tidy
       - name: changes
-        run: test -z "$(git diff 2> /dev/null)" || exit "Go modules not tidied, issue \`go mod tidy\` and commit the result"
+        run: git diff --exit-code || { echo "::error::Go modules not tidied, run \`go mod tidy\` and commit the result"; exit 1; }
   build:
     name: Build
-    needs: ["generate-specification","generate-models"]
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7.0.1
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: "go.mod"
-        check-latest: true
-      id: go
     - name: Build
       run: |
         go build -v .
   go-test:
     name: Tests
-    needs: ["tidy","build"]
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7.0.1
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: "go.mod"
-        check-latest: true
-      id: go
     - name: Test
       run: |
         go test -v ./...
   go-test-equal:
     name: Test equal
-    needs: ["tidy","build"]
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7.0.1
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: "go.mod"
-        check-latest: true
-      id: go
     - name: Test
       run: |
         go test -tags equal -v ./...
   e2e:
     name: e2e on HAProxy
-    needs: ["go-test"]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        haproxyVersion: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8]
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
+      - name: Set up Go
+        uses: actions/setup-go@v7.0.0
+        with:
+          go-version-file: "go.mod"
       - name: e2e Test
-        run: DOCKER_HAPROXY_VERSION=${{ matrix.haproxyVersion }} make e2e-docker
+        run: make e2e-docker
