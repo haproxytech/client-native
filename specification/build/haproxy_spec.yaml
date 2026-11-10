@@ -2567,6 +2567,10 @@ definitions:
         type: object
         x-display-name: Log Send Hostname
         x-go-name: GlobalLogSendHostname
+      log_tag:
+        pattern: ^[^\s]+$
+        type: string
+        x-display-name: Log Tag
       lua_options:
         $ref: '#/definitions/lua_options'
       master-worker:
