@@ -97,6 +97,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.LogTag == obj.LogTag &&
 		rec.Logasap == obj.Logasap &&
 		EqualPointerInt64(rec.MaxKeepAliveQueue, obj.MaxKeepAliveQueue, opts...) &&
+		EqualPointerInt64(rec.MaxSessionSrvConns, obj.MaxSessionSrvConns, opts...) &&
 		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
 		rec.Mode == obj.Mode &&
 		rec.MonitorURI.Equal(obj.MonitorURI, opts...) &&
