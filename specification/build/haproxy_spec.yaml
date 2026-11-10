@@ -2679,6 +2679,12 @@ definitions:
         x-default-unit: ms
         x-duration: true
         x-nullable: true
+      rate_limit_sessions:
+        maximum: 4294967295
+        minimum: 0
+        type: integer
+        x-display-name: Rate Limit Sessions
+        x-nullable: true
       redispatch:
         $ref: '#/definitions/redispatch'
       retries:
@@ -3146,6 +3152,12 @@ definitions:
         x-display-name: Nolinger
       originalto:
         $ref: '#/definitions/originalto'
+      rate_limit_sessions:
+        maximum: 4294967295
+        minimum: 0
+        type: integer
+        x-display-name: Rate Limit Sessions
+        x-nullable: true
       socket_stats:
         enum:
           - enabled

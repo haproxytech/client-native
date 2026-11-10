@@ -102,6 +102,7 @@ func TestFrontendBaseEqualFalse(t *testing.T) {
 		result.ID = Ptr(*sample.ID + 1)
 		result.MaxSessionSrvConns = Ptr(*sample.MaxSessionSrvConns + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
+		result.RateLimitSessions = Ptr(*sample.RateLimitSessions + 1)
 		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
 		result.Tcplog = !sample.Tcplog
 		samples = append(samples, struct {
@@ -199,6 +200,7 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 		result.ID = Ptr(*sample.ID + 1)
 		result.MaxSessionSrvConns = Ptr(*sample.MaxSessionSrvConns + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
+		result.RateLimitSessions = Ptr(*sample.RateLimitSessions + 1)
 		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
 		result.Tcplog = !sample.Tcplog
 		samples = append(samples, struct {
@@ -209,7 +211,7 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 69 {
+		if len(listDiffFields) != 70 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -219,7 +221,7 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FrontendBase to be different in 69 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected FrontendBase to be different in 70 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

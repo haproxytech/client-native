@@ -404,9 +404,19 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, any) { //nol
 		return true, s.source()
 	case "Originalto":
 		return true, s.originalto()
+	case "RateLimitSessions":
+		return true, s.rateLimitSessions()
 	default:
 		return false, nil
 	}
+}
+
+func (s *SectionParser) rateLimitSessions() any {
+	data, err := s.get("rate-limit sessions", false)
+	if err != nil {
+		return nil
+	}
+	return parseOption(data)
 }
 
 func (s *SectionParser) checkTimeouts(fieldName string) (bool, any) {
@@ -1676,9 +1686,25 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.source(field)
 	case "Originalto":
 		return true, s.originalto(field)
+	case "RateLimitSessions":
+		return true, s.rateLimitSessions(field)
 	default:
 		return false, nil
 	}
+}
+
+func (s *SectionObject) rateLimitSessions(field reflect.Value) error {
+	if s.Section != parser.Defaults && s.Section != parser.Frontends {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("rate-limit sessions", nil)
+	}
+	d := translateToParserData(field)
+	if d == nil {
+		return misc.CreateTypeAssertError("rate-limit sessions")
+	}
+	return s.set("rate-limit sessions", d)
 }
 
 func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (bool, error) {

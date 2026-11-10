@@ -380,6 +380,12 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["QueueTimeout"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.RateLimitSessions, obj.RateLimitSessions, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RateLimitSessions"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerRedispatch(rec.Redispatch, obj.Redispatch, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

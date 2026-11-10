@@ -79,6 +79,7 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		rec.Name == obj.Name &&
 		rec.Nolinger == obj.Nolinger &&
 		EqualPointerOriginalto(rec.Originalto, obj.Originalto, opts...) &&
+		EqualPointerInt64(rec.RateLimitSessions, obj.RateLimitSessions, opts...) &&
 		rec.SocketStats == obj.SocketStats &&
 		rec.SpliceAuto == obj.SpliceAuto &&
 		rec.SpliceRequest == obj.SpliceRequest &&

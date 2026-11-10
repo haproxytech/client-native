@@ -106,6 +106,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams, opts...) &&
 		rec.PreferLastServer == obj.PreferLastServer &&
 		EqualPointerInt64(rec.QueueTimeout, obj.QueueTimeout, opts...) &&
+		EqualPointerInt64(rec.RateLimitSessions, obj.RateLimitSessions, opts...) &&
 		EqualPointerRedispatch(rec.Redispatch, obj.Redispatch, opts...) &&
 		EqualPointerInt64(rec.Retries, obj.Retries, opts...) &&
 		rec.RetryOn == obj.RetryOn &&
