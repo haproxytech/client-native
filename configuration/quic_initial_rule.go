@@ -281,6 +281,14 @@ func ParseQUICInitialRule(f types.Action) (*models.QUICInitialRule, error) {
 			CondTest: v.CondTest,
 			Metadata: misc.ParseMetadata(v.Comment),
 		}, nil
+	case *actions.DoLog:
+		return &models.QUICInitialRule{
+			Type:       "do-log",
+			LogProfile: v.Profile,
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+			Metadata:   misc.ParseMetadata(v.Comment),
+		}, nil
 	}
 	return nil, nil //nolint:nilnil
 }
@@ -312,6 +320,13 @@ func SerializeQUICInitialRule(f models.QUICInitialRule) (types.Action, error) {
 		}
 	case "send-retry":
 		rule = &quic_actions.SendRetry{
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case "do-log":
+		rule = &actions.DoLog{
+			Profile:  f.LogProfile,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,

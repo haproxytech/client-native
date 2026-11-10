@@ -3577,3 +3577,23 @@ const frontend_quicinitialdgramdropifTRUE = `
 frontend test
   quic-initial dgram-drop if TRUE
 `
+const frontend_quicinitialdolog = `
+frontend test
+  quic-initial do-log
+`
+const frontend_quicinitialdologifTRUE = `
+frontend test
+  quic-initial do-log if TRUE
+`
+const frontend_quicinitialdologunlessTRUE = `
+frontend test
+  quic-initial do-log unless TRUE
+`
+const frontend_quicinitialdologprofilemyprofile = `
+frontend test
+  quic-initial do-log profile myprofile
+`
+const frontend_quicinitialdologprofilemyprofile_ = `
+frontend test
+  quic-initial do-log profile myprofile if TRUE
+`

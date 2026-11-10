@@ -45,14 +45,17 @@ type QUICInitialRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// log profile
+	LogProfile string `json:"log_profile,omitempty"`
+
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// type
 	// Required: true
-	// Enum: ["reject","accept","send-retry","dgram-drop"]
-	// +kubebuilder:validation:Enum="reject";"accept";"send-retry";"dgram-drop";
+	// Enum: ["reject","accept","send-retry","dgram-drop","do-log"]
+	// +kubebuilder:validation:Enum="reject";"accept";"send-retry";"dgram-drop";"do-log";
 	Type string `json:"type"`
 }
 
@@ -120,7 +123,7 @@ var qUiCInitialRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["reject","accept","send-retry","dgram-drop"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["reject","accept","send-retry","dgram-drop","do-log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -141,6 +144,9 @@ const (
 
 	// QUICInitialRuleTypeDgramDashDrop captures enum value "dgram-drop"
 	QUICInitialRuleTypeDgramDashDrop string = "dgram-drop"
+
+	// QUICInitialRuleTypeDoDashLog captures enum value "do-log"
+	QUICInitialRuleTypeDoDashLog string = "do-log"
 )
 
 // prop value enum

@@ -14,6 +14,7 @@ quic_initial_rule:
         - accept
         - send-retry
         - dgram-drop
+        - do-log
       x-nullable: false
     cond:
       type: string
@@ -29,6 +30,12 @@ quic_initial_rule:
       x-dependency:
         cond:
           required: true
+    log_profile:
+      type: string
+      x-display-name: Log Profile
+      x-dependency:
+        type:
+          value: do-log
     metadata:
       additionalProperties:
         type: object

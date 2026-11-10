@@ -59,6 +59,8 @@ func (h *Initial) Parse(line string, parts []string, comment string) (string, er
 		err = h.ParseQuicInitial(&quic_actions.SendRetry{}, parts, comment)
 	case "dgram-drop":
 		err = h.ParseQuicInitial(&quic_actions.DgramDrop{}, parts, comment)
+	case "do-log":
+		err = h.ParseQuicInitial(&actions.DoLog{}, parts, comment)
 	default:
 		return "", &errors.ParseError{Parser: "QuicInitial", Line: line}
 	}
