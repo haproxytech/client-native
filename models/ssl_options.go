@@ -92,6 +92,9 @@ type SslOptions struct {
 	// issuers chain path
 	IssuersChainPath string `json:"issuers_chain_path,omitempty"`
 
+	// key base
+	KeyBase string `json:"key_base,omitempty"`
+
 	// load extra files
 	LoadExtraFiles string `json:"load_extra_files,omitempty"`
 

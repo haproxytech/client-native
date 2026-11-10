@@ -181,7 +181,7 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 28 {
+		if len(listDiffFields) != 29 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -191,7 +191,7 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslOptions to be different in 28 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SslOptions to be different in 29 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

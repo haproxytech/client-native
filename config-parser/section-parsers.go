@@ -248,6 +248,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Word{Name: "group"})
 	addParser(parser, &sequence, &simple.Word{Name: "ca-base"})
 	addParser(parser, &sequence, &simple.Word{Name: "crt-base"})
+	addParser(parser, &sequence, &simple.Word{Name: "key-base"})
 	addParser(parser, &sequence, &parsers.MasterWorker{})
 	addParser(parser, &sequence, &parsers.ExternalCheck{})
 	addParser(parser, &sequence, &parsers.NbProc{})
