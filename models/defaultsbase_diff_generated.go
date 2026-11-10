@@ -41,6 +41,9 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["LogSteps"+diffKey] = diffValue
 	}
+	if rec.TCPClflog != obj.TCPClflog {
+		diff["TCPClflog"] = []interface{}{rec.TCPClflog, obj.TCPClflog}
+	}
 	if rec.Abortonclose != obj.Abortonclose {
 		diff["Abortonclose"] = []interface{}{rec.Abortonclose, obj.Abortonclose}
 	}

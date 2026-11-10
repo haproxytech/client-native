@@ -1129,6 +1129,30 @@ const defaults_optionhttpchkmethoduriversionhos = `
 defaults test
   option httpchk <method> <uri> <version> <host>
 `
+const defaults_optiontcplog = `
+defaults test
+  option tcplog
+`
+const defaults_nooptiontcplog = `
+defaults test
+  no option tcplog
+`
+const defaults_optiontcplogclf = `
+defaults test
+  option tcplog clf
+`
+const defaults_nooptiontcplogclf = `
+defaults test
+  no option tcplog clf
+`
+const defaults_optiontcplogcomment = `
+defaults test
+  option tcplog # comment
+`
+const defaults_optiontcplogclfcomment = `
+defaults test
+  option tcplog clf # comment
+`
 const defaults_optionusesmallbuffers = `
 defaults test
   option use-small-buffers

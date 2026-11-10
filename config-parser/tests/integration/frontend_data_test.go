@@ -893,6 +893,30 @@ const frontend_optionhttplogclfcomment = `
 frontend test
   option httplog clf # comment
 `
+const frontend_optiontcplog = `
+frontend test
+  option tcplog
+`
+const frontend_nooptiontcplog = `
+frontend test
+  no option tcplog
+`
+const frontend_optiontcplogclf = `
+frontend test
+  option tcplog clf
+`
+const frontend_nooptiontcplogclf = `
+frontend test
+  no option tcplog clf
+`
+const frontend_optiontcplogcomment = `
+frontend test
+  option tcplog # comment
+`
+const frontend_optiontcplogclfcomment = `
+frontend test
+  option tcplog clf # comment
+`
 const frontend_sticktabletypeipsize1mexpire5mst = `
 frontend test
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
