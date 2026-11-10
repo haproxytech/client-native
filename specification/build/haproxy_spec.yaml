@@ -2805,6 +2805,12 @@ definitions:
         x-default-unit: ms
         x-duration: true
         x-nullable: true
+      client_hs_timeout:
+        minimum: 0
+        type: integer
+        x-default-unit: ms
+        x-duration: true
+        x-nullable: true
       client_timeout:
         minimum: 0
         type: integer
@@ -3378,6 +3384,12 @@ definitions:
             value: http
         x-display-name: CLF Log
       client_fin_timeout:
+        minimum: 0
+        type: integer
+        x-default-unit: ms
+        x-duration: true
+        x-nullable: true
+      client_hs_timeout:
         minimum: 0
         type: integer
         x-default-unit: ms

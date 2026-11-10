@@ -89,6 +89,7 @@ func TestFrontendBaseEqualFalse(t *testing.T) {
 		result.Backlog = Ptr(*sample.Backlog + 1)
 		result.Clflog = !sample.Clflog
 		result.ClientFinTimeout = Ptr(*sample.ClientFinTimeout + 1)
+		result.ClientHsTimeout = Ptr(*sample.ClientHsTimeout + 1)
 		result.ClientTimeout = Ptr(*sample.ClientTimeout + 1)
 		result.ClitcpkaCnt = Ptr(*sample.ClitcpkaCnt + 1)
 		result.ClitcpkaIdle = Ptr(*sample.ClitcpkaIdle + 1)
@@ -185,6 +186,7 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 		result.Backlog = Ptr(*sample.Backlog + 1)
 		result.Clflog = !sample.Clflog
 		result.ClientFinTimeout = Ptr(*sample.ClientFinTimeout + 1)
+		result.ClientHsTimeout = Ptr(*sample.ClientHsTimeout + 1)
 		result.ClientTimeout = Ptr(*sample.ClientTimeout + 1)
 		result.ClitcpkaCnt = Ptr(*sample.ClitcpkaCnt + 1)
 		result.ClitcpkaIdle = Ptr(*sample.ClitcpkaIdle + 1)
@@ -207,7 +209,7 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 71 {
+		if len(listDiffFields) != 72 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -217,7 +219,7 @@ func TestFrontendBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FrontendBase to be different in 71 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected FrontendBase to be different in 72 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
