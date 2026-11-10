@@ -3256,6 +3256,9 @@ definitions:
         x-default-unit: ms
         x-duration: true
         x-nullable: true
+      tcp_clflog:
+        type: boolean
+        x-display-name: TCP CLF Log
       tcp_smart_accept:
         enum:
           - enabled
@@ -3703,6 +3706,12 @@ definitions:
         x-default-unit: ms
         x-duration: true
         x-nullable: true
+      tcp_clflog:
+        type: boolean
+        x-dependency:
+          mode:
+            value: tcp
+        x-display-name: TCP CLF Log
       tcp_smart_accept:
         enum:
           - enabled

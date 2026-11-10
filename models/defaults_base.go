@@ -47,6 +47,9 @@ type DefaultsBase struct {
 	// log steps
 	LogSteps []string `json:"log_steps,omitempty"`
 
+	// Tcp clflog
+	TCPClflog bool `json:"tcp_clflog,omitempty"`
+
 	// abortonclose
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled";"disabled";

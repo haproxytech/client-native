@@ -25,6 +25,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
 		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) &&
 		EqualSliceString(rec.LogSteps, obj.LogSteps, opts...) &&
+		rec.TCPClflog == obj.TCPClflog &&
 		rec.Abortonclose == obj.Abortonclose &&
 		rec.AcceptInvalidHTTPRequest == obj.AcceptInvalidHTTPRequest &&
 		rec.AcceptInvalidHTTPResponse == obj.AcceptInvalidHTTPResponse &&

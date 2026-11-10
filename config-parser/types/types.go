@@ -970,6 +970,23 @@ type OptionHTTPLog struct {
 	Comment  string
 }
 
+//sections:defaults,frontend
+//name:option tcplog
+//no:parse
+//test:ok:option tcplog
+//test:ok:no option tcplog
+//test:ok:option tcplog clf
+//test:ok:no option tcplog clf
+//test:ok:option tcplog # comment
+//test:ok:option tcplog clf # comment
+//test:fail:option tcplog bogus
+//test:fail:no option tcplog bogus
+type OptionTCPLog struct {
+	NoOption bool
+	Clf      bool
+	Comment  string
+}
+
 //sections:backend
 //name:option mysql-check
 //no:parse

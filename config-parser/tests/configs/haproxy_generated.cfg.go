@@ -1381,6 +1381,7 @@ defaults test
   log 127.0.0.1:1515 sample 1:6 local2
   option forwarded
   option httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
+  option tcplog
   unique-id-format %{+X}o_%ci:%cp_%fi:%fp_%Ts_%rt:%pid
   unique-id-header X-Unique-ID
   load-server-state-from-file global
@@ -2244,6 +2245,7 @@ frontend test
   option forwardfor
   option forwarded
   option httplog
+  option tcplog
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
   use_backend test if TRUE
   use_backend test if TRUE # deny
@@ -3895,6 +3897,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 2},
 	{`  option httplog
 `, 1},
+	{`  option tcplog
+`, 2},
 	{`  option mysql-check
 `, 1},
 	{`  option pgsql-check user john
