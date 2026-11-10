@@ -3317,6 +3317,12 @@ definitions:
           - disabled
         type: string
         x-display-name: Splice Response
+      spop_check:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Spop Check
       srvtcpka:
         enum:
           - enabled
