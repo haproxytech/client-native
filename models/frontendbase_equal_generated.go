@@ -70,6 +70,7 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		rec.LogSeparateErrors == obj.LogSeparateErrors &&
 		rec.LogTag == obj.LogTag &&
 		rec.Logasap == obj.Logasap &&
+		EqualPointerInt64(rec.MaxSessionSrvConns, obj.MaxSessionSrvConns, opts...) &&
 		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
 		rec.Mode == obj.Mode &&
 		EqualPointerMonitorFail(rec.MonitorFail, obj.MonitorFail, opts...) &&

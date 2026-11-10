@@ -50,6 +50,11 @@ defaults_base:
       type: integer
       x-nullable: true
       x-display-name: Backlog
+    max_session_srv_conns:
+      type: integer
+      minimum: 0
+      x-nullable: true
+      x-display-name: Max Session Server Connections
     adv_check:
       type: string
       x-display-name: Advanced Check

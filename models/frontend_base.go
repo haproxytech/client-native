@@ -237,6 +237,11 @@ type FrontendBase struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	Logasap string `json:"logasap,omitempty"`
 
+	// max session srv conns
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	MaxSessionSrvConns *int64 `json:"max_session_srv_conns,omitempty"`
+
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
@@ -457,6 +462,10 @@ func (m *FrontendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogasap(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMaxSessionSrvConns(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1583,6 +1592,18 @@ func (m *FrontendBase) validateLogasap(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateLogasapEnum("logasap", "body", m.Logasap); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *FrontendBase) validateMaxSessionSrvConns(formats strfmt.Registry) error {
+	if swag.IsZero(m.MaxSessionSrvConns) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("max_session_srv_conns", "body", *m.MaxSessionSrvConns, 0, false); err != nil {
 		return err
 	}
 
