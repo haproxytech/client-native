@@ -2013,6 +2013,8 @@ definitions:
         minimum: 0
         type: integer
         x-nullable: true
+      quick_exit:
+        type: boolean
       quiet:
         type: boolean
       stress_level:

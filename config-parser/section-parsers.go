@@ -281,6 +281,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &parsers.HTTPClientSSLVerify{})
 	addParser(parser, &sequence, &simple.Enabled{Name: "limited-quic"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "prealloc-fd"})
+	addParser(parser, &sequence, &simple.Enabled{Name: "quick-exit"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.applet.zero-copy-forwarding"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.buffers.limit"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.buffers.reserve"})
