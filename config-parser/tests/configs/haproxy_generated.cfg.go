@@ -2025,6 +2025,9 @@ defaults test
   quic-initial send-retry if TRUE
   quic-initial dgram-drop
   quic-initial dgram-drop if TRUE
+  quic-initial do-log
+  quic-initial do-log if TRUE
+  quic-initial do-log unless TRUE
 
 fcgi-app test
   set-param name fmt if acl
@@ -2858,6 +2861,9 @@ frontend test
   quic-initial send-retry if TRUE
   quic-initial dgram-drop
   quic-initial dgram-drop if TRUE
+  quic-initial do-log
+  quic-initial do-log if TRUE
+  quic-initial do-log unless TRUE
 
 log-forward test
   dgram-bind :80,:443
@@ -5663,5 +5669,11 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  quic-initial dgram-drop
 `, 2},
 	{`  quic-initial dgram-drop if TRUE
+`, 2},
+	{`  quic-initial do-log
+`, 2},
+	{`  quic-initial do-log if TRUE
+`, 2},
+	{`  quic-initial do-log unless TRUE
 `, 2},
 }

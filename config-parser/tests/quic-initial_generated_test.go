@@ -35,6 +35,11 @@ func TestInitialquic(t *testing.T) {
 		"quic-initial send-retry if TRUE": true,
 		"quic-initial dgram-drop":         true,
 		"quic-initial dgram-drop if TRUE": true,
+		"quic-initial do-log":             true,
+		"quic-initial do-log if TRUE":     true,
+		"quic-initial do-log unless TRUE": true,
+		"quic-initial do-log bogus token": false,
+		"quic-initial do-log if":          false,
 		"---":                             false,
 		"--- ---":                         false,
 	}
