@@ -80,6 +80,8 @@ func (f *Content) Parse(parts []string, comment string) error {
 		err = f.ParseAction(&actions.SetNice{}, parts)
 	case "set-tos":
 		err = f.ParseAction(&actions.SetTos{}, parts)
+	case "set-src":
+		err = f.ParseAction(&tcpActions.SetSrc{}, parts)
 	case "set-src-port":
 		err = f.ParseAction(&actions.SetSrcPort{}, parts)
 	case "switch-mode":

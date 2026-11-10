@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
+	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
 
@@ -32,21 +33,24 @@ type SetSrc struct {
 }
 
 func (f *SetSrc) Parse(parts []string, parserType types.ParserType, comment string) error {
-	if f.Comment != "" {
+	if comment != "" {
 		f.Comment = comment
 	}
 	if len(parts) < 4 {
 		return stderrors.New("not enough params")
 	}
+	command, condition := common.SplitRequest(parts[3:])
+	if len(command) == 0 || len(condition) == 1 {
+		return errors.ErrInvalidData
+	}
 	expr := common.Expression{}
 
-	err := expr.Parse([]string{parts[3]})
+	err := expr.Parse(command)
 	if err != nil {
 		return stderrors.New("not enough params")
 	}
 
 	f.Expr = expr
-	_, condition := common.SplitRequest(parts[4:])
 	if len(condition) > 1 {
 		f.Cond = condition[0]
 		f.CondTest = strings.Join(condition[1:], " ")
