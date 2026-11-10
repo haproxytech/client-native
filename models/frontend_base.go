@@ -292,6 +292,13 @@ type FrontendBase struct {
 	// originalto
 	Originalto *Originalto `json:"originalto,omitempty"`
 
+	// rate limit sessions
+	// Maximum: 4.294967295e+09
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=4.294967295e+09
+	// +kubebuilder:validation:Minimum=0
+	RateLimitSessions *int64 `json:"rate_limit_sessions,omitempty"`
+
 	// socket stats
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled";"disabled";
@@ -531,6 +538,10 @@ func (m *FrontendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateOriginalto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRateLimitSessions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1930,6 +1941,22 @@ func (m *FrontendBase) validateOriginalto(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *FrontendBase) validateRateLimitSessions(formats strfmt.Registry) error {
+	if swag.IsZero(m.RateLimitSessions) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("rate_limit_sessions", "body", *m.RateLimitSessions, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("rate_limit_sessions", "body", *m.RateLimitSessions, 4.294967295e+09, false); err != nil {
+		return err
 	}
 
 	return nil

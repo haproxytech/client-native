@@ -186,6 +186,12 @@ frontend_base:
       minimum: 0
       x-nullable: true
       x-display-name: Max Session Server Connections
+    rate_limit_sessions:
+      type: integer
+      minimum: 0
+      maximum: 4294967295
+      x-nullable: true
+      x-display-name: Rate Limit Sessions
     forwardfor:
       $ref: "#/definitions/forwardfor"
       x-dependency:

@@ -420,6 +420,13 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Minimum=0
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
 
+	// rate limit sessions
+	// Maximum: 4.294967295e+09
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=4.294967295e+09
+	// +kubebuilder:validation:Minimum=0
+	RateLimitSessions *int64 `json:"rate_limit_sessions,omitempty"`
+
 	// redispatch
 	Redispatch *Redispatch `json:"redispatch,omitempty"`
 
@@ -823,6 +830,10 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateQueueTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRateLimitSessions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3142,6 +3153,22 @@ func (m *DefaultsBase) validateQueueTimeout(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("queue_timeout", "body", *m.QueueTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DefaultsBase) validateRateLimitSessions(formats strfmt.Registry) error {
+	if swag.IsZero(m.RateLimitSessions) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("rate_limit_sessions", "body", *m.RateLimitSessions, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("rate_limit_sessions", "body", *m.RateLimitSessions, 4.294967295e+09, false); err != nil {
 		return err
 	}
 

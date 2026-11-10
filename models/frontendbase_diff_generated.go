@@ -272,6 +272,12 @@ func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["Originalto"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.RateLimitSessions, obj.RateLimitSessions, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RateLimitSessions"+diffKey] = diffValue
+	}
 	if rec.SocketStats != obj.SocketStats {
 		diff["SocketStats"] = []interface{}{rec.SocketStats, obj.SocketStats}
 	}
