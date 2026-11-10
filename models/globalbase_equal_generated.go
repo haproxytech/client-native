@@ -57,6 +57,7 @@ func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) b
 		rec.LimitedQuic == obj.LimitedQuic &&
 		rec.Localpeer == obj.Localpeer &&
 		EqualPointerGlobalLogSendHostname(rec.LogSendHostname, obj.LogSendHostname, opts...) &&
+		rec.LogTag == obj.LogTag &&
 		EqualPointerLuaOptions(rec.LuaOptions, obj.LuaOptions, opts...) &&
 		rec.MasterWorker == obj.MasterWorker &&
 		EqualPointerInt64(rec.MworkerMaxReloads, obj.MworkerMaxReloads, opts...) &&

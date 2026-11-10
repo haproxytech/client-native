@@ -187,6 +187,9 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		}
 		diff["LogSendHostname"+diffKey] = diffValue
 	}
+	if rec.LogTag != obj.LogTag {
+		diff["LogTag"] = []interface{}{rec.LogTag, obj.LogTag}
+	}
 	for diffKey, diffValue := range DiffPointerLuaOptions(rec.LuaOptions, obj.LuaOptions, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

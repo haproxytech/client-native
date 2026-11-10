@@ -63,6 +63,10 @@ global_base:
       type: boolean
     h2_workaround_bogus_websocket_clients:
       type: boolean
+    log_tag:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Log Tag
     limited_quic:
       type: boolean
     mworker_max_reloads:
