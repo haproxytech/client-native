@@ -3605,6 +3605,14 @@ const defaults_tcprequestconnectionsetmark0x1Ab = `
 defaults test
   tcp-request connection set-mark 0x1Ab if FALSE
 `
+const defaults_tcprequestconnectionsetsrcsrc = `
+defaults test
+  tcp-request connection set-src src
+`
+const defaults_tcprequestconnectionsetsrcsrcifF = `
+defaults test
+  tcp-request connection set-src src if FALSE
+`
 const defaults_tcprequestconnectionsetsrcporthd = `
 defaults test
   tcp-request connection set-src-port hdr(port)
@@ -3613,6 +3621,18 @@ const defaults_tcprequestconnectionsetsrcporthd_ = `
 defaults test
   tcp-request connection set-src-port hdr(port) if FALSE
 `
+const defaults_tcprequestcontentsetsrcsrc = `
+defaults test
+  tcp-request content set-src src
+`
+const defaults_tcprequestcontentsetsrcsrcifFALS = `
+defaults test
+  tcp-request content set-src src if FALSE
+`
+const defaults_tcprequestcontentsetsrchdripunle = `
+defaults test
+  tcp-request content set-src hdr(ip) unless FALSE
+`
 const defaults_tcprequestcontentsetsrcporthdrpo = `
 defaults test
   tcp-request content set-src-port hdr(port)
@@ -3620,6 +3640,14 @@ defaults test
 const defaults_tcprequestcontentsetsrcporthdrpo_ = `
 defaults test
   tcp-request content set-src-port hdr(port) if FALSE
+`
+const defaults_tcprequestsessionsetsrcsrc = `
+defaults test
+  tcp-request session set-src src
+`
+const defaults_tcprequestsessionsetsrcsrcifFALS = `
+defaults test
+  tcp-request session set-src src if FALSE
 `
 const defaults_tcprequestcontentsettos0ifFALSE = `
 defaults test
