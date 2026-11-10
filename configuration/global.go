@@ -698,6 +698,15 @@ func parseSSLOptions(p parser.Parser) (*models.SslOptions, error) { //nolint:goc
 		options.CrtBase = crtBase
 	}
 
+	keyBase, err := parseStringOption(p, "key-base")
+	if err != nil {
+		return nil, err
+	}
+	if keyBase != "" {
+		isEmpty = false
+		options.KeyBase = keyBase
+	}
+
 	sslBindCiphers, err := parseStringOption(p, "ssl-default-bind-ciphers")
 	if err != nil {
 		return nil, err
@@ -3156,6 +3165,10 @@ func serializeSSLOptions(p parser.Parser, options *models.SslOptions) error { //
 	}
 
 	if err := serializeStringOption(p, "crt-base", options.CrtBase); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "key-base", options.KeyBase); err != nil {
 		return err
 	}
 
