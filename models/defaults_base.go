@@ -461,6 +461,11 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Enum="enabled";"disabled";
 	SpliceResponse string `json:"splice_response,omitempty"`
 
+	// spop check
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled";"disabled";
+	SpopCheck string `json:"spop_check,omitempty"`
+
 	// srvtcpka
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled";"disabled";
@@ -846,6 +851,10 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSpliceResponse(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpopCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3337,6 +3346,48 @@ func (m *DefaultsBase) validateSpliceResponse(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSpliceResponseEnum("splice_response", "body", m.SpliceResponse); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsBaseTypeSpopCheckPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsBaseTypeSpopCheckPropEnum = append(defaultsBaseTypeSpopCheckPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsBaseSpopCheckEnabled captures enum value "enabled"
+	DefaultsBaseSpopCheckEnabled string = "enabled"
+
+	// DefaultsBaseSpopCheckDisabled captures enum value "disabled"
+	DefaultsBaseSpopCheckDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultsBase) validateSpopCheckEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsBaseTypeSpopCheckPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultsBase) validateSpopCheck(formats strfmt.Registry) error {
+	if swag.IsZero(m.SpopCheck) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpopCheckEnum("spop_check", "body", m.SpopCheck); err != nil {
 		return err
 	}
 

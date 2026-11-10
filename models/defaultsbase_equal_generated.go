@@ -122,6 +122,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		rec.SpliceAuto == obj.SpliceAuto &&
 		rec.SpliceRequest == obj.SpliceRequest &&
 		rec.SpliceResponse == obj.SpliceResponse &&
+		rec.SpopCheck == obj.SpopCheck &&
 		rec.Srvtcpka == obj.Srvtcpka &&
 		EqualPointerInt64(rec.SrvtcpkaCnt, obj.SrvtcpkaCnt, opts...) &&
 		EqualPointerInt64(rec.SrvtcpkaIdle, obj.SrvtcpkaIdle, opts...) &&
