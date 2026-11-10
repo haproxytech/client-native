@@ -401,6 +401,18 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					if p.Options.Log {
 						p.Options.Logger.Tracef("%slog-profile section %s active", p.Options.LogPrefix, data.Name)
 					}
+				case "http-hardening":
+					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
+					rawData, _ := parserSectionName.Get(false)
+					data := rawData.(*types.Section) //nolint:forcetypeassert
+					config.HTTPHardening = p.getHTTPHardeningParser()
+					config.HTTPHardening.Section = *data
+					config.HTTPHardening.DefaultSectionName = data.FromDefaults
+					p.Parsers[HTTPHardening][data.Name] = config.HTTPHardening
+					config.Active = config.HTTPHardening
+					if p.Options.Log {
+						p.Options.Logger.Tracef("%shttp-hardening section %s active", p.Options.LogPrefix, data.Name)
+					}
 				case "acme":
 					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
 					rawData, _ := parserSectionName.Get(false)

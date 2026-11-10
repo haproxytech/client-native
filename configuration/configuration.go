@@ -38,20 +38,21 @@ import (
 )
 
 const (
-	BackendParentName     = "backend"
-	FrontendParentName    = "frontend"
-	DefaultsParentName    = "defaults"
-	LogForwardParentName  = "log_forward"
-	PeersParentName       = "peers"
-	RingParentName        = "ring"
-	GlobalParentName      = "global"
-	FCGIAppParentName     = "fcgi-app"
-	ResolverParentName    = "resolvers"
-	CrtStoreParentName    = "crt-store"
-	TracesParentName      = "traces"
-	LogProfileParentName  = "log-profile"
-	AcmeParentName        = "acme"
-	HealthcheckParentName = "healthcheck"
+	BackendParentName       = "backend"
+	FrontendParentName      = "frontend"
+	DefaultsParentName      = "defaults"
+	LogForwardParentName    = "log_forward"
+	PeersParentName         = "peers"
+	RingParentName          = "ring"
+	GlobalParentName        = "global"
+	FCGIAppParentName       = "fcgi-app"
+	ResolverParentName      = "resolvers"
+	CrtStoreParentName      = "crt-store"
+	TracesParentName        = "traces"
+	LogProfileParentName    = "log-profile"
+	HTTPHardeningParentName = "http-hardening"
+	AcmeParentName          = "acme"
+	HealthcheckParentName   = "healthcheck"
 )
 
 // ClientParams is just a placeholder for all client options

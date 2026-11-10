@@ -55,6 +55,7 @@ type Configuration interface {
 	HTTPErrorRule
 	HTTPErrorsSection
 	LogProfile
+	HTTPHardening
 	LogTarget
 	LogForward
 	MailerEntry

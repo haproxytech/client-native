@@ -42,6 +42,7 @@ func (p *configParser) String() string {
 	p.writeParsers("global", p.Parsers[Global][GlobalSectionName], &result, true)
 
 	sections := []Section{
+		HTTPHardening,
 		Defaults,
 		UserList,
 		Peers,
@@ -64,13 +65,20 @@ func (p *configParser) String() string {
 
 	for _, section := range sections {
 		var sortedSections []string
-		if section == Defaults {
+		switch section { //nolint:exhaustive
+		case Defaults:
 			var err error
 			sortedSections, err = getSortedListWithFrom(p.Parsers[section])
 			if err != nil && p.Options.Log {
 				p.Options.Logger.Errorf("%s", err.Error())
 			}
-		} else {
+		case HTTPHardening:
+			var err error
+			sortedSections, err = getSortedListWithFromRoots(p.Parsers[section], httpHardeningRoots)
+			if err != nil && p.Options.Log {
+				p.Options.Logger.Errorf("%s", err.Error())
+			}
+		default:
 			sortedSections = p.getSortedList(p.Parsers[section])
 		}
 
@@ -88,6 +96,11 @@ func (p *configParser) String() string {
 		}
 	}
 	return result.String()
+}
+
+var httpHardeningRoots = map[string]struct{}{ //nolint:gochecknoglobals
+	"trusted":   {},
+	"untrusted": {},
 }
 
 func (p *configParser) shouldSerialize(section Section, sectionName string) bool {

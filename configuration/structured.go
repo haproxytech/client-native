@@ -30,6 +30,7 @@ type Structured interface {
 	StructuredUserlist
 	StructuredRing
 	StructuredLogProfile
+	StructuredHTTPHardening
 	StructuredLogForward
 	StructuredFCGIApp
 	StructuredMailersSection

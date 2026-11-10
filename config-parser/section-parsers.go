@@ -51,6 +51,7 @@ func (p *configParser) createParsers(parser map[string]ParserInterface, sequence
 	addParser(parser, &sequence, &extra.Section{Name: "crt-store"})
 	addParser(parser, &sequence, &extra.Section{Name: "traces"})
 	addParser(parser, &sequence, &extra.Section{Name: "log-profile"})
+	addParser(parser, &sequence, &extra.Section{Name: "http-hardening"})
 	addParser(parser, &sequence, &extra.Section{Name: "acme"})
 	addParser(parser, &sequence, &extra.Section{Name: "healthcheck"})
 	if !p.Options.DisableUnProcessed {
@@ -1055,6 +1056,28 @@ func (p *configParser) getLogProfileParser() *Parsers {
 	sequence := []Section{}
 	addParser(parser, &sequence, &simple.Word{Name: "log-tag"})
 	addParser(parser, &sequence, &parsers.OnLogStep{})
+	return p.createParsers(parser, sequence)
+}
+
+func (p *configParser) getHTTPHardeningParser() *Parsers {
+	parser := map[string]ParserInterface{}
+	sequence := []Section{}
+	addParser(parser, &sequence, &simple.OnOff{Name: "all"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "all-reject"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "all-delete"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "delete-all-trailer-fields"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "delete-underscore-in-header-name"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "delete-underscore-in-trailer-name"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "delete-unregistered-header-fields"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "delete-unregistered-trailer-fields"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-content-length-leading-zero"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-content-length-with-te"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-ctl-in-header-trailer"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-duplicate-host-header"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-header-trailer-folding"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-lowercase-method"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-underscore-in-header-name"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "reject-underscore-in-trailer-name"})
 	return p.createParsers(parser, sequence)
 }
 

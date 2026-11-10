@@ -253,6 +253,9 @@ type ACL struct{}
 //test:ok:bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
 //test:ok:bind :443 idle-ping 10s
 //test:ok:bind :443 idle-ping 10
+//test:ok:bind :443 http-hardening auto
+//test:ok:bind :443 http-hardening hardening1
+//test:fail:bind :443 http-hardening
 //test:ok:bind :443 shards 4
 //test:ok:bind :443 shards by-thread
 //test:ok:bind :443 shards by-group
@@ -537,6 +540,9 @@ type CPUSet struct {
 //test:ok:default-server force-tlsv13
 //test:ok:default-server init-addr last,libc,none
 //test:ok:default-server init-addr last,libc,none,127.0.0.1
+//test:ok:default-server http-hardening auto
+//test:ok:default-server http-hardening hardening1
+//test:fail:default-server http-hardening
 //test:ok:default-server inter 1500ms
 //test:ok:default-server inter 1000 weight 13
 //test:ok:default-server fastinter 2500ms
@@ -1203,6 +1209,7 @@ type Peer struct {
 //name:server
 //is:multiple
 //test:ok:server name 127.0.0.1:8080
+//test:ok:server name 127.0.0.1 http-hardening auto
 //test:ok:server name 127.0.0.1
 //test:ok:server addr 127.0.0.1
 //test:ok:server addr ::1

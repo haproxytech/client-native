@@ -192,7 +192,11 @@ func (p *configParser) SectionsCreate(sectionType Section, sectionName string) e
 
 	parts := []string{string(sectionType), sectionName}
 	comment := ""
+	before := len(st)
 	p.ProcessLine(fmt.Sprintf("%s %s", sectionType, sectionName), parts, comment, parsers)
+	if len(p.Parsers[sectionType]) == before {
+		return errors.ErrInvalidData
+	}
 	return nil
 }
 
@@ -235,11 +239,13 @@ func (p *configParser) SectionsDefaultsFromGet(sectionType Section, sectionName 
 //
 //	SectionsDefaultsFromSet(Frontends,"FrontendName", "DefaultsName2") => nil
 //
-// ONLY defaults, frontend, backend and listen sections can be used here
+// ONLY defaults, frontend, backend, listen, and http-hardening sections can be used here
 func (p *configParser) SectionsDefaultsFromSet(sectionType Section, sectionName, defaultsSection string) error {
 	p.lock()
 	defer p.unLock()
 	switch sectionType { //nolint:exhaustive
+	case HTTPHardening:
+		return p.setHTTPHardeningFrom(sectionName, defaultsSection)
 	case Defaults:
 		// for defaults we need to check for circular dependencies
 		// and whether that section exists or not due to sorting method
@@ -287,6 +293,29 @@ func (p *configParser) SectionsDefaultsFromSet(sectionType Section, sectionName,
 		}
 	}
 	section.DefaultSectionName = defaultsSection
+	return nil
+}
+
+func (p *configParser) setHTTPHardeningFrom(sectionName, parent string) error {
+	section, ok := p.Parsers[HTTPHardening][sectionName]
+	if !ok {
+		return errors.ErrSectionMissing
+	}
+	if parent == "" {
+		section.DefaultSectionName = ""
+		section.Section.FromDefaults = ""
+		return nil
+	}
+	if parent == sectionName {
+		return errors.ErrCircularDependency
+	}
+	if parent != "trusted" && parent != "untrusted" {
+		if _, ok := p.Parsers[HTTPHardening][parent]; !ok {
+			return errors.ErrFromDefaultsSectionMissing
+		}
+	}
+	section.DefaultSectionName = parent
+	section.Section.FromDefaults = parent
 	return nil
 }
 
@@ -398,12 +427,22 @@ func (p *configParser) getSortedList(data map[string]*Parsers) []string {
 // since every section can have a from that might depend on,
 // we take that into account
 func getSortedListWithFrom(data map[string]*Parsers) ([]string, error) {
+	return getSortedListWithFromRoots(data, nil)
+}
+
+// getSortedListWithFromRoots also treats names in roots as already-declared
+// parents, so implicit sections do not fail the sorter's dependency check.
+func getSortedListWithFromRoots(data map[string]*Parsers, roots map[string]struct{}) ([]string, error) {
 	sortedSections := make([]sorter.Section, len(data))
 	index := 0
 	for parserSectionName := range data {
+		from := data[parserSectionName].DefaultSectionName
+		if _, ok := roots[from]; ok {
+			from = ""
+		}
 		sortedSections[index] = sorter.Section{
 			Name: parserSectionName,
-			From: data[parserSectionName].DefaultSectionName,
+			From: from,
 		}
 		index++
 	}
