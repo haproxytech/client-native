@@ -932,6 +932,7 @@ func (p *configParser) getRingParser() *Parsers {
 	parser := map[string]ParserInterface{}
 	sequence := []Section{}
 	addParser(parser, &sequence, &simple.String{Name: "description"})
+	addParser(parser, &sequence, &simple.String{Name: "backing-file"})
 	addParser(parser, &sequence, &simple.String{Name: "format"})
 	addParser(parser, &sequence, &simple.Number{Name: "maxlen"})
 	addParser(parser, &sequence, &simple.Size{Name: "size"})

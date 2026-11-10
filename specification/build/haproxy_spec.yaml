@@ -3785,6 +3785,9 @@ definitions:
     additionalProperties: false
     description: HAProxy ring configuration
     properties:
+      backing_file:
+        description: Optional file used to persist the ring buffer
+        type: string
       description:
         type: string
         x-display-name: The description is an optional description string of the ring
