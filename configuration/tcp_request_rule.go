@@ -26,7 +26,6 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/actions"
-	http_actions "github.com/haproxytech/client-native/v6/config-parser/parsers/http/actions"
 	tcp_actions "github.com/haproxytech/client-native/v6/config-parser/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/client-native/v6/config-parser/parsers/tcp/types"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -948,7 +947,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrc:
 			return &tcp_types.Connection{
-				Action: &http_actions.SetSrc{
+				Action: &tcp_actions.SetSrc{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
@@ -1129,7 +1128,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrc:
 			return &tcp_types.Content{
-				Action: &http_actions.SetSrc{
+				Action: &tcp_actions.SetSrc{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
@@ -1404,7 +1403,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrc:
 			return &tcp_types.Session{
-				Action: &http_actions.SetSrc{
+				Action: &tcp_actions.SetSrc{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,

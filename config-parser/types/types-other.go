@@ -1134,10 +1134,17 @@ type TCPType interface { //nolint:iface
 //test:ok:tcp-request content set-mark 0x1Ab if FALSE
 //test:ok:tcp-request connection set-mark 20
 //test:ok:tcp-request connection set-mark 0x1Ab if FALSE
+//test:ok:tcp-request connection set-src src
+//test:ok:tcp-request connection set-src src if FALSE
 //test:ok:tcp-request connection set-src-port hdr(port)
 //test:ok:tcp-request connection set-src-port hdr(port) if FALSE
+//test:ok:tcp-request content set-src src
+//test:ok:tcp-request content set-src src if FALSE
+//test:ok:tcp-request content set-src hdr(ip) unless FALSE
 //test:ok:tcp-request content set-src-port hdr(port)
 //test:ok:tcp-request content set-src-port hdr(port) if FALSE
+//test:ok:tcp-request session set-src src
+//test:ok:tcp-request session set-src src if FALSE
 //test:ok:tcp-request content set-tos 0 if FALSE
 //test:ok:tcp-request content set-tos 0
 //test:ok:tcp-request connection set-tos 0 if FALSE
@@ -1153,6 +1160,9 @@ type TCPType interface { //nolint:iface
 //test:fail:tcp-request connection
 //test:fail:tcp-request content do-resolve(txn.myip) capture.req.hdr(0),lower
 //test:fail:tcp-request session
+//test:fail:tcp-request content set-src
+//test:fail:tcp-request content set-src if TRUE
+//test:fail:tcp-request session set-src
 //test:fail:tcp-request content lua.
 //test:fail:tcp-request content lua. param
 //test:fail:tcp-request connection lua.
