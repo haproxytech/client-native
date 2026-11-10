@@ -452,6 +452,9 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 	if rec.SpliceResponse != obj.SpliceResponse {
 		diff["SpliceResponse"] = []interface{}{rec.SpliceResponse, obj.SpliceResponse}
 	}
+	if rec.SpopCheck != obj.SpopCheck {
+		diff["SpopCheck"] = []interface{}{rec.SpopCheck, obj.SpopCheck}
+	}
 	if rec.Srvtcpka != obj.Srvtcpka {
 		diff["Srvtcpka"] = []interface{}{rec.Srvtcpka, obj.Srvtcpka}
 	}

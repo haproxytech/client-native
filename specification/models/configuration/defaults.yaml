@@ -407,6 +407,10 @@ defaults_base:
       type: string
       enum: [enabled, disabled]
       x-display-name: Prefer Last Server
+    spop_check:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Spop Check
     socket_stats:
       type: string
       enum: [enabled, disabled]
