@@ -28,6 +28,7 @@ func (rec TuneSslOptions) Equal(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOp
 		rec.CtxCacheSize == obj.CtxCacheSize &&
 		rec.DefaultDhParam == obj.DefaultDhParam &&
 		rec.ForcePrivateCache == obj.ForcePrivateCache &&
+		EqualPointerInt64(rec.HardMaxrecord, obj.HardMaxrecord, opts...) &&
 		rec.Keylog == obj.Keylog &&
 		EqualPointerInt64(rec.Lifetime, obj.Lifetime, opts...) &&
 		EqualPointerInt64(rec.Maxrecord, obj.Maxrecord, opts...) &&

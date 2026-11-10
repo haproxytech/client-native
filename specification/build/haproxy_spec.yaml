@@ -1942,6 +1942,13 @@ definitions:
       force_private_cache:
         type: boolean
         x-display-name: SSL Force Private Cache
+      hard_maxrecord:
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+        x-display-name: SSL Hard Maximum Size
+        x-nullable: true
+        x-size: false
       keylog:
         enum:
           - enabled
