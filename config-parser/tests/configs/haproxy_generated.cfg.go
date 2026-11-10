@@ -2079,6 +2079,11 @@ defaults test
   quic-initial send-retry if TRUE
   quic-initial dgram-drop
   quic-initial dgram-drop if TRUE
+  quic-initial do-log
+  quic-initial do-log if TRUE
+  quic-initial do-log unless TRUE
+  quic-initial do-log profile myprofile
+  quic-initial do-log profile myprofile if TRUE
 
 fcgi-app test
   set-param name fmt if acl
@@ -2936,6 +2941,11 @@ frontend test
   quic-initial send-retry if TRUE
   quic-initial dgram-drop
   quic-initial dgram-drop if TRUE
+  quic-initial do-log
+  quic-initial do-log if TRUE
+  quic-initial do-log unless TRUE
+  quic-initial do-log profile myprofile
+  quic-initial do-log profile myprofile if TRUE
 
 healthcheck test
   type httpchk OPTIONS * HTTP/1.1\\r\\nHost:\\ www
@@ -5882,5 +5892,15 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  quic-initial dgram-drop
 `, 2},
 	{`  quic-initial dgram-drop if TRUE
+`, 2},
+	{`  quic-initial do-log
+`, 2},
+	{`  quic-initial do-log if TRUE
+`, 2},
+	{`  quic-initial do-log unless TRUE
+`, 2},
+	{`  quic-initial do-log profile myprofile
+`, 2},
+	{`  quic-initial do-log profile myprofile if TRUE
 `, 2},
 }

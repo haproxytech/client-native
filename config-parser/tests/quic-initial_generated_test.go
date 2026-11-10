@@ -27,16 +27,24 @@ import (
 
 func TestInitialquic(t *testing.T) {
 	tests := map[string]bool{
-		"quic-initial reject":             true,
-		"quic-initial reject if TRUE":     true,
-		"quic-initial accept":             true,
-		"quic-initial accept if TRUE":     true,
-		"quic-initial send-retry":         true,
-		"quic-initial send-retry if TRUE": true,
-		"quic-initial dgram-drop":         true,
-		"quic-initial dgram-drop if TRUE": true,
-		"---":                             false,
-		"--- ---":                         false,
+		"quic-initial reject":                           true,
+		"quic-initial reject if TRUE":                   true,
+		"quic-initial accept":                           true,
+		"quic-initial accept if TRUE":                   true,
+		"quic-initial send-retry":                       true,
+		"quic-initial send-retry if TRUE":               true,
+		"quic-initial dgram-drop":                       true,
+		"quic-initial dgram-drop if TRUE":               true,
+		"quic-initial do-log":                           true,
+		"quic-initial do-log if TRUE":                   true,
+		"quic-initial do-log unless TRUE":               true,
+		"quic-initial do-log profile myprofile":         true,
+		"quic-initial do-log profile myprofile if TRUE": true,
+		"quic-initial do-log bogus token":               false,
+		"quic-initial do-log profile":                   false,
+		"quic-initial do-log if":                        false,
+		"---":                                           false,
+		"--- ---":                                       false,
 	}
 	parser := &quic.Initial{}
 	for command, shouldPass := range tests {

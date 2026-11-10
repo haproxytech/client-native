@@ -8154,6 +8154,12 @@ definitions:
           freeFormat: true
           operation: getACLs
           property: acl_name
+      log_profile:
+        type: string
+        x-dependency:
+          type:
+            value: do-log
+        x-display-name: Log Profile
       metadata:
         additionalProperties:
           type: object
@@ -8163,6 +8169,7 @@ definitions:
           - accept
           - send-retry
           - dgram-drop
+          - do-log
         type: string
         x-nullable: false
     required:

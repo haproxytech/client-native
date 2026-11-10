@@ -3933,3 +3933,23 @@ const defaults_quicinitialdgramdropifTRUE = `
 defaults test
   quic-initial dgram-drop if TRUE
 `
+const defaults_quicinitialdolog = `
+defaults test
+  quic-initial do-log
+`
+const defaults_quicinitialdologifTRUE = `
+defaults test
+  quic-initial do-log if TRUE
+`
+const defaults_quicinitialdologunlessTRUE = `
+defaults test
+  quic-initial do-log unless TRUE
+`
+const defaults_quicinitialdologprofilemyprofile = `
+defaults test
+  quic-initial do-log profile myprofile
+`
+const defaults_quicinitialdologprofilemyprofile_ = `
+defaults test
+  quic-initial do-log profile myprofile if TRUE
+`

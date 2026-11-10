@@ -1431,4 +1431,12 @@ type Stats struct{}
 //test:ok:quic-initial send-retry if TRUE
 //test:ok:quic-initial dgram-drop
 //test:ok:quic-initial dgram-drop if TRUE
+//test:ok:quic-initial do-log
+//test:ok:quic-initial do-log if TRUE
+//test:ok:quic-initial do-log unless TRUE
+//test:ok:quic-initial do-log profile myprofile
+//test:ok:quic-initial do-log profile myprofile if TRUE
+//test:fail:quic-initial do-log bogus token
+//test:fail:quic-initial do-log profile
+//test:fail:quic-initial do-log if
 type QuicInitial struct{}

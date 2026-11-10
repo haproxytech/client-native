@@ -29,6 +29,9 @@ func (rec QUICInitialRule) Diff(obj QUICInitialRule, opts ...eqdiff.GoMethodGenO
 	if rec.CondTest != obj.CondTest {
 		diff["CondTest"] = []interface{}{rec.CondTest, obj.CondTest}
 	}
+	if rec.LogProfile != obj.LogProfile {
+		diff["LogProfile"] = []interface{}{rec.LogProfile, obj.LogProfile}
+	}
 	if rec.Type != obj.Type {
 		diff["Type"] = []interface{}{rec.Type, obj.Type}
 	}
