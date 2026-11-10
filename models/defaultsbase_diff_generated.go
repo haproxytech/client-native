@@ -335,6 +335,12 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["MaxKeepAliveQueue"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.MaxSessionSrvConns, obj.MaxSessionSrvConns, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["MaxSessionSrvConns"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey
