@@ -82,6 +82,9 @@ func (rec SslOptions) Diff(obj SslOptions, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.IssuersChainPath != obj.IssuersChainPath {
 		diff["IssuersChainPath"] = []interface{}{rec.IssuersChainPath, obj.IssuersChainPath}
 	}
+	if rec.KeyBase != obj.KeyBase {
+		diff["KeyBase"] = []interface{}{rec.KeyBase, obj.KeyBase}
+	}
 	if rec.LoadExtraDelExt != obj.LoadExtraDelExt {
 		diff["LoadExtraDelExt"] = []interface{}{rec.LoadExtraDelExt, obj.LoadExtraDelExt}
 	}
