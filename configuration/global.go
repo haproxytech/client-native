@@ -2509,6 +2509,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.LogSendHostname = globalLogSendHostName
 
+	logTag, err := parseStringOption(p, "log-tag")
+	if err != nil {
+		return nil, err
+	}
+	global.LogTag = logTag
+
 	luaOptions, err := parseLuaOptions(p)
 	if err != nil {
 		return nil, err
@@ -3390,6 +3396,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		logSendHostName.Value = data.LogSendHostname.Param
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "log-send-hostname", logSendHostName); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "log-tag", data.LogTag); err != nil {
 		return err
 	}
 
