@@ -37,6 +37,9 @@ import (
 // swagger:model ring_base
 type RingBase struct {
 
+	// Optional file used to persist the ring buffer
+	BackingFile string `json:"backing_file,omitempty"`
+
 	// The description is an optional description string of the ring
 	Description string `json:"description,omitempty"`
 

@@ -22,7 +22,8 @@ import (
 )
 
 func (rec RingBase) Equal(obj RingBase, opts ...eqdiff.GoMethodGenOptions) bool {
-	return rec.Description == obj.Description &&
+	return rec.BackingFile == obj.BackingFile &&
+		rec.Description == obj.Description &&
 		rec.Format == obj.Format &&
 		EqualPointerInt64(rec.Maxlen, obj.Maxlen, opts...) &&
 		rec.Name == obj.Name &&
