@@ -30,6 +30,7 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerInt64(rec.Backlog, obj.Backlog, opts...) &&
 		rec.Clflog == obj.Clflog &&
 		EqualPointerInt64(rec.ClientFinTimeout, obj.ClientFinTimeout, opts...) &&
+		EqualPointerInt64(rec.ClientHsTimeout, obj.ClientHsTimeout, opts...) &&
 		EqualPointerInt64(rec.ClientTimeout, obj.ClientTimeout, opts...) &&
 		rec.Clitcpka == obj.Clitcpka &&
 		EqualPointerInt64(rec.ClitcpkaCnt, obj.ClitcpkaCnt, opts...) &&
