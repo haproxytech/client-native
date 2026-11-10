@@ -176,6 +176,11 @@ type GlobalBase struct {
 	// log send hostname
 	LogSendHostname *GlobalLogSendHostname `json:"log_send_hostname,omitempty"`
 
+	// log tag
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	LogTag string `json:"log_tag,omitempty"`
+
 	// lua options
 	LuaOptions *LuaOptions `json:"lua_options,omitempty"`
 
@@ -404,6 +409,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogSendHostname(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLogTag(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1045,6 +1054,18 @@ func (m *GlobalBase) validateLogSendHostname(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateLogTag(formats strfmt.Registry) error {
+	if swag.IsZero(m.LogTag) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("log_tag", "body", m.LogTag, `^[^\s]+$`); err != nil {
+		return err
 	}
 
 	return nil
