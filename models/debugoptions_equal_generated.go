@@ -23,6 +23,7 @@ import (
 
 func (rec DebugOptions) Equal(obj DebugOptions, opts ...eqdiff.GoMethodGenOptions) bool {
 	return EqualPointerInt64(rec.Anonkey, obj.Anonkey, opts...) &&
+		rec.Counters == obj.Counters &&
 		rec.QuickExit == obj.QuickExit &&
 		rec.Quiet == obj.Quiet &&
 		EqualPointerInt64(rec.StressLevel, obj.StressLevel, opts...) &&

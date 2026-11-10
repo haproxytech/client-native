@@ -183,7 +183,7 @@ func TestDebugOptionsDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 5 {
+		if len(listDiffFields) != 6 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -193,7 +193,7 @@ func TestDebugOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected DebugOptions to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected DebugOptions to be different in 6 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
