@@ -25,7 +25,6 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
 		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) &&
 		EqualSliceString(rec.LogSteps, obj.LogSteps, opts...) &&
-		rec.TCPClflog == obj.TCPClflog &&
 		rec.Abortonclose == obj.Abortonclose &&
 		rec.AcceptInvalidHTTPRequest == obj.AcceptInvalidHTTPRequest &&
 		rec.AcceptUnsafeViolationsInHTTPRequest == obj.AcceptUnsafeViolationsInHTTPRequest &&
@@ -83,6 +82,7 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		rec.Name == obj.Name &&
 		rec.Nolinger == obj.Nolinger &&
 		EqualPointerOriginalto(rec.Originalto, obj.Originalto, opts...) &&
+		EqualPointerInt64(rec.RateLimitSessions, obj.RateLimitSessions, opts...) &&
 		rec.SocketStats == obj.SocketStats &&
 		rec.SpliceAuto == obj.SpliceAuto &&
 		rec.SpliceRequest == obj.SpliceRequest &&
@@ -90,6 +90,7 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) &&
 		EqualPointerConfigStickTable(rec.StickTable, obj.StickTable, opts...) &&
 		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) &&
+		rec.TCPClflog == obj.TCPClflog &&
 		rec.TCPSmartAccept == obj.TCPSmartAccept &&
 		rec.Tcpka == obj.Tcpka &&
 		rec.Tcplog == obj.Tcplog &&
