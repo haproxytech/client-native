@@ -22,6 +22,7 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -39,6 +40,11 @@ type DebugOptions struct {
 	// +kubebuilder:validation:Maximum=4.294967295e+09
 	// +kubebuilder:validation:Minimum=0
 	Anonkey *int64 `json:"anonkey,omitempty"`
+
+	// counters
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled";"disabled";
+	Counters string `json:"counters,omitempty"`
 
 	// quick exit
 	QuickExit bool `json:"quick_exit,omitempty"`
@@ -65,6 +71,10 @@ func (m *DebugOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCounters(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateStressLevel(formats); err != nil {
 		res = append(res, err)
 	}
@@ -85,6 +95,48 @@ func (m *DebugOptions) validateAnonkey(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("anonkey", "body", *m.Anonkey, 4.294967295e+09, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var debugOptionsTypeCountersPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		debugOptionsTypeCountersPropEnum = append(debugOptionsTypeCountersPropEnum, v)
+	}
+}
+
+const (
+
+	// DebugOptionsCountersEnabled captures enum value "enabled"
+	DebugOptionsCountersEnabled string = "enabled"
+
+	// DebugOptionsCountersDisabled captures enum value "disabled"
+	DebugOptionsCountersDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DebugOptions) validateCountersEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, debugOptionsTypeCountersPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DebugOptions) validateCounters(formats strfmt.Registry) error {
+	if swag.IsZero(m.Counters) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCountersEnum("counters", "body", m.Counters); err != nil {
 		return err
 	}
 

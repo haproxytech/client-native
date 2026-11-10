@@ -1131,6 +1131,9 @@ debug_options:
       minimum: 0
       maximum: 4294967295
       x-nullable: true
+    counters:
+      type: string
+      enum: [enabled, disabled]
     stress_level:
       type: integer
       minimum: 0

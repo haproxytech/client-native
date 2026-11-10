@@ -918,6 +918,15 @@ func parseDebugOptions(p parser.Parser) (*models.DebugOptions, error) {
 		options.Anonkey = anonkey
 	}
 
+	counters, err := parseOnOffOption(p, "debug.counters")
+	if err != nil {
+		return nil, err
+	}
+	if counters != "" {
+		isEmpty = false
+		options.Counters = counters
+	}
+
 	stress, err := parseInt64POption(p, "stress-level")
 	if err != nil {
 		return nil, err
@@ -2790,6 +2799,9 @@ func serializeDebugOptions(p parser.Parser, options *models.DebugOptions) error 
 	}
 
 	if err := serializeInt64POption(p, "anonkey", options.Anonkey); err != nil {
+		return err
+	}
+	if err := serializeOnOffOption(p, "debug.counters", options.Counters); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "stress-level", options.StressLevel); err != nil {

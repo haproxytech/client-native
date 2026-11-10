@@ -2078,6 +2078,11 @@ definitions:
         minimum: 0
         type: integer
         x-nullable: true
+      counters:
+        enum:
+          - enabled
+          - disabled
+        type: string
       quick_exit:
         type: boolean
       quiet:

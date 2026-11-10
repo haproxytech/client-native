@@ -270,6 +270,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &parsers.Socket{})
 	addParser(parser, &sequence, &parsers.StatsTimeout{})
 	addParser(parser, &sequence, &simple.Number{Name: "anonkey"})
+	addParser(parser, &sequence, &simple.OnOff{Name: "debug.counters"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "httpclient.resolvers.disabled"})
 	addParser(parser, &sequence, &simple.Word{Name: "httpclient.resolvers.id"})
 	addParser(parser, &sequence, &parsers.HTTPClientResolversPrefer{})
