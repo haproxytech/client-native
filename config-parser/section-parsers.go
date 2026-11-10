@@ -142,6 +142,7 @@ func (p *configParser) getDefaultParser() *Parsers {
 	addParser(parser, &sequence, &parsers.OptionOriginalTo{})
 	addParser(parser, &sequence, &simple.Option{Name: "persist"})
 	addParser(parser, &sequence, &simple.Option{Name: "prefer-last-server"})
+	addParser(parser, &sequence, &simple.Option{Name: "spop-check"})
 	addParser(parser, &sequence, &simple.Option{Name: "socket-stats"})
 	addParser(parser, &sequence, &simple.Option{Name: "tcp-smart-accept"})
 	addParser(parser, &sequence, &simple.Option{Name: "tcp-smart-connect"})
