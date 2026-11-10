@@ -54,11 +54,16 @@ func (f *DoLog) Parse(parts []string, parserType types.ParserType, comment strin
 	if len(parts) < requiredLen {
 		return stderrors.New("not enough params")
 	}
-	_, condition := common.SplitRequest(command)
-	if len(condition) > 1 {
-		f.Cond = condition[0]
-		f.CondTest = strings.Join(condition[1:], " ")
+	rest := command[1:]
+	if len(rest) == 0 {
+		return nil
 	}
+	tokens, condition := common.SplitRequest(rest)
+	if len(tokens) != 0 || len(condition) < 2 {
+		return stderrors.New("not enough params")
+	}
+	f.Cond = condition[0]
+	f.CondTest = strings.Join(condition[1:], " ")
 	return nil
 }
 

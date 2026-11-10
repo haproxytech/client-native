@@ -7839,6 +7839,7 @@ definitions:
           - accept
           - send-retry
           - dgram-drop
+          - do-log
         type: string
         x-nullable: false
     required:
