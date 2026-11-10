@@ -80,6 +80,12 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["ClientFinTimeout"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.ClientHsTimeout, obj.ClientHsTimeout, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["ClientHsTimeout"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ClientTimeout, obj.ClientTimeout, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

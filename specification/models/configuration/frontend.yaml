@@ -120,6 +120,12 @@ frontend_base:
       x-nullable: true
       x-duration: true
       x-default-unit: ms
+    client_hs_timeout:
+      type: integer
+      minimum: 0
+      x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     http_request_timeout:
       type: integer
       minimum: 0

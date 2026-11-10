@@ -61,6 +61,11 @@ type FrontendBase struct {
 	// +kubebuilder:validation:Minimum=0
 	ClientFinTimeout *int64 `json:"client_fin_timeout,omitempty"`
 
+	// client hs timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	ClientHsTimeout *int64 `json:"client_hs_timeout,omitempty"`
+
 	// client timeout
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
@@ -338,6 +343,10 @@ func (m *FrontendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateClientFinTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateClientHsTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -635,6 +644,18 @@ func (m *FrontendBase) validateClientFinTimeout(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("client_fin_timeout", "body", *m.ClientFinTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *FrontendBase) validateClientHsTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ClientHsTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("client_hs_timeout", "body", *m.ClientHsTimeout, 0, false); err != nil {
 		return err
 	}
 
