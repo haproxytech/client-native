@@ -33,6 +33,10 @@ log_forward_base:
     dont-parse-log:
       type: boolean
       x-display-name: Don't Parse Log
+    host:
+      type: string
+      description: How the host field is handled when forwarding logs
+      enum: [append, fill, keep, replace]
     backlog:
       type: integer
       x-nullable: true

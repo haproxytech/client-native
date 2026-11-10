@@ -25,6 +25,7 @@ func (rec LogForwardBase) Equal(obj LogForwardBase, opts ...eqdiff.GoMethodGenOp
 	return rec.AssumeRfc6587Ntf == obj.AssumeRfc6587Ntf &&
 		EqualPointerInt64(rec.Backlog, obj.Backlog, opts...) &&
 		rec.DontParseLog == obj.DontParseLog &&
+		rec.Host == obj.Host &&
 		EqualPointerInt64(rec.Maxconn, obj.Maxconn, opts...) &&
 		rec.Name == obj.Name &&
 		EqualPointerInt64(rec.TimeoutClient, obj.TimeoutClient, opts...)
