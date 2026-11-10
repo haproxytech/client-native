@@ -1065,6 +1065,9 @@ ssl_options:
     crt_base:
       type: string
       x-display-name: SSL Certificates Base Directory
+    key_base:
+      type: string
+      x-display-name: SSL Private Keys Base Directory
     issuers_chain_path:
       type: string
     maxsslrate:

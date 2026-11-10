@@ -92,6 +92,9 @@ type SslOptions struct {
 	// issuers chain path
 	IssuersChainPath string `json:"issuers_chain_path,omitempty"`
 
+	// key base
+	KeyBase string `json:"key_base,omitempty"`
+
 	// Remove the certificate file extension before appending the extra file extension (foobar.crt loads foobar.key instead of foobar.crt.key)
 	LoadExtraDelExt bool `json:"load_extra_del_ext,omitempty"`
 
