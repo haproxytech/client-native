@@ -25,7 +25,6 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 	return EqualSlicePointerErrorfile(rec.ErrorFiles, obj.ErrorFiles, opts...) &&
 		EqualSlicePointerErrorfiles(rec.ErrorFilesFromHTTPErrors, obj.ErrorFilesFromHTTPErrors, opts...) &&
 		EqualSliceString(rec.LogSteps, obj.LogSteps, opts...) &&
-		rec.TCPClflog == obj.TCPClflog &&
 		rec.Abortonclose == obj.Abortonclose &&
 		rec.AcceptInvalidHTTPRequest == obj.AcceptInvalidHTTPRequest &&
 		rec.AcceptInvalidHTTPResponse == obj.AcceptInvalidHTTPResponse &&
@@ -112,6 +111,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerPgsqlCheckParams(rec.PgsqlCheckParams, obj.PgsqlCheckParams, opts...) &&
 		rec.PreferLastServer == obj.PreferLastServer &&
 		EqualPointerInt64(rec.QueueTimeout, obj.QueueTimeout, opts...) &&
+		EqualPointerInt64(rec.RateLimitSessions, obj.RateLimitSessions, opts...) &&
 		EqualPointerRedispatch(rec.Redispatch, obj.Redispatch, opts...) &&
 		EqualPointerInt64(rec.Retries, obj.Retries, opts...) &&
 		rec.RetryOn == obj.RetryOn &&
@@ -130,6 +130,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl, opts...) &&
 		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) &&
 		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) &&
+		rec.TCPClflog == obj.TCPClflog &&
 		rec.TCPSmartAccept == obj.TCPSmartAccept &&
 		rec.TCPSmartConnect == obj.TCPSmartConnect &&
 		rec.Tcpka == obj.Tcpka &&

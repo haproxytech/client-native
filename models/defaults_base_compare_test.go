@@ -86,7 +86,6 @@ func TestDefaultsBaseEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.TCPClflog = !sample.TCPClflog
 		result.Backlog = Ptr(*sample.Backlog + 1)
 		result.CheckTimeout = Ptr(*sample.CheckTimeout + 1)
 		result.Clflog = !sample.Clflog
@@ -108,6 +107,7 @@ func TestDefaultsBaseEqualFalse(t *testing.T) {
 		result.MaxSessionSrvConns = Ptr(*sample.MaxSessionSrvConns + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
 		result.QueueTimeout = Ptr(*sample.QueueTimeout + 1)
+		result.RateLimitSessions = Ptr(*sample.RateLimitSessions + 1)
 		result.Retries = Ptr(*sample.Retries + 1)
 		result.ServerFinTimeout = Ptr(*sample.ServerFinTimeout + 1)
 		result.ServerTimeout = Ptr(*sample.ServerTimeout + 1)
@@ -115,6 +115,7 @@ func TestDefaultsBaseEqualFalse(t *testing.T) {
 		result.SrvtcpkaIdle = Ptr(*sample.SrvtcpkaIdle + 1)
 		result.SrvtcpkaIntvl = Ptr(*sample.SrvtcpkaIntvl + 1)
 		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
+		result.TCPClflog = !sample.TCPClflog
 		result.Tcplog = !sample.Tcplog
 		result.TunnelTimeout = Ptr(*sample.TunnelTimeout + 1)
 		samples = append(samples, struct {
@@ -196,7 +197,6 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.TCPClflog = !sample.TCPClflog
 		result.Backlog = Ptr(*sample.Backlog + 1)
 		result.CheckTimeout = Ptr(*sample.CheckTimeout + 1)
 		result.Clflog = !sample.Clflog
@@ -218,6 +218,7 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 		result.MaxSessionSrvConns = Ptr(*sample.MaxSessionSrvConns + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
 		result.QueueTimeout = Ptr(*sample.QueueTimeout + 1)
+		result.RateLimitSessions = Ptr(*sample.RateLimitSessions + 1)
 		result.Retries = Ptr(*sample.Retries + 1)
 		result.ServerFinTimeout = Ptr(*sample.ServerFinTimeout + 1)
 		result.ServerTimeout = Ptr(*sample.ServerTimeout + 1)
@@ -225,6 +226,7 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 		result.SrvtcpkaIdle = Ptr(*sample.SrvtcpkaIdle + 1)
 		result.SrvtcpkaIntvl = Ptr(*sample.SrvtcpkaIntvl + 1)
 		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
+		result.TCPClflog = !sample.TCPClflog
 		result.Tcplog = !sample.Tcplog
 		result.TunnelTimeout = Ptr(*sample.TunnelTimeout + 1)
 		samples = append(samples, struct {
@@ -235,7 +237,7 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 117 {
+		if len(listDiffFields) != 118 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -245,7 +247,7 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected DefaultsBase to be different in 117 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected DefaultsBase to be different in 118 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

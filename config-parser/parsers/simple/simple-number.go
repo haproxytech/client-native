@@ -19,6 +19,7 @@ package simple
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
@@ -33,21 +34,24 @@ type Number struct {
 
 func (s *Number) Parse(line string, parts []string, comment string) (string, error) {
 	var err error
-	if parts[0] == s.Name {
-		if len(parts) < 2 {
-			return "", &errors.ParseError{Parser: "Number", Line: line, Message: "Parse error"}
-		}
-		var num int64
-		if num, err = strconv.ParseInt(parts[1], 10, 64); err != nil {
-			return "", &errors.ParseError{Parser: "Number", Line: line, Message: err.Error()}
-		}
-		s.data = &types.Int64C{
-			Value:   num,
-			Comment: comment,
-		}
-		return "", nil
+	name := strings.Fields(s.Name)
+	if len(parts) < len(name)+1 {
+		return "", &errors.ParseError{Parser: "Number", Line: line, Message: "Parse error"}
 	}
-	return "", &errors.ParseError{Parser: s.Name, Line: line}
+	for i, namePart := range name {
+		if parts[i] != namePart {
+			return "", &errors.ParseError{Parser: s.Name, Line: line}
+		}
+	}
+	var num int64
+	if num, err = strconv.ParseInt(parts[len(name)], 10, 64); err != nil {
+		return "", &errors.ParseError{Parser: "Number", Line: line, Message: err.Error()}
+	}
+	s.data = &types.Int64C{
+		Value:   num,
+		Comment: comment,
+	}
+	return "", nil
 }
 
 func (s *Number) Result() ([]common.ReturnResultLine, error) {
