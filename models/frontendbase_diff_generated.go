@@ -41,9 +41,6 @@ func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["LogSteps"+diffKey] = diffValue
 	}
-	if rec.TCPClflog != obj.TCPClflog {
-		diff["TCPClflog"] = []interface{}{rec.TCPClflog, obj.TCPClflog}
-	}
 	if rec.Abortonclose != obj.Abortonclose {
 		diff["Abortonclose"] = []interface{}{rec.Abortonclose, obj.Abortonclose}
 	}
@@ -275,6 +272,12 @@ func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["Originalto"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.RateLimitSessions, obj.RateLimitSessions, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["RateLimitSessions"+diffKey] = diffValue
+	}
 	if rec.SocketStats != obj.SocketStats {
 		diff["SocketStats"] = []interface{}{rec.SocketStats, obj.SocketStats}
 	}
@@ -304,6 +307,9 @@ func (rec FrontendBase) Diff(obj FrontendBase, opts ...eqdiff.GoMethodGenOptions
 			diffKey = "." + diffKey
 		}
 		diff["TarpitTimeout"+diffKey] = diffValue
+	}
+	if rec.TCPClflog != obj.TCPClflog {
+		diff["TCPClflog"] = []interface{}{rec.TCPClflog, obj.TCPClflog}
 	}
 	if rec.TCPSmartAccept != obj.TCPSmartAccept {
 		diff["TCPSmartAccept"] = []interface{}{rec.TCPSmartAccept, obj.TCPSmartAccept}

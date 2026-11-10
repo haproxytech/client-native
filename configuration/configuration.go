@@ -415,6 +415,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, any) { //nol
 		return true, s.originalto()
 	case "LogSteps":
 		return true, s.logSteps()
+	case "RateLimitSessions":
+		return true, s.rateLimitSessions()
 	default:
 		return false, nil
 	}
@@ -1583,6 +1585,14 @@ func (s *SectionParser) logSteps() any {
 	return nil
 }
 
+func (s *SectionParser) rateLimitSessions() any {
+	data, err := s.get("rate-limit sessions", false)
+	if err != nil {
+		return nil
+	}
+	return parseOption(data)
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  any
@@ -1768,6 +1778,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.originalto(field)
 	case "LogSteps":
 		return true, s.logSteps(field)
+	case "RateLimitSessions":
+		return true, s.rateLimitSessions(field)
 	case "UseFCGIApp":
 		return true, s.useFCGIApp(field)
 	default:
@@ -3219,6 +3231,20 @@ func (s *SectionObject) logSteps(field reflect.Value) error {
 		return s.set("log-steps", nil)
 	}
 	return s.set("log-steps", types.StringC{Value: d})
+}
+
+func (s *SectionObject) rateLimitSessions(field reflect.Value) error {
+	if s.Section != parser.Defaults && s.Section != parser.Frontends {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("rate-limit sessions", nil)
+	}
+	d := translateToParserData(field)
+	if d == nil {
+		return misc.CreateTypeAssertError("rate-limit sessions")
+	}
+	return s.set("rate-limit sessions", d)
 }
 
 func (s *SectionObject) useFCGIApp(field reflect.Value) error {
