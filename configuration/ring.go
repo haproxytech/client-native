@@ -112,6 +112,18 @@ func ParseRingSection(p parser.Parser, ring *models.Ring) error { //nolint:gocog
 		}
 	}
 
+	backingFile, err := p.Get(parser.Ring, ring.Name, "backing-file", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		bf, ok := backingFile.(*types.StringC)
+		if !ok {
+			return misc.CreateTypeAssertError("backing-file")
+		}
+		ring.BackingFile = bf.Value
+	}
+
 	format, err := p.Get(parser.Ring, ring.Name, "format", true)
 	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
 		return err
@@ -268,6 +280,17 @@ func SerializeRingSection(p parser.Parser, data *models.Ring, opt *options.Confi
 	} else {
 		d := types.StringC{Value: data.Description}
 		if err = p.Set(parser.Ring, data.Name, "description", d); err != nil {
+			return err
+		}
+	}
+
+	if data.BackingFile == "" {
+		if err = p.Set(parser.Ring, data.Name, "backing-file", nil); err != nil {
+			return err
+		}
+	} else {
+		d := types.StringC{Value: data.BackingFile}
+		if err = p.Set(parser.Ring, data.Name, "backing-file", d); err != nil {
 			return err
 		}
 	}
