@@ -748,6 +748,13 @@ definitions:
       $ref: "#/definitions/log_profile_step"
     description: List of steps where to override the logging.
     x-omitempty: true
+  http_hardening:
+    $ref: "models/configuration/http_hardening.yaml#/http_hardening"
+  http_hardenings:
+    description: List of HTTP hardening profiles
+    type: array
+    items:
+      $ref: "#/definitions/http_hardening"
   ssl_front_use:
     $ref: "models/configuration/ssl_front_use.yaml#/ssl_front_use"
   ssl_front_uses:
@@ -954,6 +961,7 @@ tags:
   - name: CrtLoad
   - name: Traces
   - name: LogProfile
+  - name: HTTPHardening
   - name: Acme
   - name: Profiling
   - name: HealthCheck
@@ -1232,6 +1240,10 @@ paths:
     $ref: "paths/configuration/log_profile.yaml#/log_profiles"
   /services/haproxy/configuration/log_profiles/{name}:
     $ref: "paths/configuration/log_profile.yaml#/log_profiles_one"
+  /services/haproxy/configuration/http_hardenings:
+    $ref: "paths/configuration/http_hardening.yaml#/http_hardenings"
+  /services/haproxy/configuration/http_hardenings/{name}:
+    $ref: "paths/configuration/http_hardening.yaml#/http_hardenings_one"
   /services/haproxy/runtime:
     $ref: "paths/general.yaml#/runtime"
   /services/haproxy/runtime/acls:

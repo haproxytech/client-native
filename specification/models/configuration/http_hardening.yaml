@@ -1,0 +1,84 @@
+---
+http_hardening:
+  title: HTTP Hardening
+  description: Defines a named HTTP hardening profile.
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      description: Name of the HTTP hardening profile. The reserved name "auto" cannot be declared.
+      x-nullable: false
+    from:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      description: Profile whose settings are copied when this profile is declared.
+    all:
+      type: string
+      enum: ["on", "off"]
+      description: Enables or disables every hardening check.
+    all_reject:
+      type: string
+      enum: ["on", "off"]
+      description: Enables or disables every reject check.
+    all_delete:
+      type: string
+      enum: ["on", "off"]
+      description: Enables or disables every delete check.
+    delete_all_trailer_fields:
+      type: string
+      enum: ["on", "off"]
+      description: Deletes all trailer fields.
+    delete_underscore_in_header_name:
+      type: string
+      enum: ["on", "off"]
+      description: Deletes header fields whose name contains an underscore.
+    delete_underscore_in_trailer_name:
+      type: string
+      enum: ["on", "off"]
+      description: Deletes trailer fields whose name contains an underscore.
+    delete_unregistered_header_fields:
+      type: string
+      enum: ["on", "off"]
+      description: Deletes unregistered header fields.
+    delete_unregistered_trailer_fields:
+      type: string
+      enum: ["on", "off"]
+      description: Deletes unregistered trailer fields.
+    reject_content_length_leading_zero:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects a Content-Length value with a leading zero.
+    reject_content_length_with_te:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects a message carrying both Content-Length and Transfer-Encoding.
+    reject_ctl_in_header_trailer:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects control characters in header or trailer values.
+    reject_duplicate_host_header:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects duplicate Host headers.
+    reject_header_trailer_folding:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects folded header or trailer lines.
+    reject_lowercase_method:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects methods containing lowercase characters.
+    reject_underscore_in_header_name:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects header names containing an underscore.
+    reject_underscore_in_trailer_name:
+      type: string
+      enum: ["on", "off"]
+      description: Rejects trailer names containing an underscore.
+    metadata:
+      additionalProperties:
+        type: object

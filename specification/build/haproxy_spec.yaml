@@ -12432,6 +12432,126 @@ definitions:
       $ref: "#/definitions/log_profile_step"
     description: List of steps where to override the logging.
     x-omitempty: true
+  http_hardening:
+    description: Defines a named HTTP hardening profile.
+    properties:
+      all:
+        description: Enables or disables every hardening check.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      all_delete:
+        description: Enables or disables every delete check.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      all_reject:
+        description: Enables or disables every reject check.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      delete_all_trailer_fields:
+        description: Deletes all trailer fields.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      delete_underscore_in_header_name:
+        description: Deletes header fields whose name contains an underscore.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      delete_underscore_in_trailer_name:
+        description: Deletes trailer fields whose name contains an underscore.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      delete_unregistered_header_fields:
+        description: Deletes unregistered header fields.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      delete_unregistered_trailer_fields:
+        description: Deletes unregistered trailer fields.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      from:
+        description: Profile whose settings are copied when this profile is declared.
+        pattern: ^[A-Za-z0-9-_.:]+$
+        type: string
+      metadata:
+        additionalProperties:
+          type: object
+      name:
+        description: Name of the HTTP hardening profile. The reserved name "auto" cannot be declared.
+        pattern: ^[A-Za-z0-9-_.:]+$
+        type: string
+        x-nullable: false
+      reject_content_length_leading_zero:
+        description: Rejects a Content-Length value with a leading zero.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      reject_content_length_with_te:
+        description: Rejects a message carrying both Content-Length and Transfer-Encoding.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      reject_ctl_in_header_trailer:
+        description: Rejects control characters in header or trailer values.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      reject_duplicate_host_header:
+        description: Rejects duplicate Host headers.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      reject_header_trailer_folding:
+        description: Rejects folded header or trailer lines.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      reject_lowercase_method:
+        description: Rejects methods containing lowercase characters.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      reject_underscore_in_header_name:
+        description: Rejects header names containing an underscore.
+        enum:
+          - "on"
+          - "off"
+        type: string
+      reject_underscore_in_trailer_name:
+        description: Rejects trailer names containing an underscore.
+        enum:
+          - "on"
+          - "off"
+        type: string
+    required:
+      - name
+    title: HTTP Hardening
+    type: object
+  http_hardenings:
+    description: List of HTTP hardening profiles
+    type: array
+    items:
+      $ref: "#/definitions/http_hardening"
   ssl_front_use:
     description: Assign a certificate to the current frontend
     properties:
@@ -12804,6 +12924,7 @@ tags:
   - name: HTTPCheck
   - name: HTTPErrorRule
   - name: HTTPErrors
+  - name: HTTPHardening
   - name: HTTPRequestRule
   - name: HTTPResponseRule
   - name: HealthCheck
@@ -26180,6 +26301,154 @@ paths:
       summary: Modify a Log Profile
       tags:
         - LogProfile
+  /services/haproxy/configuration/http_hardenings:
+    get:
+      description: Returns an array of all the configured http_hardening sections in HAProxy
+      operationId: getHTTPHardenings
+      parameters:
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_hardenings'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return all the HTTP Hardening profiles
+      tags:
+        - HTTPHardening
+    post:
+      description: Creates a new http_hardening section
+      operationId: createHTTPHardening
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_hardening'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: HTTP Hardening profile created
+          schema:
+            $ref: '#/definitions/http_hardening'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_hardening'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new HTTP Hardening profile
+      tags:
+        - HTTPHardening
+  /services/haproxy/configuration/http_hardenings/{name}:
+    delete:
+      description: Deletes an http_hardening section from the configuration
+      operationId: deleteHTTPHardening
+      parameters:
+        - description: http_hardening name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: http_hardening deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete an HTTP Hardening profile
+      tags:
+        - HTTPHardening
+    get:
+      description: Find an http_hardening section by its name
+      operationId: getHTTPHardening
+      parameters:
+        - description: http_hardening name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_hardening'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an HTTP Hardening profile
+      tags:
+        - HTTPHardening
+    put:
+      description: Modifies an http_hardening's configuration by its name
+      operationId: editHTTPHardening
+      parameters:
+        - description: http_hardening name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_hardening'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: http_hardening configuration updated
+          schema:
+            $ref: '#/definitions/http_hardening'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_hardening'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Modify an HTTP Hardening profile
+      tags:
+        - HTTPHardening
   /services/haproxy/runtime:
     get:
       description: Returns a list of endpoints to be used for advanced runtime settings of HAProxy objects.
