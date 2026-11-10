@@ -44,6 +44,12 @@ func (rec TuneSslOptions) Diff(obj TuneSslOptions, opts ...eqdiff.GoMethodGenOpt
 	if rec.ForcePrivateCache != obj.ForcePrivateCache {
 		diff["ForcePrivateCache"] = []interface{}{rec.ForcePrivateCache, obj.ForcePrivateCache}
 	}
+	for diffKey, diffValue := range DiffPointerInt64(rec.HardMaxrecord, obj.HardMaxrecord, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["HardMaxrecord"+diffKey] = diffValue
+	}
 	if rec.Keylog != obj.Keylog {
 		diff["Keylog"] = []interface{}{rec.Keylog, obj.Keylog}
 	}

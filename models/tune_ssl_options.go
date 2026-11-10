@@ -50,6 +50,13 @@ type TuneSslOptions struct {
 	// force private cache
 	ForcePrivateCache bool `json:"force_private_cache,omitempty"`
 
+	// hard maxrecord
+	// Maximum: 2.147483647e+09
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=2.147483647e+09
+	// +kubebuilder:validation:Minimum=0
+	HardMaxrecord *int64 `json:"hard_maxrecord,omitempty"`
+
 	// keylog
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled";"disabled";
@@ -74,6 +81,10 @@ type TuneSslOptions struct {
 func (m *TuneSslOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateHardMaxrecord(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateKeylog(formats); err != nil {
 		res = append(res, err)
 	}
@@ -85,6 +96,22 @@ func (m *TuneSslOptions) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *TuneSslOptions) validateHardMaxrecord(formats strfmt.Registry) error {
+	if swag.IsZero(m.HardMaxrecord) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("hard_maxrecord", "body", *m.HardMaxrecord, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("hard_maxrecord", "body", *m.HardMaxrecord, 2.147483647e+09, false); err != nil {
+		return err
+	}
+
 	return nil
 }
 

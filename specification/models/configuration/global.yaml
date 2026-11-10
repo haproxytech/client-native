@@ -807,6 +807,13 @@ tune_ssl_options:
       x-display-name: SSL Maximum Size
       x-nullable: true
       x-size: false
+    hard_maxrecord:
+      type: integer
+      x-display-name: SSL Hard Maximum Size
+      minimum: 0
+      maximum: 2147483647
+      x-nullable: true
+      x-size: false
     default_dh_param:
       type: integer
       x-display-name: SSL Default DH Parameter Size
