@@ -40,6 +40,9 @@ type DebugOptions struct {
 	// +kubebuilder:validation:Minimum=0
 	Anonkey *int64 `json:"anonkey,omitempty"`
 
+	// quick exit
+	QuickExit bool `json:"quick_exit,omitempty"`
+
 	// quiet
 	Quiet bool `json:"quiet,omitempty"`
 

@@ -1735,6 +1735,8 @@ definitions:
         minimum: 0
         type: integer
         x-nullable: true
+      quick_exit:
+        type: boolean
       quiet:
         type: boolean
       zero_warning:

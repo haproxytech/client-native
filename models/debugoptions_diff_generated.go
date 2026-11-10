@@ -29,6 +29,9 @@ func (rec DebugOptions) Diff(obj DebugOptions, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["Anonkey"+diffKey] = diffValue
 	}
+	if rec.QuickExit != obj.QuickExit {
+		diff["QuickExit"] = []interface{}{rec.QuickExit, obj.QuickExit}
+	}
 	if rec.Quiet != obj.Quiet {
 		diff["Quiet"] = []interface{}{rec.Quiet, obj.Quiet}
 	}
