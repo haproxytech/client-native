@@ -975,6 +975,15 @@ func parseDebugOptions(p parser.Parser) (*models.DebugOptions, error) {
 		options.Quiet = quiet
 	}
 
+	quickExit, err := parseBoolOption(p, "quick-exit")
+	if err != nil {
+		return nil, err
+	}
+	if quickExit {
+		isEmpty = false
+		options.QuickExit = quickExit
+	}
+
 	zeroWarning, err := parseBoolOption(p, "zero-warning")
 	if err != nil {
 		return nil, err
@@ -2986,6 +2995,9 @@ func serializeDebugOptions(p parser.Parser, options *models.DebugOptions) error 
 		return err
 	}
 	if err := serializeBoolOption(p, "quiet", options.Quiet); err != nil {
+		return err
+	}
+	if err := serializeBoolOption(p, "quick-exit", options.QuickExit); err != nil {
 		return err
 	}
 	return serializeBoolOption(p, "zero-warning", options.ZeroWarning)

@@ -1230,6 +1230,8 @@ debug_options:
       x-nullable: true
     quiet:
       type: boolean
+    quick_exit:
+      type: boolean
     zero_warning:
       type: boolean
 performance_options:
