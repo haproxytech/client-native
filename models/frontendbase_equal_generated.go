@@ -89,6 +89,7 @@ func (rec FrontendBase) Equal(obj FrontendBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) &&
 		EqualPointerConfigStickTable(rec.StickTable, obj.StickTable, opts...) &&
 		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) &&
+		rec.TCPClflog == obj.TCPClflog &&
 		rec.TCPSmartAccept == obj.TCPSmartAccept &&
 		rec.Tcpka == obj.Tcpka &&
 		rec.Tcplog == obj.Tcplog &&

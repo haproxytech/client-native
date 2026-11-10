@@ -130,6 +130,7 @@ func (rec DefaultsBase) Equal(obj DefaultsBase, opts ...eqdiff.GoMethodGenOption
 		EqualPointerInt64(rec.SrvtcpkaIntvl, obj.SrvtcpkaIntvl, opts...) &&
 		EqualPointerStatsOptions(rec.StatsOptions, obj.StatsOptions, opts...) &&
 		EqualPointerInt64(rec.TarpitTimeout, obj.TarpitTimeout, opts...) &&
+		rec.TCPClflog == obj.TCPClflog &&
 		rec.TCPSmartAccept == obj.TCPSmartAccept &&
 		rec.TCPSmartConnect == obj.TCPSmartConnect &&
 		rec.Tcpka == obj.Tcpka &&

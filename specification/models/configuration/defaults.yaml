@@ -157,6 +157,9 @@ defaults_base:
     tcplog:
       type: boolean
       x-display-name: TCP Log
+    tcp_clflog:
+      type: boolean
+      x-display-name: TCP CLF Log
     log_format:
       type: string
     log_format_sd:

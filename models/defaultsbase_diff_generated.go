@@ -488,6 +488,9 @@ func (rec DefaultsBase) Diff(obj DefaultsBase, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["TarpitTimeout"+diffKey] = diffValue
 	}
+	if rec.TCPClflog != obj.TCPClflog {
+		diff["TCPClflog"] = []interface{}{rec.TCPClflog, obj.TCPClflog}
+	}
 	if rec.TCPSmartAccept != obj.TCPSmartAccept {
 		diff["TCPSmartAccept"] = []interface{}{rec.TCPSmartAccept, obj.TCPSmartAccept}
 	}

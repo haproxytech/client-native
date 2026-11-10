@@ -365,6 +365,10 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, any) { //nol
 		return true, s.clflog()
 	case "Httplog":
 		return true, s.httplog()
+	case "Tcplog":
+		return true, s.tcpLog()
+	case "TCPClflog":
+		return true, s.tcpClflog()
 	case "HTTPReuse":
 		return true, s.httpReuse()
 	case "UniqueIDFormat":
@@ -566,6 +570,29 @@ func (s *SectionParser) clflog() any {
 	data, err := s.get("option httplog", false)
 	if err == nil {
 		d := data.(*types.OptionHTTPLog)
+		if !d.NoOption {
+			return d.Clf
+		}
+	}
+	return nil
+}
+
+func (s *SectionParser) tcpLog() any {
+	data, err := s.get("option tcplog", false)
+	if err == nil {
+		d := data.(*types.OptionTCPLog)
+		if d.NoOption {
+			return "disabled"
+		}
+		return "enabled"
+	}
+	return nil
+}
+
+func (s *SectionParser) tcpClflog() any {
+	data, err := s.get("option tcplog", false)
+	if err == nil {
+		d := data.(*types.OptionTCPLog)
 		if !d.NoOption {
 			return d.Clf
 		}
@@ -1685,6 +1712,10 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.clflog(field)
 	case "Httplog":
 		return true, s.httplog(field)
+	case "Tcplog":
+		return true, s.tcpLog(field)
+	case "TCPClflog":
+		return true, s.tcpClflog(field)
 	case "Compression":
 		return true, s.compression(field)
 	case "ClitcpkaIdle":
@@ -1892,6 +1923,64 @@ func (s *SectionObject) clflog(field reflect.Value) error {
 		}
 		o := &types.OptionHTTPLog{Clf: true}
 		if err := s.set("option httplog", o); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *SectionObject) tcpLog(field reflect.Value) error {
+	if s.Section == parser.Frontends || s.Section == parser.Defaults {
+		if valueIsNil(field) {
+			// keep an active clf variant when only the plain flag is cleared
+			d, err := s.Parser.Get(s.Section, s.Name, "option tcplog", false)
+			if err != nil {
+				if !errors.Is(err, parser_errors.ErrFetch) {
+					return err
+				}
+				return nil
+			}
+			o := d.(*types.OptionTCPLog)
+			if !o.Clf {
+				if err := s.set("option tcplog", nil); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		o := &types.OptionTCPLog{}
+		// fields are processed alphabetically, so tcp_clflog may be set before tcplog
+		if d, err := s.Parser.Get(s.Section, s.Name, "option tcplog", false); err == nil {
+			o.Clf = d.(*types.OptionTCPLog).Clf
+		}
+		if err := s.set("option tcplog", o); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *SectionObject) tcpClflog(field reflect.Value) error {
+	if s.Section == parser.Frontends || s.Section == parser.Defaults {
+		if valueIsNil(field) {
+			d, err := s.Parser.Get(s.Section, s.Name, "option tcplog", false)
+			if err != nil {
+				if !errors.Is(err, parser_errors.ErrFetch) {
+					return err
+				}
+				return nil
+			}
+			o := d.(*types.OptionTCPLog)
+			if o.Clf {
+				o.Clf = false
+				if err := s.set("option tcplog", o); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		o := &types.OptionTCPLog{Clf: true}
+		if err := s.set("option tcplog", o); err != nil {
 			return err
 		}
 	}

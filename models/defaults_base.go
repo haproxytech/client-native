@@ -492,6 +492,9 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Minimum=0
 	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
+	// tcp clflog
+	TCPClflog bool `json:"tcp_clflog,omitempty"`
+
 	// tcp smart accept
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled";"disabled";
