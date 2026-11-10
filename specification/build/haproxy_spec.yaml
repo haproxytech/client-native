@@ -4453,6 +4453,14 @@ definitions:
       dont-parse-log:
         type: boolean
         x-display-name: Don't Parse Log
+      host:
+        description: How the host field is handled when forwarding logs
+        enum:
+          - append
+          - fill
+          - keep
+          - replace
+        type: string
       maxconn:
         type: integer
         x-nullable: true

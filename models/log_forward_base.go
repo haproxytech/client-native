@@ -22,6 +22,7 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -44,6 +45,11 @@ type LogForwardBase struct {
 
 	// dont parse log
 	DontParseLog bool `json:"dont-parse-log,omitempty"`
+
+	// How the host field is handled when forwarding logs
+	// Enum: ["append","fill","keep","replace"]
+	// +kubebuilder:validation:Enum="append";"fill";"keep";"replace";
+	Host string `json:"host,omitempty"`
 
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
@@ -70,6 +76,10 @@ type LogForwardBase struct {
 func (m *LogForwardBase) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateHost(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
@@ -81,6 +91,54 @@ func (m *LogForwardBase) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var logForwardBaseTypeHostPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["append","fill","keep","replace"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		logForwardBaseTypeHostPropEnum = append(logForwardBaseTypeHostPropEnum, v)
+	}
+}
+
+const (
+
+	// LogForwardBaseHostAppend captures enum value "append"
+	LogForwardBaseHostAppend string = "append"
+
+	// LogForwardBaseHostFill captures enum value "fill"
+	LogForwardBaseHostFill string = "fill"
+
+	// LogForwardBaseHostKeep captures enum value "keep"
+	LogForwardBaseHostKeep string = "keep"
+
+	// LogForwardBaseHostReplace captures enum value "replace"
+	LogForwardBaseHostReplace string = "replace"
+)
+
+// prop value enum
+func (m *LogForwardBase) validateHostEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, logForwardBaseTypeHostPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *LogForwardBase) validateHost(formats strfmt.Registry) error {
+	if swag.IsZero(m.Host) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHostEnum("host", "body", m.Host); err != nil {
+		return err
+	}
+
 	return nil
 }
 

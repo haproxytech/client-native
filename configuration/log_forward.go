@@ -100,22 +100,8 @@ func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
 		}
 	}
 
-	// get option assume-rfc6587-ntf
-	_, err := p.Get(parser.LogForward, lf.Name, "option assume-rfc6587-ntf", false)
-	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+	if err := parseLogForwardOptions(p, lf); err != nil {
 		return err
-	}
-	if err == nil {
-		lf.AssumeRfc6587Ntf = true
-	}
-
-	// get option dont-parse-log
-	_, err = p.Get(parser.LogForward, lf.Name, "option dont-parse-log", false)
-	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
-		return err
-	}
-	if err == nil {
-		lf.DontParseLog = true
 	}
 
 	backlog, err := p.Get(parser.LogForward, lf.Name, "backlog", false)
@@ -159,6 +145,39 @@ func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
 		if tc.Value != "" {
 			lf.TimeoutClient = misc.ParseTimeout(tc.Value)
 		}
+	}
+	return nil
+}
+
+func parseLogForwardOptions(p parser.Parser, lf *models.LogForward) error {
+	// get option assume-rfc6587-ntf
+	_, err := p.Get(parser.LogForward, lf.Name, "option assume-rfc6587-ntf", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		lf.AssumeRfc6587Ntf = true
+	}
+
+	// get option dont-parse-log
+	_, err = p.Get(parser.LogForward, lf.Name, "option dont-parse-log", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		lf.DontParseLog = true
+	}
+
+	host, err := p.Get(parser.LogForward, lf.Name, "option host", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		h, ok := host.(*types.StringC)
+		if !ok {
+			return misc.CreateTypeAssertError("option host")
+		}
+		lf.Host = h.Value
 	}
 	return nil
 }
@@ -286,6 +305,14 @@ func SerializeLogForwardSection(p parser.Parser, data *models.LogForward, opt *o
 		dontParseLogOption = types.SimpleOption{}
 	}
 	if err = p.Set(parser.LogForward, data.Name, "option dont-parse-log", dontParseLogOption); err != nil {
+		return err
+	}
+
+	var hostOption common.ParserData
+	if data.Host != "" {
+		hostOption = types.StringC{Value: data.Host}
+	}
+	if err = p.Set(parser.LogForward, data.Name, "option host", hostOption); err != nil {
 		return err
 	}
 

@@ -35,6 +35,9 @@ func (rec LogForwardBase) Diff(obj LogForwardBase, opts ...eqdiff.GoMethodGenOpt
 	if rec.DontParseLog != obj.DontParseLog {
 		diff["DontParseLog"] = []interface{}{rec.DontParseLog, obj.DontParseLog}
 	}
+	if rec.Host != obj.Host {
+		diff["Host"] = []interface{}{rec.Host, obj.Host}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.Maxconn, obj.Maxconn, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey
