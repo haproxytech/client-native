@@ -1059,10 +1059,17 @@ backend test
   tcp-request content set-mark 0x1Ab if FALSE
   tcp-request connection set-mark 20
   tcp-request connection set-mark 0x1Ab if FALSE
+  tcp-request connection set-src src
+  tcp-request connection set-src src if FALSE
   tcp-request connection set-src-port hdr(port)
   tcp-request connection set-src-port hdr(port) if FALSE
+  tcp-request content set-src src
+  tcp-request content set-src src if FALSE
+  tcp-request content set-src hdr(ip) unless FALSE
   tcp-request content set-src-port hdr(port)
   tcp-request content set-src-port hdr(port) if FALSE
+  tcp-request session set-src src
+  tcp-request session set-src src if FALSE
   tcp-request content set-tos 0 if FALSE
   tcp-request content set-tos 0
   tcp-request connection set-tos 0 if FALSE
@@ -1950,10 +1957,17 @@ defaults test
   tcp-request content set-mark 0x1Ab if FALSE
   tcp-request connection set-mark 20
   tcp-request connection set-mark 0x1Ab if FALSE
+  tcp-request connection set-src src
+  tcp-request connection set-src src if FALSE
   tcp-request connection set-src-port hdr(port)
   tcp-request connection set-src-port hdr(port) if FALSE
+  tcp-request content set-src src
+  tcp-request content set-src src if FALSE
+  tcp-request content set-src hdr(ip) unless FALSE
   tcp-request content set-src-port hdr(port)
   tcp-request content set-src-port hdr(port) if FALSE
+  tcp-request session set-src src
+  tcp-request session set-src src if FALSE
   tcp-request content set-tos 0 if FALSE
   tcp-request content set-tos 0
   tcp-request connection set-tos 0 if FALSE
@@ -2749,10 +2763,17 @@ frontend test
   tcp-request content set-mark 0x1Ab if FALSE
   tcp-request connection set-mark 20
   tcp-request connection set-mark 0x1Ab if FALSE
+  tcp-request connection set-src src
+  tcp-request connection set-src src if FALSE
   tcp-request connection set-src-port hdr(port)
   tcp-request connection set-src-port hdr(port) if FALSE
+  tcp-request content set-src src
+  tcp-request content set-src src if FALSE
+  tcp-request content set-src hdr(ip) unless FALSE
   tcp-request content set-src-port hdr(port)
   tcp-request content set-src-port hdr(port) if FALSE
+  tcp-request session set-src src
+  tcp-request session set-src src if FALSE
   tcp-request content set-tos 0 if FALSE
   tcp-request content set-tos 0
   tcp-request connection set-tos 0 if FALSE
@@ -5417,13 +5438,27 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  tcp-request connection set-mark 0x1Ab if FALSE
 `, 3},
+	{`  tcp-request connection set-src src
+`, 3},
+	{`  tcp-request connection set-src src if FALSE
+`, 3},
 	{`  tcp-request connection set-src-port hdr(port)
 `, 3},
 	{`  tcp-request connection set-src-port hdr(port) if FALSE
 `, 3},
+	{`  tcp-request content set-src src
+`, 3},
+	{`  tcp-request content set-src src if FALSE
+`, 3},
+	{`  tcp-request content set-src hdr(ip) unless FALSE
+`, 3},
 	{`  tcp-request content set-src-port hdr(port)
 `, 3},
 	{`  tcp-request content set-src-port hdr(port) if FALSE
+`, 3},
+	{`  tcp-request session set-src src
+`, 3},
+	{`  tcp-request session set-src src if FALSE
 `, 3},
 	{`  tcp-request content set-tos 0 if FALSE
 `, 3},

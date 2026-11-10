@@ -4361,6 +4361,14 @@ const backend_tcprequestconnectionsetmark0x1Ab = `
 backend test
   tcp-request connection set-mark 0x1Ab if FALSE
 `
+const backend_tcprequestconnectionsetsrcsrc = `
+backend test
+  tcp-request connection set-src src
+`
+const backend_tcprequestconnectionsetsrcsrcifF = `
+backend test
+  tcp-request connection set-src src if FALSE
+`
 const backend_tcprequestconnectionsetsrcporthd = `
 backend test
   tcp-request connection set-src-port hdr(port)
@@ -4369,6 +4377,18 @@ const backend_tcprequestconnectionsetsrcporthd_ = `
 backend test
   tcp-request connection set-src-port hdr(port) if FALSE
 `
+const backend_tcprequestcontentsetsrcsrc = `
+backend test
+  tcp-request content set-src src
+`
+const backend_tcprequestcontentsetsrcsrcifFALS = `
+backend test
+  tcp-request content set-src src if FALSE
+`
+const backend_tcprequestcontentsetsrchdripunle = `
+backend test
+  tcp-request content set-src hdr(ip) unless FALSE
+`
 const backend_tcprequestcontentsetsrcporthdrpo = `
 backend test
   tcp-request content set-src-port hdr(port)
@@ -4376,6 +4396,14 @@ backend test
 const backend_tcprequestcontentsetsrcporthdrpo_ = `
 backend test
   tcp-request content set-src-port hdr(port) if FALSE
+`
+const backend_tcprequestsessionsetsrcsrc = `
+backend test
+  tcp-request session set-src src
+`
+const backend_tcprequestsessionsetsrcsrcifFALS = `
+backend test
+  tcp-request session set-src src if FALSE
 `
 const backend_tcprequestcontentsettos0ifFALSE = `
 backend test
