@@ -88,6 +88,12 @@ frontend_base:
       x-dependency:
         mode:
           value: tcp
+    tcp_clflog:
+      type: boolean
+      x-display-name: TCP CLF Log
+      x-dependency:
+        mode:
+          value: tcp
     log_format:
       type: string
     log_format_sd:
