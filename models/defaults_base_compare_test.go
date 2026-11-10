@@ -103,6 +103,7 @@ func TestDefaultsBaseEqualFalse(t *testing.T) {
 		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
 		result.Httplog = !sample.Httplog
 		result.MaxKeepAliveQueue = Ptr(*sample.MaxKeepAliveQueue + 1)
+		result.MaxSessionSrvConns = Ptr(*sample.MaxSessionSrvConns + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
 		result.QueueTimeout = Ptr(*sample.QueueTimeout + 1)
 		result.Retries = Ptr(*sample.Retries + 1)
@@ -210,6 +211,7 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
 		result.Httplog = !sample.Httplog
 		result.MaxKeepAliveQueue = Ptr(*sample.MaxKeepAliveQueue + 1)
+		result.MaxSessionSrvConns = Ptr(*sample.MaxSessionSrvConns + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
 		result.QueueTimeout = Ptr(*sample.QueueTimeout + 1)
 		result.Retries = Ptr(*sample.Retries + 1)
@@ -229,7 +231,7 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 113 {
+		if len(listDiffFields) != 114 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -239,7 +241,7 @@ func TestDefaultsBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected DefaultsBase to be different in 113 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected DefaultsBase to be different in 114 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

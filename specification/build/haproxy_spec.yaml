@@ -3198,6 +3198,11 @@ definitions:
         description: Maximum server queue size for maintaining keep-alive connections
         type: integer
         x-nullable: true
+      max_session_srv_conns:
+        minimum: 0
+        type: integer
+        x-display-name: Max Session Server Connections
+        x-nullable: true
       maxconn:
         type: integer
         x-display-name: Max Connections
@@ -3715,6 +3720,11 @@ definitions:
           - disabled
         type: string
         x-display-name: Log ASAP
+      max_session_srv_conns:
+        minimum: 0
+        type: integer
+        x-display-name: Max Session Server Connections
+        x-nullable: true
       maxconn:
         type: integer
         x-display-name: Max Connections
