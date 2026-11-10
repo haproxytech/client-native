@@ -24,6 +24,9 @@ ring_base:
     description:
       type: string
       description: The description is an optional description string of the ring
+    backing_file:
+      type: string
+      description: Optional file used to persist the ring buffer
     format:
       type: string
       description: Format used to store events into the ring buffer

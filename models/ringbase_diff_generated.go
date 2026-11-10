@@ -23,6 +23,9 @@ import (
 
 func (rec RingBase) Diff(obj RingBase, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
+	if rec.BackingFile != obj.BackingFile {
+		diff["BackingFile"] = []interface{}{rec.BackingFile, obj.BackingFile}
+	}
 	if rec.Description != obj.Description {
 		diff["Description"] = []interface{}{rec.Description, obj.Description}
 	}
