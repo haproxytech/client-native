@@ -376,6 +376,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.ssl.keylog"})
 	addParser(parser, &sequence, &simple.Time{Name: "tune.ssl.lifetime"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.ssl.maxrecord"})
+	addParser(parser, &sequence, &simple.Number{Name: "tune.ssl.hard-maxrecord"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.ssl.default-dh-param"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.ssl.ssl-ctx-cache-size"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.ssl.capture-buffer-size"})
