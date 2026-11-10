@@ -1925,6 +1925,15 @@ func parseTuneSSLOptions(p parser.Parser) (*models.TuneSslOptions, error) {
 		options.Maxrecord = intPOption
 	}
 
+	intPOption, err = parseInt64POption(p, "tune.ssl.hard-maxrecord")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.HardMaxrecord = intPOption
+	}
+
 	intOption, err := parseInt64Option(p, "tune.ssl.default-dh-param")
 	if err != nil {
 		return nil, err
@@ -3502,6 +3511,9 @@ func serializeTuneSSLOptions(p parser.Parser, options *models.TuneSslOptions, co
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.ssl.maxrecord", options.Maxrecord); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.ssl.hard-maxrecord", options.HardMaxrecord); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.ssl.ocsp-update.maxdelay", options.OcspUpdateMaxDelay); err != nil {
