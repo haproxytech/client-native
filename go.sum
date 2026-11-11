@@ -2,8 +2,8 @@ github.com/Masterminds/semver/v3 v3.5.0 h1:kQceYJfbupGfZOKZQg0kou0DgAKhzDg2NZPAw
 github.com/Masterminds/semver/v3 v3.5.0/go.mod h1:4V+yj/TJE1HU9XfppCwVMZq3I84lprf4nC11bSS5beM=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/go-faker/faker/v4 v4.11.0 h1:HeIFTzafXsgrlxKE2QySGGTQocfGdQ8sGqU2CXvs120=
-github.com/go-faker/faker/v4 v4.11.0/go.mod h1:VFIEwWDd16EdYDLF6NJ5gAAzEp7vz5LgKgJ2iZ17Tdg=
+github.com/go-faker/faker/v4 v4.12.0 h1:yZXxuoQjxN+C2PVgYoDSHGiD9wj6dX1/Ful4p7QQV0k=
+github.com/go-faker/faker/v4 v4.12.0/go.mod h1:VFIEwWDd16EdYDLF6NJ5gAAzEp7vz5LgKgJ2iZ17Tdg=
 github.com/go-openapi/analysis v1.0.1 h1:JTEyujgl4GyFj8pbMUY2yZx5ak1Ozt/DaqzQjQBnBWM=
 github.com/go-openapi/analysis v1.0.1/go.mod h1:f3gYbXmnXSQIZB02DqE4f8JX969PdOEnaY7gDBLeJjI=
 github.com/go-openapi/errors v0.22.9 h1:HI9+SyVYiRzyeBQGv0CbWbQa+u2S0nny7G7AhY+UMiM=
@@ -54,8 +54,8 @@ github.com/go-quicktest/qt v1.102.0 h1:HSQxCeh5YZH3EL3W39ixjtyaEhcWSXQHtHnMBzSs4
 github.com/go-quicktest/qt v1.102.0/go.mod h1:p4lGIVX+8Wa6ZPNDvqcxq36XpUDLh42FLetFU7odllI=
 github.com/go-viper/mapstructure/v2 v2.5.0 h1:vM5IJoUAy3d7zRSVtIwQgBj7BiWtMPfmPEgAXnvj1Ro=
 github.com/go-viper/mapstructure/v2 v2.5.0/go.mod h1:oJDH3BJKyqBA2TXFhDsKDGDTlndYOZ6rGS0BRZIxGhM=
-github.com/gofrs/flock v0.13.1 h1:jjREztyBeSKBZYAC+mgc1laB+xsgy4kYMf3FbKF2UBo=
-github.com/gofrs/flock v0.13.1/go.mod h1:sf4BFiHwnvgxa25DlQoDqXQnwRMEOwqxRq37P6MzzmE=
+github.com/gofrs/flock v0.13.2 h1:9o62TArG4T0f8L46kSf8sLtNUGvJEfiCK9md7/ilko0=
+github.com/gofrs/flock v0.13.2/go.mod h1:OEjpF6MC2Plt1fLXTTgXwnZohWbs/Alxf2i1qTne/Vg=
 github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
 github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
