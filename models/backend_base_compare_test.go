@@ -78,11 +78,13 @@ func TestBackendBaseEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendBase
 		var result BackendBase
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -176,11 +178,13 @@ func TestBackendBaseDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendBase
 		var result BackendBase
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -221,7 +225,7 @@ func TestBackendBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected BackendBase to be different in 89 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BackendBase to be different in 89 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -275,11 +279,13 @@ func TestBackendForcePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -354,11 +360,13 @@ func TestBackendForcePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -380,7 +388,7 @@ func TestBackendForcePersistDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected BackendForcePersist to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BackendForcePersist to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -434,11 +442,13 @@ func TestForcePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -513,11 +523,13 @@ func TestForcePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -539,7 +551,7 @@ func TestForcePersistDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ForcePersist to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ForcePersist to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -593,11 +605,13 @@ func TestBackendIgnorePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -672,11 +686,13 @@ func TestBackendIgnorePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -698,7 +714,7 @@ func TestBackendIgnorePersistDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected BackendIgnorePersist to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BackendIgnorePersist to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -752,11 +768,13 @@ func TestIgnorePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -831,11 +849,13 @@ func TestIgnorePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -857,7 +877,7 @@ func TestIgnorePersistDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected IgnorePersist to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected IgnorePersist to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
