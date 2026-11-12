@@ -207,3 +207,5 @@ allowed:
   - async
   - rehaul
   - XXXX
+  - gosentry
+  - libafl
