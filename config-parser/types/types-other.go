@@ -230,6 +230,8 @@ type Filter interface {
 //test:ok:filter trace
 //test:ok:filter trace name name max-fwd 100
 //test:ok:filter trace name name random-forwarding max-fwd 100 hexdump
+//test:ok:filter trace quiet
+//test:ok:filter trace name name quiet random-parsing max-fwd 100 hexdump
 //test:ok:filter lua.my-filter
 //test:ok:filter lua.my-filter arg1 arg2
 //test:fail:filter lua

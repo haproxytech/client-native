@@ -300,6 +300,7 @@ func ParseFilter(f types.Filter) *models.Filter {
 		return &models.Filter{
 			Type:               "trace",
 			TraceName:          v.Name,
+			TraceQuiet:         v.Quiet,
 			TraceHexdump:       v.Hexdump,
 			TraceRndForwarding: v.RandomForwarding,
 			TraceRndParsing:    v.RandomParsing,
@@ -355,6 +356,7 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 	case "trace":
 		return &filters.Trace{
 			Name:             f.TraceName,
+			Quiet:            f.TraceQuiet,
 			Hexdump:          f.TraceHexdump,
 			RandomForwarding: f.TraceRndForwarding,
 			RandomParsing:    f.TraceRndParsing,

@@ -152,6 +152,14 @@ type Int64C struct {
 //test:ok:compression minsize-res 10k
 //test:ok:compression minsize-res 10
 //test:fail:compression minsize-res
+//generate:type:FilterAPI
+//name:filter-api
+//sections:global
+//test:ok:filter-api default
+//test:ok:filter-api downgrade-to-legacy
+//test:fail:filter-api
+//test:fail:filter-api bogus
+//test:fail:filter-api default extra
 type StringC struct {
 	Value   string
 	Comment string

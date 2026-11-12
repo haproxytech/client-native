@@ -107,6 +107,9 @@ func (c *client) PushStructuredDefaultsConfiguration(data *models.Defaults, tran
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
+	if err := ValidateFilterSequenceList(data.FilterSequenceList); err != nil {
+		return NewConfError(ErrValidationError, err.Error())
+	}
 
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
@@ -144,6 +147,9 @@ func (c *client) EditStructuredDefaultsSection(name string, data *models.Default
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
+	if err := ValidateFilterSequenceList(data.FilterSequenceList); err != nil {
+		return NewConfError(ErrValidationError, err.Error())
+	}
 
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
@@ -178,6 +184,9 @@ func (c *client) CreateStructuredDefaultsSection(data *models.Defaults, transact
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
+	}
+	if err := ValidateFilterSequenceList(data.FilterSequenceList); err != nil {
+		return NewConfError(ErrValidationError, err.Error())
 	}
 
 	p, t, err := c.loadDataForChange(transactionID, version)
@@ -228,6 +237,21 @@ func parseDefaultsSection(name string, p parser.Parser) (*models.Defaults, error
 		return nil, err
 	}
 	d.ACLList = acls
+	filterConfigs, err := ParseFilterConfigs(DefaultsParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	d.FilterConfigList = filterConfigs
+	filterRules, err := ParseFilterRules(DefaultsParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	d.FilterRuleList = filterRules
+	filterSequences, err := ParseFilterSequences(DefaultsParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	d.FilterSequenceList = filterSequences
 	lt, err := ParseLogTargets(DefaultsParentName, name, p)
 	if err != nil {
 		return nil, err
@@ -282,7 +306,7 @@ func parseDefaultsSection(name string, p parser.Parser) (*models.Defaults, error
 	return d, nil
 }
 
-func serializeDefaultsSection(a StructuredToParserArgs, d *models.Defaults) error { //nolint: gocognit
+func serializeDefaultsSection(a StructuredToParserArgs, d *models.Defaults) error { //nolint: gocognit,gocyclo,cyclop
 	p := *a.Parser
 	var err error
 
@@ -385,6 +409,21 @@ func serializeDefaultsSection(a StructuredToParserArgs, d *models.Defaults) erro
 			return err
 		}
 		if err = p.Insert(parser.Defaults, d.Name, "acl", *acl, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), DefaultsParentName, d.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, config := range d.FilterConfigList {
+		if err = p.Insert(parser.Defaults, d.Name, "filter-config", *config, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), DefaultsParentName, d.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, rule := range d.FilterRuleList {
+		if err = p.Insert(parser.Defaults, d.Name, "filter-rule", *rule, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), DefaultsParentName, d.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, sequence := range d.FilterSequenceList {
+		if err = p.Insert(parser.Defaults, d.Name, "filter-sequence", *sequence, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), DefaultsParentName, d.Name, a.TID, a.TID == "", err)
 		}
 	}

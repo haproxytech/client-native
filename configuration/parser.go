@@ -68,6 +68,20 @@ func getParserFromParent(p parser.Parser, attribute, parentType, parentName stri
 		default:
 			return "", "", fmt.Errorf("unsupported parent: %s", parentType)
 		}
+	case "filter-config", "filter-rule", "filter-sequence":
+		switch parentType {
+		case BackendParentName:
+			return parser.Backends, parentName, nil
+		case FrontendParentName:
+			return parser.Frontends, parentName, nil
+		case DefaultsParentName:
+			if parentName == "" {
+				parentName = parser.DefaultsSectionName(p)
+			}
+			return parser.Defaults, parentName, nil
+		default:
+			return "", "", fmt.Errorf("unsupported parent: %s", parentType)
+		}
 	case "tcp-response":
 		switch parentType {
 		case BackendParentName:

@@ -24,8 +24,9 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 )
 
-type Trace struct { // filter trace [name <name>] [random-parsing] [random-forwarding] [max-fwd <max>] [hexdump]
+type Trace struct { // filter trace [name <name>] [quiet] [random-parsing] [random-forwarding] [max-fwd <max>] [hexdump]
 	Name             string
+	Quiet            bool
 	RandomParsing    bool
 	RandomForwarding bool
 	MaxFwd           *int64
@@ -50,6 +51,8 @@ func (f *Trace) Parse(parts []string, comment string) error {
 				return errors.ErrInvalidData
 			}
 			f.Name = parts[index]
+		case "quiet":
+			f.Quiet = true
 		case "random-parsing":
 			f.RandomParsing = true
 		case "random-forwarding":
@@ -80,6 +83,9 @@ func (f *Trace) Result() common.ReturnResultLine {
 	if f.Name != "" {
 		result.WriteString(" name ")
 		result.WriteString(f.Name)
+	}
+	if f.Quiet {
+		result.WriteString(" quiet")
 	}
 	if f.RandomParsing {
 		result.WriteString(" random-parsing")

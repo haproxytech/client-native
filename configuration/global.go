@@ -2548,6 +2548,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.ClusterSecret = clusterSecret
 
+	filterAPI, err := parseStringOption(p, "filter-api")
+	if err != nil {
+		return nil, err
+	}
+	global.FilterAPI = filterAPI
+
 	cpuPolicy, err := parseStringOption(p, "cpu-policy")
 	if err != nil {
 		return nil, err
@@ -3565,6 +3571,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeStringOption(p, "cluster-secret", data.ClusterSecret); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "filter-api", data.FilterAPI); err != nil {
 		return err
 	}
 

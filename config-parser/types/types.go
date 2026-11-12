@@ -118,6 +118,73 @@ type LogStdErr struct {
 //test:fail:acl
 type ACL struct{}
 
+// FilterConfig
+// model:FilterConfig
+//
+//name:filter-config
+//doc:https://docs.haproxy.org/dev/configuration.html#filter-config%20(Alphabetically%20sorted%20keywords%20reference)
+//sections:frontend,backend,defaults
+//is:multiple
+//no:parse
+//test:ok:filter-config trace id A
+//test:ok:filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+//test:ok:filter-config http-comp-req
+//test:ok:filter-config http-comp-req enabled
+//test:ok:filter-config decomp-req
+//test:ok:filter-config decomp-res enabled
+//test:ok:filter-config spoe id S engine e config f
+//test:ok:filter-config cache-store id C enabled
+//test:ok:filter-config fcgi id F
+//test:ok:filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+//test:ok:filter-config bwlim-out id C limit 1m key src table t
+//test:fail:filter-config
+//test:fail:filter-config bogus id A
+//test:fail:filter-config trace
+//test:fail:filter-config trace A
+//test:fail:filter-config trace id A extra
+//test:fail:filter-config decomp-req id A
+//test:fail:http-comp-req
+type FilterConfig struct{}
+
+// FilterRule
+// model:FilterRule
+//
+//name:filter-rule
+//doc:https://docs.haproxy.org/dev/configuration.html#filter-enable%20(Alphabetically%20sorted%20keywords%20reference)
+//sections:frontend,backend,defaults
+//is:multiple
+//no:parse
+//test:ok:filter-enable trace
+//test:ok:filter-enable trace/A trace/B
+//test:ok:filter-disable trace/A
+//test:ok:filter-disable http-comp-req
+//test:fail:filter-enable
+//test:fail:filter-disable
+//test:fail:filter-rule trace/A
+type FilterRule struct{}
+
+// FilterSequence
+// model:FilterSequence
+//
+//name:filter-sequence
+//doc:https://docs.haproxy.org/dev/configuration.html#filter-sequence%20(Alphabetically%20sorted%20keywords%20reference)
+//sections:frontend,backend,defaults
+//is:multiple
+//no:parse
+//set:validate:ValidateFilterSequence
+//test:ok:filter-sequence request trace/A:before(trace/B)
+//test:ok:filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+//test:ok:filter-sequence response trace:after(trace/A)
+//test:fail:filter-sequence
+//test:fail:filter-sequence request
+//test:fail:filter-sequence request trace/A
+//test:fail:filter-sequence request trace/A:before
+//test:fail:filter-sequence request trace/A:before(trace/B
+//test:fail:filter-sequence request trace/A before trace/B
+//test:fail:filter-sequence bogus trace/A:before(trace/B)
+//test:fail:filter-sequence request trace/A:before(trace/A)
+type FilterSequence struct{}
+
 //sections:frontend
 //name:bind
 //is:multiple

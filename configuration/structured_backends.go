@@ -83,6 +83,9 @@ func (c *client) EditStructuredBackend(name string, data *models.Backend, transa
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
+	if err := ValidateFilterSequenceList(data.FilterSequenceList); err != nil {
+		return NewConfError(ErrValidationError, err.Error())
+	}
 
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
@@ -117,6 +120,9 @@ func (c *client) CreateStructuredBackend(data *models.Backend, transactionID str
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
+	}
+	if err := ValidateFilterSequenceList(data.FilterSequenceList); err != nil {
+		return NewConfError(ErrValidationError, err.Error())
 	}
 
 	p, t, err := c.loadDataForChange(transactionID, version)
@@ -175,6 +181,22 @@ func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error)
 		return nil, err
 	}
 	b.FilterList = filters
+
+	filterConfigs, err := ParseFilterConfigs(BackendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	b.FilterConfigList = filterConfigs
+	filterRules, err := ParseFilterRules(BackendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	b.FilterRuleList = filterRules
+	filterSequences, err := ParseFilterSequences(BackendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	b.FilterSequenceList = filterSequences
 
 	// http after response rules
 	arules, err := ParseHTTPAfterRules(BackendParentName, name, p)
@@ -278,7 +300,7 @@ func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error)
 	return b, nil
 }
 
-func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit
+func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	p := *a.Parser
 	var err error
 
@@ -297,6 +319,21 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 	}
 	for i, filter := range b.FilterList {
 		if err = p.Insert(parser.Backends, b.Name, "filter", SerializeFilter(*filter, a.Options), i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, config := range b.FilterConfigList {
+		if err = p.Insert(parser.Backends, b.Name, "filter-config", *config, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, rule := range b.FilterRuleList {
+		if err = p.Insert(parser.Backends, b.Name, "filter-rule", *rule, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, sequence := range b.FilterSequenceList {
+		if err = p.Insert(parser.Backends, b.Name, "filter-sequence", *sequence, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
 	}

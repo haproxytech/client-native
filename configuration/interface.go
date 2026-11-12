@@ -44,6 +44,9 @@ type Configuration interface {
 	DgramBind
 	FCGIApp
 	Filter
+	FilterConfig
+	FilterRule
+	FilterSequence
 	ForceBeSwitch
 	Frontend
 	Global

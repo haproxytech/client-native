@@ -134,12 +134,24 @@ func (p *{{ .StructName }}) Insert(data common.ParserData, index int) error {
 	switch newValue := data.(type) {
 	{{- if not (eq .Model "") }}
 	case []models.{{ .Model }}:
+		{{- if not (eq .SetValidator "") }}
+		for i := range newValue {
+			if err := {{ .SetValidator }}(newValue[i]); err != nil {
+				return err
+			}
+		}
+		{{- end }}
 	{{- else }}
 	case []types.{{ .ParserType }}:
 	{{- end }}
 		p.data = newValue
 	{{- if not (eq .Model "") }}
 	case *models.{{ .Model }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(*newValue); err != nil {
+			return err
+		}
+		{{- end }}
 	{{- else }}
 	case *types.{{ .ParserType }}:
 	{{- end }}
@@ -163,6 +175,11 @@ func (p *{{ .StructName }}) Insert(data common.ParserData, index int) error {
 		}
 	{{- if not (eq .Model "") }}
 	case models.{{ .Model }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(newValue); err != nil {
+			return err
+		}
+		{{- end }}
 	{{- else }}
 	case types.{{ .ParserType }}:
 	{{- end }}
@@ -202,12 +219,24 @@ func (p *{{ .StructName }}) Set(data common.ParserData, index int) error {
 	switch newValue := data.(type) {
 	{{- if not (eq .Model "") }}
 	case []models.{{ .Model }}:
+		{{- if not (eq .SetValidator "") }}
+		for i := range newValue {
+			if err := {{ .SetValidator }}(newValue[i]); err != nil {
+				return err
+			}
+		}
+		{{- end }}
 	{{- else }}
 	case []types.{{ .ParserType }}:
 	{{- end }}
 		p.data = newValue
 	{{- if not (eq .Model "") }}
 	case *models.{{ .Model }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(*newValue); err != nil {
+			return err
+		}
+		{{- end }}
 	{{- else }}
 	case *types.{{ .ParserType }}:
 	{{- end }}
@@ -220,6 +249,11 @@ func (p *{{ .StructName }}) Set(data common.ParserData, index int) error {
 		}
 	{{- if not (eq .Model "") }}
 	case models.{{ .Model }}:
+		{{- if not (eq .SetValidator "") }}
+		if err := {{ .SetValidator }}(newValue); err != nil {
+			return err
+		}
+		{{- end }}
 	{{- else }}
 	case types.{{ .ParserType }}:
 	{{- end }}

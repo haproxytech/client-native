@@ -33,6 +33,18 @@ func addParser(parser map[string]ParserInterface, sequence *[]Section, p ParserI
 	*sequence = append(*sequence, Section(p.GetParserName()))
 }
 
+// addFilterInstanceParsers registers the shared filter-enable/filter-disable
+// parser once. The aliases only serve dispatch; the sequence writes its
+// canonical entry so the same lines are not serialized three times.
+func addFilterInstanceParsers(parser map[string]ParserInterface, sequence *[]Section) {
+	addParser(parser, sequence, &parsers.FilterConfig{})
+	rule := &parsers.FilterRule{}
+	addParser(parser, sequence, rule)
+	parser["filter-enable"] = rule
+	parser["filter-disable"] = rule
+	addParser(parser, sequence, &parsers.FilterSequence{})
+}
+
 func (p *configParser) createParsers(parser map[string]ParserInterface, sequence []Section) *Parsers {
 	addParser(parser, &sequence, &extra.Section{Name: "defaults"})
 	addParser(parser, &sequence, &extra.Section{Name: "global"})
@@ -224,6 +236,7 @@ func (p *configParser) getDefaultParser() *Parsers {
 	addParser(parser, &sequence, &http.Responses{Mode: "defaults"})
 	addParser(parser, &sequence, &http.AfterResponses{})
 	addParser(parser, &sequence, &quic.Initial{})
+	addFilterInstanceParsers(parser, &sequence)
 	// the ConfigSnippet must be at the end to parsers load order to ensure
 	// the overloading of any option has been declared previously
 	addParser(parser, &sequence, &parsers.ConfigSnippet{})
@@ -512,6 +525,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Word{Name: "shm-stats-file"})
 	addParser(parser, &sequence, &simple.Number{Name: "shm-stats-file-max-objects"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "noktls"})
+	addParser(parser, &sequence, &parsers.FilterAPI{})
 	// the ConfigSnippet must be at the end to parsers load order to ensure
 	// the overloading of any option has been declared previously
 	addParser(parser, &sequence, &parsers.ConfigSnippet{})
@@ -587,6 +601,7 @@ func (p *configParser) getFrontendParser() *Parsers {
 	addParser(parser, &sequence, &simple.Time{Name: "clitcpka-idle"})
 	addParser(parser, &sequence, &simple.Time{Name: "clitcpka-intvl"})
 	addParser(parser, &sequence, &filters.Filters{})
+	addFilterInstanceParsers(parser, &sequence)
 	addParser(parser, &sequence, &parsers.CompressionAlgo{})
 	addParser(parser, &sequence, &parsers.CompressionAlgoReq{})
 	addParser(parser, &sequence, &parsers.CompressionAlgoRes{})
@@ -705,6 +720,7 @@ func (p *configParser) getBackendParser() *Parsers {
 	addParser(parser, &sequence, &parsers.DefaultServer{})
 	addParser(parser, &sequence, &parsers.Stick{})
 	addParser(parser, &sequence, &filters.Filters{})
+	addFilterInstanceParsers(parser, &sequence)
 	addParser(parser, &sequence, &parsers.CompressionAlgo{})
 	addParser(parser, &sequence, &parsers.CompressionAlgoReq{})
 	addParser(parser, &sequence, &parsers.CompressionAlgoRes{})
@@ -860,6 +876,7 @@ func (p *configParser) getListenParser() *Parsers {
 		addParser(parser, &sequence, &parsers.DefaultServer{})
 		addParser(parser, &sequence, &parsers.Stick{})
 		addParser(parser, &sequence, &filters.Filters{})
+		addFilterInstanceParsers(parser, &sequence)
 		addParser(parser, &sequence, &parsers.CompressionAlgo{})
 		addParser(parser, &sequence, &parsers.CompressionAlgoReq{})
 		addParser(parser, &sequence, &parsers.CompressionAlgoRes{})
