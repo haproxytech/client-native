@@ -229,3 +229,6 @@ allowed:
   - rehaul
   - rebase
   - XXXX
+  - dereferences
+  - gosentry
+  - libafl
