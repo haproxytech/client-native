@@ -1,0 +1,192 @@
+---
+filter_rules:
+  get:
+    summary: Return an array of all Filter Rules
+    description: Returns all Filter Rules that are configured in specified parent.
+    operationId: getAllFilterRule{{ .ParentType }}
+    tags:
+      - FilterRule
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/filter_rules"
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Filter Rule list
+    description: Replaces a whole list of Filter Rules with the list given in parameter
+    operationId: replaceAllFilterRule{{ .ParentType }}
+    tags:
+      - FilterRule
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter_rules'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter_rules"
+      '200':
+        description: All Filter Rule lines replaced
+        schema:
+          $ref: '#/definitions/filter_rules'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+filter_rules_one:
+  get:
+    summary: Return one Filter Rule
+    description: Returns one Filter Rule configuration by it's index in the specified parent.
+    operationId: getFilterRule{{ .ParentType }}
+    tags:
+      - FilterRule
+    parameters:
+      - name: index
+        in: path
+        description: Filter Rule Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/filter_rule"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Filter Rule
+    description: Replaces a Filter Rule configuration by it's index in the specified parent.
+    operationId: replaceFilterRule{{ .ParentType }}
+    tags:
+      - FilterRule
+    parameters:
+      - name: index
+        in: path
+        description: Filter Rule Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter_rule"
+      '200':
+        description: Filter Rule replaced
+        schema:
+          $ref: "#/definitions/filter_rule"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Filter Rule
+    description: Deletes a Filter Rule configuration by it's index from the specified parent.
+    operationId: deleteFilterRule{{ .ParentType }}
+    tags:
+      - FilterRule
+    parameters:
+      - name: index
+        in: path
+        description: Filter Rule Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Filter Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Filter Rule
+    description: Adds a new Filter Rule in the specified parent.
+    operationId: createFilterRule{{ .ParentType }}
+    tags:
+      - FilterRule
+    parameters:
+      - name: index
+        in: path
+        description: Filter Rule Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter_rule"
+      '201':
+        description: Filter Rule created
+        schema:
+          $ref: "#/definitions/filter_rule"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'

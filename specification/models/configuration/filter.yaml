@@ -26,6 +26,11 @@ filter:
       x-dependency:
         type:
           value: trace
+    trace_quiet:
+      type: boolean
+      x-dependency:
+        type:
+          value: trace
     trace_rnd_parsing:
       type: boolean
       x-display-name: Trace Random Parsing

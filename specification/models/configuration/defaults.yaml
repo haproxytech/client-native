@@ -40,6 +40,15 @@ defaults:
         quic_initial_rule_list:
           $ref: "#/definitions/quic_initial_rules"
           x-go-name: QUICInitialRuleList
+        filter_config_list:
+          $ref: "#/definitions/filter_configs"
+          x-go-name: FilterConfigList
+        filter_rule_list:
+          $ref: "#/definitions/filter_rules"
+          x-go-name: FilterRuleList
+        filter_sequence_list:
+          $ref: "#/definitions/filter_sequences"
+          x-go-name: FilterSequenceList
 defaults_base:
   title: Defaults Base
   description: HAProxy defaults configuration

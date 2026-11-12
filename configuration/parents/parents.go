@@ -101,6 +101,24 @@ func Parents(childType string) []Parent {
 			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},
 			{PathParentType: "frontends", ParentType: "Frontend", GenericParentType: "Backend"},
 		}
+	case FilterConfigChildType:
+		return []Parent{
+			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},
+			{PathParentType: "frontends", ParentType: "Frontend", GenericParentType: "Backend"},
+			{PathParentType: "defaults", ParentType: "Defaults", GenericParentType: "Backend"},
+		}
+	case FilterRuleChildType:
+		return []Parent{
+			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},
+			{PathParentType: "frontends", ParentType: "Frontend", GenericParentType: "Backend"},
+			{PathParentType: "defaults", ParentType: "Defaults", GenericParentType: "Backend"},
+		}
+	case FilterSequenceChildType:
+		return []Parent{
+			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},
+			{PathParentType: "frontends", ParentType: "Frontend", GenericParentType: "Backend"},
+			{PathParentType: "defaults", ParentType: "Defaults", GenericParentType: "Backend"},
+		}
 	case LogTargetChildType:
 		return []Parent{
 			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},

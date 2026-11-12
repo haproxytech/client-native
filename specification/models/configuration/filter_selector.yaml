@@ -1,0 +1,23 @@
+---
+filter_selector:
+  title: Filter Selector
+  description: Filter class or class/instance reference
+  type: object
+  required:
+    - class
+  properties:
+    class:
+      type: string
+      pattern: '^[A-Za-z0-9._-]+$'
+      x-nullable: false
+    id:
+      type: string
+      description: |-
+        Filter instance identifier. Required by trace, spoe, cache-store, fcgi,
+        bandwidth limitation and lua classes.
+      pattern: '^[A-Za-z0-9._-]+$'
+      x-dependency:
+        class:
+          value: [trace, spoe, cache-store, fcgi, bwlim-in, bwlim-out, lua]
+          required: true
+  additionalProperties: false

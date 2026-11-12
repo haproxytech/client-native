@@ -136,6 +136,9 @@ func (rec GlobalBase) Diff(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) ma
 		}
 		diff["FiftyOneDegreesOptions"+diffKey] = diffValue
 	}
+	if rec.FilterAPI != obj.FilterAPI {
+		diff["FilterAPI"] = []interface{}{rec.FilterAPI, obj.FilterAPI}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.ForceCfgParserPause, obj.ForceCfgParserPause, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

@@ -1,0 +1,192 @@
+---
+filter_configs:
+  get:
+    summary: Return an array of all Filter Configs
+    description: Returns all Filter Configs that are configured in specified parent.
+    operationId: getAllFilterConfig{{ .ParentType }}
+    tags:
+      - FilterConfig
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/filter_configs"
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Filter Config list
+    description: Replaces a whole list of Filter Configs with the list given in parameter
+    operationId: replaceAllFilterConfig{{ .ParentType }}
+    tags:
+      - FilterConfig
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter_configs'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter_configs"
+      '200':
+        description: All Filter Config lines replaced
+        schema:
+          $ref: '#/definitions/filter_configs'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+filter_configs_one:
+  get:
+    summary: Return one Filter Config
+    description: Returns one Filter Config configuration by it's index in the specified parent.
+    operationId: getFilterConfig{{ .ParentType }}
+    tags:
+      - FilterConfig
+    parameters:
+      - name: index
+        in: path
+        description: Filter Config Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/filter_config"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Filter Config
+    description: Replaces a Filter Config configuration by it's index in the specified parent.
+    operationId: replaceFilterConfig{{ .ParentType }}
+    tags:
+      - FilterConfig
+    parameters:
+      - name: index
+        in: path
+        description: Filter Config Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter_config'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter_config"
+      '200':
+        description: Filter Config replaced
+        schema:
+          $ref: "#/definitions/filter_config"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Filter Config
+    description: Deletes a Filter Config configuration by it's index from the specified parent.
+    operationId: deleteFilterConfig{{ .ParentType }}
+    tags:
+      - FilterConfig
+    parameters:
+      - name: index
+        in: path
+        description: Filter Config Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Filter Config deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Filter Config
+    description: Adds a new Filter Config of the specified class in the specified parent.
+    operationId: createFilterConfig{{ .ParentType }}
+    tags:
+      - FilterConfig
+    parameters:
+      - name: index
+        in: path
+        description: Filter Config Index
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter_config'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter_config"
+      '201':
+        description: Filter Config created
+        schema:
+          $ref: "#/definitions/filter_config"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'

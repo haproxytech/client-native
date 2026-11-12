@@ -114,6 +114,9 @@ type Filter struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TraceName string `json:"trace_name,omitempty"`
 
+	// trace quiet
+	TraceQuiet bool `json:"trace_quiet,omitempty"`
+
 	// trace rnd forwarding
 	TraceRndForwarding bool `json:"trace_rnd_forwarding,omitempty"`
 

@@ -342,6 +342,34 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/filter'
+  filter_config:
+    $ref: "models/configuration/filter_config.yaml#/filter_config"
+  filter_configs:
+    title: Filter Configs Array
+    description: HAProxy filter configurations array (corresponds to filter-config directive)
+    type: array
+    items:
+      $ref: '#/definitions/filter_config'
+  filter_rule:
+    $ref: "models/configuration/filter_rule.yaml#/filter_rule"
+  filter_selector:
+    $ref: "models/configuration/filter_selector.yaml#/filter_selector"
+  filter_rules:
+    title: Filter Rules Array
+    description: HAProxy filter enable/disable rules array (corresponds to filter-enable and filter-disable directives)
+    type: array
+    items:
+      $ref: '#/definitions/filter_rule'
+  filter_sequence:
+    $ref: "models/configuration/filter_sequence.yaml#/filter_sequence"
+  filter_sequences:
+    title: Filter Sequences Array
+    description: HAProxy filter sequence lines array (corresponds to filter-sequence directive)
+    type: array
+    items:
+      $ref: '#/definitions/filter_sequence'
+  filter_sequence_rule:
+    $ref: "models/configuration/filter_sequence.yaml#/filter_sequence_rule"
   stick_rule:
     $ref: "models/configuration/stick.yaml#/stick_rule"
   stick_rules:
@@ -930,6 +958,9 @@ tags:
   - name: ServerSwitchingRule
   - name: TCPResponseRule
   - name: Filter
+  - name: FilterConfig
+  - name: FilterRule
+  - name: FilterSequence
   - name: StickRule
   - name: StickTable
   - name: LogTarget
@@ -1185,6 +1216,30 @@ paths:
   {{ range parents "filter" -}}
   /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/filters/{index}:
     $ref: "paths/configuration/filter.yaml#/filters_one"
+  {{ end -}}
+  {{ range parents "filter_config" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/filter_configs:
+    $ref: "paths/configuration/filter_config.yaml#/filter_configs"
+  {{ end -}}
+  {{ range parents "filter_config" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/filter_configs/{index}:
+    $ref: "paths/configuration/filter_config.yaml#/filter_configs_one"
+  {{ end -}}
+  {{ range parents "filter_rule" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/filter_rules:
+    $ref: "paths/configuration/filter_rule.yaml#/filter_rules"
+  {{ end -}}
+  {{ range parents "filter_rule" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/filter_rules/{index}:
+    $ref: "paths/configuration/filter_rule.yaml#/filter_rules_one"
+  {{ end -}}
+  {{ range parents "filter_sequence" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/filter_sequences:
+    $ref: "paths/configuration/filter_sequence.yaml#/filter_sequences"
+  {{ end -}}
+  {{ range parents "filter_sequence" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/filter_sequences/{index}:
+    $ref: "paths/configuration/filter_sequence.yaml#/filter_sequences_one"
   {{ end -}}
   /services/haproxy/configuration/backends/{parent_name}/stick_rules:
     $ref: "paths/configuration/stick.yaml#/stick_rules"

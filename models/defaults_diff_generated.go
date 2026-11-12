@@ -29,6 +29,15 @@ func (rec Defaults) Diff(obj Defaults, opts ...eqdiff.GoMethodGenOptions) map[st
 	for diffKey, diffValue := range rec.ACLList.Diff(obj.ACLList, opts...) {
 		diff["ACLList"+diffKey] = diffValue
 	}
+	for diffKey, diffValue := range rec.FilterConfigList.Diff(obj.FilterConfigList, opts...) {
+		diff["FilterConfigList"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range rec.FilterRuleList.Diff(obj.FilterRuleList, opts...) {
+		diff["FilterRuleList"+diffKey] = diffValue
+	}
+	for diffKey, diffValue := range rec.FilterSequenceList.Diff(obj.FilterSequenceList, opts...) {
+		diff["FilterSequenceList"+diffKey] = diffValue
+	}
 	for diffKey, diffValue := range rec.HTTPAfterResponseRuleList.Diff(obj.HTTPAfterResponseRuleList, opts...) {
 		diff["HTTPAfterResponseRuleList"+diffKey] = diffValue
 	}

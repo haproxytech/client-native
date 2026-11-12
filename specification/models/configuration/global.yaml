@@ -22,6 +22,10 @@ global_base:
     cluster_secret:
       type: string
       x-display-name: Cluster Secret
+    filter_api:
+      type: string
+      enum: [default, downgrade-to-legacy]
+      x-display-name: Filter API
     gid:
       type: integer
       x-display-name: GID

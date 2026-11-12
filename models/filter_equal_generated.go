@@ -38,6 +38,7 @@ func (rec Filter) Equal(obj Filter, opts ...eqdiff.GoMethodGenOptions) bool {
 		rec.TraceHexdump == obj.TraceHexdump &&
 		EqualPointerInt64(rec.TraceMaxFwd, obj.TraceMaxFwd, opts...) &&
 		rec.TraceName == obj.TraceName &&
+		rec.TraceQuiet == obj.TraceQuiet &&
 		rec.TraceRndForwarding == obj.TraceRndForwarding &&
 		rec.TraceRndParsing == obj.TraceRndParsing &&
 		rec.Type == obj.Type

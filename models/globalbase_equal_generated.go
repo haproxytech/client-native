@@ -45,6 +45,7 @@ func (rec GlobalBase) Equal(obj GlobalBase, opts ...eqdiff.GoMethodGenOptions) b
 		rec.ExposeExperimentalDirectives == obj.ExposeExperimentalDirectives &&
 		rec.ExternalCheck == obj.ExternalCheck &&
 		EqualPointerFiftyOneDegreesOptions(rec.FiftyOneDegreesOptions, obj.FiftyOneDegreesOptions, opts...) &&
+		rec.FilterAPI == obj.FilterAPI &&
 		EqualPointerInt64(rec.ForceCfgParserPause, obj.ForceCfgParserPause, opts...) &&
 		rec.Gid == obj.Gid &&
 		EqualPointerInt64(rec.Grace, obj.Grace, opts...) &&

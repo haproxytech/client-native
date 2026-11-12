@@ -1,0 +1,49 @@
+---
+filter_sequence:
+  title: Filter Sequence
+  description: Ordered filter sequence rule line
+  type: object
+  required:
+    - side
+    - rules
+  properties:
+    side:
+      type: string
+      enum:
+        - global
+        - request
+        - response
+      x-nullable: false
+    rules:
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/definitions/filter_sequence_rule'
+    metadata:
+      additionalProperties:
+        type: object
+  additionalProperties: false
+  example:
+    side: request
+    rules:
+      - instance: trace/A
+        direction: before
+        target: trace/B
+filter_sequence_rule:
+  type: object
+  required:
+    - instance
+    - direction
+    - target
+  properties:
+    instance:
+      $ref: '#/definitions/filter_selector'
+    direction:
+      type: string
+      enum:
+        - before
+        - after
+      x-nullable: false
+    target:
+      $ref: '#/definitions/filter_selector'
+  additionalProperties: false

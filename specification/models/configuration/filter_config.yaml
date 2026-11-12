@@ -1,0 +1,167 @@
+---
+filter_config:
+  title: Filter Config
+  description: HAProxy filter instance configuration
+  type: object
+  required:
+    - class
+  properties:
+    class:
+      type: string
+      enum:
+        - trace
+        - http-comp-req
+        - http-comp-res
+        - decomp-req
+        - decomp-res
+        - spoe
+        - cache-store
+        - fcgi
+        - bwlim-in
+        - bwlim-out
+        - lua
+      x-nullable: false
+    id:
+      type: string
+      description: |-
+        Filter instance identifier. Required by trace, spoe, cache-store, fcgi,
+        bandwidth limitation and lua classes. It is the cache name for cache-store,
+        the FCGI application name for fcgi and the registered Lua filter name for lua.
+      pattern: '^[A-Za-z0-9._-]+$'
+      x-dependency:
+        class:
+          value: [trace, spoe, cache-store, fcgi, bwlim-in, bwlim-out, lua]
+          required: true
+    enabled:
+      type: boolean
+    trace_quiet:
+      type: boolean
+      x-dependency:
+        class:
+          value: trace
+    trace_rnd_parsing:
+      type: boolean
+      x-display-name: Trace Random Parsing
+      x-dependency:
+        class:
+          value: trace
+    trace_rnd_forwarding:
+      type: boolean
+      x-display-name: Trace Random Forwarding
+      x-dependency:
+        class:
+          value: trace
+    trace_max_fwd:
+      type: integer
+      x-nullable: true
+      x-display-name: Trace Max Forward
+      x-dependency:
+        class:
+          value: trace
+    trace_hexdump:
+      type: boolean
+      x-dependency:
+        class:
+          value: trace
+    spoe_engine:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        class:
+          value: spoe
+    spoe_config:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        class:
+          value: spoe
+          required: true
+    limit:
+      type: integer
+      description: |-
+        The max number of bytes that can be forwarded over the period.
+        The value must be specified for per-stream and shared bandwidth limitation filters.
+        It follows the HAProxy size format and is expressed in bytes.
+      x-size: true
+      x-dependency:
+        class:
+          value: [bwlim-in, bwlim-out]
+          required: true
+    key:
+      type: string
+      description: |-
+        A sample expression rule.
+        It describes what elements will be analyzed, extracted, combined, and used to select which table entry to update the counters.
+        It must be specified for shared bandwidth limitation filters only.
+      x-dependency:
+        class:
+          value: [bwlim-in, bwlim-out]
+          required: true
+        limit:
+          required: true
+    default_limit:
+      description: |-
+        The max number of bytes that can be forwarded over the period.
+        The value must be specified for per-stream and shared bandwidth limitation filters.
+        It follows the HAProxy size format and is expressed in bytes.
+      type: integer
+      x-size: true
+      x-dependency:
+        class:
+          value: [bwlim-in, bwlim-out]
+          required: true
+    table:
+      description: |-
+        An optional table to be used instead of the default one, which is the stick-table declared in the current proxy.
+        It can be specified for shared bandwidth limitation filters only.
+      x-dependency:
+        class:
+          value: [bwlim-in, bwlim-out]
+          required: true
+        limit:
+          required: true
+      type: string
+    default_period:
+      description: |-
+        The default time period used to evaluate the bandwidth limitation rate.
+        It can be specified for per-stream bandwidth limitation filters only.
+        It follows the HAProxy time format and is expressed in milliseconds.
+      type: integer
+      x-duration: true
+      x-default-unit: ms
+      x-dependency:
+        class:
+          value: [bwlim-in, bwlim-out]
+          required: true
+        default_limit:
+          required: true
+    lua_args:
+      type: array
+      x-omitempty: true
+      description: |-
+        Arguments passed to the filter registered as lua.<id>. Their meaning is
+        defined by the Lua script.
+      items:
+        type: string
+      x-dependency:
+        class:
+          value: lua
+    min_size:
+      description: |-
+        The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
+        This value can be specified for per-stream and shared bandwidth limitation filters.
+        It follows the HAProxy size format and is expressed in bytes.
+      type: integer
+      x-size: true
+      x-dependency:
+        class:
+          value: [bwlim-in, bwlim-out]
+          required: true
+    metadata:
+      additionalProperties:
+        type: object
+  additionalProperties: false
+  example:
+    class: trace
+    id: name
+    trace_rnd_parsing: true

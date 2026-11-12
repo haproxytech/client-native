@@ -24,7 +24,10 @@ import (
 func (rec Backend) Equal(obj Backend, opts ...eqdiff.GoMethodGenOptions) bool {
 	return rec.BackendBase.Equal(obj.BackendBase, opts...) &&
 		rec.ACLList.Equal(obj.ACLList, opts...) &&
+		rec.FilterConfigList.Equal(obj.FilterConfigList, opts...) &&
 		rec.FilterList.Equal(obj.FilterList, opts...) &&
+		rec.FilterRuleList.Equal(obj.FilterRuleList, opts...) &&
+		rec.FilterSequenceList.Equal(obj.FilterSequenceList, opts...) &&
 		rec.HTTPAfterResponseRuleList.Equal(obj.HTTPAfterResponseRuleList, opts...) &&
 		rec.HTTPCheckList.Equal(obj.HTTPCheckList, opts...) &&
 		rec.HTTPErrorRuleList.Equal(obj.HTTPErrorRuleList, opts...) &&

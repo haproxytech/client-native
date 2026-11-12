@@ -77,6 +77,9 @@ func (rec Filter) Diff(obj Filter, opts ...eqdiff.GoMethodGenOptions) map[string
 	if rec.TraceName != obj.TraceName {
 		diff["TraceName"] = []interface{}{rec.TraceName, obj.TraceName}
 	}
+	if rec.TraceQuiet != obj.TraceQuiet {
+		diff["TraceQuiet"] = []interface{}{rec.TraceQuiet, obj.TraceQuiet}
+	}
 	if rec.TraceRndForwarding != obj.TraceRndForwarding {
 		diff["TraceRndForwarding"] = []interface{}{rec.TraceRndForwarding, obj.TraceRndForwarding}
 	}

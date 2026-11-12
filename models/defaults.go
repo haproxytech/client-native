@@ -37,6 +37,15 @@ type Defaults struct {
 	// Acl list
 	ACLList Acls `json:"acl_list,omitempty"`
 
+	// filter config list
+	FilterConfigList FilterConfigs `json:"filter_config_list,omitempty"`
+
+	// filter rule list
+	FilterRuleList FilterRules `json:"filter_rule_list,omitempty"`
+
+	// filter sequence list
+	FilterSequenceList FilterSequences `json:"filter_sequence_list,omitempty"`
+
 	// HTTP after response rule list
 	HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
 
@@ -81,6 +90,12 @@ func (m *Defaults) UnmarshalJSON(raw []byte) error {
 	var dataAO1 struct {
 		ACLList Acls `json:"acl_list,omitempty"`
 
+		FilterConfigList FilterConfigs `json:"filter_config_list,omitempty"`
+
+		FilterRuleList FilterRules `json:"filter_rule_list,omitempty"`
+
+		FilterSequenceList FilterSequences `json:"filter_sequence_list,omitempty"`
+
 		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
 
 		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
@@ -106,6 +121,12 @@ func (m *Defaults) UnmarshalJSON(raw []byte) error {
 	}
 
 	m.ACLList = dataAO1.ACLList
+
+	m.FilterConfigList = dataAO1.FilterConfigList
+
+	m.FilterRuleList = dataAO1.FilterRuleList
+
+	m.FilterSequenceList = dataAO1.FilterSequenceList
 
 	m.HTTPAfterResponseRuleList = dataAO1.HTTPAfterResponseRuleList
 
@@ -142,6 +163,12 @@ func (m Defaults) MarshalJSON() ([]byte, error) {
 	var dataAO1 struct {
 		ACLList Acls `json:"acl_list,omitempty"`
 
+		FilterConfigList FilterConfigs `json:"filter_config_list,omitempty"`
+
+		FilterRuleList FilterRules `json:"filter_rule_list,omitempty"`
+
+		FilterSequenceList FilterSequences `json:"filter_sequence_list,omitempty"`
+
 		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
 
 		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
@@ -164,6 +191,12 @@ func (m Defaults) MarshalJSON() ([]byte, error) {
 	}
 
 	dataAO1.ACLList = m.ACLList
+
+	dataAO1.FilterConfigList = m.FilterConfigList
+
+	dataAO1.FilterRuleList = m.FilterRuleList
+
+	dataAO1.FilterSequenceList = m.FilterSequenceList
 
 	dataAO1.HTTPAfterResponseRuleList = m.HTTPAfterResponseRuleList
 
@@ -203,6 +236,18 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateACLList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFilterConfigList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFilterRuleList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFilterSequenceList(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -263,6 +308,60 @@ func (m *Defaults) validateACLList(formats strfmt.Registry) error {
 			return ve.ValidateName("acl_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("acl_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateFilterConfigList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FilterConfigList) { // not required
+		return nil
+	}
+
+	if err := m.FilterConfigList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_config_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_config_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateFilterRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FilterRuleList) { // not required
+		return nil
+	}
+
+	if err := m.FilterRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateFilterSequenceList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FilterSequenceList) { // not required
+		return nil
+	}
+
+	if err := m.FilterSequenceList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_sequence_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_sequence_list")
 		}
 		return err
 	}
@@ -463,6 +562,18 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateFilterConfigList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateFilterRuleList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateFilterSequenceList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateHTTPAfterResponseRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -516,6 +627,48 @@ func (m *Defaults) contextValidateACLList(ctx context.Context, formats strfmt.Re
 			return ve.ValidateName("acl_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("acl_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateFilterConfigList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.FilterConfigList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_config_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_config_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateFilterRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.FilterRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateFilterSequenceList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.FilterSequenceList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_sequence_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_sequence_list")
 		}
 		return err
 	}

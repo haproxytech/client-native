@@ -1,0 +1,30 @@
+---
+filter_rule:
+  title: Filter Rule
+  description: Ordered filter enable or disable operation
+  type: object
+  required:
+    - type
+    - filters
+  properties:
+    type:
+      type: string
+      enum:
+        - enable
+        - disable
+      x-nullable: false
+    filters:
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/definitions/filter_selector'
+    metadata:
+      additionalProperties:
+        type: object
+  additionalProperties: false
+  example:
+    type: enable
+    filters:
+      - class: trace
+        id: A
+      - class: trace

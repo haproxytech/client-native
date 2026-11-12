@@ -115,6 +115,11 @@ type GlobalBase struct {
 	// fifty one degrees options
 	FiftyOneDegreesOptions *FiftyOneDegreesOptions `json:"fifty_one_degrees_options,omitempty"`
 
+	// filter api
+	// Enum: ["default","downgrade-to-legacy"]
+	// +kubebuilder:validation:Enum="default";"downgrade-to-legacy";
+	FilterAPI string `json:"filter_api,omitempty"`
+
 	// Pause the configuration parser to simulate long reloads
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
@@ -393,6 +398,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFiftyOneDegreesOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFilterAPI(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -940,6 +949,48 @@ func (m *GlobalBase) validateFiftyOneDegreesOptions(formats strfmt.Registry) err
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var globalBaseTypeFilterAPIPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["default","downgrade-to-legacy"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalBaseTypeFilterAPIPropEnum = append(globalBaseTypeFilterAPIPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalBaseFilterAPIDefault captures enum value "default"
+	GlobalBaseFilterAPIDefault string = "default"
+
+	// GlobalBaseFilterAPIDowngradeDashToDashLegacy captures enum value "downgrade-to-legacy"
+	GlobalBaseFilterAPIDowngradeDashToDashLegacy string = "downgrade-to-legacy"
+)
+
+// prop value enum
+func (m *GlobalBase) validateFilterAPIEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalBaseTypeFilterAPIPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalBase) validateFilterAPI(formats strfmt.Registry) error {
+	if swag.IsZero(m.FilterAPI) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateFilterAPIEnum("filter_api", "body", m.FilterAPI); err != nil {
+		return err
 	}
 
 	return nil
