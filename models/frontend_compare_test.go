@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -75,11 +76,13 @@ func TestFrontendEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Frontend
 		var result Frontend
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -170,11 +173,13 @@ func TestFrontendDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Frontend
 		var result Frontend
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}

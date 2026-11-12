@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -75,11 +76,13 @@ func TestBackendEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Backend
 		var result Backend
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -173,11 +176,13 @@ func TestBackendDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Backend
 		var result Backend
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -271,11 +276,13 @@ func TestBackendForcePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -350,11 +357,13 @@ func TestBackendForcePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -429,11 +438,13 @@ func TestForcePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -508,11 +519,13 @@ func TestForcePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -587,11 +600,13 @@ func TestBackendIgnorePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -666,11 +681,13 @@ func TestBackendIgnorePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -745,11 +762,13 @@ func TestIgnorePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
@@ -824,11 +843,13 @@ func TestIgnorePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample)
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err.Error())
 		}
