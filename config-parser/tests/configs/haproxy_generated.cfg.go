@@ -107,6 +107,24 @@ backend test
   acl logout url_beg /logout
   acl uid_given url_reg /login?userid=[^&]+
   acl cookie_set hdr_sub(cookie) SEEN=1
+  filter-config trace id A
+  filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+  filter-config http-comp-req
+  filter-config http-comp-req enabled
+  filter-config decomp-req
+  filter-config decomp-res enabled
+  filter-config spoe id S engine e config f
+  filter-config cache-store id C enabled
+  filter-config fcgi id F
+  filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+  filter-config bwlim-out id C limit 1m key src table t
+  filter-enable trace
+  filter-enable trace/A trace/B
+  filter-disable trace/A
+  filter-disable http-comp-req
+  filter-sequence request trace/A:before(trace/B)
+  filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+  filter-sequence response trace:after(trace/A)
   balance roundrobin
   persist rdp-cookie
   cookie test
@@ -1230,6 +1248,24 @@ defaults test
   acl logout url_beg /logout
   acl uid_given url_reg /login?userid=[^&]+
   acl cookie_set hdr_sub(cookie) SEEN=1
+  filter-config trace id A
+  filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+  filter-config http-comp-req
+  filter-config http-comp-req enabled
+  filter-config decomp-req
+  filter-config decomp-res enabled
+  filter-config spoe id S engine e config f
+  filter-config cache-store id C enabled
+  filter-config fcgi id F
+  filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+  filter-config bwlim-out id C limit 1m key src table t
+  filter-enable trace
+  filter-enable trace/A trace/B
+  filter-disable trace/A
+  filter-disable http-comp-req
+  filter-sequence request trace/A:before(trace/B)
+  filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+  filter-sequence response trace:after(trace/A)
   balance roundrobin
   persist rdp-cookie
   cookie test
@@ -2139,6 +2175,24 @@ frontend test
   acl logout url_beg /logout
   acl uid_given url_reg /login?userid=[^&]+
   acl cookie_set hdr_sub(cookie) SEEN=1
+  filter-config trace id A
+  filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+  filter-config http-comp-req
+  filter-config http-comp-req enabled
+  filter-config decomp-req
+  filter-config decomp-res enabled
+  filter-config spoe id S engine e config f
+  filter-config cache-store id C enabled
+  filter-config fcgi id F
+  filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+  filter-config bwlim-out id C limit 1m key src table t
+  filter-enable trace
+  filter-enable trace/A trace/B
+  filter-disable trace/A
+  filter-disable http-comp-req
+  filter-sequence request trace/A:before(trace/B)
+  filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+  filter-sequence response trace:after(trace/A)
   bind :80,:443
   bind 10.0.0.1:10080,10.0.0.1:10443
   bind /var/run/ssl-frontend.sock user root mode 600 accept-proxy
@@ -3305,6 +3359,42 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  acl uid_given url_reg /login?userid=[^&]+
 `, 3},
 	{`  acl cookie_set hdr_sub(cookie) SEEN=1
+`, 3},
+	{`  filter-config trace id A
+`, 3},
+	{`  filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+`, 3},
+	{`  filter-config http-comp-req
+`, 3},
+	{`  filter-config http-comp-req enabled
+`, 3},
+	{`  filter-config decomp-req
+`, 3},
+	{`  filter-config decomp-res enabled
+`, 3},
+	{`  filter-config spoe id S engine e config f
+`, 3},
+	{`  filter-config cache-store id C enabled
+`, 3},
+	{`  filter-config fcgi id F
+`, 3},
+	{`  filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+`, 3},
+	{`  filter-config bwlim-out id C limit 1m key src table t
+`, 3},
+	{`  filter-enable trace
+`, 3},
+	{`  filter-enable trace/A trace/B
+`, 3},
+	{`  filter-disable trace/A
+`, 3},
+	{`  filter-disable http-comp-req
+`, 3},
+	{`  filter-sequence request trace/A:before(trace/B)
+`, 3},
+	{`  filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+`, 3},
+	{`  filter-sequence response trace:after(trace/A)
 `, 3},
 	{`  bind :80,:443
 `, 1},

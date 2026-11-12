@@ -77,6 +77,78 @@ const frontend_aclcookiesethdrsubcookieSEEN1 = `
 frontend test
   acl cookie_set hdr_sub(cookie) SEEN=1
 `
+const frontend_filterconfigtraceidA = `
+frontend test
+  filter-config trace id A
+`
+const frontend_filterconfigtraceidAenabledquiet = `
+frontend test
+  filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+`
+const frontend_filterconfighttpcompreq = `
+frontend test
+  filter-config http-comp-req
+`
+const frontend_filterconfighttpcompreqenabled = `
+frontend test
+  filter-config http-comp-req enabled
+`
+const frontend_filterconfigdecompreq = `
+frontend test
+  filter-config decomp-req
+`
+const frontend_filterconfigdecompresenabled = `
+frontend test
+  filter-config decomp-res enabled
+`
+const frontend_filterconfigspoeidSengineeconfig = `
+frontend test
+  filter-config spoe id S engine e config f
+`
+const frontend_filterconfigcachestoreidCenabled = `
+frontend test
+  filter-config cache-store id C enabled
+`
+const frontend_filterconfigfcgiidF = `
+frontend test
+  filter-config fcgi id F
+`
+const frontend_filterconfigbwliminidBdefaultlim = `
+frontend test
+  filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+`
+const frontend_filterconfigbwlimoutidClimit1mke = `
+frontend test
+  filter-config bwlim-out id C limit 1m key src table t
+`
+const frontend_filterenabletrace = `
+frontend test
+  filter-enable trace
+`
+const frontend_filterenabletraceAtraceB = `
+frontend test
+  filter-enable trace/A trace/B
+`
+const frontend_filterdisabletraceA = `
+frontend test
+  filter-disable trace/A
+`
+const frontend_filterdisablehttpcompreq = `
+frontend test
+  filter-disable http-comp-req
+`
+const frontend_filtersequencerequesttraceAbefor = `
+frontend test
+  filter-sequence request trace/A:before(trace/B)
+`
+const frontend_filtersequenceglobaltraceAbefore = `
+frontend test
+  filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+`
+const frontend_filtersequenceresponsetraceafter = `
+frontend test
+  filter-sequence response trace:after(trace/A)
+`
 const frontend_bind80443 = `
 frontend test
   bind :80,:443

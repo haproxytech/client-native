@@ -77,6 +77,78 @@ const defaults_aclcookiesethdrsubcookieSEEN1 = `
 defaults test
   acl cookie_set hdr_sub(cookie) SEEN=1
 `
+const defaults_filterconfigtraceidA = `
+defaults test
+  filter-config trace id A
+`
+const defaults_filterconfigtraceidAenabledquiet = `
+defaults test
+  filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+`
+const defaults_filterconfighttpcompreq = `
+defaults test
+  filter-config http-comp-req
+`
+const defaults_filterconfighttpcompreqenabled = `
+defaults test
+  filter-config http-comp-req enabled
+`
+const defaults_filterconfigdecompreq = `
+defaults test
+  filter-config decomp-req
+`
+const defaults_filterconfigdecompresenabled = `
+defaults test
+  filter-config decomp-res enabled
+`
+const defaults_filterconfigspoeidSengineeconfig = `
+defaults test
+  filter-config spoe id S engine e config f
+`
+const defaults_filterconfigcachestoreidCenabled = `
+defaults test
+  filter-config cache-store id C enabled
+`
+const defaults_filterconfigfcgiidF = `
+defaults test
+  filter-config fcgi id F
+`
+const defaults_filterconfigbwliminidBdefaultlim = `
+defaults test
+  filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+`
+const defaults_filterconfigbwlimoutidClimit1mke = `
+defaults test
+  filter-config bwlim-out id C limit 1m key src table t
+`
+const defaults_filterenabletrace = `
+defaults test
+  filter-enable trace
+`
+const defaults_filterenabletraceAtraceB = `
+defaults test
+  filter-enable trace/A trace/B
+`
+const defaults_filterdisabletraceA = `
+defaults test
+  filter-disable trace/A
+`
+const defaults_filterdisablehttpcompreq = `
+defaults test
+  filter-disable http-comp-req
+`
+const defaults_filtersequencerequesttraceAbefor = `
+defaults test
+  filter-sequence request trace/A:before(trace/B)
+`
+const defaults_filtersequenceglobaltraceAbefore = `
+defaults test
+  filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+`
+const defaults_filtersequenceresponsetraceafter = `
+defaults test
+  filter-sequence response trace:after(trace/A)
+`
 const defaults_balanceroundrobin = `
 defaults test
   balance roundrobin

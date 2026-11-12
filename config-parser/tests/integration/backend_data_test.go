@@ -77,6 +77,78 @@ const backend_aclcookiesethdrsubcookieSEEN1 = `
 backend test
   acl cookie_set hdr_sub(cookie) SEEN=1
 `
+const backend_filterconfigtraceidA = `
+backend test
+  filter-config trace id A
+`
+const backend_filterconfigtraceidAenabledquiet = `
+backend test
+  filter-config trace id A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
+`
+const backend_filterconfighttpcompreq = `
+backend test
+  filter-config http-comp-req
+`
+const backend_filterconfighttpcompreqenabled = `
+backend test
+  filter-config http-comp-req enabled
+`
+const backend_filterconfigdecompreq = `
+backend test
+  filter-config decomp-req
+`
+const backend_filterconfigdecompresenabled = `
+backend test
+  filter-config decomp-res enabled
+`
+const backend_filterconfigspoeidSengineeconfig = `
+backend test
+  filter-config spoe id S engine e config f
+`
+const backend_filterconfigcachestoreidCenabled = `
+backend test
+  filter-config cache-store id C enabled
+`
+const backend_filterconfigfcgiidF = `
+backend test
+  filter-config fcgi id F
+`
+const backend_filterconfigbwliminidBdefaultlim = `
+backend test
+  filter-config bwlim-in id B default-limit 10k default-period 1s min-size 2k
+`
+const backend_filterconfigbwlimoutidClimit1mke = `
+backend test
+  filter-config bwlim-out id C limit 1m key src table t
+`
+const backend_filterenabletrace = `
+backend test
+  filter-enable trace
+`
+const backend_filterenabletraceAtraceB = `
+backend test
+  filter-enable trace/A trace/B
+`
+const backend_filterdisabletraceA = `
+backend test
+  filter-disable trace/A
+`
+const backend_filterdisablehttpcompreq = `
+backend test
+  filter-disable http-comp-req
+`
+const backend_filtersequencerequesttraceAbefor = `
+backend test
+  filter-sequence request trace/A:before(trace/B)
+`
+const backend_filtersequenceglobaltraceAbefore = `
+backend test
+  filter-sequence global trace/A:before(trace/B) comp-req:after(trace/C)
+`
+const backend_filtersequenceresponsetraceafter = `
+backend test
+  filter-sequence response trace:after(trace/A)
+`
 const backend_balanceroundrobin = `
 backend test
   balance roundrobin

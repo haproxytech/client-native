@@ -17,16 +17,15 @@ package configs //nolint:testpackage
 
 import (
 	"bytes"
-	"errors"
 	"os"
 	"strings"
 	"testing"
 
 	parser "github.com/haproxytech/client-native/v6/config-parser"
-	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/options"
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/filters"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 func TestWholeConfigs(t *testing.T) {
@@ -203,15 +202,11 @@ func TestDefaultSectionsSkipOnWriteParsers(t *testing.T) {
 	}
 }
 
-// TestRemovedFilterSequence asserts that the standalone filter-sequence directive
-// no longer has a dedicated typed parser in frontend, backend and listen sections,
-// while the generic unprocessed parser keeps the raw lines and the ordinary
-// compression filters remain typed.
-func TestRemovedFilterSequence(t *testing.T) { //nolint:gocognit
-	wantSequence := []string{
-		"filter-sequence request lua.my-filter,comp-req",
-		"filter-sequence response lua.my-filter,comp-res",
-	}
+// TestFilterSequenceDirective asserts that the documented filter-sequence
+// grammar is parsed into a typed parser, while the obsolete comma-list syntax
+// stays unprocessed and ordinary compression filters remain typed.
+func TestFilterSequenceDirective(t *testing.T) { //nolint:gocognit
+	const obsolete = "filter-sequence request lua.my-filter,comp-req"
 	tests := []struct {
 		name    string
 		section parser.Section
@@ -225,21 +220,38 @@ func TestRemovedFilterSequence(t *testing.T) { //nolint:gocognit
 			config := tt.name + ` test
   filter comp-req
   filter comp-res
+  filter-sequence request trace/A:before(trace/B)
   filter-sequence request lua.my-filter,comp-req
-  filter-sequence response lua.my-filter,comp-res
 `
 			p, err := parser.New(options.String(config), options.UseListenSectionParsers)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			// The dedicated filter-sequence parser must be gone.
-			if _, err = p.Get(tt.section, "test", "filter-sequence", false); !errors.Is(err, parser_errors.ErrParserMissing) {
-				t.Fatalf("filter-sequence parser must be missing, got err=%v", err)
+			data, err := p.Get(tt.section, "test", "filter-sequence", false)
+			if err != nil {
+				t.Fatalf("filter-sequence fetch: %v", err)
+			}
+			sequences, ok := data.([]models.FilterSequence)
+			if !ok {
+				t.Fatalf("unexpected filter-sequence type %T", data)
+			}
+			if len(sequences) != 1 {
+				t.Fatalf("filter-sequence lines = %d, want 1", len(sequences))
+			}
+			sequence := sequences[0]
+			if sequence.Side != "request" || len(sequence.Rules) != 1 {
+				t.Fatalf("unexpected parsed sequence %+v", sequence)
+			}
+			rule := sequence.Rules[0]
+			if rule.Instance.Class != "trace" || rule.Instance.ID != "A" ||
+				rule.Direction != "before" ||
+				rule.Target.Class != "trace" || rule.Target.ID != "B" {
+				t.Fatalf("unexpected parsed rule %+v", rule)
 			}
 
-			// The generic unprocessed parser must retain exactly the two sequence lines.
-			data, err := p.Get(tt.section, "test", "", false)
+			// The obsolete comma-list syntax must remain unprocessed.
+			data, err = p.Get(tt.section, "test", "", false)
 			if err != nil {
 				t.Fatalf("unprocessed fetch: %v", err)
 			}
@@ -247,23 +259,14 @@ func TestRemovedFilterSequence(t *testing.T) { //nolint:gocognit
 			if !ok {
 				t.Fatalf("unexpected unprocessed type %T", data)
 			}
-			remaining := map[string]bool{}
-			for _, line := range wantSequence {
-				remaining[line] = true
-			}
 			got := []string{}
 			for _, entry := range unprocessed {
-				if !strings.HasPrefix(entry.Value, "filter-sequence ") {
-					continue
+				if strings.HasPrefix(entry.Value, "filter-sequence ") {
+					got = append(got, entry.Value)
 				}
-				got = append(got, entry.Value)
-				if !remaining[entry.Value] {
-					t.Fatalf("unexpected unprocessed line %q", entry.Value)
-				}
-				delete(remaining, entry.Value)
 			}
-			if len(got) != len(wantSequence) || len(remaining) != 0 {
-				t.Fatalf("unprocessed filter-sequence lines = %v, want %v", got, wantSequence)
+			if len(got) != 1 || got[0] != obsolete {
+				t.Fatalf("unprocessed filter-sequence lines = %v, want [%s]", got, obsolete)
 			}
 
 			// Compression filters must remain typed.
@@ -288,9 +291,13 @@ func TestRemovedFilterSequence(t *testing.T) { //nolint:gocognit
 				t.Fatalf("expected typed comp-req and comp-res filters, got %v", typed)
 			}
 
-			// Serialized output must keep both the sequence lines and the filters.
 			result := p.String()
-			for _, want := range append([]string{"filter comp-req", "filter comp-res"}, wantSequence...) {
+			for _, want := range []string{
+				"filter comp-req",
+				"filter comp-res",
+				"filter-sequence request trace/A:before(trace/B)",
+				"filter-sequence request lua.my-filter,comp-req",
+			} {
 				if !strings.Contains(result, want) {
 					t.Fatalf("serialized output missing %q:\n%s", want, result)
 				}

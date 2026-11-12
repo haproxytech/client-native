@@ -26,9 +26,8 @@ import (
 	"github.com/haproxytech/client-native/v6/models"
 )
 
-// TestFilterModelSchema asserts that the generated Frontend and Backend models
-// no longer expose a FilterSequenceList field once the standalone
-// filter-sequence support has been removed.
+// TestFilterModelSchema asserts that the generated parent models expose the
+// filter instance lists while the legacy filter list stays available.
 func TestFilterModelSchema(t *testing.T) {
 	tests := []struct {
 		name string
@@ -36,13 +35,28 @@ func TestFilterModelSchema(t *testing.T) {
 	}{
 		{"frontend", reflect.TypeOf(models.Frontend{})},
 		{"backend", reflect.TypeOf(models.Backend{})},
+		{"defaults", reflect.TypeOf(models.Defaults{})},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if _, ok := tt.typ.FieldByName("FilterSequenceList"); ok {
-				t.Fatalf("%s must not expose FilterSequenceList after filter-sequence removal", tt.name)
+			for _, field := range []string{"FilterConfigList", "FilterRuleList", "FilterSequenceList"} {
+				if _, ok := tt.typ.FieldByName(field); !ok {
+					t.Fatalf("%s must expose %s", tt.name, field)
+				}
 			}
 		})
+	}
+
+	for _, tt := range []struct {
+		name string
+		typ  reflect.Type
+	}{
+		{"frontend", reflect.TypeOf(models.Frontend{})},
+		{"backend", reflect.TypeOf(models.Backend{})},
+	} {
+		if _, ok := tt.typ.FieldByName("FilterList"); !ok {
+			t.Fatalf("%s must keep the legacy FilterList", tt.name)
+		}
 	}
 }
 

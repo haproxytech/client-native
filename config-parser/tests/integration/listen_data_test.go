@@ -17,15 +17,67 @@ limitations under the License.
 
 package integration_test
 
-const listen_sslfusecrttestfoobarpem = `
+const listen_filterconfigtraceA = `
 listen test
-  ssl-f-use crt test.foobar.pem
+  filter-config trace A
 `
-const listen_sslfusecrttest2foobarcrtkeytest2 = `
+const listen_filterconfigtraceAenabledquietra = `
 listen test
-  ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
+  filter-config trace A enabled quiet random-parsing random-forwarding max-fwd 0 hexdump
 `
-const listen_sslfusecrtfoobarpemrsasigalgsRSA = `
+const listen_filterconfighttpcompreq = `
 listen test
-  ssl-f-use crt foobar.pem.rsa sigalgs "RSA-PSS+SHA256"
+  filter-config http-comp-req
+`
+const listen_filterconfighttpcompreqenabled = `
+listen test
+  filter-config http-comp-req enabled
+`
+const listen_filterconfigspoeSengineeconfigf = `
+listen test
+  filter-config spoe S engine e config f
+`
+const listen_filterconfigcachestoreCenabled = `
+listen test
+  filter-config cache-store C enabled
+`
+const listen_filterconfigfcgiF = `
+listen test
+  filter-config fcgi F
+`
+const listen_filterconfigbwliminBdefaultlimit = `
+listen test
+  filter-config bwlim-in B default-limit 10k default-period 1s min-size 2k
+`
+const listen_filterconfigbwlimoutClimit1mkeys = `
+listen test
+  filter-config bwlim-out C limit 1m key src table t
+`
+const listen_filterenabletrace = `
+listen test
+  filter-enable trace
+`
+const listen_filterenabletraceAtraceB = `
+listen test
+  filter-enable trace/A trace/B
+`
+const listen_filterdisabletraceA = `
+listen test
+  filter-disable trace/A
+`
+const listen_filterdisablehttpcompreq = `
+listen test
+  filter-disable http-comp-req
+`
+const listen_filtersequencerequesttraceAbefor = `
+listen test
+  filter-sequence request trace/A before trace/B
+`
+const listen_filtersequenceglobaltraceAbefore = `
+listen test
+  filter-sequence global trace/A before trace/B comp-req after trace/C
+`
+const listen_filtersequenceresponsetracebefor = `
+listen test
+  filter-sequence response trace before trace/A
 `

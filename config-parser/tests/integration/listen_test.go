@@ -30,9 +30,22 @@ func TestWholeConfigsSectionsListen(t *testing.T) {
 	tests := []struct {
 		Name, Config string
 	}{
-		{"listen_sslfusecrtfoobarpemrsasigalgsRSA", listen_sslfusecrtfoobarpemrsasigalgsRSA},
-		{"listen_sslfusecrttest2foobarcrtkeytest2", listen_sslfusecrttest2foobarcrtkeytest2},
-		{"listen_sslfusecrttestfoobarpem", listen_sslfusecrttestfoobarpem},
+		{"listen_filterconfigbwliminBdefaultlimit", listen_filterconfigbwliminBdefaultlimit},
+		{"listen_filterconfigbwlimoutClimit1mkeys", listen_filterconfigbwlimoutClimit1mkeys},
+		{"listen_filterconfigcachestoreCenabled", listen_filterconfigcachestoreCenabled},
+		{"listen_filterconfigfcgiF", listen_filterconfigfcgiF},
+		{"listen_filterconfighttpcompreq", listen_filterconfighttpcompreq},
+		{"listen_filterconfighttpcompreqenabled", listen_filterconfighttpcompreqenabled},
+		{"listen_filterconfigspoeSengineeconfigf", listen_filterconfigspoeSengineeconfigf},
+		{"listen_filterconfigtraceA", listen_filterconfigtraceA},
+		{"listen_filterconfigtraceAenabledquietra", listen_filterconfigtraceAenabledquietra},
+		{"listen_filterdisablehttpcompreq", listen_filterdisablehttpcompreq},
+		{"listen_filterdisabletraceA", listen_filterdisabletraceA},
+		{"listen_filterenabletrace", listen_filterenabletrace},
+		{"listen_filterenabletraceAtraceB", listen_filterenabletraceAtraceB},
+		{"listen_filtersequenceglobaltraceAbefore", listen_filtersequenceglobaltraceAbefore},
+		{"listen_filtersequencerequesttraceAbefor", listen_filtersequencerequesttraceAbefor},
+		{"listen_filtersequenceresponsetracebefor", listen_filtersequenceresponsetracebefor},
 	}
 	for _, config := range tests {
 		t.Run(config.Name, func(t *testing.T) {

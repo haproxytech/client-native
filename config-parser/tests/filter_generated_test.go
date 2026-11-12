@@ -52,6 +52,8 @@ func TestFiltersfilters(t *testing.T) {
 		"filter trace":                                                                    true,
 		"filter trace name name max-fwd 100":                                              true,
 		"filter trace name name random-forwarding max-fwd 100 hexdump":                    true,
+		"filter trace quiet":                                                              true,
+		"filter trace name name quiet random-parsing max-fwd 100 hexdump":                 true,
 		"filter lua.my-filter":                                                            true,
 		"filter lua.my-filter arg1 arg2":                                                  true,
 		"filter lua":                                                                      false,
