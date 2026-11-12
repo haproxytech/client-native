@@ -78,11 +78,13 @@ func TestBindEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Bind
 		var result Bind
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -159,11 +161,13 @@ func TestBindDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Bind
 		var result Bind
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -187,7 +191,7 @@ func TestBindDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Bind to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Bind to be different in 5 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }

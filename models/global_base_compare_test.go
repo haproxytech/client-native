@@ -78,11 +78,13 @@ func TestGlobalBaseEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalBase
 		var result GlobalBase
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -188,11 +190,13 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalBase
 		var result GlobalBase
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -245,7 +249,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalBase to be different in 79 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalBase to be different in 79 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -299,11 +303,13 @@ func TestGlobalBaseCPUAffinityEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalBaseCPUAffinity
 		var result GlobalBaseCPUAffinity
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -378,11 +384,13 @@ func TestGlobalBaseCPUAffinityDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalBaseCPUAffinity
 		var result GlobalBaseCPUAffinity
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -404,7 +412,7 @@ func TestGlobalBaseCPUAffinityDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalBaseCPUAffinity to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalBaseCPUAffinity to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -458,11 +466,13 @@ func TestCPUMapEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample CPUMap
 		var result CPUMap
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -537,11 +547,13 @@ func TestCPUMapDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample CPUMap
 		var result CPUMap
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -563,7 +575,7 @@ func TestCPUMapDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected CPUMap to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected CPUMap to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -617,11 +629,13 @@ func TestCPUSetEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample CPUSet
 		var result CPUSet
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -696,11 +710,13 @@ func TestCPUSetDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample CPUSet
 		var result CPUSet
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -722,7 +738,7 @@ func TestCPUSetDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected CPUSet to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected CPUSet to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -776,11 +792,13 @@ func TestGlobalDefaultPathEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalDefaultPath
 		var result GlobalDefaultPath
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -855,11 +873,13 @@ func TestGlobalDefaultPathDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalDefaultPath
 		var result GlobalDefaultPath
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -881,7 +901,7 @@ func TestGlobalDefaultPathDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalDefaultPath to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalDefaultPath to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -935,11 +955,13 @@ func TestH1CaseAdjustEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample H1CaseAdjust
 		var result H1CaseAdjust
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1014,11 +1036,13 @@ func TestH1CaseAdjustDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample H1CaseAdjust
 		var result H1CaseAdjust
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1040,7 +1064,7 @@ func TestH1CaseAdjustDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected H1CaseAdjust to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected H1CaseAdjust to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -1094,11 +1118,13 @@ func TestGlobalHardenEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalHarden
 		var result GlobalHarden
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1173,11 +1199,13 @@ func TestGlobalHardenDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalHarden
 		var result GlobalHarden
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1199,7 +1227,7 @@ func TestGlobalHardenDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalHarden to be different in 1 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalHarden to be different in 1 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -1253,11 +1281,13 @@ func TestGlobalHardenRejectPrivilegedPortsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalHardenRejectPrivilegedPorts
 		var result GlobalHardenRejectPrivilegedPorts
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1332,11 +1362,13 @@ func TestGlobalHardenRejectPrivilegedPortsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalHardenRejectPrivilegedPorts
 		var result GlobalHardenRejectPrivilegedPorts
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1358,7 +1390,7 @@ func TestGlobalHardenRejectPrivilegedPortsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -1412,11 +1444,13 @@ func TestGlobalLogSendHostnameEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalLogSendHostname
 		var result GlobalLogSendHostname
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1491,11 +1525,13 @@ func TestGlobalLogSendHostnameDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample GlobalLogSendHostname
 		var result GlobalLogSendHostname
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1517,7 +1553,7 @@ func TestGlobalLogSendHostnameDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalLogSendHostname to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalLogSendHostname to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -1571,11 +1607,13 @@ func TestRuntimeAPIEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample RuntimeAPI
 		var result RuntimeAPI
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1650,11 +1688,13 @@ func TestRuntimeAPIDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample RuntimeAPI
 		var result RuntimeAPI
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1676,7 +1716,7 @@ func TestRuntimeAPIDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected RuntimeAPI to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected RuntimeAPI to be different in 3 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -1730,11 +1770,13 @@ func TestSetVarFmtEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetVarFmt
 		var result SetVarFmt
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1809,11 +1851,13 @@ func TestSetVarFmtDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetVarFmt
 		var result SetVarFmt
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1835,7 +1879,7 @@ func TestSetVarFmtDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SetVarFmt to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SetVarFmt to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -1889,11 +1933,13 @@ func TestSetVarEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetVar
 		var result SetVar
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1968,11 +2014,13 @@ func TestSetVarDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetVar
 		var result SetVar
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -1994,7 +2042,7 @@ func TestSetVarDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SetVar to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SetVar to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -2048,11 +2096,13 @@ func TestThreadGroupEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ThreadGroup
 		var result ThreadGroup
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -2127,11 +2177,13 @@ func TestThreadGroupDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ThreadGroup
 		var result ThreadGroup
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -2153,7 +2205,7 @@ func TestThreadGroupDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ThreadGroup to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ThreadGroup to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }

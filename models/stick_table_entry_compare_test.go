@@ -78,11 +78,13 @@ func TestStickTableEntryEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntry
 		var result StickTableEntry
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -182,11 +184,13 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntry
 		var result StickTableEntry
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -233,7 +237,7 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StickTableEntry to be different in 30 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTableEntry to be different in 30 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -287,11 +291,13 @@ func TestStickTableEntryGpcEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntryGpc
 		var result StickTableEntryGpc
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -368,11 +374,13 @@ func TestStickTableEntryGpcDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntryGpc
 		var result StickTableEntryGpc
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -396,7 +404,7 @@ func TestStickTableEntryGpcDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StickTableEntryGpc to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTableEntryGpc to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -450,11 +458,13 @@ func TestStickTableEntryGpcRateEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntryGpcRate
 		var result StickTableEntryGpcRate
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -531,11 +541,13 @@ func TestStickTableEntryGpcRateDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntryGpcRate
 		var result StickTableEntryGpcRate
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -559,7 +571,7 @@ func TestStickTableEntryGpcRateDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StickTableEntryGpcRate to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTableEntryGpcRate to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -613,11 +625,13 @@ func TestStickTableEntryGptEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntryGpt
 		var result StickTableEntryGpt
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -694,11 +708,13 @@ func TestStickTableEntryGptDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableEntryGpt
 		var result StickTableEntryGpt
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -722,7 +738,7 @@ func TestStickTableEntryGptDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StickTableEntryGpt to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTableEntryGpt to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }

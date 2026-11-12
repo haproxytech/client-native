@@ -78,11 +78,13 @@ func TestSslOptionsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslOptions
 		var result SslOptions
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -162,11 +164,13 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslOptions
 		var result SslOptions
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -193,7 +197,7 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslOptions to be different in 31 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SslOptions to be different in 31 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -247,11 +251,13 @@ func TestSslEngineEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -326,11 +332,13 @@ func TestSslEngineDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -352,7 +360,7 @@ func TestSslEngineDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslEngine to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SslEngine to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
