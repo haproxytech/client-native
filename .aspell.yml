@@ -214,3 +214,6 @@ allowed:
   - async
   - rehaul
   - XXXX
+  - dereferences
+  - gosentry
+  - libafl
