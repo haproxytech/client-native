@@ -78,11 +78,13 @@ func TestFCGILogStderrEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderr
 		var result FCGILogStderr
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -159,11 +161,13 @@ func TestFCGILogStderrDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderr
 		var result FCGILogStderr
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -187,7 +191,7 @@ func TestFCGILogStderrDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FCGILogStderr to be different in 8 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected FCGILogStderr to be different in 8 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -241,11 +245,13 @@ func TestFCGILogStderrSampleEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderrSample
 		var result FCGILogStderrSample
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -321,11 +327,13 @@ func TestFCGILogStderrSampleDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderrSample
 		var result FCGILogStderrSample
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -348,7 +356,7 @@ func TestFCGILogStderrSampleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected FCGILogStderrSample to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected FCGILogStderrSample to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
