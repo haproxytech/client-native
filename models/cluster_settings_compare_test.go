@@ -78,11 +78,13 @@ func TestClusterSettingsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettings
 		var result ClusterSettings
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -157,11 +159,13 @@ func TestClusterSettingsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettings
 		var result ClusterSettings
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -183,7 +187,7 @@ func TestClusterSettingsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ClusterSettings to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ClusterSettings to be different in 4 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -237,11 +241,13 @@ func TestClusterSettingsClusterEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettingsCluster
 		var result ClusterSettingsCluster
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -317,11 +323,13 @@ func TestClusterSettingsClusterDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettingsCluster
 		var result ClusterSettingsCluster
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -344,7 +352,7 @@ func TestClusterSettingsClusterDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ClusterSettingsCluster to be different in 7 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ClusterSettingsCluster to be different in 7 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
@@ -398,11 +406,13 @@ func TestClusterLogTargetEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterLogTarget
 		var result ClusterLogTarget
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -478,11 +488,13 @@ func TestClusterLogTargetDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterLogTarget
 		var result ClusterLogTarget
-		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
-		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
 		if err != nil {
 			t.Error(err)
 		}
@@ -505,7 +517,7 @@ func TestClusterLogTargetDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ClusterLogTarget to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ClusterLogTarget to be different in 4 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }
