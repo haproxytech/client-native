@@ -154,7 +154,7 @@ func parseMailersSectionsSections(p parser.Parser) (models.MailersSections, erro
 }
 
 func parseMailersSectionsSection(name string, p parser.Parser) (*models.MailersSection, error) {
-	ms := &models.MailersSection{MailersSectionBase: models.MailersSectionBase{Name: name}}
+	ms := &models.MailersSection{Name: name}
 	if err := ParseMailersSection(p, ms); err != nil {
 		return nil, err
 	}

@@ -120,7 +120,7 @@ func parseUserlistsSections(p parser.Parser) (models.Userlists, error) {
 
 func parseUserlistsSection(name string, p parser.Parser) (*models.Userlist, error) {
 	u := &models.Userlist{
-		UserlistBase: models.UserlistBase{Name: name},
+		Name: name,
 	}
 	if err := ParseUserlistSection(p, u); err != nil {
 		return nil, err
