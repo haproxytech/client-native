@@ -21,6 +21,7 @@ linters:
     - wastedassign
     - goconst
     - exhaustruct
+    - exhaustruct_v5
     - nonamedreturns
     - interfacebloat
     - dupword
