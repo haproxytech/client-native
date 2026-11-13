@@ -49,7 +49,7 @@ func (c *client) GetStructuredHealthcheck(name string, transactionID string) (in
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("HealthCheck %s does not exist", name))
 	}
 
-	healthCheck := &models.HealthCheck{HealthCheckBase: models.HealthCheckBase{Name: name}}
+	healthCheck := &models.HealthCheck{Name: name}
 	err = ParseHealthcheckSection(p, healthCheck)
 	if err != nil {
 		return v, nil, err

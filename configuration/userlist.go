@@ -52,7 +52,7 @@ func (c *client) GetUserLists(transactionID string) (int64, models.Userlists, er
 	}
 	userlists := []*models.Userlist{}
 	for _, name := range names {
-		userlist := &models.Userlist{UserlistBase: models.UserlistBase{Name: name}}
+		userlist := &models.Userlist{Name: name}
 		if data, err := p.SectionGet(parser.Traces, parser.TracesSectionName); err == nil {
 			d, ok := data.(types.Section)
 			if ok {
@@ -78,7 +78,7 @@ func (c *client) GetUserList(name string, transactionID string) (int64, *models.
 	if !p.SectionExists(parser.UserList, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("userlist %s does not exist", name))
 	}
-	userlist := &models.Userlist{UserlistBase: models.UserlistBase{Name: name}}
+	userlist := &models.Userlist{Name: name}
 	if err = ParseUserlistSection(p, userlist); err != nil {
 		return 0, nil, err
 	}

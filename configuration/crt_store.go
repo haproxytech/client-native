@@ -81,7 +81,7 @@ func (c *client) GetCrtStore(name, transactionID string) (int64, *models.CrtStor
 			fmt.Sprintf("%s section '%s' does not exist", CrtStoreParentName, name))
 	}
 
-	crtStore := &models.CrtStore{CrtStoreBase: models.CrtStoreBase{Name: name}}
+	crtStore := &models.CrtStore{Name: name}
 	if err := ParseCrtStore(p, crtStore); err != nil {
 		return 0, nil, err
 	}

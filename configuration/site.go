@@ -352,7 +352,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 			if err != nil {
 				res = append(res, err)
 			}
-			frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+			frontend := &models.Frontend{Name: name}
 			if err := ParseSection(&frontend.FrontendBase, parser.Frontends, name, p); err != nil {
 				res = append(res, err)
 			}
@@ -466,7 +466,7 @@ func (c *client) parseSites(p parser.Parser) (models.Sites, error) {
 }
 
 func (c *client) parseSite(s string, p parser.Parser) *models.Site {
-	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: s}}
+	frontend := &models.Frontend{Name: s}
 	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, s, p); err != nil {
 		return nil
 	}
@@ -504,7 +504,7 @@ func (c *client) parseSite(s string, p parser.Parser) *models.Site {
 }
 
 func (c *client) parseFarm(name string, useAs string, cond string, condTest string, p parser.Parser) *models.SiteFarm {
-	backend := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+	backend := &models.Backend{Name: name}
 	if p.SectionExists(parser.Backends, name) {
 		if err := ParseSection(&backend.BackendBase, parser.Backends, name, p); err == nil {
 			srvs, err := ParseServers(BackendParentName, name, p)
@@ -528,7 +528,7 @@ func (c *client) parseFarm(name string, useAs string, cond string, condTest stri
 }
 
 func SerializeServiceToFrontend(service *models.SiteService, name string) *models.Frontend {
-	fr := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+	fr := &models.Frontend{Name: name}
 	if service != nil {
 		fr.Mode = service.Mode
 		fr.Maxconn = service.Maxconn
@@ -539,12 +539,10 @@ func SerializeServiceToFrontend(service *models.SiteService, name string) *model
 
 func SerializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
 	return &models.Backend{
-		BackendBase: models.BackendBase{
-			Name:       farm.Name,
-			Mode:       farm.Mode,
-			Forwardfor: farm.Forwardfor,
-			Balance:    farm.Balance,
-		},
+		Name:       farm.Name,
+		Mode:       farm.Mode,
+		Forwardfor: farm.Forwardfor,
+		Balance:    farm.Balance,
 	}
 }
 
@@ -599,7 +597,7 @@ func (c *client) createBckFrontendRels(name string, b *models.SiteFarm, edit boo
 }
 
 func (c *client) addDefaultBckToFrontend(fName string, bName string, t string, p parser.Parser) error {
-	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: fName}}
+	frontend := &models.Frontend{Name: fName}
 
 	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, fName, p); err != nil {
 		return err
@@ -609,7 +607,7 @@ func (c *client) addDefaultBckToFrontend(fName string, bName string, t string, p
 }
 
 func (c *client) removeDefaultBckToFrontend(fName string, t string, p parser.Parser) error {
-	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: fName}}
+	frontend := &models.Frontend{Name: fName}
 	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, fName, p); err != nil {
 		return err
 	}
@@ -618,7 +616,7 @@ func (c *client) removeDefaultBckToFrontend(fName string, t string, p parser.Par
 }
 
 func (c *client) editService(name string, service *models.SiteService, t string, p parser.Parser) error {
-	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+	frontend := &models.Frontend{Name: name}
 	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, name, p); err != nil {
 		return err
 	}
@@ -631,7 +629,7 @@ func (c *client) editService(name string, service *models.SiteService, t string,
 }
 
 func (c *client) editFarm(name string, farm *models.SiteFarm, t string, p parser.Parser) error {
-	backend := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+	backend := &models.Backend{Name: name}
 	if err := ParseSection(&backend.BackendBase, parser.Backends, name, p); err != nil {
 		return err
 	}

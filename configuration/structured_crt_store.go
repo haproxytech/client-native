@@ -173,7 +173,7 @@ func parseCrtStoreSections(p parser.Parser) (models.CrtStores, error) {
 }
 
 func parseCrtStoreSection(name string, p parser.Parser) (*models.CrtStore, error) {
-	store := &models.CrtStore{CrtStoreBase: models.CrtStoreBase{Name: name}}
+	store := &models.CrtStore{Name: name}
 	if err := ParseCrtStore(p, store); err != nil {
 		return nil, err
 	}
