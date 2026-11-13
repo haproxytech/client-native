@@ -157,7 +157,7 @@ func parsePeerSections(p parser.Parser) (models.PeerSections, error) {
 }
 
 func parsePeerSection(name string, p parser.Parser) (*models.PeerSection, error) {
-	ps := &models.PeerSection{PeerSectionBase: models.PeerSectionBase{Name: name}}
+	ps := &models.PeerSection{Name: name}
 	if err := ParseSection(&ps.PeerSectionBase, parser.Peers, name, p); err != nil {
 		return nil, err
 	}

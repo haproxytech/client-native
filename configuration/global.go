@@ -3105,9 +3105,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		for _, errCodes := range data.HTTPErrCodes {
 			if errCodes != nil {
 				errCode := types.HTTPErrCodes{
-					StringC: types.StringC{
-						Value: *errCodes.Value,
-					},
+					Value: *errCodes.Value,
 				}
 				httpErrCodes = append(httpErrCodes, errCode)
 			}
@@ -3122,9 +3120,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		for _, failCodes := range data.HTTPFailCodes {
 			if failCodes != nil {
 				failCode := types.HTTPFailCodes{
-					StringC: types.StringC{
-						Value: *failCodes.Value,
-					},
+					Value: *failCodes.Value,
 				}
 				httpFailCodes = append(httpFailCodes, failCode)
 			}

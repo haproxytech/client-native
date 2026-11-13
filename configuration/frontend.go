@@ -52,7 +52,7 @@ func (c *client) GetFrontends(transactionID string) (int64, models.Frontends, er
 
 	frontends := []*models.Frontend{}
 	for _, name := range fNames {
-		f := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+		f := &models.Frontend{Name: name}
 		if err := ParseSection(&f.FrontendBase, parser.Frontends, name, p); err != nil {
 			continue
 		}
@@ -79,7 +79,7 @@ func (c *client) GetFrontend(name string, transactionID string) (int64, *models.
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
 	}
 
-	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+	frontend := &models.Frontend{Name: name}
 	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, name, p); err != nil {
 		return v, nil, err
 	}

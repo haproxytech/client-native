@@ -158,7 +158,7 @@ func parseFrontendsSections(p parser.Parser) (models.Frontends, error) {
 }
 
 func parseFrontendsSection(name string, p parser.Parser) (*models.Frontend, error) {
-	f := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+	f := &models.Frontend{Name: name}
 	if err := ParseSection(&f.FrontendBase, parser.Frontends, name, p); err != nil {
 		return nil, err
 	}

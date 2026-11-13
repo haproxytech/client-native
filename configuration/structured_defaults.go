@@ -221,7 +221,7 @@ func parseDefaultsSections(p parser.Parser) (models.DefaultsSections, error) {
 }
 
 func parseDefaultsSection(name string, p parser.Parser) (*models.Defaults, error) {
-	d := &models.Defaults{DefaultsBase: models.DefaultsBase{Name: name}}
+	d := &models.Defaults{Name: name}
 	if err := ParseSection(&d.DefaultsBase, parser.Defaults, name, p); err != nil {
 		return nil, err
 	}

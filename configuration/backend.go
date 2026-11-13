@@ -58,7 +58,7 @@ func (c *client) GetBackends(transactionID string) (int64, models.Backends, erro
 
 	backends := []*models.Backend{}
 	for _, name := range bNames {
-		b := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+		b := &models.Backend{Name: name}
 		if err := ParseSection(&b.BackendBase, parser.Backends, name, p); err != nil {
 			continue
 		}
@@ -85,7 +85,7 @@ func (c *client) GetBackend(name string, transactionID string) (int64, *models.B
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
 	}
 
-	backend := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+	backend := &models.Backend{Name: name}
 	if err := ParseSection(&backend.BackendBase, parser.Backends, name, p); err != nil {
 		return v, nil, err
 	}

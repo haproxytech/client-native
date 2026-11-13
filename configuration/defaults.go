@@ -101,7 +101,7 @@ func (c *client) GetDefaultsSections(transactionID string) (int64, models.Defaul
 
 	defaults := []*models.Defaults{}
 	for _, name := range dNames {
-		d := &models.Defaults{DefaultsBase: models.DefaultsBase{Name: name}}
+		d := &models.Defaults{Name: name}
 		if err := ParseSection(&d.DefaultsBase, parser.Defaults, name, p); err != nil {
 			continue
 		}
@@ -128,7 +128,7 @@ func (c *client) GetDefaultsSection(name string, transactionID string) (int64, *
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Defaults section %s does not exist", name))
 	}
 
-	defaults := &models.Defaults{DefaultsBase: models.DefaultsBase{Name: name}}
+	defaults := &models.Defaults{Name: name}
 	if err := ParseSection(&defaults.DefaultsBase, parser.Defaults, name, p); err != nil {
 		return v, nil, err
 	}

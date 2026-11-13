@@ -157,7 +157,7 @@ func parseLogForwardsSections(p parser.Parser) (models.LogForwards, error) {
 }
 
 func parseLogForwardsSection(name string, p parser.Parser) (*models.LogForward, error) {
-	lf := &models.LogForward{LogForwardBase: models.LogForwardBase{Name: name}}
+	lf := &models.LogForward{Name: name}
 	if err := ParseLogForward(p, lf); err != nil {
 		return nil, err
 	}

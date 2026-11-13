@@ -278,10 +278,8 @@ func (s *Service) createBackend(from string) (bool, error) {
 	_, _, err := s.client.GetBackend(s.name, s.transactionID)
 	if err != nil {
 		err := s.client.CreateBackend(&models.Backend{
-			BackendBase: models.BackendBase{
-				From: from,
-				Name: s.name,
-			},
+			From: from,
+			Name: s.name,
 		}, s.transactionID, 0)
 		if err != nil {
 			return false, err
@@ -322,10 +320,8 @@ func (s *Service) updateConfig() (bool, error) {
 				Name:    node.name,
 				Address: node.address,
 				Port:    new(node.port),
-				ServerParams: models.ServerParams{
-					Weight: misc.Int64P(128),
-					Check:  "enabled",
-				},
+				Weight:  misc.Int64P(128),
+				Check:   "enabled",
 			}
 			if node.disabled {
 				server.Maintenance = "enabled"
@@ -379,13 +375,11 @@ func (s *Service) setServer(server ServiceServer) error {
 func (s *Service) addNode() error {
 	name := s.getNodeName()
 	server := &models.Server{
-		Name:    name,
-		Address: "127.0.0.1",
-		Port:    misc.Int64P(80),
-		ServerParams: models.ServerParams{
-			Weight:      misc.Int64P(128),
-			Maintenance: "enabled",
-		},
+		Name:        name,
+		Address:     "127.0.0.1",
+		Port:        misc.Int64P(80),
+		Weight:      misc.Int64P(128),
+		Maintenance: "enabled",
 	}
 	err := s.client.CreateServer(BackendParentName, s.name, server, s.transactionID, 0)
 	if err != nil {
