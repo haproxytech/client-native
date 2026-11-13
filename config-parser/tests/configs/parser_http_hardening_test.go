@@ -189,8 +189,8 @@ http-hardening trusted
 		t.Fatal(err)
 	}
 	section := data.(types.Section)
-	if section.FromDefaults != "trusted" {
-		t.Fatalf("expected parent trusted, got %q", section.FromDefaults)
+	if section.From != "trusted" {
+		t.Fatalf("expected parent trusted, got %q", section.From)
 	}
 }
 

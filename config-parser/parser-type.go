@@ -38,12 +38,12 @@ type ParserInterface interface { //nolint:revive
 }
 
 type Parsers struct {
-	Parsers            map[string]ParserInterface
-	Section            types.Section
-	ParserSequence     []Section
-	PreComments        []string
-	PostComments       []string
-	DefaultSectionName string
+	Parsers        map[string]ParserInterface
+	Section        types.Section
+	ParserSequence []Section
+	PreComments    []string
+	PostComments   []string
+	SectionName    string
 }
 
 func (p *Parsers) Get(attribute string, createIfNotExist ...bool) (common.ParserData, error) {

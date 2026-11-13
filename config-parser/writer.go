@@ -191,7 +191,7 @@ func (p *configParser) writeParsers(sectionName string, parsersData *Parsers, re
 	case "global":
 		break
 	default:
-		p.writeSection(sectionName, parsersData.Section.Comment, parsersData.PreComments, parsersData.DefaultSectionName, result)
+		p.writeSection(sectionName, parsersData.Section.Comment, parsersData.PreComments, parsersData.SectionName, result)
 		sectionNameWritten = true
 	}
 	for _, parserName := range parsersData.ParserSequence {
@@ -201,7 +201,7 @@ func (p *configParser) writeParsers(sectionName string, parsersData *Parsers, re
 			continue
 		}
 		if !sectionNameWritten {
-			p.writeSection(sectionName, parsersData.Section.Comment, parsersData.PreComments, parsersData.DefaultSectionName, result)
+			p.writeSection(sectionName, parsersData.Section.Comment, parsersData.PreComments, parsersData.SectionName, result)
 			sectionNameWritten = true
 		}
 		for _, line := range comments {

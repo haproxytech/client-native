@@ -168,7 +168,7 @@ func ParseHTTPHardening(p parser.Parser, name string) (*models.HTTPHardening, er
 			return nil, misc.CreateTypeAssertError(HTTPHardeningParentName)
 		}
 		profile.Metadata = misc.ParseMetadata(d.Comment)
-		profile.From = d.FromDefaults
+		profile.From = d.From
 	} else if !errors.Is(err, parser_errors.ErrFetch) {
 		return nil, err
 	}

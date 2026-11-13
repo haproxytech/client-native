@@ -193,8 +193,8 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 						data.Name = name
 					}
 					config.Defaults = p.getDefaultParser()
-					if data.FromDefaults != "" {
-						config.Defaults.DefaultSectionName = data.FromDefaults
+					if data.From != "" {
+						config.Defaults.SectionName = data.From
 					}
 					config.Defaults.Section = *data
 					p.Parsers[Defaults][data.Name] = config.Defaults
@@ -213,10 +213,10 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Frontend = p.getFrontendParser()
-					if data.FromDefaults != "" {
-						config.Frontend.DefaultSectionName = data.FromDefaults
+					if data.From != "" {
+						config.Frontend.SectionName = data.From
 					} else {
-						config.Frontend.DefaultSectionName = p.lastDefaultsSectionName
+						config.Frontend.SectionName = p.lastDefaultsSectionName
 					}
 					config.Frontend.Section = *data
 					p.Parsers[Frontends][data.Name] = config.Frontend
@@ -229,10 +229,10 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Backend = p.getBackendParser()
-					if data.FromDefaults != "" {
-						config.Backend.DefaultSectionName = data.FromDefaults
+					if data.From != "" {
+						config.Backend.SectionName = data.From
 					} else {
-						config.Backend.DefaultSectionName = p.lastDefaultsSectionName
+						config.Backend.SectionName = p.lastDefaultsSectionName
 					}
 					config.Backend.Section = *data
 					p.Parsers[Backends][data.Name] = config.Backend
@@ -245,10 +245,10 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Listen = p.getListenParser()
-					if data.FromDefaults != "" {
-						config.Listen.DefaultSectionName = data.FromDefaults
+					if data.From != "" {
+						config.Listen.SectionName = data.From
 					} else {
-						config.Listen.DefaultSectionName = p.lastDefaultsSectionName
+						config.Listen.SectionName = p.lastDefaultsSectionName
 					}
 					config.Listen.Section = *data
 					p.Parsers[Listen][data.Name] = config.Listen
@@ -407,7 +407,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.HTTPHardening = p.getHTTPHardeningParser()
 					config.HTTPHardening.Section = *data
-					config.HTTPHardening.DefaultSectionName = data.FromDefaults
+					config.HTTPHardening.SectionName = data.From
 					p.Parsers[HTTPHardening][data.Name] = config.HTTPHardening
 					config.Active = config.HTTPHardening
 					if p.Options.Log {

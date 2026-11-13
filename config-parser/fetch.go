@@ -222,7 +222,7 @@ func (p *configParser) SectionsDefaultsFromGet(sectionType Section, sectionName 
 		return "", errors.ErrSectionMissing
 	}
 
-	return section.DefaultSectionName, nil
+	return section.SectionName, nil
 }
 
 // SectionsDefaultsFromSet set default section for section.
@@ -255,7 +255,7 @@ func (p *configParser) SectionsDefaultsFromSet(sectionType Section, sectionName,
 		for k, v := range sections {
 			s := sorter.Section{
 				Name: k,
-				From: v.DefaultSectionName,
+				From: v.SectionName,
 			}
 			if s.Name == sectionName {
 				s.From = defaultsSection
@@ -292,7 +292,7 @@ func (p *configParser) SectionsDefaultsFromSet(sectionType Section, sectionName,
 			return errors.ErrFromDefaultsSectionMissing
 		}
 	}
-	section.DefaultSectionName = defaultsSection
+	section.SectionName = defaultsSection
 	return nil
 }
 
@@ -302,8 +302,8 @@ func (p *configParser) setHTTPHardeningFrom(sectionName, parent string) error {
 		return errors.ErrSectionMissing
 	}
 	if parent == "" {
-		section.DefaultSectionName = ""
-		section.Section.FromDefaults = ""
+		section.SectionName = ""
+		section.Section.From = ""
 		return nil
 	}
 	if parent == sectionName {
@@ -314,8 +314,8 @@ func (p *configParser) setHTTPHardeningFrom(sectionName, parent string) error {
 			return errors.ErrFromDefaultsSectionMissing
 		}
 	}
-	section.DefaultSectionName = parent
-	section.Section.FromDefaults = parent
+	section.SectionName = parent
+	section.Section.From = parent
 	return nil
 }
 
@@ -436,7 +436,7 @@ func getSortedListWithFromRoots(data map[string]*Parsers, roots map[string]struc
 	sortedSections := make([]sorter.Section, len(data))
 	index := 0
 	for parserSectionName := range data {
-		from := data[parserSectionName].DefaultSectionName
+		from := data[parserSectionName].SectionName
 		if _, ok := roots[from]; ok {
 			from = ""
 		}
