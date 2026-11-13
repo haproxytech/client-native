@@ -157,7 +157,7 @@ func parseBackendsSections(p parser.Parser) (models.Backends, error) {
 }
 
 func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error) {
-	b := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+	b := &models.Backend{Name: name}
 	if err := ParseSection(&b.BackendBase, parser.Backends, name, p); err != nil {
 		return nil, err
 	}

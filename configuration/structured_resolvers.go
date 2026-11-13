@@ -154,7 +154,7 @@ func parseResolversSections(p parser.Parser) (models.Resolvers, error) {
 }
 
 func parseResolversSection(name string, p parser.Parser) (*models.Resolver, error) {
-	r := &models.Resolver{ResolverBase: models.ResolverBase{Name: name}}
+	r := &models.Resolver{Name: name}
 	if err := ParseResolverSection(p, r); err != nil {
 		return nil, err
 	}

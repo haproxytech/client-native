@@ -154,7 +154,7 @@ func parseRingsSections(p parser.Parser) (models.Rings, error) {
 }
 
 func parseRingsSection(name string, p parser.Parser) (*models.Ring, error) {
-	r := &models.Ring{RingBase: models.RingBase{Name: name}}
+	r := &models.Ring{Name: name}
 	if err := ParseRingSection(p, r); err != nil {
 		return nil, err
 	}

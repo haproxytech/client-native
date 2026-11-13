@@ -2090,7 +2090,7 @@ func (s *SectionObject) externalCheckCommand(field reflect.Value) error {
 		if valueIsNil(field) {
 			pExtCmd = nil
 		} else {
-			str, ok := field.Interface().(string)
+			str, ok := reflect.TypeAssert[string](field)
 			if !ok {
 				return misc.CreateTypeAssertError("external-check command")
 			}
@@ -2109,7 +2109,7 @@ func (s *SectionObject) externalCheckPath(field reflect.Value) error {
 		if valueIsNil(field) {
 			pExtPath = nil
 		} else {
-			str, ok := field.Interface().(string)
+			str, ok := reflect.TypeAssert[string](field)
 			if !ok {
 				return misc.CreateTypeAssertError("external-check path")
 			}
@@ -2314,7 +2314,7 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("stick-table", nil)
 		}
-		st, ok := field.Elem().Interface().(models.ConfigStickTable)
+		st, ok := reflect.TypeAssert[models.ConfigStickTable](field.Elem())
 		if !ok {
 			return misc.CreateTypeAssertError("stick-table")
 		}
@@ -2353,7 +2353,7 @@ func (s *SectionObject) defaultServer(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("default-server", nil)
 		}
-		ds, ok := field.Elem().Interface().(models.DefaultServer)
+		ds, ok := reflect.TypeAssert[models.DefaultServer](field.Elem())
 		if !ok {
 			return misc.CreateTypeAssertError("default-server")
 		}
@@ -2388,7 +2388,7 @@ func (s *SectionObject) errorFiles(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("errorfile", nil)
 	}
-	efs, ok := field.Interface().([]*models.Errorfile)
+	efs, ok := reflect.TypeAssert[[]*models.Errorfile](field)
 	if !ok {
 		return nil
 	}
@@ -2403,7 +2403,7 @@ func (s *SectionObject) errorFilesFromHTTPErrors(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("errorfiles", nil)
 	}
-	efs, ok := field.Interface().([]*models.Errorfiles)
+	efs, ok := reflect.TypeAssert[[]*models.Errorfiles](field)
 	if !ok {
 		return nil
 	}
@@ -2422,7 +2422,7 @@ func (s *SectionObject) hashType(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("hash-type", nil)
 		}
-		b, ok := field.Elem().Interface().(models.HashType)
+		b, ok := reflect.TypeAssert[models.HashType](field.Elem())
 		if !ok {
 			return misc.CreateTypeAssertError("hash-type")
 		}
@@ -2443,7 +2443,7 @@ func (s *SectionObject) cookie(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("cookie", nil)
 		}
-		d, ok := field.Elem().Interface().(models.Cookie)
+		d, ok := reflect.TypeAssert[models.Cookie](field.Elem())
 		if !ok {
 			return misc.CreateTypeAssertError("cookie")
 		}
@@ -2488,7 +2488,7 @@ func (s *SectionObject) persistRule(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("persist", nil)
 		}
-		b, ok := field.Elem().Interface().(models.PersistRule)
+		b, ok := reflect.TypeAssert[models.PersistRule](field.Elem())
 		if !ok {
 			return misc.CreateTypeAssertError("persist")
 		}
@@ -2514,7 +2514,7 @@ func (s *SectionObject) balance(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("balance", nil)
 		}
-		b, ok := field.Elem().Interface().(models.Balance)
+		b, ok := reflect.TypeAssert[models.Balance](field.Elem())
 		if !ok {
 			return misc.CreateTypeAssertError("balance")
 		}
@@ -2566,7 +2566,7 @@ func (s *SectionObject) redispatch(field reflect.Value) error {
 		if valueIsNil(field) {
 			return s.set("option redispatch", nil)
 		}
-		br, ok := field.Elem().Interface().(models.Redispatch)
+		br, ok := reflect.TypeAssert[models.Redispatch](field.Elem())
 		if !ok {
 			return misc.CreateTypeAssertError("option redispatch")
 		}
@@ -2588,7 +2588,7 @@ func (s *SectionObject) forwardfor(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("option forwardfor", nil)
 	}
-	ff, ok := field.Elem().Interface().(models.Forwardfor)
+	ff, ok := reflect.TypeAssert[models.Forwardfor](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("option forwardfor")
 	}
@@ -2604,7 +2604,7 @@ func (s *SectionObject) forwarded(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("option forwarded", nil)
 	}
-	ff, ok := field.Elem().Interface().(models.Forwarded)
+	ff, ok := reflect.TypeAssert[models.Forwarded](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("option forwarded")
 	}
@@ -2684,7 +2684,7 @@ func (s *SectionObject) monitorFail(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("monitor fail", nil)
 	}
-	opt, ok := field.Elem().Interface().(models.MonitorFail)
+	opt, ok := reflect.TypeAssert[models.MonitorFail](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("monitor fail")
 	}
@@ -2698,7 +2698,7 @@ func (s *SectionObject) emailAlert(field reflect.Value) error {
 	if valueIsNil(field) {
 		return nil
 	}
-	ea, ok := field.Elem().Interface().(models.EmailAlert)
+	ea, ok := reflect.TypeAssert[models.EmailAlert](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("email-alert")
 	}
@@ -2748,7 +2748,7 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("stats", nil)
 	}
-	opt, ok := field.Elem().Interface().(models.StatsOptions)
+	opt, ok := reflect.TypeAssert[models.StatsOptions](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("stats options")
 	}
@@ -2898,7 +2898,7 @@ func (s *SectionObject) compression(field reflect.Value) error { //nolint:gocogn
 		}
 		return nil
 	}
-	compression, ok := field.Elem().Interface().(models.Compression)
+	compression, ok := reflect.TypeAssert[models.Compression](field.Elem())
 	if !ok {
 		return errors.New("error casting compression model")
 	}
@@ -3041,7 +3041,7 @@ func (s *SectionObject) errorloc302(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("errorloc302", nil)
 	}
-	errorLoc, ok := field.Elem().Interface().(models.Errorloc)
+	errorLoc, ok := reflect.TypeAssert[models.Errorloc](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("errorloc302")
 	}
@@ -3057,7 +3057,7 @@ func (s *SectionObject) errorloc303(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("errorloc303", nil)
 	}
-	errorLoc, ok := field.Elem().Interface().(models.Errorloc)
+	errorLoc, ok := reflect.TypeAssert[models.Errorloc](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("errorloc303")
 	}
@@ -3085,7 +3085,7 @@ func (s *SectionObject) defaultBind(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("default-bind", nil)
 	}
-	db, ok := field.Elem().Interface().(models.DefaultBind)
+	db, ok := reflect.TypeAssert[models.DefaultBind](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("default-bind")
 	}
@@ -3111,7 +3111,7 @@ func (s *SectionObject) forcePersistList(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("force-persist", nil)
 	}
-	data, ok := field.Interface().([]*models.ForcePersist)
+	data, ok := reflect.TypeAssert[[]*models.ForcePersist](field)
 	if !ok {
 		return misc.CreateTypeAssertError("force-persist")
 	}
@@ -3133,7 +3133,7 @@ func (s *SectionObject) ignorePersistList(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("ignore-persist", nil)
 	}
-	data, ok := field.Interface().([]*models.IgnorePersist)
+	data, ok := reflect.TypeAssert[[]*models.IgnorePersist](field)
 	if !ok {
 		return misc.CreateTypeAssertError("ignore-persist")
 	}
@@ -3155,7 +3155,7 @@ func (s *SectionObject) source(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("source", nil)
 	}
-	so, ok := field.Elem().Interface().(models.Source)
+	so, ok := reflect.TypeAssert[models.Source](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("source")
 	}
@@ -3204,7 +3204,7 @@ func (s *SectionObject) originalto(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("option originalto", nil)
 	}
-	originalto, ok := field.Elem().Interface().(models.Originalto)
+	originalto, ok := reflect.TypeAssert[models.Originalto](field.Elem())
 	if !ok {
 		return misc.CreateTypeAssertError("option originalto")
 	}
@@ -3222,7 +3222,7 @@ func (s *SectionObject) logSteps(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("log-steps", nil)
 	}
-	logSteps, ok := field.Interface().([]string)
+	logSteps, ok := reflect.TypeAssert[[]string](field)
 	if !ok {
 		return misc.CreateTypeAssertError("log-steps")
 	}

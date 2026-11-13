@@ -218,7 +218,7 @@ func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
 	return err
 }
 
-func SerializeCacheSection(p parser.Parser, data *models.Cache) error {
+func SerializeCacheSection(p parser.Parser, data *models.Cache) error { //nolint:gocognit
 	var err error
 
 	if data.Metadata != nil {
