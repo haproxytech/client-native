@@ -158,7 +158,7 @@ func passHeader(p parser.Parser, name string) ([]*models.FCGIPassHeader, error) 
 
 func ParseFCGIApp(p parser.Parser, name string) (*models.FCGIApp, error) {
 	app := &models.FCGIApp{
-		FCGIAppBase: models.FCGIAppBase{Name: name},
+		Name: name,
 	}
 
 	if data, err := p.SectionGet(parser.FCGIApp, name); err == nil {

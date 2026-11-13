@@ -52,7 +52,7 @@ func (c *client) GetPeerSections(transactionID string) (int64, models.PeerSectio
 
 	peerSections := []*models.PeerSection{}
 	for _, name := range names {
-		peerSection := &models.PeerSection{PeerSectionBase: models.PeerSectionBase{Name: name}}
+		peerSection := &models.PeerSection{Name: name}
 		if err := ParseSection(&peerSection.PeerSectionBase, parser.Peers, name, p); err != nil {
 			continue
 		}
@@ -79,7 +79,7 @@ func (c *client) GetPeerSection(name string, transactionID string) (int64, *mode
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerSection %s does not exist", name))
 	}
 
-	peerSection := &models.PeerSection{PeerSectionBase: models.PeerSectionBase{Name: name}}
+	peerSection := &models.PeerSection{Name: name}
 	if err := ParseSection(&peerSection.PeerSectionBase, parser.Peers, name, p); err != nil {
 		return v, nil, err
 	}

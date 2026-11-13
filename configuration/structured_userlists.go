@@ -128,8 +128,8 @@ func parseUserlistsSection(name string, p parser.Parser) (*models.Userlist, erro
 		return nil, errula
 	}
 	u := &models.Userlist{
-		Users:        userlista,
-		UserlistBase: models.UserlistBase{Name: name},
+		Users: userlista,
+		Name:  name,
 	}
 
 	// groups
