@@ -1,0 +1,271 @@
+// Copyright 2026 HAProxy Technologies
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package configuration
+
+import (
+	"cmp"
+	"slices"
+
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/config-parser/common"
+	"github.com/haproxytech/client-native/v6/runtime"
+)
+
+// step is one runtime call needed to make the running HAProxy match the
+// committed configuration.
+type step func(rt runtime.Runtime) error
+
+// change is one differing plain attribute of a section.
+type change struct {
+	section  string            // section name
+	old, new common.ParserData // nil when the attribute is not set
+}
+
+// fieldApplier turns a changed attribute into runtime steps; false means reload.
+type fieldApplier func(c change) ([]step, bool)
+
+// option is one keyword of an item line with its arguments, e.g. {"weight", "10"}.
+type option struct{ name, args string }
+
+// item is one named line of an object list (a server) with its effective options.
+type item struct {
+	name    string
+	options []option
+}
+
+// get returns the arguments of the last option called name.
+func (it item) get(name string) (string, bool) {
+	for _, o := range slices.Backward(it.options) {
+		if o.name == name {
+			return o.args, true
+		}
+	}
+	return "", false
+}
+
+// itemApplier turns one changed option of a kept item into runtime steps;
+// false means reload.
+type itemApplier func(section string, old, cur item) ([]step, bool)
+
+// objectSpec describes a list of named lines inside a section.
+type objectSpec struct {
+	items  func(p parser.Parser, t parser.Section, section string) ([]item, error)
+	fields map[string]itemApplier                       // option name -> applier; missing = reload
+	add    func(section string, it item) ([]step, bool) // nil = reload
+	del    func(section string, it item) ([]step, bool) // nil = reload
+}
+
+// entry is what the registry holds for one attribute: either apply or object.
+type entry struct {
+	apply  fieldApplier
+	object *objectSpec
+}
+
+// runtimeRegistry maps section type and attribute (the configuration keyword)
+// to the way a change of it is applied at runtime.
+type runtimeRegistry map[parser.Section]map[string]entry
+
+// scanOrder is the order section types are compared in: cheap and
+// reload-prone types first, so a reload is detected early. Unlisted types go
+// before all listed ones.
+var scanOrder = []parser.Section{ //nolint:gochecknoglobals
+	parser.Global, parser.Defaults, parser.UserList, parser.Peers, parser.Mailers,
+	parser.Resolvers, parser.Cache, parser.Ring, parser.Traces, parser.LogForward,
+	parser.LogProfile, parser.HTTPErrors, parser.HealthChecks, parser.Acme,
+	parser.CrtStore, parser.FCGIApp, parser.Frontends, parser.Listen, parser.Backends,
+}
+
+// runtimeSteps returns the runtime calls that turn a HAProxy running oldP into
+// one running newP. It returns false at the first difference reg has no entry
+// for; the caller must then reload.
+func runtimeSteps(reg runtimeRegistry, oldP, newP parser.Parser) ([]step, bool) {
+	types, ok := sectionTypes(oldP, newP)
+	if !ok {
+		return nil, false
+	}
+	var steps []step
+	for _, t := range types {
+		names := sectionNames(oldP, t)
+		if !slices.Equal(names, sectionNames(newP, t)) {
+			return nil, false
+		}
+		for _, name := range names {
+			// fn runs under both parser locks: it must not call the parsers.
+			var attrs []string
+			missing := false
+			ok := parser.DiffSection(oldP, newP, t, name, func(attr string) bool {
+				if _, found := reg[t][attr]; !found {
+					missing = true
+					return false
+				}
+				attrs = append(attrs, attr)
+				return true
+			})
+			if !ok || missing {
+				return nil, false
+			}
+			for _, attr := range attrs {
+				var more []step
+				e := reg[t][attr]
+				switch {
+				case e.object != nil:
+					more, ok = diffObject(e.object, oldP, newP, t, name)
+				case e.apply != nil:
+					more, ok = e.apply(change{section: name, old: getData(oldP, t, name, attr), new: getData(newP, t, name, attr)})
+				default:
+					ok = false
+				}
+				if !ok {
+					return nil, false
+				}
+				steps = append(steps, more...)
+			}
+		}
+	}
+	return steps, true
+}
+
+// sectionTypes returns the section types of both parsers in scan order.
+func sectionTypes(oldP, newP parser.Parser) ([]parser.Section, bool) {
+	a, b := parser.SectionTypes(oldP), parser.SectionTypes(newP)
+	if a == nil || b == nil {
+		return nil, false
+	}
+	types := slices.DeleteFunc(slices.Concat(a, b), func(t parser.Section) bool { return t == parser.Comments })
+	slices.SortFunc(types, func(x, y parser.Section) int {
+		return cmp.Or(cmp.Compare(slices.Index(scanOrder, x), slices.Index(scanOrder, y)), cmp.Compare(x, y))
+	})
+	return slices.Compact(types), true
+}
+
+func sectionNames(p parser.Parser, t parser.Section) []string {
+	names, err := p.SectionsGet(t)
+	if err != nil {
+		return nil
+	}
+	slices.Sort(names)
+	return names
+}
+
+func getData(p parser.Parser, t parser.Section, section, attr string) common.ParserData {
+	data, err := p.Get(t, section, attr)
+	if err != nil {
+		return nil
+	}
+	return data
+}
+
+// diffObject returns the runtime steps that turn the object list of section
+// in oldP into the one in newP: removals, then changes, then additions.
+func diffObject(spec *objectSpec, oldP, newP parser.Parser, t parser.Section, section string) ([]step, bool) {
+	olds, err := spec.items(oldP, t, section)
+	if err != nil {
+		return nil, false
+	}
+	curs, err := spec.items(newP, t, section)
+	if err != nil {
+		return nil, false
+	}
+	oldIdx, okOld := indexItems(olds)
+	curIdx, okCur := indexItems(curs)
+	if !okOld || !okCur {
+		return nil, false
+	}
+
+	if !keptInOrder(curs, oldIdx) {
+		return nil, false
+	}
+
+	var steps []step
+	appendSteps := func(more []step, ok bool) bool {
+		steps = append(steps, more...)
+		return ok
+	}
+	for _, old := range olds {
+		if _, kept := curIdx[old.name]; !kept && (spec.del == nil || !appendSteps(spec.del(section, old))) {
+			return nil, false
+		}
+	}
+	for _, cur := range curs {
+		i, kept := oldIdx[cur.name]
+		if !kept || slices.Equal(olds[i].options, cur.options) {
+			continue
+		}
+		changed := changedOptions(olds[i], cur)
+		if len(changed) == 0 {
+			return nil, false
+		}
+		for _, name := range changed {
+			apply, found := spec.fields[name]
+			if !found || !appendSteps(apply(section, olds[i], cur)) {
+				return nil, false
+			}
+		}
+	}
+	for _, cur := range curs {
+		if _, kept := oldIdx[cur.name]; !kept && (spec.add == nil || !appendSteps(spec.add(section, cur))) {
+			return nil, false
+		}
+	}
+	return steps, true
+}
+
+// indexItems maps item names to their position; false on duplicate names.
+func indexItems(items []item) (map[string]int, bool) {
+	idx := make(map[string]int, len(items))
+	for i, it := range items {
+		if _, dup := idx[it.name]; dup {
+			return nil, false
+		}
+		idx[it.name] = i
+	}
+	return idx, true
+}
+
+// keptInOrder reports whether the items of curs found in oldIdx keep their
+// relative order and come before every added item.
+func keptInOrder(curs []item, oldIdx map[string]int) bool {
+	last, added := -1, false
+	for _, cur := range curs {
+		i, kept := oldIdx[cur.name]
+		if !kept {
+			added = true
+			continue
+		}
+		if added || i < last {
+			return false
+		}
+		last = i
+	}
+	return true
+}
+
+// changedOptions returns the option names whose effective value differs
+// between old and cur, in order of first appearance in cur then old.
+func changedOptions(old, cur item) []string {
+	var names []string
+	for _, o := range slices.Concat(cur.options, old.options) {
+		if slices.Contains(names, o.name) {
+			continue
+		}
+		a, okA := old.get(o.name)
+		b, okB := cur.get(o.name)
+		if okA != okB || a != b {
+			names = append(names, o.name)
+		}
+	}
+	return names
+}
