@@ -19,6 +19,9 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/haproxytech/client-native/v6/configuration/options"
+	"github.com/haproxytech/client-native/v6/runtime"
 )
 
 func genConfig(backends, servers int) string {
@@ -98,6 +101,35 @@ func BenchmarkRuntimeStepsPrefiltered(b *testing.B) {
 				b.ResetTimer()
 				for range b.N {
 					runtimeSteps(registry, oldP, newP, func() map[string]struct{} { return sameSections(oldText, newText) })
+				}
+			})
+		}
+	}
+}
+
+// BenchmarkRuntimeCommitRaw measures a whole PostRawConfiguration commit with
+// and without runtime apply; every commit changes one server weight.
+func BenchmarkRuntimeCommitRaw(b *testing.B) {
+	for _, size := range benchSizes {
+		cfg := genConfig(size.backends, size.servers)
+		cfgs := [2]string{changeLastBackendWeight(b, cfg, size.backends), cfg}
+		for _, mode := range []string{"disabled", "enabled"} {
+			b.Run(size.name+"/"+mode, func(b *testing.B) {
+				var opts []options.ConfigurationOption
+				if mode == "enabled" {
+					opts = append(opts, options.RuntimeApply(func() runtime.Runtime { return &fakeRuntime{} }, func(options.CommitResult) {}))
+				}
+				c := newCommitClient(b, cfg, opts...)
+				b.ReportAllocs()
+				b.ResetTimer()
+				for i := range b.N {
+					version, err := c.GetVersion("")
+					if err != nil {
+						b.Fatal(err)
+					}
+					if err := c.PostRawConfiguration(&cfgs[i%2], version, false); err != nil {
+						b.Fatal(err)
+					}
 				}
 			})
 		}

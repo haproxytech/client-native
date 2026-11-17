@@ -201,6 +201,12 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 		t.backupCfgAndCleanup(version)
 	}
 
+	// Plan the runtime apply while the previous file and parser are in place.
+	var applyAtRuntime func()
+	if c, ok := t.TransactionClient.(*client); ok {
+		applyAtRuntime = c.planRuntimeApply(transactionID, transactionFile, version)
+	}
+
 	if err := t.TransactionClient.Save(t.ConfigurationFile, transactionID); err != nil {
 		t.failTransaction(transactionID, t.writeFailedTransaction)
 		return nil, err
@@ -211,6 +217,10 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	if err := t.TransactionClient.CommitParser(transactionID); err != nil {
 		_ = t.TransactionClient.LoadData(t.ConfigurationFile)
 		return nil, err
+	}
+
+	if applyAtRuntime != nil {
+		applyAtRuntime()
 	}
 
 	return &models.Transaction{ID: transactionID, Version: tVersion, Status: "success"}, nil

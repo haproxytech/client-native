@@ -17,11 +17,14 @@ package configuration
 
 import (
 	"cmp"
+	"fmt"
+	"os"
 	"slices"
 	"strings"
 
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/common"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/runtime"
 )
 
@@ -92,6 +95,75 @@ var scanOrder = []parser.Section{ //nolint:gochecknoglobals
 // prefilterMinSections: section types with fewer sections are compared
 // directly; the prefilter costs a pass over both files.
 const prefilterMinSections = 16
+
+// planRuntimeApply decides how the commit of transactionID reaches the running
+// HAProxy. It must run while the previous configuration file and parser are
+// still in place. The returned function applies the plan and reports the
+// outcome; it is nil when runtime apply is not enabled.
+func (c *client) planRuntimeApply(transactionID, transactionFile string, version int64) func() {
+	if c.RuntimeApply == nil && c.OnCommit == nil {
+		return nil
+	}
+	res := options.CommitResult{TransactionID: transactionID, Version: version, Reload: true}
+	var rt runtime.Runtime
+	var steps []step
+	func() {
+		defer recoverInto(&res, "planning")
+		if c.RuntimeApply != nil {
+			rt = c.RuntimeApply()
+		}
+		if rt == nil {
+			return
+		}
+		newP, err := c.GetParser(transactionID)
+		if err != nil {
+			res.Err = err
+			return
+		}
+		same := func() map[string]struct{} { return sameSectionsInFiles(c.ConfigurationFile, transactionFile) }
+		var ok bool
+		steps, ok = runtimeSteps(registry, c.parser, newP, same)
+		res.Reload = !ok
+	}()
+	return func() {
+		if !res.Reload {
+			func() {
+				defer recoverInto(&res, "step")
+				for _, s := range steps {
+					if err := s(rt); err != nil {
+						res.Reload, res.Err = true, err
+						return
+					}
+				}
+			}()
+		}
+		if c.OnCommit != nil {
+			c.OnCommit(res)
+		}
+	}
+}
+
+// recoverInto turns a panic into a reload with the panic as the reason. It
+// must be called directly by defer.
+func recoverInto(res *options.CommitResult, stage string) {
+	if r := recover(); r != nil {
+		res.Reload, res.Err = true, fmt.Errorf("runtime apply %s panicked: %v", stage, r)
+	}
+}
+
+// sameSectionsInFiles is sameSections on the contents of two files; nil when
+// either cannot be read.
+func sameSectionsInFiles(oldPath, newPath string) map[string]struct{} {
+	oldText, err := os.ReadFile(oldPath)
+	if err != nil {
+		return nil
+	}
+	newText, err := os.ReadFile(newPath)
+	if err != nil {
+		return nil
+	}
+	return sameSections(string(oldText), string(newText))
+}
 
 // runtimeSteps returns the runtime calls that turn a HAProxy running oldP into
 // one running newP. It returns false at the first difference reg has no entry

@@ -16,6 +16,8 @@ limitations under the License.
 
 package options
 
+import "github.com/haproxytech/client-native/v6/runtime"
+
 type ConfigurationOptions struct {
 	ConfigurationFile string
 	Haproxy           string
@@ -37,6 +39,10 @@ type ConfigurationOptions struct {
 	SkipConfigurationFileValidation bool // opposite of previously available ValidateConfigurationFile
 	MasterWorker                    bool
 	UseMd5Hash                      bool
+
+	// RuntimeApply and OnCommit are set by the RuntimeApply option.
+	RuntimeApply func() runtime.Runtime
+	OnCommit     func(CommitResult)
 }
 
 type ConfigurationOption interface {
