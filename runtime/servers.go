@@ -48,7 +48,7 @@ func (s *SingleRuntime) SetServerAddr(backend, server string, ip string, port in
 	} else {
 		cmd = fmt.Sprintf("set server %s/%s addr %s", backend, server, ip)
 	}
-	return s.Execute(cmd)
+	return s.executeStrict(cmd, "changed from", "nothing changed", "no need to change")
 }
 
 // SetServerState set state for server
@@ -89,7 +89,7 @@ func (s *SingleRuntime) SetServerCheckPort(backend, server string, port int) err
 	if port < 1 || port > 65535 {
 		return stderrors.New("bad request")
 	}
-	return s.Execute(fmt.Sprintf("set server %s/%s check-port %d", backend, server, port))
+	return s.executeStrict(fmt.Sprintf("set server %s/%s check-port %d", backend, server, port))
 }
 
 // ShutdownSessionsServer terminates all the sessions attached to the server
@@ -132,7 +132,7 @@ func (s *SingleRuntime) DisableServer(backend, server string) error {
 // SetServerAgentAddr set agent-addr for server
 func (s *SingleRuntime) SetServerAgentAddr(backend, server string, addr string) error {
 	cmd := fmt.Sprintf("set server %s/%s agent-addr %s", backend, server, addr)
-	return s.Execute(cmd)
+	return s.executeStrict(cmd)
 }
 
 // SetServerAgentSend set agent-send for server

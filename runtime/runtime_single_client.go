@@ -166,6 +166,22 @@ func (s *SingleRuntime) Execute(command string) error {
 	return nil
 }
 
+// executeStrict is Execute for commands that report failures at warning
+// severity: a "[4]:" response is an error unless it contains one of
+// okWarnings.
+func (s *SingleRuntime) executeStrict(command string, okWarnings ...string) error {
+	rawdata, err := s.ExecuteWithResponse(command)
+	if err != nil || len(rawdata) <= 4 || rawdata[0:4] != "[4]:" {
+		return err
+	}
+	for _, ok := range okWarnings {
+		if strings.Contains(rawdata, ok) {
+			return nil
+		}
+	}
+	return fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[4:], command)
+}
+
 func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
 	// Make sure to only execute a single command.
 	if strings.ContainsAny(command, ";") {
