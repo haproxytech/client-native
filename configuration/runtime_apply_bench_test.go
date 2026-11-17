@@ -56,16 +56,21 @@ func BenchmarkParserString(b *testing.B) {
 	}
 }
 
+// benchCases returns the configuration pairs the runtime steps benchmarks run.
+func benchCases(b *testing.B, size benchSize) (string, []struct{ name, cfg string }) {
+	b.Helper()
+	cfg := genConfig(size.backends, size.servers)
+	return cfg, []struct{ name, cfg string }{
+		{"nochange", cfg},
+		{"weight-last", changeLastBackendWeight(b, cfg, size.backends)},
+		{"global", strings.Replace(cfg, "maxconn 1000", "maxconn 2000", 1)},
+		{"frontend", strings.Replace(cfg, "bind :80", "bind :81", 1)},
+	}
+}
+
 func BenchmarkRuntimeSteps(b *testing.B) {
 	for _, size := range benchSizes {
-		cfg := genConfig(size.backends, size.servers)
-		weightLast := changeLastBackendWeight(b, cfg, size.backends)
-		cases := []struct{ name, cfg string }{
-			{"nochange", cfg},
-			{"weight-last", weightLast},
-			{"global", strings.Replace(cfg, "maxconn 1000", "maxconn 2000", 1)},
-			{"frontend", strings.Replace(cfg, "bind :80", "bind :81", 1)},
-		}
+		cfg, cases := benchCases(b, size)
 		oldP := newRuntimeApplyParser(b, cfg)
 		for _, c := range cases {
 			newP := newRuntimeApplyParser(b, c.cfg)
@@ -73,7 +78,26 @@ func BenchmarkRuntimeSteps(b *testing.B) {
 				b.ReportAllocs()
 				b.ResetTimer()
 				for range b.N {
-					runtimeSteps(registry, oldP, newP)
+					runtimeSteps(registry, oldP, newP, nil)
+				}
+			})
+		}
+	}
+}
+
+func BenchmarkRuntimeStepsPrefiltered(b *testing.B) {
+	for _, size := range benchSizes {
+		cfg, cases := benchCases(b, size)
+		oldP := newRuntimeApplyParser(b, cfg)
+		oldText := oldP.String()
+		for _, c := range cases {
+			newP := newRuntimeApplyParser(b, c.cfg)
+			newText := newP.String()
+			b.Run(size.name+"/"+c.name, func(b *testing.B) {
+				b.ReportAllocs()
+				b.ResetTimer()
+				for range b.N {
+					runtimeSteps(registry, oldP, newP, func() map[string]struct{} { return sameSections(oldText, newText) })
 				}
 			})
 		}

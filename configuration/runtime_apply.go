@@ -18,6 +18,7 @@ package configuration
 import (
 	"cmp"
 	"slices"
+	"strings"
 
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -82,60 +83,156 @@ type runtimeRegistry map[parser.Section]map[string]entry
 // reload-prone types first, so a reload is detected early. Unlisted types go
 // before all listed ones.
 var scanOrder = []parser.Section{ //nolint:gochecknoglobals
-	parser.Global, parser.Defaults, parser.UserList, parser.Peers, parser.Mailers,
+	parser.Global, parser.HTTPHardening, parser.Defaults, parser.UserList, parser.Peers, parser.Mailers,
 	parser.Resolvers, parser.Cache, parser.Ring, parser.Traces, parser.LogForward,
 	parser.LogProfile, parser.HTTPErrors, parser.HealthChecks, parser.Acme,
 	parser.CrtStore, parser.FCGIApp, parser.Frontends, parser.Listen, parser.Backends,
 }
 
+// prefilterMinSections: section types with fewer sections are compared
+// directly; the prefilter costs a pass over both files.
+const prefilterMinSections = 16
+
 // runtimeSteps returns the runtime calls that turn a HAProxy running oldP into
 // one running newP. It returns false at the first difference reg has no entry
-// for; the caller must then reload.
-func runtimeSteps(reg runtimeRegistry, oldP, newP parser.Parser) ([]step, bool) {
+// for; the caller must then reload. same, when not nil, is called at most once,
+// on reaching the first section type with more than prefilterMinSections
+// sections; the sections whose "type name" key it returns are known to be
+// textually identical and are not compared from then on.
+func runtimeSteps(reg runtimeRegistry, oldP, newP parser.Parser, same func() map[string]struct{}) ([]step, bool) {
 	types, ok := sectionTypes(oldP, newP)
 	if !ok {
 		return nil, false
 	}
 	var steps []step
+	var skip map[string]struct{}
 	for _, t := range types {
 		names := sectionNames(oldP, t)
 		if !slices.Equal(names, sectionNames(newP, t)) {
 			return nil, false
 		}
+		if same != nil && len(names) > prefilterMinSections {
+			skip, same = same(), nil
+		}
 		for _, name := range names {
-			// fn runs under both parser locks: it must not call the parsers.
-			var attrs []string
-			missing := false
-			ok := parser.DiffSection(oldP, newP, t, name, func(attr string) bool {
-				if _, found := reg[t][attr]; !found {
-					missing = true
-					return false
+			if len(skip) > 0 {
+				if _, found := skip[string(t)+" "+name]; found {
+					continue
 				}
-				attrs = append(attrs, attr)
-				return true
-			})
-			if !ok || missing {
+			}
+			more, ok := sectionSteps(reg, oldP, newP, t, name)
+			if !ok {
 				return nil, false
 			}
-			for _, attr := range attrs {
-				var more []step
-				e := reg[t][attr]
-				switch {
-				case e.object != nil:
-					more, ok = diffObject(e.object, oldP, newP, t, name)
-				case e.apply != nil:
-					more, ok = e.apply(change{section: name, old: getData(oldP, t, name, attr), new: getData(newP, t, name, attr)})
-				default:
-					ok = false
-				}
-				if !ok {
-					return nil, false
-				}
-				steps = append(steps, more...)
-			}
+			steps = append(steps, more...)
 		}
 	}
 	return steps, true
+}
+
+// sectionSteps returns the runtime calls for the differences of one section;
+// false means reload.
+func sectionSteps(reg runtimeRegistry, oldP, newP parser.Parser, t parser.Section, name string) ([]step, bool) {
+	// fn runs under both parser locks: it must not call the parsers.
+	var attrs []string
+	missing := false
+	ok := parser.DiffSection(oldP, newP, t, name, func(attr string) bool {
+		if _, found := reg[t][attr]; !found {
+			missing = true
+			return false
+		}
+		attrs = append(attrs, attr)
+		return true
+	})
+	if !ok || missing {
+		return nil, false
+	}
+	var steps []step
+	for _, attr := range attrs {
+		var more []step
+		e := reg[t][attr]
+		switch {
+		case e.object != nil:
+			more, ok = diffObject(e.object, oldP, newP, t, name)
+		case e.apply != nil:
+			more, ok = e.apply(change{section: name, old: getData(oldP, t, name, attr), new: getData(newP, t, name, attr)})
+		default:
+			ok = false
+		}
+		if !ok {
+			return nil, false
+		}
+		steps = append(steps, more...)
+	}
+	return steps, true
+}
+
+// sameSections returns the keys ("backend be1") of the sections whose text is
+// byte-identical in two configurations rendered by the config-parser writer.
+// It returns nil, meaning nothing may be skipped, when either text does not
+// have the writer's layout.
+func sameSections(oldText, newText string) map[string]struct{} {
+	a, okA := sectionBlocks(oldText)
+	b, okB := sectionBlocks(newText)
+	if !okA || !okB {
+		return nil
+	}
+	same := make(map[string]struct{}, len(a))
+	for key, block := range a {
+		if other, found := b[key]; found && other == block {
+			same[key] = struct{}{}
+		}
+	}
+	return same
+}
+
+// sectionBlocks splits a rendered configuration into its sections, keyed by
+// "type name" ("global" when the header has no name). It returns false when
+// the text does not have the layout the writer produces.
+func sectionBlocks(text string) (map[string]string, bool) {
+	blocks := map[string]string{}
+	key, start := "", -1
+	closeBlock := func(end int) bool {
+		if start < 0 {
+			return true
+		}
+		if _, dup := blocks[key]; dup {
+			return false
+		}
+		blocks[key] = text[start:end]
+		return true
+	}
+	for pos := 0; pos < len(text); {
+		end := len(text)
+		if i := strings.IndexByte(text[pos:], '\n'); i >= 0 {
+			end = pos + i + 1
+		}
+		if c := text[pos]; c != '\n' && c != ' ' && c != '\t' && c != '#' {
+			k, ok := headerKey(text[pos:end])
+			if !ok || !closeBlock(pos) {
+				return nil, false
+			}
+			key, start = k, pos
+		}
+		pos = end
+	}
+	if !closeBlock(len(text)) {
+		return nil, false
+	}
+	return blocks, true
+}
+
+// headerKey returns the "type name" key of a section header line.
+func headerKey(line string) (string, bool) {
+	typ, rest, _ := strings.Cut(strings.TrimRight(line, "\n"), " ")
+	if !slices.Contains(scanOrder, parser.Section(typ)) {
+		return "", false
+	}
+	name, _, _ := strings.Cut(strings.TrimLeft(rest, " "), " ")
+	if name == "" || name == "from" || strings.HasPrefix(name, "#") {
+		return typ, true
+	}
+	return typ + " " + name, true
 }
 
 // sectionTypes returns the section types of both parsers in scan order.
