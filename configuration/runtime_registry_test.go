@@ -18,6 +18,7 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -233,7 +234,7 @@ func TestRuntimeRegistry(t *testing.T) {
 func TestRuntimeRegistryAddServerInherited(t *testing.T) {
 	tests := []struct {
 		name, cfg, server, want string
-		health                  bool
+		after                   []string // calls after AddServer; nil = only the ready step
 	}{
 		{
 			name:   "backend default-server",
@@ -272,23 +273,61 @@ func TestRuntimeRegistryAddServerInherited(t *testing.T) {
 			name:   "inherited check, no-check on server",
 			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  default-server check\n  server s1 10.0.0.1:80\n",
 			server: "server s3 10.0.0.3:80 no-check",
-			want:   "10.0.0.3:80 check no-check",
+			want:   "10.0.0.3:80",
+		},
+		{
+			name:   "inherited no-check, check on server",
+			cfg:    "defaults d\n  mode http\n  default-server no-check\n\nbackend be from d\n  server s1 10.0.0.1:80\n",
+			server: "server s3 10.0.0.3:80 check",
+			want:   "10.0.0.3:80 check",
+			after:  []string{"EnableServerHealth be s3", "SetServerState be s3 ready"},
+		},
+		{
+			name:   "enabled on server",
+			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  server s1 10.0.0.1:80\n",
+			server: "server s3 10.0.0.3:80 weight 5 enabled",
+			want:   "10.0.0.3:80 weight 5",
+		},
+		{
+			name:   "inherited disabled, enabled on server",
+			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  default-server disabled\n  server s1 10.0.0.1:80\n",
+			server: "server s3 10.0.0.3:80 enabled",
+			want:   "10.0.0.3:80",
+		},
+		{
+			name:   "inherited enabled, disabled on server",
+			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  default-server enabled\n  server s1 10.0.0.1:80\n",
+			server: "server s3 10.0.0.3:80 disabled",
+			want:   "10.0.0.3:80 disabled",
+			after:  []string{},
+		},
+		{
+			name:   "inherited agent-check, no-agent-check on server",
+			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  default-server agent-check agent-port 5000\n  server s1 10.0.0.1:80\n",
+			server: "server s3 10.0.0.3:80 no-agent-check",
+			want:   "10.0.0.3:80 agent-port 5000",
+		},
+		{
+			name:   "other no- keyword passed through",
+			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  server s1 10.0.0.1:80\n",
+			server: "server s3 10.0.0.3:80 no-ssl",
+			want:   "10.0.0.3:80 no-ssl",
 		},
 		{
 			name:   "inherited check",
 			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  default-server check\n  server s1 10.0.0.1:80\n",
 			server: "server s3 10.0.0.3:80",
 			want:   "10.0.0.3:80 check",
-			health: true,
+			after:  []string{"EnableServerHealth be s3", "SetServerState be s3 ready"},
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			want := []string{"AddServer be s3 " + tc.want}
-			if tc.health {
-				want = append(want, "EnableServerHealth be s3")
+			after := tc.after
+			if after == nil {
+				after = []string{"SetServerState be s3 ready"}
 			}
-			want = append(want, "SetServerState be s3 ready")
+			want := append([]string{"AddServer be s3 " + tc.want}, after...)
 			require.Equal(t, want, registryCalls(t, tc.cfg, tc.cfg+"  "+tc.server+"\n"))
 		})
 	}
@@ -401,6 +440,18 @@ func TestRuntimeRegistryClient(t *testing.T) {
 				require.NoError(t, c.CreateServer(BackendParentName, "be", srv, "", currentVersion(t, c)))
 			},
 			want: []string{"AddServer be s3 10.0.0.3:80 check", "EnableServerHealth be s3", "SetServerState be s3 ready"},
+		},
+		"create maintenance disabled": {
+			do: func(t *testing.T, c *client) {
+				t.Helper()
+				port := int64(80)
+				srv := &models.Server{Name: "s3", Address: "10.0.0.3", Port: &port, ServerParams: models.ServerParams{Maintenance: "disabled"}}
+				require.NoError(t, c.CreateServer(BackendParentName, "be", srv, "", currentVersion(t, c)))
+				data, err := os.ReadFile(c.ConfigurationFile)
+				require.NoError(t, err)
+				require.Contains(t, string(data), "server s3 10.0.0.3:80 enabled")
+			},
+			want: []string{"AddServer be s3 10.0.0.3:80", "SetServerState be s3 ready"},
 		},
 		"delete": {
 			do: func(t *testing.T, c *client) {

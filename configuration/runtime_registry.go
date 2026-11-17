@@ -279,15 +279,27 @@ func serverAgentSend(section string, _, cur item) ([]step, bool) {
 	return []step{func(rt runtime.Runtime) error { return rt.SetServerAgentSend(section, cur.name, send) }}, true
 }
 
+// dynamicServerDefaults maps keywords that only restate what a runtime-added
+// server starts with, and that add server refuses, to the opposite keyword
+// each one cancels when it comes later. Any other no-... keyword is sent as
+// written; HAProxy rejects it and the commit falls back to a reload.
+var dynamicServerDefaults = map[string]string{ //nolint:gochecknoglobals
+	"enabled":        "disabled",
+	"no-check":       "check",
+	"no-agent-check": "agent-check",
+}
+
 // addServer adds a server with all its effective options, since a server
-// added at runtime does not inherit default-server settings. It starts in
-// maintenance with checks off, so those are turned on afterwards.
+// added at runtime does not inherit default-server settings. Keywords of
+// dynamicServerDefaults are not sent and drop their earlier opposite. The
+// server starts in maintenance with checks off, so those are turned on
+// afterwards.
 func addServer(section string, it item) ([]step, bool) {
 	addr, _ := it.get("address")
 	if _, _, ok := hostPort(addr); !ok {
 		return nil, false
 	}
-	attrs := []string{addr}
+	var sent []option
 	for _, o := range it.options {
 		if o.name == "address" {
 			continue
@@ -295,6 +307,14 @@ func addServer(section string, it item) ([]step, bool) {
 		if strings.ContainsAny(o.name+o.args, "\"'\\") {
 			return nil, false
 		}
+		if opposite, found := dynamicServerDefaults[o.name]; found {
+			sent = slices.DeleteFunc(sent, func(x option) bool { return x.name == opposite })
+			continue
+		}
+		sent = append(sent, o)
+	}
+	attrs := []string{addr}
+	for _, o := range sent {
 		if o.args == "" {
 			attrs = append(attrs, o.name)
 		} else {
