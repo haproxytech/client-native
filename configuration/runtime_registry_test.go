@@ -86,6 +86,38 @@ func (r *recordingRuntime) SetServerAgentSend(backend, server, send string) erro
 	return r.record("SetServerAgentSend %s %s %s", backend, server, send)
 }
 
+func (r *recordingRuntime) SetServerMaxconn(backend, server string, maxconn int) error {
+	return r.record("SetServerMaxconn %s %s %d", backend, server, maxconn)
+}
+
+func (r *recordingRuntime) SetServerAgentPort(backend, server string, port int) error {
+	return r.record("SetServerAgentPort %s %s %d", backend, server, port)
+}
+
+func (r *recordingRuntime) SetServerCheckAddr(backend, server, addr string, port int) error {
+	return r.record("SetServerCheckAddr %s %s %s %d", backend, server, addr, port)
+}
+
+func (r *recordingRuntime) SetGlobalMaxConn(maxconn int) error {
+	return r.record("SetGlobalMaxConn %d", maxconn)
+}
+
+func (r *recordingRuntime) SetRateLimitConnectionsGlobal(value uint64) error {
+	return r.record("SetRateLimitConnectionsGlobal %d", value)
+}
+
+func (r *recordingRuntime) SetRateLimitSessionsGlobal(value uint64) error {
+	return r.record("SetRateLimitSessionsGlobal %d", value)
+}
+
+func (r *recordingRuntime) SetRateLimitSSLSessionGlobal(value uint64) error {
+	return r.record("SetRateLimitSSLSessionGlobal %d", value)
+}
+
+func (r *recordingRuntime) SetRateLimitHTTPCompressionGlobal(value uint64) error {
+	return r.record("SetRateLimitHTTPCompressionGlobal %d", value)
+}
+
 func (r *recordingRuntime) EnableAgentCheck(backend, server string) error {
 	return r.record("EnableAgentCheck %s %s", backend, server)
 }
@@ -146,6 +178,8 @@ func TestRuntimeRegistry(t *testing.T) {
 	r := func(old, cur string) string { return rep(registryBase, old, cur) }
 	both := func(s1New, s2New string) string { return rep(r(s1, s1New), s2, s2New) }
 	withS2 := func(s2Line string) string { return r(s2, s2Line) }
+	g := func(lines string) string { return "global\n" + lines + "\n" + registryBase }
+	dsMaxconn := r("backend be from d\n", "backend be from d\n  default-server maxconn 20\n")
 	del := []string{
 		"SetServerState be s2 maint", "ShutdownSessionsServer be s2",
 		"WaitServerRemovable be s2 500ms", "DeleteServer be s2",
@@ -179,7 +213,14 @@ func TestRuntimeRegistry(t *testing.T) {
 		{"agent-addr", withS2(s2 + " agent-addr 10.0.0.5"), withS2(s2 + " agent-addr 10.0.0.6"), []string{"SetServerAgentAddr be s2 10.0.0.6"}},
 		{"agent-send plain", withS2(s2 + " agent-send hello"), withS2(s2 + " agent-send bye"), []string{"SetServerAgentSend be s2 bye"}},
 		{"agent-send quoted", withS2(s2 + " agent-send hello"), withS2(s2 + ` agent-send "a b"`), reloads},
-		{"server maxconn", registryBase, withS2(s2 + " maxconn 10"), reloads},
+		{"server inter", registryBase, withS2(s2 + " inter 3s"), reloads},
+		{"server maxconn changed", withS2(s2 + " maxconn 10"), withS2(s2 + " maxconn 50"), []string{"SetServerMaxconn be s2 50"}},
+		{"server maxconn added", registryBase, withS2(s2 + " maxconn 10"), []string{"SetServerMaxconn be s2 10"}},
+		{"server maxconn removed", withS2(s2 + " maxconn 10"), registryBase, reloads},
+		{"server maxconn removed inherits default-server", rep(dsMaxconn, s2, s2+" maxconn 10"), dsMaxconn, []string{"SetServerMaxconn be s2 20"}},
+		{"server agent-port", withS2(s2 + " agent-port 5000"), withS2(s2 + " agent-port 5001"), []string{"SetServerAgentPort be s2 5001"}},
+		{"server check addr", withS2(s2 + " check addr 10.0.0.5"), withS2(s2 + " check addr 10.0.0.6"), []string{"SetServerCheckAddr be s2 10.0.0.6 0"}},
+		{"server check addr host name", withS2(s2 + " check addr 10.0.0.5"), withS2(s2 + " check addr example.com"), reloads},
 		{"server ssl", registryBase, withS2(s2 + " ssl"), reloads},
 		{"add plain", registryBase, registryBase + "  server s3 10.0.0.3:80\n", []string{"AddServer be s3 10.0.0.3:80", "SetServerState be s3 ready"}},
 		{
@@ -211,6 +252,20 @@ func TestRuntimeRegistry(t *testing.T) {
 		{"frontend maxconn", registryBase, r("maxconn 50", "maxconn 100"), []string{"SetFrontendMaxConn fe 100"}},
 		{"frontend maxconn zero", registryBase, r("maxconn 50", "maxconn 0"), reloads},
 		{"frontend maxconn removed", registryBase, r("  maxconn 50\n", ""), reloads},
+		{"global maxconn", g("  maxconn 100\n"), g("  maxconn 200\n"), []string{"SetGlobalMaxConn 200"}},
+		{"global maxconn zero", g("  maxconn 100\n"), g("  maxconn 0\n"), reloads},
+		{"global maxconnrate", g("  maxconnrate 10\n"), g("  maxconnrate 20\n"), []string{"SetRateLimitConnectionsGlobal 20"}},
+		{"global maxconnrate zero", g("  maxconnrate 10\n"), g("  maxconnrate 0\n"), []string{"SetRateLimitConnectionsGlobal 0"}},
+		{"global maxsessrate", g("  maxsessrate 10\n"), g("  maxsessrate 30\n"), []string{"SetRateLimitSessionsGlobal 30"}},
+		{"global maxsslrate", g("  maxsslrate 10\n"), g("  maxsslrate 40\n"), []string{"SetRateLimitSSLSessionGlobal 40"}},
+		{"global maxcomprate", g("  maxcomprate 10\n"), g("  maxcomprate 50\n"), []string{"SetRateLimitHTTPCompressionGlobal 50"}},
+		{"global maxconn removed", g("  daemon\n  maxconn 100\n"), g("  daemon\n"), reloads},
+		{"global nbthread", g("  nbthread 2\n"), g("  nbthread 4\n"), reloads},
+		{
+			"global maxconn and server weight", g("  maxconn 100\n"),
+			"global\n  maxconn 200\n\n" + r(s1, "server s1 10.0.0.1:80 weight 20"),
+			[]string{"SetGlobalMaxConn 200", "SetServerWeight be s1 20"},
+		},
 		{
 			"default-server changed",
 			r("backend be from d\n", "backend be from d\n  default-server weight 5\n"),
@@ -414,6 +469,18 @@ func TestRuntimeRegistryCommitError(t *testing.T) {
 	require.True(t, res.Reload)
 	require.ErrorIs(t, res.Err, errRecorded)
 	require.Equal(t, []string{"SetServerState be s2 maint"}, rt.calls)
+}
+
+func TestRuntimeRegistryGlobalCommitError(t *testing.T) {
+	var rec commitRecorder
+	rt := &recordingRuntime{failOn: "SetGlobalMaxConn"}
+	cfg := "global\n  maxconn 100\n\n" + registryBase
+	c := newApplyClient(t, cfg, rt, &rec)
+	postRaw(t, c, strings.Replace(cfg, "maxconn 100", "maxconn 200", 1))
+	res := rec.one(t)
+	require.True(t, res.Reload)
+	require.ErrorIs(t, res.Err, errRecorded)
+	require.Equal(t, []string{"SetGlobalMaxConn 200"}, rt.calls)
 }
 
 func TestRuntimeRegistryClient(t *testing.T) {

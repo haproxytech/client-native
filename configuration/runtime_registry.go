@@ -37,14 +37,23 @@ import (
 // difference without an entry, and any applier returning false, makes the
 // commit fall back to a reload.
 //
-// A plain attribute (keyword of a section) gets an apply function that turns
-// the old and new parser data into runtime calls.
+// A plain attribute (keyword of a section, such as the frontend maxconn or the
+// global process limits) gets an apply function that turns the old and new
+// parser data into runtime calls.
 //
 // An object list (named lines such as servers) gets an object spec: items
 // lists the lines of a section with their effective options, fields maps an
 // option name to the applier run when that option changes on a kept line,
 // add and del handle added and removed lines (nil = reload).
 var registry = runtimeRegistry{ //nolint:gochecknoglobals
+	parser.Global: {
+		// maxconn 0 is automatic in the file but restores the startup value at runtime.
+		"maxconn":     {apply: globalNumber(1, func(rt runtime.Runtime, v int64) error { return rt.SetGlobalMaxConn(int(v)) })},
+		"maxconnrate": {apply: globalNumber(0, func(rt runtime.Runtime, v int64) error { return rt.SetRateLimitConnectionsGlobal(uint64(v)) })},
+		"maxsessrate": {apply: globalNumber(0, func(rt runtime.Runtime, v int64) error { return rt.SetRateLimitSessionsGlobal(uint64(v)) })},
+		"maxsslrate":  {apply: globalNumber(0, func(rt runtime.Runtime, v int64) error { return rt.SetRateLimitSSLSessionGlobal(uint64(v)) })},
+		"maxcomprate": {apply: globalNumber(0, func(rt runtime.Runtime, v int64) error { return rt.SetRateLimitHTTPCompressionGlobal(uint64(v)) })},
+	},
 	parser.Frontends: {
 		"maxconn": {apply: frontendMaxconn},
 	},
@@ -60,6 +69,9 @@ var registry = runtimeRegistry{ //nolint:gochecknoglobals
 				"agent-check": serverAgentCheck,
 				"agent-addr":  serverAgentAddr,
 				"agent-send":  serverAgentSend,
+				"agent-port":  serverAgentPort,
+				"maxconn":     serverMaxconn,
+				"addr":        serverCheckAddr,
 			},
 			add: addServer,
 			del: delServer,
@@ -71,14 +83,27 @@ var registry = runtimeRegistry{ //nolint:gochecknoglobals
 // connections before the commit falls back to a reload.
 const serverRemovableTimeout = 500 * time.Millisecond
 
-func frontendMaxconn(c change) ([]step, bool) {
 // frontendMaxconn needs a reload for maxconn 0: it means the global limit in
 // the file but stops the frontend from accepting at runtime.
+func frontendMaxconn(c change) ([]step, bool) {
 	v, ok := c.new.(*types.Int64C)
 	if !ok || v == nil || v.Value <= 0 {
 		return nil, false
 	}
 	return []step{func(rt runtime.Runtime) error { return rt.SetFrontendMaxConn(c.section, int(v.Value)) }}, true
+}
+
+// globalNumber applies a global numeric keyword with set; a removed keyword
+// or a value below lowest means reload.
+func globalNumber(lowest int64, set func(rt runtime.Runtime, v int64) error) fieldApplier {
+	return func(c change) ([]step, bool) {
+		v, ok := c.new.(*types.Int64C)
+		if !ok || v == nil || v.Value < lowest {
+			return nil, false
+		}
+		n := v.Value
+		return []step{func(rt runtime.Runtime) error { return set(rt, n) }}, true
+	}
 }
 
 // serverItems returns the server lines of a section with their effective
@@ -218,8 +243,8 @@ func serverAddress(section string, old, cur item) ([]step, bool) {
 	if !ok {
 		return nil, false
 	}
-	oldAddr, _ := old.get("address")
 	// An old host name may still be resolved and overwrite the new address.
+	oldAddr, _ := old.get("address")
 	if _, oldPort, oldOK := hostPort(oldAddr); !oldOK || (port == 0 && oldPort != 0) {
 		return nil, false
 	}
@@ -277,6 +302,40 @@ func serverAgentSend(section string, _, cur item) ([]step, bool) {
 		return nil, false
 	}
 	return []step{func(rt runtime.Runtime) error { return rt.SetServerAgentSend(section, cur.name, send) }}, true
+}
+
+func serverAgentPort(section string, _, cur item) ([]step, bool) {
+	v, ok := cur.get("agent-port")
+	if !ok || !plain(v) {
+		return nil, false
+	}
+	port, err := strconv.Atoi(v)
+	if err != nil {
+		return nil, false
+	}
+	return []step{func(rt runtime.Runtime) error { return rt.SetServerAgentPort(section, cur.name, port) }}, true
+}
+
+func serverMaxconn(section string, _, cur item) ([]step, bool) {
+	v, ok := cur.get("maxconn")
+	if !ok || !plain(v) {
+		return nil, false
+	}
+	n, err := strconv.Atoi(v)
+	if err != nil || n < 0 {
+		return nil, false
+	}
+	return []step{func(rt runtime.Runtime) error { return rt.SetServerMaxconn(section, cur.name, n) }}, true
+}
+
+// serverCheckAddr sets the health check address (addr keyword); the check
+// port has its own entry.
+func serverCheckAddr(section string, _, cur item) ([]step, bool) {
+	addr, ok := cur.get("addr")
+	if !ok || !plain(addr) || net.ParseIP(addr) == nil {
+		return nil, false
+	}
+	return []step{func(rt runtime.Runtime) error { return rt.SetServerCheckAddr(section, cur.name, addr, 0) }}, true
 }
 
 // dynamicServerDefaults maps keywords that only restate what a runtime-added
