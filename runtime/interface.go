@@ -19,6 +19,7 @@ import (
 	"context"
 	"io"
 	"mime/multipart"
+	"time"
 
 	"github.com/haproxytech/client-native/v6/models"
 	"github.com/haproxytech/client-native/v6/runtime/options"
@@ -95,6 +96,10 @@ type Servers interface {
 	GetServerState(backend, server string) (*models.RuntimeServer, error)
 	// SetServerCheckPort set health heck port for server
 	SetServerCheckPort(backend, server string, port int) error
+	// ShutdownSessionsServer terminates all the sessions attached to the server
+	ShutdownSessionsServer(backend, server string) error
+	// WaitServerRemovable waits up to timeout for the server to become removable by DeleteServer
+	WaitServerRemovable(backend, server string, timeout time.Duration) error
 }
 
 type ACLs interface {

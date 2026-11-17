@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/Masterminds/semver/v3"
 	native_errors "github.com/haproxytech/client-native/v6/errors"
@@ -461,6 +462,33 @@ func (c *client) SetServerCheckPort(backend, server string, port int) error {
 		return errors.New("no valid runtime found")
 	}
 	err := c.runtime.SetServerCheckPort(backend, server, port)
+	if err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// ShutdownSessionsServer terminates all the sessions attached to the server
+func (c *client) ShutdownSessionsServer(backend, server string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	err := c.runtime.ShutdownSessionsServer(backend, server)
+	if err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// WaitServerRemovable waits up to timeout for the server to become removable by DeleteServer
+func (c *client) WaitServerRemovable(backend, server string, timeout time.Duration) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("3.0")}) {
+		return errors.New("this operation requires HAProxy 3.0 or later")
+	}
+	err := c.runtime.WaitServerRemovable(backend, server, timeout)
 	if err != nil {
 		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}

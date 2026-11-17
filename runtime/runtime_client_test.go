@@ -23,6 +23,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	"github.com/Masterminds/semver/v3"
 	native_errors "github.com/haproxytech/client-native/v6/errors"
@@ -317,4 +318,50 @@ func TestReplaceMapPayloadDoesNotCommitAfterAddFailure(t *testing.T) {
 		"clear map @1 " + path,
 		"add map @1 " + path + " <<\nfirst one\n",
 	}, socket.Commands())
+}
+
+func TestShutdownSessionsServer(t *testing.T) {
+	socket := newMapCommandSocket(t, nil)
+	client := newMapClient(t, socket, "3.0.0")
+
+	assert.NoError(t, client.ShutdownSessionsServer("be", "srv1"))
+	assert.Equal(t, []string{"shutdown sessions server be/srv1"}, socket.Commands())
+}
+
+func TestShutdownSessionsServerError(t *testing.T) {
+	socket := newMapCommandSocket(t, func(string) string { return "[3]: No such server." })
+	client := newMapClient(t, socket, "3.0.0")
+
+	assert.Error(t, client.ShutdownSessionsServer("be", "srv1"))
+}
+
+func TestWaitServerRemovable(t *testing.T) {
+	socket := newMapCommandSocket(t, nil)
+	client := newMapClient(t, socket, "3.0.0")
+
+	assert.NoError(t, client.WaitServerRemovable("be", "srv1", 2*time.Second))
+	assert.Equal(t, []string{"wait 2000ms srv-removable be/srv1"}, socket.Commands())
+}
+
+func TestWaitServerRemovableError(t *testing.T) {
+	socket := newMapCommandSocket(t, func(string) string { return "[3]: timeout reached." })
+	client := newMapClient(t, socket, "3.0.0")
+
+	assert.Error(t, client.WaitServerRemovable("be", "srv1", time.Second))
+}
+
+func TestWaitServerRemovableSubMillisecond(t *testing.T) {
+	socket := newMapCommandSocket(t, nil)
+	client := newMapClient(t, socket, "3.0.0")
+
+	assert.Error(t, client.WaitServerRemovable("be", "srv1", time.Microsecond))
+	assert.Empty(t, socket.Commands())
+}
+
+func TestWaitServerRemovableUnsupportedVersion(t *testing.T) {
+	socket := newMapCommandSocket(t, nil)
+	client := newMapClient(t, socket, "2.9.0")
+
+	assert.Error(t, client.WaitServerRemovable("be", "srv1", time.Second))
+	assert.Empty(t, socket.Commands())
 }

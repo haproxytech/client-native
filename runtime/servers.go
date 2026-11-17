@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	stderrors "errors"
 
@@ -89,6 +90,19 @@ func (s *SingleRuntime) SetServerCheckPort(backend, server string, port int) err
 		return stderrors.New("bad request")
 	}
 	return s.Execute(fmt.Sprintf("set server %s/%s check-port %d", backend, server, port))
+}
+
+// ShutdownSessionsServer terminates all the sessions attached to the server
+func (s *SingleRuntime) ShutdownSessionsServer(backend, server string) error {
+	return s.Execute(fmt.Sprintf("shutdown sessions server %s/%s", backend, server))
+}
+
+// WaitServerRemovable waits up to timeout for the server to become removable by DeleteServer
+func (s *SingleRuntime) WaitServerRemovable(backend, server string, timeout time.Duration) error {
+	if timeout < time.Millisecond {
+		return stderrors.New("bad request")
+	}
+	return s.Execute(fmt.Sprintf("wait %dms srv-removable %s/%s", timeout.Milliseconds(), backend, server))
 }
 
 // EnableAgentCheck enable agent check for server
