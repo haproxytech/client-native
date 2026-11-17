@@ -232,6 +232,16 @@ func TestRuntimeRegistry(t *testing.T) {
 			[]string{"AddServer be s3 10.0.0.3:80 agent-check agent-port 5000", "EnableAgentCheck be s3", "SetServerState be s3 ready"},
 		},
 		{"add disabled", registryBase, registryBase + "  server s3 10.0.0.3:80 disabled\n", []string{"AddServer be s3 10.0.0.3:80 disabled"}},
+		{
+			"add resolve options without resolvers", registryBase,
+			registryBase + "  server s3 10.0.0.3:80 check resolve-net 10.0.0.0/8 resolve-opts allow-dup-ip,ignore-weight weight 80\n",
+			[]string{"AddServer be s3 10.0.0.3:80 check weight 80", "EnableServerHealth be s3", "SetServerState be s3 ready"},
+		},
+		{
+			"add resolve options with resolvers", registryBase,
+			registryBase + "  server s3 10.0.0.3:80 resolvers mydns resolve-opts allow-dup-ip resolve-prefer ipv4\n",
+			[]string{"AddServer be s3 10.0.0.3:80 resolvers mydns resolve-opts allow-dup-ip resolve-prefer ipv4", "SetServerState be s3 ready"},
+		},
 		{"add host name", registryBase, registryBase + "  server s3 example.com:80\n", reloads},
 		{"add quoted", registryBase, registryBase + "  server s3 10.0.0.3:80 agent-send \"a b\"\n", reloads},
 		{"add before existing", registryBase, r(s2, "server s3 10.0.0.3:80\n  "+s2), reloads},
@@ -372,6 +382,13 @@ func TestRuntimeRegistryAddServerInherited(t *testing.T) {
 			name:   "inherited check",
 			cfg:    "defaults d\n  mode http\n\nbackend be from d\n  default-server check\n  server s1 10.0.0.1:80\n",
 			server: "server s3 10.0.0.3:80",
+			want:   "10.0.0.3:80 check",
+			after:  []string{"EnableServerHealth be s3", "SetServerState be s3 ready"},
+		},
+		{
+			name:   "inherited resolve options without resolvers",
+			cfg:    "defaults d\n  mode http\n  default-server resolve-net 10.0.0.0/8 resolve-opts allow-dup-ip\n\nbackend be from d\n  server s1 10.0.0.1:80\n",
+			server: "server s3 10.0.0.3:80 check",
 			want:   "10.0.0.3:80 check",
 			after:  []string{"EnableServerHealth be s3", "SetServerState be s3 ready"},
 		},
@@ -519,6 +536,20 @@ func TestRuntimeRegistryClient(t *testing.T) {
 				require.Contains(t, string(data), "server s3 10.0.0.3:80 enabled")
 			},
 			want: []string{"AddServer be s3 10.0.0.3:80", "SetServerState be s3 ready"},
+		},
+		"create resolve options without resolvers": {
+			do: func(t *testing.T, c *client) {
+				t.Helper()
+				port, weight := int64(8080), int64(80)
+				srv := &models.Server{Name: "s3", Address: "10.1.0.1", Port: &port, ServerParams: models.ServerParams{
+					Check: "enabled", Weight: &weight, ResolveNet: "10.0.0.0/8,10.200.200.0/12", ResolveOpts: "allow-dup-ip,ignore-weight",
+				}}
+				require.NoError(t, c.CreateServer(BackendParentName, "be", srv, "", currentVersion(t, c)))
+				data, err := os.ReadFile(c.ConfigurationFile)
+				require.NoError(t, err)
+				require.Contains(t, string(data), "resolve-opts allow-dup-ip,ignore-weight")
+			},
+			want: []string{"AddServer be s3 10.1.0.1:8080 check weight 80", "EnableServerHealth be s3", "SetServerState be s3 ready"},
 		},
 		"delete": {
 			do: func(t *testing.T, c *client) {

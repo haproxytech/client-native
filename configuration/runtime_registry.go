@@ -350,14 +350,16 @@ var dynamicServerDefaults = map[string]string{ //nolint:gochecknoglobals
 
 // addServer adds a server with all its effective options, since a server
 // added at runtime does not inherit default-server settings. Keywords of
-// dynamicServerDefaults are not sent and drop their earlier opposite. The
-// server starts in maintenance with checks off, so those are turned on
-// afterwards.
+// dynamicServerDefaults are not sent and drop their earlier opposite. Without
+// a resolvers option the resolve-* options are not sent either: they only
+// affect DNS resolution, which such a server never does. The server starts
+// in maintenance with checks off, so those are turned on afterwards.
 func addServer(section string, it item) ([]step, bool) {
 	addr, _ := it.get("address")
 	if _, _, ok := hostPort(addr); !ok {
 		return nil, false
 	}
+	_, resolvers := it.get("resolvers")
 	var sent []option
 	for _, o := range it.options {
 		if o.name == "address" {
@@ -365,6 +367,9 @@ func addServer(section string, it item) ([]step, bool) {
 		}
 		if strings.ContainsAny(o.name+o.args, "\"'\\") {
 			return nil, false
+		}
+		if !resolvers && strings.HasPrefix(o.name, "resolve-") {
+			continue
 		}
 		if opposite, found := dynamicServerDefaults[o.name]; found {
 			sent = slices.DeleteFunc(sent, func(x option) bool { return x.name == opposite })
