@@ -127,14 +127,21 @@ func runSteps(t *testing.T, steps []step) {
 }
 
 func TestRuntimeStepsPackageRegistry(t *testing.T) {
-	for name, cfg := range map[string]string{
-		"identical":    runtimeApplyBase,
-		"comment only": strings.Replace(runtimeApplyBase, "# comment", "# other comment", 1),
+	r := strings.Replace
+	for name, tc := range map[string]struct {
+		cfg   string
+		ok    bool
+		steps int
+	}{
+		"identical":      {runtimeApplyBase, true, 0},
+		"comment only":   {r(runtimeApplyBase, "# comment", "# other comment", 1), true, 0},
+		"weight changed": {r(runtimeApplyBase, "weight 10 check", "weight 20 check", 1), true, 1},
+		"no entry":       {r(runtimeApplyBase, "balance roundrobin", "balance leastconn", 1), false, 0},
 	} {
 		t.Run(name, func(t *testing.T) {
-			steps, ok := runtimeSteps(registry, newRuntimeApplyParser(t, runtimeApplyBase), newRuntimeApplyParser(t, cfg), nil)
-			require.True(t, ok)
-			require.Empty(t, steps)
+			steps, ok := runtimeSteps(registry, newRuntimeApplyParser(t, runtimeApplyBase), newRuntimeApplyParser(t, tc.cfg), nil)
+			require.Equal(t, tc.ok, ok)
+			require.Len(t, steps, tc.steps)
 		})
 	}
 }

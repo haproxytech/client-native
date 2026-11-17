@@ -107,6 +107,11 @@ func BenchmarkRuntimeStepsPrefiltered(b *testing.B) {
 	}
 }
 
+// noopRuntime accepts the weight change every benchmark commit makes.
+type noopRuntime struct{ runtime.Runtime }
+
+func (noopRuntime) SetServerWeight(string, string, string) error { return nil }
+
 // BenchmarkRuntimeCommitRaw measures a whole PostRawConfiguration commit with
 // and without runtime apply; every commit changes one server weight.
 func BenchmarkRuntimeCommitRaw(b *testing.B) {
@@ -117,7 +122,11 @@ func BenchmarkRuntimeCommitRaw(b *testing.B) {
 			b.Run(size.name+"/"+mode, func(b *testing.B) {
 				var opts []options.ConfigurationOption
 				if mode == "enabled" {
-					opts = append(opts, options.RuntimeApply(func() runtime.Runtime { return &fakeRuntime{} }, func(options.CommitResult) {}))
+					opts = append(opts, options.RuntimeApply(func() runtime.Runtime { return &noopRuntime{} }, func(res options.CommitResult) {
+						if res.Reload {
+							b.Fatalf("runtime apply fell back to a reload: %v", res.Err)
+						}
+					}))
 				}
 				c := newCommitClient(b, cfg, opts...)
 				b.ReportAllocs()
