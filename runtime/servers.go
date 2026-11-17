@@ -105,6 +105,46 @@ func (s *SingleRuntime) WaitServerRemovable(backend, server string, timeout time
 	return s.Execute(fmt.Sprintf("wait %dms srv-removable %s/%s", timeout.Milliseconds(), backend, server))
 }
 
+// SetServerMaxconn sets maxconn for server
+func (s *SingleRuntime) SetServerMaxconn(backend, server string, maxconn int) error {
+	if maxconn < 0 {
+		return stderrors.New("bad request")
+	}
+	return s.Execute(fmt.Sprintf("set maxconn server %s/%s %d", backend, server, maxconn))
+}
+
+// SetServerAgentPort sets agent-port for server
+func (s *SingleRuntime) SetServerAgentPort(backend, server string, port int) error {
+	if port < 1 || port > 65535 {
+		return stderrors.New("bad request")
+	}
+	return s.executeStrict(fmt.Sprintf("set server %s/%s agent-port %d", backend, server, port))
+}
+
+// SetServerCheckAddr sets check-addr [port] for server
+func (s *SingleRuntime) SetServerCheckAddr(backend, server, addr string, port int) error {
+	cmd := fmt.Sprintf("set server %s/%s check-addr %s", backend, server, addr)
+	if port > 0 {
+		cmd += fmt.Sprintf(" port %d", port)
+	}
+	return s.executeStrict(cmd)
+}
+
+// SetServerFqdn sets fqdn for server
+func (s *SingleRuntime) SetServerFqdn(backend, server, fqdn string) error {
+	cmd := fmt.Sprintf("set server %s/%s fqdn %s", backend, server, fqdn)
+	rawdata, err := s.ExecuteWithResponse(cmd)
+	if err != nil || len(rawdata) <= 4 || rawdata[0:4] != "[4]:" {
+		return err
+	}
+	// HAProxy reports both success and failure of this command at warning severity
+	if (strings.Contains(rawdata, "changed its FQDN") || strings.Contains(rawdata, "no need to change")) &&
+		!strings.Contains(rawdata, "could not update") {
+		return nil
+	}
+	return fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[4:], cmd)
+}
+
 // EnableAgentCheck enable agent check for server
 func (s *SingleRuntime) EnableAgentCheck(backend, server string) error {
 	cmd := fmt.Sprintf("enable agent %s/%s", backend, server)

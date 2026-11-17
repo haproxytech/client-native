@@ -495,6 +495,164 @@ func (c *client) WaitServerRemovable(backend, server string, timeout time.Durati
 	return nil
 }
 
+// SetServerMaxconn sets maxconn for server
+func (c *client) SetServerMaxconn(backend, server string, maxconn int) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetServerMaxconn(backend, server, maxconn); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetServerAgentPort sets agent-port for server
+func (c *client) SetServerAgentPort(backend, server string, port int) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetServerAgentPort(backend, server, port); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetServerCheckAddr sets check-addr [port] for server
+func (c *client) SetServerCheckAddr(backend, server, addr string, port int) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetServerCheckAddr(backend, server, addr, port); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetServerFqdn sets fqdn for server
+func (c *client) SetServerFqdn(backend, server, fqdn string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetServerFqdn(backend, server, fqdn); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetGlobalMaxConn sets the process-wide maxconn
+func (c *client) SetGlobalMaxConn(maxconn int) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetGlobalMaxConn(maxconn); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetRateLimitConnectionsGlobal sets the process-wide connections per second limit
+func (c *client) SetRateLimitConnectionsGlobal(value uint64) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetRateLimitConnectionsGlobal(value); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetRateLimitSessionsGlobal sets the process-wide sessions per second limit
+func (c *client) SetRateLimitSessionsGlobal(value uint64) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetRateLimitSessionsGlobal(value); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetRateLimitHTTPCompressionGlobal sets the process-wide HTTP compression rate limit in kB/s
+func (c *client) SetRateLimitHTTPCompressionGlobal(value uint64) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetRateLimitHTTPCompressionGlobal(value); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// AddBackend creates an unpublished backend that takes all its settings from the named defaults section
+func (c *client) AddBackend(name, defaults, mode, guid string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("3.4")}) {
+		return errors.New("this operation requires HAProxy 3.4 or later")
+	}
+	if err := c.runtime.AddBackend(name, defaults, mode, guid); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// DeleteBackend removes a backend; it must be unpublished, without servers and not referenced by the configuration
+func (c *client) DeleteBackend(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("3.4")}) {
+		return errors.New("this operation requires HAProxy 3.4 or later")
+	}
+	if err := c.runtime.DeleteBackend(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// PublishBackend makes the backend available to content switching rules
+func (c *client) PublishBackend(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("3.4")}) {
+		return errors.New("this operation requires HAProxy 3.4 or later")
+	}
+	if err := c.runtime.PublishBackend(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// UnpublishBackend makes the backend unavailable to content switching rules
+func (c *client) UnpublishBackend(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("3.4")}) {
+		return errors.New("this operation requires HAProxy 3.4 or later")
+	}
+	if err := c.runtime.UnpublishBackend(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// WaitBackendRemovable waits up to timeout for the backend to become removable by DeleteBackend
+func (c *client) WaitBackendRemovable(name string, timeout time.Duration) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Version: semver.MustParse("3.4")}) {
+		return errors.New("this operation requires HAProxy 3.4 or later")
+	}
+	if err := c.runtime.WaitBackendRemovable(name, timeout); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
 // SetTableEntry create or update a stick-table entry in the table.
 func (c *client) SetTableEntry(table, key string, dataType models.StickTableEntry) error {
 	if !c.runtime.IsValid() {

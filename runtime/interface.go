@@ -100,6 +100,27 @@ type Servers interface {
 	ShutdownSessionsServer(backend, server string) error
 	// WaitServerRemovable waits up to timeout for the server to become removable by DeleteServer
 	WaitServerRemovable(backend, server string, timeout time.Duration) error
+	// SetServerMaxconn sets maxconn for server
+	SetServerMaxconn(backend, server string, maxconn int) error
+	// SetServerAgentPort sets agent-port for server
+	SetServerAgentPort(backend, server string, port int) error
+	// SetServerCheckAddr sets check-addr for server, and the check port when port > 0
+	SetServerCheckAddr(backend, server, addr string, port int) error
+	// SetServerFqdn sets fqdn for server
+	SetServerFqdn(backend, server, fqdn string) error
+}
+
+type Backends interface {
+	// AddBackend creates an unpublished backend that takes all its settings from the named defaults section
+	AddBackend(name, defaults, mode, guid string) error
+	// DeleteBackend removes a backend; it must be unpublished, without servers and not referenced by the configuration
+	DeleteBackend(name string) error
+	// PublishBackend makes the backend available to content switching rules
+	PublishBackend(name string) error
+	// UnpublishBackend makes the backend unavailable to content switching rules
+	UnpublishBackend(name string) error
+	// WaitBackendRemovable waits up to timeout for the backend to become removable by DeleteBackend
+	WaitBackendRemovable(name string, timeout time.Duration) error
 }
 
 type ACLs interface {
@@ -144,6 +165,14 @@ type Manage interface {
 	ClearCounters() error
 	// Clears counters
 	ClearAllCounters() error
+	// SetGlobalMaxConn sets the process-wide maxconn
+	SetGlobalMaxConn(maxconn int) error
+	// SetRateLimitConnectionsGlobal sets the process-wide connections per second limit
+	SetRateLimitConnectionsGlobal(value uint64) error
+	// SetRateLimitSessionsGlobal sets the process-wide sessions per second limit
+	SetRateLimitSessionsGlobal(value uint64) error
+	// SetRateLimitHTTPCompressionGlobal sets the process-wide HTTP compression rate limit in kB/s
+	SetRateLimitHTTPCompressionGlobal(value uint64) error
 }
 
 type Raw interface {
@@ -218,6 +247,7 @@ type Runtime interface {
 	Manage
 	Maps
 	Servers
+	Backends
 	ACLs
 	Tables
 	Raw
