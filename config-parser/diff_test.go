@@ -160,6 +160,116 @@ func TestDiffSectionSameParser(t *testing.T) {
 	}
 }
 
+// noFromCfg has two defaults sections, declared in the order the writer writes
+// them, and a frontend and a backend without from.
+const noFromCfg = `defaults aa
+  mode http
+
+defaults zz
+  mode tcp
+
+frontend fe
+  bind :80
+
+backend be
+  balance roundrobin
+`
+
+// noFromReversed is noFromCfg with the defaults sections declared the other
+// way round: the one read last is not the one written last.
+var noFromReversed = strings.NewReplacer("defaults aa", "defaults zz", "defaults zz", "defaults aa").Replace(noFromCfg)
+
+var noFromSections = []struct {
+	t    parser.Section
+	name string
+}{{parser.Frontends, "fe"}, {parser.Backends, "be"}}
+
+func newNoNamedParser(t *testing.T, cfg string) parser.Parser {
+	t.Helper()
+	p, err := parser.New(options.String(cfg), options.NoNamedDefaultsFrom)
+	if err != nil {
+		t.Fatalf("parser.New: %v", err)
+	}
+	return p
+}
+
+// lastDefaultsHeader returns the name on the last defaults header line p writes.
+func lastDefaultsHeader(t *testing.T, p parser.Parser) string {
+	t.Helper()
+	name := ""
+	for line := range strings.Lines(p.String()) {
+		if fields := strings.Fields(line); len(fields) > 1 && fields[0] == "defaults" {
+			name = fields[1]
+		}
+	}
+	if name == "" {
+		t.Fatal("no defaults header written")
+	}
+	return name
+}
+
+func TestEffectiveDefaults(t *testing.T) {
+	if got := parser.EffectiveDefaults(newDiffParser(t, diffBase), parser.Backends, "be"); got != "d1" {
+		t.Errorf("explicit from: got %q, want d1", got)
+	}
+
+	one := newNoNamedParser(t, "defaults d\n  mode http\n\nfrontend fe\n  bind :80\n\nbackend be\n  balance roundrobin\n")
+	for _, s := range noFromSections {
+		if from, _ := one.SectionsDefaultsFromGet(s.t, s.name); from != "" {
+			t.Fatalf("one defaults, %s: NoNamedDefaultsFrom parser has from %q", s.name, from)
+		}
+		if got := parser.EffectiveDefaults(one, s.t, s.name); got != "d" {
+			t.Errorf("one defaults, %s: got %q, want d", s.name, got)
+		}
+	}
+
+	two := newNoNamedParser(t, noFromReversed)
+	want := lastDefaultsHeader(t, two)
+	for _, s := range noFromSections {
+		if got := parser.EffectiveDefaults(two, s.t, s.name); got != want {
+			t.Errorf("two defaults, %s: got %q, want %q", s.name, got, want)
+		}
+	}
+	if got := parser.EffectiveDefaults(two, parser.Defaults, "aa"); got != "" {
+		t.Errorf("defaults without from: got %q, want empty", got)
+	}
+
+	none := newNoNamedParser(t, "frontend fe\n  bind :80\n")
+	if got := parser.EffectiveDefaults(none, parser.Frontends, "fe"); got != "" {
+		t.Errorf("no defaults section: got %q, want empty", got)
+	}
+}
+
+func TestDiffSectionImplicitFrom(t *testing.T) {
+	tests := []struct {
+		name, cfg string
+		want      []string
+	}{
+		{"same defaults", noFromCfg, nil},
+		// The default parser names the defaults section read last; once written,
+		// a section without from inherits from the one written last.
+		{"other defaults", noFromReversed, []string{"from"}},
+	}
+	for _, tt := range tests {
+		for _, s := range noFromSections {
+			t.Run(tt.name+"/"+s.name, func(t *testing.T) {
+				named := newDiffParser(t, tt.cfg)
+				if from, _ := named.SectionsDefaultsFromGet(s.t, s.name); from == "" {
+					t.Fatal("default parser has no from")
+				}
+				var got []string
+				ok := parser.DiffSection(named, newNoNamedParser(t, tt.cfg), s.t, s.name, func(attr string) bool {
+					got = append(got, attr)
+					return true
+				})
+				if !ok || !slices.Equal(got, tt.want) {
+					t.Fatalf("ok = %v, got %v, want %v", ok, got, tt.want)
+				}
+			})
+		}
+	}
+}
+
 func TestSectionTypes(t *testing.T) {
 	got := parser.SectionTypes(newDiffParser(t, "global\n  maxconn 1\n\ndefaults d\n  mode http\n\nfrontend fe\n  bind :80\n\nbackend be\n  balance roundrobin\n"))
 	for _, want := range []parser.Section{parser.Global, parser.Defaults, parser.Frontends, parser.Backends, parser.Comments} {

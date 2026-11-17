@@ -16,12 +16,17 @@ limitations under the License.
 
 package parser
 
-import "github.com/haproxytech/client-native/v6/config-parser/common"
+import (
+	"slices"
+
+	"github.com/haproxytech/client-native/v6/config-parser/common"
+)
 
 // DiffSection reports which attributes of section (t, name) render differently
 // in a and b. fn is called once per differing attribute, in ParserSequence
-// order, and stops the walk by returning false. A different `from` defaults
-// section is reported first, as attribute "from". Comments are ignored.
+// order, and stops the walk by returning false. A different defaults section
+// (see EffectiveDefaults) is reported first, as attribute "from". Comments are
+// ignored.
 // It returns false when a or b was not created by this package, the section is
 // missing in either, or the two sections do not have the same parser sequence;
 // callers must then assume the sections differ.
@@ -46,7 +51,9 @@ func DiffSection(a, b Parser, t Section, name string, fn func(attribute string) 
 	if !okA || !okB {
 		return false
 	}
-	if sa.SectionName != sb.SectionName && !fn("from") {
+	// No `from` and a `from` naming the implicitly inherited section are the same.
+	if sa.SectionName != sb.SectionName &&
+		pa.effectiveDefaults(t, name) != pb.effectiveDefaults(t, name) && !fn("from") {
 		return true
 	}
 	if len(sa.ParserSequence) != len(sb.ParserSequence) {
@@ -65,6 +72,39 @@ func DiffSection(a, b Parser, t Section, name string, fn func(attribute string) 
 		}
 	}
 	return true
+}
+
+// EffectiveDefaults returns the name of the defaults section that section
+// (t, name) of p inherits from once p is written out: the one named by its
+// `from` or, for a frontend, backend or listen section without one, the
+// defaults section written last. It returns "" when there is none or p was
+// not created by this package.
+func EffectiveDefaults(p Parser, t Section, name string) string {
+	cp, ok := p.(*configParser)
+	if !ok {
+		return ""
+	}
+	cp.lock()
+	defer cp.unLock()
+	return cp.effectiveDefaults(t, name)
+}
+
+// effectiveDefaults is EffectiveDefaults with p locked.
+func (p *configParser) effectiveDefaults(t Section, name string) string {
+	s, ok := p.Parsers[t][name]
+	if !ok {
+		return ""
+	}
+	if s.SectionName != "" || (t != Frontends && t != Backends && t != Listen) {
+		return s.SectionName
+	}
+	names, _ := getSortedListWithFrom(p.Parsers[Defaults]) // String ignores the error too
+	for _, d := range slices.Backward(names) {
+		if p.shouldSerialize(Defaults, d) {
+			return d
+		}
+	}
+	return ""
 }
 
 // SectionTypes returns the section types p holds at least one section of.

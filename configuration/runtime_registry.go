@@ -141,10 +141,12 @@ func serverItems(p parser.Parser, t parser.Section, section string) ([]item, err
 }
 
 // defaultsChain returns the defaults sections a section inherits from, root
-// first. It stops at a cycle or a missing section.
+// first, including the implicit one of a section without `from`. It stops at a
+// cycle or a missing section.
 func defaultsChain(p parser.Parser, t parser.Section, section string) []string {
 	var chain []string
-	name, err := p.SectionsDefaultsFromGet(t, section)
+	var err error
+	name := parser.EffectiveDefaults(p, t, section)
 	for err == nil && name != "" && !slices.Contains(chain, name) {
 		var next string
 		if next, err = p.SectionsDefaultsFromGet(parser.Defaults, name); err == nil {

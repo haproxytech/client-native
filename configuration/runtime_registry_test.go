@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -26,6 +27,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
 	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/models"
 	"github.com/haproxytech/client-native/v6/runtime"
@@ -142,7 +144,13 @@ func (r *recordingRuntime) WaitServerRemovable(backend, server string, timeout t
 // from oldCfg to newCfg; nil means reload.
 func registryCalls(t *testing.T, oldCfg, newCfg string) []string {
 	t.Helper()
-	steps, ok := runtimeSteps(registry, newRuntimeApplyParser(t, oldCfg), newRuntimeApplyParser(t, newCfg), nil)
+	return parserCalls(t, newRuntimeApplyParser(t, oldCfg), newRuntimeApplyParser(t, newCfg))
+}
+
+// parserCalls is registryCalls on parsers.
+func parserCalls(t *testing.T, oldP, newP parser.Parser) []string {
+	t.Helper()
+	steps, ok := runtimeSteps(registry, oldP, newP, nil)
 	if !ok {
 		return nil
 	}
@@ -403,6 +411,93 @@ func TestRuntimeRegistryAddServerInherited(t *testing.T) {
 			require.Equal(t, want, registryCalls(t, tc.cfg, tc.cfg+"  "+tc.server+"\n"))
 		})
 	}
+}
+
+// implicitDefaultsCfg has a frontend and a backend without from; the backend
+// inherits its default-server options from the only defaults section.
+const implicitDefaultsCfg = `defaults d
+  mode http
+  default-server check weight 5
+
+frontend fe
+  bind :80
+  default_backend be
+
+backend be
+  server s1 10.0.0.1:80 weight 10
+`
+
+var implicitWeightChanged = strings.Replace(implicitDefaultsCfg, "weight 10", "weight 20", 1) //nolint:gochecknoglobals
+
+var addImplicitS3 = []string{"AddServer be s3 10.0.0.3:80 check weight 5", "EnableServerHealth be s3", "SetServerState be s3 ready"} //nolint:gochecknoglobals
+
+// newNoNamedParser builds a parser the way transaction parsers are built: a
+// section without from gets no defaults section name.
+func newNoNamedParser(t *testing.T, cfg string) parser.Parser {
+	t.Helper()
+	p, err := parser.New(parser_options.String(cfg), parser_options.NoNamedDefaultsFrom)
+	require.NoError(t, err)
+	return p
+}
+
+func TestRuntimeRegistryImplicitDefaults(t *testing.T) {
+	t.Run("add server", func(t *testing.T) {
+		got := parserCalls(t, newNoNamedParser(t, implicitDefaultsCfg), newNoNamedParser(t, implicitDefaultsCfg+"  server s3 10.0.0.3:80\n"))
+		require.Equal(t, addImplicitS3, got)
+	})
+	t.Run("named old, unnamed new", func(t *testing.T) {
+		got := parserCalls(t, newRuntimeApplyParser(t, implicitDefaultsCfg), newNoNamedParser(t, implicitWeightChanged))
+		require.Equal(t, []string{"SetServerWeight be s1 20"}, got)
+	})
+}
+
+// haproxyBin returns a stand-in HAProxy 3.2 binary: with it the client reads
+// its configuration file without NoNamedDefaultsFrom, as with a real HAProxy
+// 2.4 or later, while its transaction parsers use it.
+func haproxyBin(t *testing.T) string {
+	t.Helper()
+	path := filepath.Join(t.TempDir(), "haproxy")
+	require.NoError(t, os.WriteFile(path, []byte("#!/bin/sh\necho 'HAProxy version 3.2.0-1 2025/05/28 - https://haproxy.org/'\n"), 0o700))
+	return path
+}
+
+func TestRuntimeRegistryClientImplicitDefaults(t *testing.T) {
+	newClient := func(t *testing.T, rt *recordingRuntime, rec *commitRecorder) *client {
+		t.Helper()
+		c := newApplyClient(t, implicitDefaultsCfg, rt, rec, options.HAProxyBin(haproxyBin(t)))
+		from, err := c.parser.SectionsDefaultsFromGet(parser.Backends, "be")
+		require.NoError(t, err)
+		require.Equal(t, "d", from, "the startup parser must name the implicit defaults section")
+		return c
+	}
+	t.Run("unchanged", func(t *testing.T) {
+		var rec commitRecorder
+		rt := &recordingRuntime{}
+		c := newClient(t, rt, &rec)
+		postRaw(t, c, implicitDefaultsCfg)
+		res := rec.one(t)
+		require.False(t, res.Reload)
+		require.NoError(t, res.Err)
+		require.Empty(t, rt.calls)
+	})
+	t.Run("weight then create", func(t *testing.T) {
+		var rec commitRecorder
+		rt := &recordingRuntime{}
+		c := newClient(t, rt, &rec)
+		postRaw(t, c, implicitWeightChanged)
+		res := rec.one(t)
+		require.False(t, res.Reload)
+		require.NoError(t, res.Err)
+		require.Equal(t, []string{"SetServerWeight be s1 20"}, rt.calls)
+
+		rec, rt.calls = nil, nil
+		port := int64(80)
+		require.NoError(t, c.CreateServer(BackendParentName, "be", &models.Server{Name: "s3", Address: "10.0.0.3", Port: &port}, "", currentVersion(t, c)))
+		res = rec.one(t)
+		require.False(t, res.Reload)
+		require.NoError(t, res.Err)
+		require.Equal(t, addImplicitS3, rt.calls)
+	})
 }
 
 func TestServerItems(t *testing.T) {
