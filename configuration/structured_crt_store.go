@@ -17,11 +17,11 @@ package configuration
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	convert "github.com/haproxytech/client-native/v6/configuration/convert/v2v3"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -142,13 +142,7 @@ func serializeCrtStoreSection(a StructuredToParserArgs, r *models.CrtStore) erro
 	if err := SerializeCrtStore(p, r); err != nil {
 		return err
 	}
-	crtLoadCerts := make([]string, 0, len(r.CrtLoads))
-	for name := range r.CrtLoads {
-		crtLoadCerts = append(crtLoadCerts, name)
-	}
-	sort.Strings(crtLoadCerts)
-	for _, name := range crtLoadCerts {
-		crtLoad := r.CrtLoads[name]
+	for _, crtLoad := range misc.SortedByKey(r.CrtLoads) {
 		if err := p.Insert(parser.CrtStore, r.Name, "load", SerializeCrtLoad(&crtLoad), -1); err != nil {
 			return a.HandleError(crtLoad.Certificate, CrtStoreParentName, r.Name, a.TID, a.TID == "", err)
 		}

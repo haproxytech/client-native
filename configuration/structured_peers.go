@@ -22,6 +22,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/configuration/options"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -223,17 +224,17 @@ func serializePeerSection(a StructuredToParserArgs, ps *models.PeerSection, opt 
 	if err = CreateEditSection(&ps.PeerSectionBase, parser.Peers, ps.Name, p, a.Options); err != nil {
 		return a.HandleError(ps.Name, "", "", a.TID, a.TID == "", err)
 	}
-	for _, entry := range ps.PeerEntries {
+	for _, entry := range misc.SortedByKey(ps.PeerEntries) {
 		if err = p.Insert(parser.Peers, ps.Name, "peer", SerializePeerEntry(entry), -1); err != nil {
 			return a.HandleError(entry.Name, PeersParentName, ps.Name, a.TID, a.TID == "", err)
 		}
 	}
-	for _, bind := range ps.Binds {
+	for _, bind := range misc.SortedByKey(ps.Binds) {
 		if err = p.Insert(parser.Peers, ps.Name, "bind", SerializeBind(bind, opt), -1); err != nil {
 			return a.HandleError(bind.Name, PeersParentName, ps.Name, a.TID, a.TID == "", err)
 		}
 	}
-	for _, server := range ps.Servers {
+	for _, server := range misc.SortedByKey(ps.Servers) {
 		if err = p.Insert(parser.Peers, ps.Name, "server", SerializeServer(server, a.Options), -1); err != nil {
 			return a.HandleError(server.Name, PeersParentName, ps.Name, a.TID, a.TID == "", err)
 		}
@@ -243,7 +244,7 @@ func serializePeerSection(a StructuredToParserArgs, ps *models.PeerSection, opt 
 			return a.HandleError(strconv.FormatInt(int64(i), 10), PeersParentName, ps.Name, a.TID, a.TID == "", err)
 		}
 	}
-	for _, table := range ps.Tables {
+	for _, table := range misc.SortedByKey(ps.Tables) {
 		if err = p.Insert(parser.Peers, ps.Name, "table", SerializeTable(table), -1); err != nil {
 			return a.HandleError(table.Name, PeersParentName, ps.Name, a.TID, a.TID == "", err)
 		}
