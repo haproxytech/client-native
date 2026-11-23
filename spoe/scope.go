@@ -21,6 +21,7 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	conf "github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -39,7 +40,7 @@ func (c *SingleSpoe) GetScopes(transactionID string) (int64, models.SpoeScopes, 
 	sNames := p.Parsers
 
 	scopes := models.SpoeScopes{}
-	for name := range sNames {
+	for name := range misc.SortedByKey(sNames) {
 		if p.IsScope(name) {
 			name := models.SpoeScope(name)
 			scopes = append(scopes, name)
