@@ -35,4 +35,9 @@ const (
 
 	// DefaultTimeSuffix uses the most appropriate Time unit for serialization
 	DefaultTimeSuffix = "nearest"
+
+	// DefaultFailedTransactionsNumber is how many failed transaction files are kept
+	DefaultFailedTransactionsNumber = 7
+	// DefaultOutdatedTransactionsNumber is how many outdated transaction files are kept
+	DefaultOutdatedTransactionsNumber = 7
 )

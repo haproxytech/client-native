@@ -21,9 +21,11 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/google/uuid"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
@@ -546,6 +548,7 @@ func (t *Transaction) writeOutdatedTransaction(transactionID, configFile string)
 	if err := moveFile(configFile, outdatedConfigFile); err != nil {
 		_ = os.Remove(configFile)
 	}
+	t.pruneTransactionFiles(outdatedDir, t.OutdatedTransactionsNumber, options.DefaultOutdatedTransactionsNumber)
 }
 
 func (t *Transaction) writeFailedTransaction(transactionID, configFile string) {
@@ -556,6 +559,47 @@ func (t *Transaction) writeFailedTransaction(transactionID, configFile string) {
 	failedConfigFile := t.getTransactionFile(transactionID, models.TransactionStatusFailed)
 	if err := moveFile(configFile, failedConfigFile); err != nil {
 		_ = os.Remove(configFile)
+	}
+	t.pruneTransactionFiles(failedDir, t.FailedTransactionsNumber, options.DefaultFailedTransactionsNumber)
+}
+
+// pruneTransactionFiles keeps only the newest transaction files in dir.
+// Zero keep means default: clients may build options without the option setters.
+func (t *Transaction) pruneTransactionFiles(dir string, keep, defaultKeep int) {
+	if keep <= 0 {
+		keep = defaultKeep
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return
+	}
+	type txFile struct {
+		name    string
+		modTime time.Time
+	}
+	prefix := filepath.Base(filepath.Clean(t.ConfigurationFile)) + "."
+	files := make([]txFile, 0, len(entries))
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasPrefix(e.Name(), prefix) {
+			continue
+		}
+		info, err := e.Info()
+		if err != nil {
+			continue
+		}
+		files = append(files, txFile{name: e.Name(), modTime: info.ModTime()})
+	}
+	if len(files) <= keep {
+		return
+	}
+	slices.SortFunc(files, func(a, b txFile) int {
+		if c := b.modTime.Compare(a.modTime); c != 0 {
+			return c
+		}
+		return strings.Compare(a.name, b.name)
+	})
+	for _, f := range files[keep:] {
+		_ = os.Remove(filepath.Join(dir, f.name))
 	}
 }
 
