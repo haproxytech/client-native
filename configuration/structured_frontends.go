@@ -23,6 +23,7 @@ import (
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 	"github.com/haproxytech/client-native/v6/configuration/options"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -271,7 +272,7 @@ func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend, opt 
 	if err = CreateEditSection(&f.FrontendBase, parser.Frontends, f.Name, p, a.Options); err != nil {
 		return a.HandleError(f.Name, "", "", a.TID, a.TID == "", err)
 	}
-	for _, bind := range f.Binds {
+	for _, bind := range misc.SortedByKey(f.Binds) {
 		if err = p.Insert(parser.Frontends, f.Name, "bind", SerializeBind(bind, opt), -1); err != nil {
 			return a.HandleError(bind.Name, FrontendParentName, f.Name, a.TID, a.TID == "", err)
 		}

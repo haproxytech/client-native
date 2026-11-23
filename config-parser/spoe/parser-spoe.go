@@ -116,13 +116,7 @@ func (p *Parser) SectionsGet(scope string, sectionType parser.Section) ([]string
 	if !ok {
 		return nil, errors.ErrSectionMissing
 	}
-	result := make([]string, len(st))
-	index := 0
-	for sectionName := range st {
-		result[index] = sectionName
-		index++
-	}
-	return result, nil
+	return p.getSortedList(st), nil
 }
 
 // ScopeDelete deletes one section of sectionType

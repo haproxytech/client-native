@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/errors"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -146,7 +147,7 @@ func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:goco
 	}
 	entry := &models.StickTableEntry{ID: idData[0]}
 	data := parseStickTableEntryLine(strings.TrimSpace(idData[1]))
-	for k, v := range data {
+	for k, v := range misc.SortedByKey(data) {
 		switch key := k; {
 		case key == "server_id":
 			sID, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
