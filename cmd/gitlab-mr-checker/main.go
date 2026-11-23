@@ -30,6 +30,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/haproxytech/client-native/v6/docs"
 	"github.com/joho/godotenv"
 )
 
@@ -86,17 +87,6 @@ var baseURL string //nolint:gochecknoglobals
 
 const LABEL_COLOR = "#8fbc8f" //nolint:revive
 
-// supportedVersions lists the active client-native release lines for which
-// the bot will propose backports. Update this when a new release is cut
-// or an old one is EOL'd.
-var supportedVersions = []string{ //nolint:gochecknoglobals
-	"5.1",
-	"6.0",
-	"6.2",
-	"6.3",
-	"6.4",
-}
-
 //nolint:modernize,perfsprint
 func main() {
 	_ = godotenv.Overload()
@@ -144,13 +134,19 @@ func main() {
 		slog.Error("CI_PROJECT_ID not set")
 		os.Exit(1)
 	}
+	lifecycle, err := docs.GetLifecycle()
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
+
 	question := `<!-- MR BACKPORT QUESTION -->` + "\n" + "Does this needs backport ? \n| Version | label |\n|:--:|:--:|"
 	backportLabels := map[string]struct{}{
 		"backport-ee": {},
 	}
-	for _, ver := range supportedVersions {
-		question += "\n" + "| " + ver + " | " + "backport-" + ver + " |"
-		backportLabels["backport-"+ver] = struct{}{}
+	for _, v := range lifecycle.Versions {
+		question += "\n" + "| " + v.Version + " | " + "backport-" + v.Version + " |"
+		backportLabels["backport-"+v.Version] = struct{}{}
 	}
 	// ee
 	question += "\n" + "| EE | " + "backport-ee |"
