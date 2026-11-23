@@ -29,6 +29,8 @@ type ConfigurationOptions struct {
 	ValidateConfigFilesAfter        []string
 	PreferredTimeSuffix             string
 	BackupsNumber                   int
+	FailedTransactionsNumber        int
+	OutdatedTransactionsNumber      int
 	PersistentTransactions          bool
 	SkipFailedTransactions          bool
 	UseModelsValidation             bool
