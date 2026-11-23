@@ -17,12 +17,12 @@ package configuration
 
 import (
 	"fmt"
-	"sort"
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -278,7 +278,7 @@ func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error)
 	return b, nil
 }
 
-func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit,gocyclo,cyclop
+func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error { //nolint:gocognit
 	p := *a.Parser
 	var err error
 
@@ -290,14 +290,7 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 		return a.HandleError(b.Name, "", "", a.TID, a.TID == "", err)
 	}
 
-	// Ensure sorting of servers by name
-	orderedNames := make([]string, 0, len(b.Servers))
-	for name := range b.Servers {
-		orderedNames = append(orderedNames, name)
-	}
-	sort.Strings(orderedNames)
-	for _, name := range orderedNames {
-		localS := b.Servers[name]
+	for _, localS := range misc.SortedByKey(b.Servers) {
 		if err = p.Insert(parser.Backends, b.Name, "server", SerializeServer(localS, a.Options), -1); err != nil {
 			return a.HandleError(localS.Name, BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
@@ -318,14 +311,7 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 		}
 	}
 
-	// Ensure sorting of ServerTemplates by name
-	orderedNames = make([]string, 0, len(b.ServerTemplates))
-	for name := range b.ServerTemplates {
-		orderedNames = append(orderedNames, name)
-	}
-	sort.Strings(orderedNames)
-	for _, name := range orderedNames {
-		localT := b.ServerTemplates[name]
+	for _, localT := range misc.SortedByKey(b.ServerTemplates) {
 		if err = p.Insert(parser.Backends, b.Name, "server-template", SerializeServerTemplate(localT, a.Options), -1); err != nil {
 			return a.HandleError(localT.Prefix, BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}

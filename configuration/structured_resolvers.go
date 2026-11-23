@@ -20,6 +20,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -181,7 +182,7 @@ func serializeResolverSection(a StructuredToParserArgs, r *models.Resolver) erro
 	if err = SerializeResolverSection(p, r, a.Options); err != nil {
 		return err
 	}
-	for _, ns := range r.Nameservers {
+	for _, ns := range misc.SortedByKey(r.Nameservers) {
 		if err = p.Insert(parser.Resolvers, r.Name, "nameserver", SerializeNameserver(ns), -1); err != nil {
 			return a.HandleError(ns.Name, ResolverParentName, r.Name, a.TID, a.TID == "", err)
 		}
