@@ -20,6 +20,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -183,7 +184,7 @@ func serializeRingSection(a StructuredToParserArgs, r *models.Ring) error {
 	if err = SerializeRingSection(p, r, a.Options); err != nil {
 		return err
 	}
-	for _, ns := range r.Servers {
+	for _, ns := range misc.SortedByKey(r.Servers) {
 		if err = p.Insert(parser.Ring, r.Name, "server", SerializeServer(ns, a.Options), -1); err != nil {
 			return a.HandleError(ns.Name, RingParentName, r.Name, a.TID, a.TID == "", err)
 		}

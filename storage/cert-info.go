@@ -22,6 +22,8 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"maps"
+	"slices"
 	"strings"
 	"time"
 )
@@ -195,11 +197,5 @@ func (ci *certsInfo) toCertificatesInfo() *CertificatesInfo {
 }
 
 func mapKeys(m map[string]struct{}) []string {
-	list := make([]string, len(m))
-	i := 0
-	for key := range m {
-		list[i] = key
-		i++
-	}
-	return list
+	return slices.Sorted(maps.Keys(m))
 }

@@ -114,13 +114,7 @@ func (p *configParser) SectionsGet(sectionType Section) ([]string, error) {
 	if !ok {
 		return nil, errors.ErrSectionMissing
 	}
-	result := make([]string, len(st))
-	index := 0
-	for sectionName := range st {
-		result[index] = sectionName
-		index++
-	}
-	return result, nil
+	return p.getSortedList(st), nil
 }
 
 // SectionsDelete deletes one section of sectionType

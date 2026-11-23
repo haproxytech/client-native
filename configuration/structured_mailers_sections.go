@@ -20,6 +20,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -185,7 +186,7 @@ func serializeMailersSectionSection(a StructuredToParserArgs, ms *models.Mailers
 	if err = SerializeMailersSection(p, ms, a.Options); err != nil {
 		return err
 	}
-	for _, mailerEntry := range ms.MailerEntries {
+	for _, mailerEntry := range misc.SortedByKey(ms.MailerEntries) {
 		if err = p.Insert(parser.Mailers, ms.Name, "mailer", SerializeMailerEntry(mailerEntry), -1); err != nil {
 			return a.HandleError(mailerEntry.Name, "mailer", ms.Name, a.TID, a.TID == "", err)
 		}

@@ -22,6 +22,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -291,7 +292,7 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 		return a.HandleError(b.Name, "", "", a.TID, a.TID == "", err)
 	}
 
-	for _, server := range b.Servers {
+	for _, server := range misc.SortedByKey(b.Servers) {
 		if err = p.Insert(parser.Backends, b.Name, "server", SerializeServer(server, a.Options), -1); err != nil {
 			return a.HandleError(server.Name, BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
@@ -311,7 +312,7 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
 	}
-	for _, template := range b.ServerTemplates {
+	for _, template := range misc.SortedByKey(b.ServerTemplates) {
 		if err = p.Insert(parser.Backends, b.Name, "server-template", SerializeServerTemplate(template, a.Options), -1); err != nil {
 			return a.HandleError(template.Prefix, BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}

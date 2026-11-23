@@ -20,6 +20,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -154,12 +155,12 @@ func serializeUserlistSection(a StructuredToParserArgs, u *models.Userlist) erro
 	if err != nil {
 		return err
 	}
-	for _, user := range u.Users {
+	for _, user := range misc.SortedByKey(u.Users) {
 		if err = p.Insert(parser.UserList, u.Name, "user", SerializeUser(user), -1); err != nil {
 			return a.HandleError(user.Username, "userlist", u.Name, a.TID, a.TID == "", err)
 		}
 	}
-	for _, group := range u.Groups {
+	for _, group := range misc.SortedByKey(u.Groups) {
 		if err = p.Insert(parser.UserList, u.Name, "group", SerializeGroup(group), -1); err != nil {
 			return a.HandleError(group.Name, "userlist", u.Name, a.TID, a.TID == "", err)
 		}

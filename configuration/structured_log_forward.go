@@ -21,6 +21,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -204,12 +205,12 @@ func serializeLogForwardSection(a StructuredToParserArgs, lf *models.LogForward)
 	if err = SerializeLogForwardSection(p, lf, a.Options); err != nil {
 		return err
 	}
-	for _, dgramBind := range lf.DgramBinds {
+	for _, dgramBind := range misc.SortedByKey(lf.DgramBinds) {
 		if err = p.Insert(parser.LogForward, lf.Name, "dgram-bind", SerializeDgramBind(dgramBind), -1); err != nil {
 			return a.HandleError(dgramBind.Name, "log-forward", lf.Name, a.TID, a.TID == "", err)
 		}
 	}
-	for _, bind := range lf.Binds {
+	for _, bind := range misc.SortedByKey(lf.Binds) {
 		if err = p.Insert(parser.LogForward, lf.Name, "bind", SerializeBind(bind), -1); err != nil {
 			return a.HandleError(bind.Name, "log-forward", lf.Name, a.TID, a.TID == "", err)
 		}
