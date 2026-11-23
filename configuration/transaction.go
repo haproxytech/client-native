@@ -164,12 +164,14 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	if !t.PersistentTransactions {
 		err = t.createTransactionFiles(transactionID)
 		if err != nil {
+			t.failTransaction(transactionID, t.writeFailedTransaction)
 			return nil, err
 		}
 	}
 
 	transactionFile, err := t.GetTransactionFile(transactionID)
 	if err != nil {
+		t.failTransaction(transactionID, t.writeFailedTransaction)
 		return nil, err
 	}
 
@@ -182,6 +184,7 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 
 	if !skipVersion {
 		if err := t.TransactionClient.IncrementTransactionVersion(transactionID); err != nil {
+			t.failTransaction(transactionID, t.writeFailedTransaction)
 			return nil, err
 		}
 	}
@@ -519,6 +522,9 @@ func (t *Transaction) getBackupFile(version int64) (string, error) {
 }
 
 func (t *Transaction) failTransaction(transactionID string, txHandler transactionCleanerHandler) {
+	// Non-persistent transactions may have no file yet, the parser must go anyway.
+	_ = t.TransactionClient.DeleteParser(transactionID)
+
 	configFile, err := t.GetTransactionFile(transactionID)
 	if err != nil {
 		return
@@ -529,7 +535,6 @@ func (t *Transaction) failTransaction(transactionID string, txHandler transactio
 	} else {
 		txHandler(transactionID, configFile)
 	}
-	_ = t.TransactionClient.DeleteParser(transactionID)
 }
 
 func (t *Transaction) writeOutdatedTransaction(transactionID, configFile string) {
