@@ -177,6 +177,14 @@ const peers_defaultserverinitaddrlastlibcnon_ = `
 peers test
   default-server init-addr last,libc,none,127.0.0.1
 `
+const peers_defaultserverhttphardeningauto = `
+peers test
+  default-server http-hardening auto
+`
+const peers_defaultserverhttphardeningharden = `
+peers test
+  default-server http-hardening hardening1
+`
 const peers_defaultserverinter1500ms = `
 peers test
   default-server inter 1500ms

@@ -617,6 +617,15 @@ func StructuredToLogProfileMap() map[string]models.LogProfiles {
 	return res
 }
 
+func StructuredToHTTPHardeningMap() map[string]models.HTTPHardenings {
+	resources, _ := expectedResources[models.HTTPHardening]("http_hardenings")
+	res := make(map[string]models.HTTPHardenings)
+	keyRoot := ""
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
+	return res
+}
+
 func StructuredToAcmeMap() map[string]models.AcmeProviders {
 	resources, _ := expectedResources[models.AcmeProvider]("acme_providers")
 	res := make(map[string]models.AcmeProviders)

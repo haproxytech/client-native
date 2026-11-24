@@ -361,6 +361,14 @@ const backend_defaultserverinitaddrlastlibcnon_ = `
 backend test
   default-server init-addr last,libc,none,127.0.0.1
 `
+const backend_defaultserverhttphardeningauto = `
+backend test
+  default-server http-hardening auto
+`
+const backend_defaultserverhttphardeningharden = `
+backend test
+  default-server http-hardening hardening1
+`
 const backend_defaultserverinter1500ms = `
 backend test
   default-server inter 1500ms
@@ -1264,6 +1272,10 @@ backend test
 const backend_servername1270018080 = `
 backend test
   server name 127.0.0.1:8080
+`
+const backend_servername127001httphardeningaut = `
+backend test
+  server name 127.0.0.1 http-hardening auto
 `
 const backend_servername127001 = `
 backend test

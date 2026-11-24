@@ -361,6 +361,14 @@ const defaults_defaultserverinitaddrlastlibcnon_ = `
 defaults test
   default-server init-addr last,libc,none,127.0.0.1
 `
+const defaults_defaultserverhttphardeningauto = `
+defaults test
+  default-server http-hardening auto
+`
+const defaults_defaultserverhttphardeningharden = `
+defaults test
+  default-server http-hardening hardening1
+`
 const defaults_defaultserverinter1500ms = `
 defaults test
   default-server inter 1500ms

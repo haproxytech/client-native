@@ -1045,6 +1045,13 @@ log-profile logp1
   on error format "%ci: error" sd "%a %b sd"
   on any sd "custom sd"
 
+http-hardening hardening1
+  all on
+  reject-lowercase-method off
+
+http-hardening hardening2 from hardening1
+  all-delete off
+
 mailers localmailer1
   mailer smtp1 10.0.10.1:514
   mailer smtp2 10.0.10.2:514

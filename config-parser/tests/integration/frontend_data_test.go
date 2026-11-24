@@ -589,6 +589,14 @@ const frontend_bind443idleping10 = `
 frontend test
   bind :443 idle-ping 10
 `
+const frontend_bind443httphardeningauto = `
+frontend test
+  bind :443 http-hardening auto
+`
+const frontend_bind443httphardeninghardening1 = `
+frontend test
+  bind :443 http-hardening hardening1
+`
 const frontend_bind443shards4 = `
 frontend test
   bind :443 shards 4

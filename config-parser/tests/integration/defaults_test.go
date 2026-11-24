@@ -116,6 +116,8 @@ func TestWholeConfigsSectionsDefaults(t *testing.T) {
 		{"defaults_defaultserverforcetlsv11", defaults_defaultserverforcetlsv11},
 		{"defaults_defaultserverforcetlsv12", defaults_defaultserverforcetlsv12},
 		{"defaults_defaultserverforcetlsv13", defaults_defaultserverforcetlsv13},
+		{"defaults_defaultserverhttphardeningauto", defaults_defaultserverhttphardeningauto},
+		{"defaults_defaultserverhttphardeningharden", defaults_defaultserverhttphardeningharden},
 		{"defaults_defaultserverinitaddrlastlibcnon", defaults_defaultserverinitaddrlastlibcnon},
 		{"defaults_defaultserverinitaddrlastlibcnon_", defaults_defaultserverinitaddrlastlibcnon_},
 		{"defaults_defaultserverinter1000weight13", defaults_defaultserverinter1000weight13},

@@ -3302,6 +3302,18 @@
             ]
         }
     },
+    "http_hardenings": {
+        "hardening1": {
+            "name": "hardening1",
+            "all": "on",
+            "reject_lowercase_method": "off"
+        },
+        "hardening2": {
+            "name": "hardening2",
+            "from": "hardening1",
+            "all_delete": "off"
+        }
+    },
     "mailers_sections": {
         "localmailer1": {
             "name": "localmailer1",

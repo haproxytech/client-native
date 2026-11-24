@@ -150,6 +150,8 @@ backend test
   default-server force-tlsv13
   default-server init-addr last,libc,none
   default-server init-addr last,libc,none,127.0.0.1
+  default-server http-hardening auto
+  default-server http-hardening hardening1
   default-server inter 1500ms
   default-server inter 1000 weight 13
   default-server fastinter 2500ms
@@ -305,6 +307,7 @@ backend test
   external-check path /usr/bin:/bin
   external-check command /bin/true
   server name 127.0.0.1:8080
+  server name 127.0.0.1 http-hardening auto
   server name 127.0.0.1
   server addr 127.0.0.1
   server addr ::1
@@ -1270,6 +1273,8 @@ defaults test
   default-server force-tlsv13
   default-server init-addr last,libc,none
   default-server init-addr last,libc,none,127.0.0.1
+  default-server http-hardening auto
+  default-server http-hardening hardening1
   default-server inter 1500ms
   default-server inter 1000 weight 13
   default-server fastinter 2500ms
@@ -2262,6 +2267,8 @@ frontend test
   bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
   bind :443 idle-ping 10s
   bind :443 idle-ping 10
+  bind :443 http-hardening auto
+  bind :443 http-hardening hardening1
   bind :443 shards 4
   bind :443 shards by-thread
   bind :443 shards by-group
@@ -3105,6 +3112,8 @@ peers test
   default-server force-tlsv13
   default-server init-addr last,libc,none
   default-server init-addr last,libc,none,127.0.0.1
+  default-server http-hardening auto
+  default-server http-hardening hardening1
   default-server inter 1500ms
   default-server inter 1000 weight 13
   default-server fastinter 2500ms
@@ -3553,6 +3562,10 @@ var configTests = []configTest{{`  set-param name fmt if acl
 `, 1},
 	{`  bind :443 idle-ping 10
 `, 1},
+	{`  bind :443 http-hardening auto
+`, 1},
+	{`  bind :443 http-hardening hardening1
+`, 1},
 	{`  bind :443 shards 4
 `, 1},
 	{`  bind :443 shards by-thread
@@ -3750,6 +3763,10 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  default-server init-addr last,libc,none
 `, 3},
 	{`  default-server init-addr last,libc,none,127.0.0.1
+`, 3},
+	{`  default-server http-hardening auto
+`, 3},
+	{`  default-server http-hardening hardening1
 `, 3},
 	{`  default-server inter 1500ms
 `, 3},
@@ -4084,6 +4101,8 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  peer name 127.0.0.1:8080 shard 1
 `, 1},
 	{`  server name 127.0.0.1:8080
+`, 1},
+	{`  server name 127.0.0.1 http-hardening auto
 `, 1},
 	{`  server name 127.0.0.1
 `, 1},

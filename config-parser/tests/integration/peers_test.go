@@ -78,6 +78,8 @@ func TestWholeConfigsSectionsPeers(t *testing.T) {
 		{"peers_defaultserverforcetlsv11", peers_defaultserverforcetlsv11},
 		{"peers_defaultserverforcetlsv12", peers_defaultserverforcetlsv12},
 		{"peers_defaultserverforcetlsv13", peers_defaultserverforcetlsv13},
+		{"peers_defaultserverhttphardeningauto", peers_defaultserverhttphardeningauto},
+		{"peers_defaultserverhttphardeningharden", peers_defaultserverhttphardeningharden},
 		{"peers_defaultserverinitaddrlastlibcnon", peers_defaultserverinitaddrlastlibcnon},
 		{"peers_defaultserverinitaddrlastlibcnon_", peers_defaultserverinitaddrlastlibcnon_},
 		{"peers_defaultserverinter1000weight13", peers_defaultserverinter1000weight13},

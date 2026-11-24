@@ -81,6 +81,8 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_bind443gidusers", frontend_bind443gidusers},
 		{"frontend_bind443groupgroup", frontend_bind443groupgroup},
 		{"frontend_bind443guidprefixguidexample", frontend_bind443guidprefixguidexample},
+		{"frontend_bind443httphardeningauto", frontend_bind443httphardeningauto},
+		{"frontend_bind443httphardeninghardening1", frontend_bind443httphardeninghardening1},
 		{"frontend_bind443id1", frontend_bind443id1},
 		{"frontend_bind443idleping10", frontend_bind443idleping10},
 		{"frontend_bind443idleping10s", frontend_bind443idleping10s},
