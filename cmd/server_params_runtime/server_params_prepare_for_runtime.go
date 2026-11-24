@@ -30,6 +30,7 @@ var ServerParamsPrepareForRuntimeMap = map[string]string{ //nolint:gochecknoglob
 	"ForceTlsv13":      FuncDoNotSendDisabledFields,
 	"Tlsv13":           FuncDoNotSendDisabledFields,
 	"Maintenance":      FuncDoNotSendDisabledFields,
+	"Pha":              FuncDoNotSendDisabledFields,
 	"NoSslv3":          FuncDoNotSendEnabledFields,
 	"NoTlsv10":         FuncDoNotSendEnabledFields,
 	"NoTlsv11":         FuncDoNotSendEnabledFields,

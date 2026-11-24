@@ -170,6 +170,8 @@ backend test
   default-server init-addr last,libc,none,127.0.0.1
   default-server http-hardening auto
   default-server http-hardening hardening1
+  default-server pha
+  default-server no-pha
   default-server inter 1500ms
   default-server inter 1000 weight 13
   default-server fastinter 2500ms
@@ -327,6 +329,8 @@ backend test
   server name 127.0.0.1:8080
   server name 127.0.0.1 http-hardening auto
   server name 127.0.0.1
+  server name 127.0.0.1 pha
+  server name 127.0.0.1 no-pha
   server addr 127.0.0.1
   server addr ::1
   server name 127.0.0.1 agent-check
@@ -1311,6 +1315,8 @@ defaults test
   default-server init-addr last,libc,none,127.0.0.1
   default-server http-hardening auto
   default-server http-hardening hardening1
+  default-server pha
+  default-server no-pha
   default-server inter 1500ms
   default-server inter 1000 weight 13
   default-server fastinter 2500ms
@@ -3168,6 +3174,8 @@ peers test
   default-server init-addr last,libc,none,127.0.0.1
   default-server http-hardening auto
   default-server http-hardening hardening1
+  default-server pha
+  default-server no-pha
   default-server inter 1500ms
   default-server inter 1000 weight 13
   default-server fastinter 2500ms
@@ -3858,6 +3866,10 @@ var configTests = []configTest{{`  set-param name fmt if acl
 `, 3},
 	{`  default-server http-hardening hardening1
 `, 3},
+	{`  default-server pha
+`, 3},
+	{`  default-server no-pha
+`, 3},
 	{`  default-server inter 1500ms
 `, 3},
 	{`  default-server inter 1000 weight 13
@@ -4195,6 +4207,10 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  server name 127.0.0.1 http-hardening auto
 `, 1},
 	{`  server name 127.0.0.1
+`, 1},
+	{`  server name 127.0.0.1 pha
+`, 1},
+	{`  server name 127.0.0.1 no-pha
 `, 1},
 	{`  server addr 127.0.0.1
 `, 1},

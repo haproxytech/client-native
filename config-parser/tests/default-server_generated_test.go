@@ -69,6 +69,8 @@ func TestDefaultServer(t *testing.T) {
 		"default-server init-addr last,libc,none,127.0.0.1":        true,
 		"default-server http-hardening auto":                       true,
 		"default-server http-hardening hardening1":                 true,
+		"default-server pha":                                       true,
+		"default-server no-pha":                                    true,
 		"default-server inter 1500ms":                              true,
 		"default-server inter 1000 weight 13":                      true,
 		"default-server fastinter 2500ms":                          true,

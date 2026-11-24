@@ -85,6 +85,7 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		rec.OnError == obj.OnError &&
 		rec.OnMarkedDown == obj.OnMarkedDown &&
 		rec.OnMarkedUp == obj.OnMarkedUp &&
+		rec.Pha == obj.Pha &&
 		rec.PoolConnName == obj.PoolConnName &&
 		EqualPointerInt64(rec.PoolLowConn, obj.PoolLowConn, opts...) &&
 		EqualPointerInt64(rec.PoolMaxConn, obj.PoolMaxConn, opts...) &&

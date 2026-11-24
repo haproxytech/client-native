@@ -322,6 +322,13 @@ type ServerParams struct {
 	// +kubebuilder:validation:Enum="shutdown-backup-sessions";
 	OnMarkedUp string `json:"on-marked-up,omitempty"`
 
+	// TLS post-handshake authentication toward the backend. Omitted means unspecified;
+	// enabled emits "pha", disabled emits "no-pha".
+	//
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled";"disabled";
+	Pha string `json:"pha,omitempty"`
+
 	// pool conn name
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -729,6 +736,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateOnMarkedUp(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePha(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2260,6 +2271,48 @@ func (m *ServerParams) validateOnMarkedUp(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateOnMarkedUpEnum("on-marked-up", "body", m.OnMarkedUp); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypePhaPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypePhaPropEnum = append(serverParamsTypePhaPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsPhaEnabled captures enum value "enabled"
+	ServerParamsPhaEnabled string = "enabled"
+
+	// ServerParamsPhaDisabled captures enum value "disabled"
+	ServerParamsPhaDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validatePhaEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypePhaPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validatePha(formats strfmt.Registry) error {
+	if swag.IsZero(m.Pha) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validatePhaEnum("pha", "body", m.Pha); err != nil {
 		return err
 	}
 

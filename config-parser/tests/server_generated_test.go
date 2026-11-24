@@ -30,6 +30,8 @@ func TestServer(t *testing.T) {
 		"server name 127.0.0.1:8080":                                true,
 		"server name 127.0.0.1 http-hardening auto":                 true,
 		"server name 127.0.0.1":                                     true,
+		"server name 127.0.0.1 pha":                                 true,
+		"server name 127.0.0.1 no-pha":                              true,
 		"server addr 127.0.0.1":                                     true,
 		"server addr ::1":                                           true,
 		"server name 127.0.0.1 agent-check":                         true,

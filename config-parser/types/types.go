@@ -610,6 +610,8 @@ type CPUSet struct {
 //test:ok:default-server http-hardening auto
 //test:ok:default-server http-hardening hardening1
 //test:fail:default-server http-hardening
+//test:ok:default-server pha
+//test:ok:default-server no-pha
 //test:ok:default-server inter 1500ms
 //test:ok:default-server inter 1000 weight 13
 //test:ok:default-server fastinter 2500ms
@@ -1278,6 +1280,8 @@ type Peer struct {
 //test:ok:server name 127.0.0.1:8080
 //test:ok:server name 127.0.0.1 http-hardening auto
 //test:ok:server name 127.0.0.1
+//test:ok:server name 127.0.0.1 pha
+//test:ok:server name 127.0.0.1 no-pha
 //test:ok:server addr 127.0.0.1
 //test:ok:server addr ::1
 //test:fail:server addr

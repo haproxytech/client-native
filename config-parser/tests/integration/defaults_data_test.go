@@ -441,6 +441,14 @@ const defaults_defaultserverhttphardeningharden = `
 defaults test
   default-server http-hardening hardening1
 `
+const defaults_defaultserverpha = `
+defaults test
+  default-server pha
+`
+const defaults_defaultservernopha = `
+defaults test
+  default-server no-pha
+`
 const defaults_defaultserverinter1500ms = `
 defaults test
   default-server inter 1500ms

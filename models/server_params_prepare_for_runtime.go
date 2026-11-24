@@ -57,6 +57,9 @@ func (s *ServerParams) prepareForRuntimeDoNotSendDisabledFields() {
 	if s.Maintenance == "disabled" {
 		s.Maintenance = ""
 	}
+	if s.Pha == "disabled" {
+		s.Pha = ""
+	}
 	if s.SendProxy == "disabled" {
 		s.SendProxy = ""
 	}

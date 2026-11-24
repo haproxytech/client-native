@@ -328,6 +328,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Renegotiate = "enabled"
 			case "no-renegotiate":
 				serverParams.Renegotiate = "disabled"
+			case "pha":
+				serverParams.Pha = "enabled"
+			case "no-pha":
+				serverParams.Pha = "disabled"
 			case "send-proxy":
 				serverParams.SendProxy = "enabled"
 			case "no-send-proxy":
@@ -652,6 +656,12 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.CheckSsl == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-check-ssl"})
+	}
+	if s.Pha == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "pha"})
+	}
+	if s.Pha == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-pha"})
 	}
 	if s.CheckPoolConnName != "" {
 		options = append(options, &params.ServerOptionValue{Name: "check-pool-conn-name", Value: s.CheckPoolConnName})

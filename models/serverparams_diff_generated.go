@@ -254,6 +254,9 @@ func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions
 	if rec.OnMarkedUp != obj.OnMarkedUp {
 		diff["OnMarkedUp"] = []interface{}{rec.OnMarkedUp, obj.OnMarkedUp}
 	}
+	if rec.Pha != obj.Pha {
+		diff["Pha"] = []interface{}{rec.Pha, obj.Pha}
+	}
 	if rec.PoolConnName != obj.PoolConnName {
 		diff["PoolConnName"] = []interface{}{rec.PoolConnName, obj.PoolConnName}
 	}

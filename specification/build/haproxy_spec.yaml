@@ -925,6 +925,14 @@ definitions:
         enum:
           - shutdown-backup-sessions
         type: string
+      pha:
+        description: |
+          TLS post-handshake authentication toward the backend. Omitted means unspecified;
+          enabled emits "pha", disabled emits "no-pha".
+        enum:
+          - enabled
+          - disabled
+        type: string
       pool_conn_name:
         pattern: ^[^\s]+$
         type: string

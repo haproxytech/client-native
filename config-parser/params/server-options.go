@@ -363,6 +363,8 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"minconn":                 func() ServerOption { return &ServerOptionValue{Name: "minconn"} },
 	"namespace":               func() ServerOption { return &ServerOptionValue{Name: "namespace"} },
 	"npn":                     func() ServerOption { return &ServerOptionValue{Name: "npn"} },
+	"pha":                     func() ServerOption { return &ServerOptionWord{Name: "pha"} },
+	"no-pha":                  func() ServerOption { return &ServerOptionWord{Name: "no-pha"} },
 	"observe":                 func() ServerOption { return &ServerOptionValue{Name: "observe"} },
 	"on-error":                func() ServerOption { return &ServerOptionValue{Name: "on-error"} },
 	"on-marked-down":          func() ServerOption { return &ServerOptionValue{Name: "on-marked-down"} },

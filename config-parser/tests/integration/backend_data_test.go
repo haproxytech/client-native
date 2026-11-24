@@ -441,6 +441,14 @@ const backend_defaultserverhttphardeningharden = `
 backend test
   default-server http-hardening hardening1
 `
+const backend_defaultserverpha = `
+backend test
+  default-server pha
+`
+const backend_defaultservernopha = `
+backend test
+  default-server no-pha
+`
 const backend_defaultserverinter1500ms = `
 backend test
   default-server inter 1500ms
@@ -1352,6 +1360,14 @@ backend test
 const backend_servername127001 = `
 backend test
   server name 127.0.0.1
+`
+const backend_servername127001pha = `
+backend test
+  server name 127.0.0.1 pha
+`
+const backend_servername127001nopha = `
+backend test
+  server name 127.0.0.1 no-pha
 `
 const backend_serveraddr127001 = `
 backend test

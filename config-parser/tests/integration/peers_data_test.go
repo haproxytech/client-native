@@ -185,6 +185,14 @@ const peers_defaultserverhttphardeningharden = `
 peers test
   default-server http-hardening hardening1
 `
+const peers_defaultserverpha = `
+peers test
+  default-server pha
+`
+const peers_defaultservernopha = `
+peers test
+  default-server no-pha
+`
 const peers_defaultserverinter1500ms = `
 peers test
   default-server inter 1500ms

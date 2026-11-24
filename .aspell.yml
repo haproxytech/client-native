@@ -163,6 +163,7 @@ allowed:
   - parsers
   - parallelize
   - passthrough
+  - pha
   - placholder
   - podman
   - pre
