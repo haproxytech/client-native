@@ -193,6 +193,12 @@ bind_params:
     guid_prefix:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
+    http_hardening:
+      type: string
+      pattern: '^[^\s]+$'
+      description: |
+        Name of the http-hardening profile applied to connections accepted on this bind,
+        or "auto" to use no explicit profile.
     id:
       type: string
       x-display-name: Socket ID

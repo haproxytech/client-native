@@ -119,6 +119,9 @@ func (rec BindParams) Diff(obj BindParams, opts ...eqdiff.GoMethodGenOptions) ma
 	if rec.GUIDPrefix != obj.GUIDPrefix {
 		diff["GUIDPrefix"] = []interface{}{rec.GUIDPrefix, obj.GUIDPrefix}
 	}
+	if rec.HTTPHardening != obj.HTTPHardening {
+		diff["HTTPHardening"] = []interface{}{rec.HTTPHardening, obj.HTTPHardening}
+	}
 	if rec.ID != obj.ID {
 		diff["ID"] = []interface{}{rec.ID, obj.ID}
 	}

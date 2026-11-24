@@ -209,6 +209,13 @@ type ServerParams struct {
 	// +kubebuilder:validation:Minimum=1
 	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
 
+	// Name of the http-hardening profile applied to traffic exchanged with this server,
+	// or "auto" to use no explicit profile.
+	//
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	HTTPHardening string `json:"http_hardening,omitempty"`
+
 	// idle ping
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
@@ -650,6 +657,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHealthCheckPort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPHardening(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1607,6 +1618,18 @@ func (m *ServerParams) validateHealthCheckPort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("health_check_port", "body", *m.HealthCheckPort, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateHTTPHardening(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPHardening) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("http_hardening", "body", m.HTTPHardening, `^[^\s]+$`); err != nil {
 		return err
 	}
 

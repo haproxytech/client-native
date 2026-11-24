@@ -378,6 +378,8 @@ func parseBindParams(bindOptions []params.BindOption) (models.BindParams, string
 				b.ID = v.Value
 			case "idle-ping":
 				b.IdlePing = misc.ParseTimeout(v.Value)
+			case "http-hardening":
+				b.HTTPHardening = v.Value
 			case "guid-prefix":
 				b.GUIDPrefix = v.Value
 			case "interface":
@@ -646,6 +648,9 @@ func serializeBindParams(b models.BindParams, name string, path string, opt *opt
 	}
 	if b.IdlePing != nil {
 		options = append(options, &params.BindOptionValue{Name: "idle-ping", Value: misc.SerializeTime(*b.IdlePing, opt.PreferredTimeSuffix)})
+	}
+	if b.HTTPHardening != "" {
+		options = append(options, &params.BindOptionValue{Name: "http-hardening", Value: b.HTTPHardening})
 	}
 	if b.Interface != "" {
 		options = append(options, &params.BindOptionValue{Name: "interface", Value: b.Interface})

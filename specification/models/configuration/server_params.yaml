@@ -199,6 +199,12 @@ server_params:
     hash_key:
       type: string
       pattern: '^[^\s]+$'
+    http_hardening:
+      type: string
+      pattern: '^[^\s]+$'
+      description: |
+        Name of the http-hardening profile applied to traffic exchanged with this server,
+        or "auto" to use no explicit profile.
     idle_ping:
       type: integer
       minimum: 0

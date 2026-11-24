@@ -432,6 +432,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.GUID = v.Value
 			case "idle-ping":
 				serverParams.IdlePing = misc.ParseTimeout(v.Value)
+			case "http-hardening":
+				serverParams.HTTPHardening = v.Value
 			case "init-addr":
 				serverParams.InitAddr = &v.Value
 			case "init-state":
@@ -880,6 +882,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.Npn != "" {
 		options = append(options, &params.ServerOptionValue{Name: "npn", Value: s.Npn})
+	}
+	if s.HTTPHardening != "" {
+		options = append(options, &params.ServerOptionValue{Name: "http-hardening", Value: s.HTTPHardening})
 	}
 	if s.Observe != "" {
 		options = append(options, &params.ServerOptionValue{Name: "observe", Value: s.Observe})

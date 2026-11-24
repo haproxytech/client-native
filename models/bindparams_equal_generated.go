@@ -53,6 +53,7 @@ func (rec BindParams) Equal(obj BindParams, opts ...eqdiff.GoMethodGenOptions) b
 		rec.Gid == obj.Gid &&
 		rec.Group == obj.Group &&
 		rec.GUIDPrefix == obj.GUIDPrefix &&
+		rec.HTTPHardening == obj.HTTPHardening &&
 		rec.ID == obj.ID &&
 		EqualPointerInt64(rec.IdlePing, obj.IdlePing, opts...) &&
 		rec.Interface == obj.Interface &&

@@ -321,6 +321,12 @@ definitions:
       guid_prefix:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
+      http_hardening:
+        description: |
+          Name of the http-hardening profile applied to connections accepted on this bind,
+          or "auto" to use no explicit profile.
+        pattern: ^[^\s]+$
+        type: string
       id:
         type: string
         x-display-name: Socket ID
@@ -784,6 +790,12 @@ definitions:
         minimum: 1
         type: integer
         x-nullable: true
+      http_hardening:
+        description: |
+          Name of the http-hardening profile applied to traffic exchanged with this server,
+          or "auto" to use no explicit profile.
+        pattern: ^[^\s]+$
+        type: string
       idle_ping:
         minimum: 0
         type: integer

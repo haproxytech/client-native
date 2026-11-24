@@ -155,6 +155,9 @@ func (rec ServerParams) Diff(obj ServerParams, opts ...eqdiff.GoMethodGenOptions
 		}
 		diff["HealthCheckPort"+diffKey] = diffValue
 	}
+	if rec.HTTPHardening != obj.HTTPHardening {
+		diff["HTTPHardening"] = []interface{}{rec.HTTPHardening, obj.HTTPHardening}
+	}
 	for diffKey, diffValue := range DiffPointerInt64(rec.IdlePing, obj.IdlePing, opts...) {
 		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
 			diffKey = "." + diffKey

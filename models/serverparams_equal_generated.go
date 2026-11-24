@@ -60,6 +60,7 @@ func (rec ServerParams) Equal(obj ServerParams, opts ...eqdiff.GoMethodGenOption
 		rec.HashKey == obj.HashKey &&
 		rec.HealthCheckAddress == obj.HealthCheckAddress &&
 		EqualPointerInt64(rec.HealthCheckPort, obj.HealthCheckPort, opts...) &&
+		rec.HTTPHardening == obj.HTTPHardening &&
 		EqualPointerInt64(rec.IdlePing, obj.IdlePing, opts...) &&
 		EqualPointerString(rec.InitAddr, obj.InitAddr, opts...) &&
 		rec.InitState == obj.InitState &&

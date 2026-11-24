@@ -135,6 +135,13 @@ type BindParams struct {
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	GUIDPrefix string `json:"guid_prefix,omitempty"`
 
+	// Name of the http-hardening profile applied to connections accepted on this bind,
+	// or "auto" to use no explicit profile.
+	//
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	HTTPHardening string `json:"http_hardening,omitempty"`
+
 	// id
 	ID string `json:"id,omitempty"`
 
@@ -378,6 +385,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPHardening(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateIdlePing(formats); err != nil {
 		res = append(res, err)
 	}
@@ -548,6 +559,18 @@ func (m *BindParams) validateGUIDPrefix(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("guid_prefix", "body", m.GUIDPrefix, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateHTTPHardening(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPHardening) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("http_hardening", "body", m.HTTPHardening, `^[^\s]+$`); err != nil {
 		return err
 	}
 
