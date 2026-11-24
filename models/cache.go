@@ -22,6 +22,7 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -35,6 +36,9 @@ import (
 //
 // swagger:model cache
 type Cache struct {
+
+	// early hints
+	EarlyHints *CacheEarlyHints `json:"early_hints,omitempty"`
 
 	// max age
 	MaxAge int64 `json:"max_age,omitempty"`
@@ -70,6 +74,10 @@ type Cache struct {
 func (m *Cache) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateEarlyHints(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
@@ -81,6 +89,25 @@ func (m *Cache) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Cache) validateEarlyHints(formats strfmt.Registry) error {
+	if swag.IsZero(m.EarlyHints) { // not required
+		return nil
+	}
+
+	if m.EarlyHints != nil {
+		if err := m.EarlyHints.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("early_hints")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("early_hints")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -113,8 +140,38 @@ func (m *Cache) validateTotalMaxSize(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this cache based on context it is used
+// ContextValidate validate this cache based on the context it is used
 func (m *Cache) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateEarlyHints(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Cache) contextValidateEarlyHints(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.EarlyHints != nil {
+
+		if swag.IsZero(m.EarlyHints) { // not required
+			return nil
+		}
+
+		if err := m.EarlyHints.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("early_hints")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("early_hints")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -129,6 +186,127 @@ func (m *Cache) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Cache) UnmarshalBinary(b []byte) error {
 	var res Cache
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// CacheEarlyHints cache early hints
+//
+// swagger:model CacheEarlyHints
+type CacheEarlyHints struct {
+	// mode
+	// Required: true
+	// Enum: ["on","off","only"]
+	// +kubebuilder:validation:Enum="on";"off";"only";
+	Mode *string `json:"mode"`
+
+	// ratio
+	// Maximum: 99
+	// Minimum: 1
+	// +kubebuilder:validation:Maximum=99
+	// +kubebuilder:validation:Minimum=1
+	Ratio *int64 `json:"ratio,omitempty"`
+}
+
+// Validate validates this cache early hints
+func (m *CacheEarlyHints) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRatio(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var cacheEarlyHintsTypeModePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["on","off","only"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		cacheEarlyHintsTypeModePropEnum = append(cacheEarlyHintsTypeModePropEnum, v)
+	}
+}
+
+const (
+
+	// CacheEarlyHintsModeOn captures enum value "on"
+	CacheEarlyHintsModeOn string = "on"
+
+	// CacheEarlyHintsModeOff captures enum value "off"
+	CacheEarlyHintsModeOff string = "off"
+
+	// CacheEarlyHintsModeOnly captures enum value "only"
+	CacheEarlyHintsModeOnly string = "only"
+)
+
+// prop value enum
+func (m *CacheEarlyHints) validateModeEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, cacheEarlyHintsTypeModePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CacheEarlyHints) validateMode(formats strfmt.Registry) error {
+
+	if err := validate.Required("early_hints"+"."+"mode", "body", m.Mode); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateModeEnum("early_hints"+"."+"mode", "body", *m.Mode); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CacheEarlyHints) validateRatio(formats strfmt.Registry) error {
+	if swag.IsZero(m.Ratio) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("early_hints"+"."+"ratio", "body", *m.Ratio, 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("early_hints"+"."+"ratio", "body", *m.Ratio, 99, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this cache early hints based on context it is used
+func (m *CacheEarlyHints) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *CacheEarlyHints) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *CacheEarlyHints) UnmarshalBinary(b []byte) error {
+	var res CacheEarlyHints
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

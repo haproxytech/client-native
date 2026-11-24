@@ -187,7 +187,7 @@ func TestCacheDiffFalse(t *testing.T) {
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
 		listDiffFields := GetListOfDiffFields(result)
-		if len(listDiffFields) != 6 {
+		if len(listDiffFields) != 7 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -197,7 +197,172 @@ func TestCacheDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Cache to be different in 6 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
+			t.Errorf("Expected Cache to be different in 7 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
+		}
+	}
+}
+
+func TestCacheEarlyHintsEqual(t *testing.T) {
+	samples := []struct {
+		a, b CacheEarlyHints
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CacheEarlyHints
+		var result CacheEarlyHints
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b CacheEarlyHints
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CacheEarlyHints to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestCacheEarlyHintsEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b CacheEarlyHints
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CacheEarlyHints
+		var result CacheEarlyHints
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Ratio = Ptr(*sample.Ratio + 1)
+		samples = append(samples, struct {
+			a, b CacheEarlyHints
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CacheEarlyHints to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestCacheEarlyHintsDiff(t *testing.T) {
+	samples := []struct {
+		a, b CacheEarlyHints
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CacheEarlyHints
+		var result CacheEarlyHints
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b CacheEarlyHints
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CacheEarlyHints to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestCacheEarlyHintsDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b CacheEarlyHints
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CacheEarlyHints
+		var result CacheEarlyHints
+		// Non-empty slices and maps: if both sides got an empty one, that
+		// field would compare equal and the diff field count would be short.
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true), options.WithRandomMapAndSliceMinSize(1))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Ratio = Ptr(*sample.Ratio + 1)
+		samples = append(samples, struct {
+			a, b CacheEarlyHints
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		listDiffFields := GetListOfDiffFields(result)
+		if len(listDiffFields) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CacheEarlyHints to be different in 2 cases, but it is not (%d) %s %s", len(listDiffFields), a, b)
 		}
 	}
 }

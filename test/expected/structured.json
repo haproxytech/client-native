@@ -1331,6 +1331,10 @@
     },
     "caches": {
         "test": {
+            "early_hints": {
+                "mode": "on",
+                "ratio": 25
+            },
             "max_age": 60,
             "max_object_size": 8,
             "max_secondary_entries": 10,
@@ -1921,6 +1925,7 @@
                 },
                 {
                     "cache_name": "cache-name",
+                    "no_early_hints": true,
                     "cond": "if",
                     "cond_test": "FALSE",
                     "type": "cache-use"

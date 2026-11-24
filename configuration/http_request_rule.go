@@ -321,11 +321,12 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 		}
 	case *http_actions.CacheUse:
 		rule = &models.HTTPRequestRule{
-			Type:      "cache-use",
-			CacheName: v.Name,
-			Cond:      v.Cond,
-			CondTest:  v.CondTest,
-			Metadata:  misc.ParseMetadata(v.Comment),
+			Type:         "cache-use",
+			CacheName:    v.Name,
+			NoEarlyHints: v.NoEarlyHints,
+			Cond:         v.Cond,
+			CondTest:     v.CondTest,
+			Metadata:     misc.ParseMetadata(v.Comment),
 		}
 	case *http_actions.Capture:
 		if (v.SlotID == nil && v.Len == nil) || (v.SlotID != nil && v.Len != nil) {
@@ -986,10 +987,11 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 		}
 	case "cache-use":
 		rule = &http_actions.CacheUse{
-			Name:     f.CacheName,
-			Cond:     f.Cond,
-			CondTest: f.CondTest,
-			Comment:  comment,
+			Name:         f.CacheName,
+			NoEarlyHints: f.NoEarlyHints,
+			Cond:         f.Cond,
+			CondTest:     f.CondTest,
+			Comment:      comment,
 		}
 	case "capture":
 		if f.CaptureLen > 0 && f.CaptureID != nil {

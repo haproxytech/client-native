@@ -286,6 +286,8 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_httprequestauth", frontend_httprequestauth},
 		{"frontend_httprequestcacheusecachename", frontend_httprequestcacheusecachename},
 		{"frontend_httprequestcacheusecachenameifFA", frontend_httprequestcacheusecachenameifFA},
+		{"frontend_httprequestcacheusecachenamenoea", frontend_httprequestcacheusecachenamenoea},
+		{"frontend_httprequestcacheusecachenamenoea_", frontend_httprequestcacheusecachenamenoea_},
 		{"frontend_httprequestcapturereqcookcntFirs", frontend_httprequestcapturereqcookcntFirs},
 		{"frontend_httprequestcapturestrDNSresoluti", frontend_httprequestcapturestrDNSresoluti},
 		{"frontend_httprequestdelaclmaplstsrc", frontend_httprequestdelaclmaplstsrc},

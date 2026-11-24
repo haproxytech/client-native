@@ -320,8 +320,11 @@ type Action interface {
 //test:fail:http-request add-header X-value
 //test:ok:http-request cache-use cache-name
 //test:ok:http-request cache-use cache-name if FALSE
+//test:ok:http-request cache-use cache-name no-early-hints
+//test:ok:http-request cache-use cache-name no-early-hints if FALSE
 //test:fail:http-request cache-use
 //test:fail:http-request cache-use if FALSE
+//test:fail:http-request cache-use cache-name bogus
 //test:ok:http-request del-acl(map.lst) [src]
 //test:fail:http-request del-acl(map.lst)
 //test:ok:http-request allow

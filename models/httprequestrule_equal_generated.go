@@ -55,6 +55,7 @@ func (rec HTTPRequestRule) Equal(obj HTTPRequestRule, opts ...eqdiff.GoMethodGen
 		rec.MarkValue == obj.MarkValue &&
 		rec.MethodFmt == obj.MethodFmt &&
 		rec.NiceValue == obj.NiceValue &&
+		rec.NoEarlyHints == obj.NoEarlyHints &&
 		rec.Normalizer == obj.Normalizer &&
 		rec.NormalizerFull == obj.NormalizerFull &&
 		rec.NormalizerStrict == obj.NormalizerStrict &&

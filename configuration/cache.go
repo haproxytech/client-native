@@ -169,7 +169,7 @@ func (c *client) CreateCache(data *models.Cache, transactionID string, version i
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
+func ParseCacheSection(p parser.Parser, cache *models.Cache) error { //nolint:gocognit
 	var err error
 	var data common.ParserData
 	name := *cache.Name
@@ -178,6 +178,18 @@ func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
 		d, ok := data.(*types.Section)
 		if ok && d != nil {
 			cache.Metadata = misc.ParseMetadata(d.Comment)
+		}
+	}
+
+	if data, err = p.Get(parser.Cache, name, "early-hints", false); err == nil {
+		d, ok := data.(*types.EarlyHints)
+		if ok && d != nil {
+			cache.EarlyHints = &models.CacheEarlyHints{
+				Mode: new(d.Mode),
+			}
+			if d.Ratio != nil {
+				cache.EarlyHints.Ratio = new(*d.Ratio)
+			}
 		}
 	}
 
@@ -227,6 +239,27 @@ func SerializeCacheSection(p parser.Parser, data *models.Cache) error { //nolint
 			return err
 		}
 		if err := p.SectionCommentSet(parser.Cache, *data.Name, comment); err != nil {
+			return err
+		}
+	}
+	if data.EarlyHints == nil {
+		if err = p.Set(parser.Cache, *data.Name, "early-hints", nil); err != nil {
+			return err
+		}
+	} else {
+		if data.EarlyHints.Mode == nil {
+			return NewConfError(ErrValidationError, "early_hints.mode is required")
+		}
+
+		var pRatio *int64
+		if data.EarlyHints.Ratio != nil {
+			pRatio = new(*data.EarlyHints.Ratio)
+		}
+		n := types.EarlyHints{
+			Mode:  *data.EarlyHints.Mode,
+			Ratio: pRatio,
+		}
+		if err = p.Set(parser.Cache, *data.Name, "early-hints", n); err != nil {
 			return err
 		}
 	}

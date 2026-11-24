@@ -2145,6 +2145,14 @@ const backend_httprequestcacheusecachenameifFA = `
 backend test
   http-request cache-use cache-name if FALSE
 `
+const backend_httprequestcacheusecachenamenoea = `
+backend test
+  http-request cache-use cache-name no-early-hints
+`
+const backend_httprequestcacheusecachenamenoea_ = `
+backend test
+  http-request cache-use cache-name no-early-hints if FALSE
+`
 const backend_httprequestdelaclmaplstsrc = `
 backend test
   http-request del-acl(map.lst) [src]

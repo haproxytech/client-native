@@ -1109,6 +1109,14 @@ const frontend_httprequestcacheusecachenameifFA = `
 frontend test
   http-request cache-use cache-name if FALSE
 `
+const frontend_httprequestcacheusecachenamenoea = `
+frontend test
+  http-request cache-use cache-name no-early-hints
+`
+const frontend_httprequestcacheusecachenamenoea_ = `
+frontend test
+  http-request cache-use cache-name no-early-hints if FALSE
+`
 const frontend_httprequestdelaclmaplstsrc = `
 frontend test
   http-request del-acl(map.lst) [src]

@@ -378,6 +378,8 @@ func TestWholeConfigsSectionsDefaults(t *testing.T) {
 		{"defaults_httprequestauth", defaults_httprequestauth},
 		{"defaults_httprequestcacheusecachename", defaults_httprequestcacheusecachename},
 		{"defaults_httprequestcacheusecachenameifFA", defaults_httprequestcacheusecachenameifFA},
+		{"defaults_httprequestcacheusecachenamenoea", defaults_httprequestcacheusecachenamenoea},
+		{"defaults_httprequestcacheusecachenamenoea_", defaults_httprequestcacheusecachenamenoea_},
 		{"defaults_httprequestdelaclmaplstsrc", defaults_httprequestdelaclmaplstsrc},
 		{"defaults_httprequestdelheaderXvalue", defaults_httprequestdelheaderXvalue},
 		{"defaults_httprequestdelheaderXvalueifTRUE", defaults_httprequestdelheaderXvalueifTRUE},

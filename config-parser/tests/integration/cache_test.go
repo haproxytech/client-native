@@ -30,6 +30,12 @@ func TestWholeConfigsSectionsCache(t *testing.T) {
 	tests := []struct {
 		Name, Config string
 	}{
+		{"cache_earlyhintsoff", cache_earlyhintsoff},
+		{"cache_earlyhintsoffratio25", cache_earlyhintsoffratio25},
+		{"cache_earlyhintson", cache_earlyhintson},
+		{"cache_earlyhintsonly", cache_earlyhintsonly},
+		{"cache_earlyhintsonlyratio25", cache_earlyhintsonlyratio25},
+		{"cache_earlyhintsonratio25", cache_earlyhintsonratio25},
 		{"cache_processvaryoff", cache_processvaryoff},
 		{"cache_processvaryon", cache_processvaryon},
 	}

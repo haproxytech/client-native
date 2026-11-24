@@ -180,6 +180,9 @@ type HTTPRequestRule struct {
 	// +kubebuilder:validation:Minimum=-1024
 	NiceValue int64 `json:"nice_value,omitempty"`
 
+	// no early hints
+	NoEarlyHints bool `json:"no_early_hints,omitempty"`
+
 	// normalizer
 	// Enum: ["fragment-encode","fragment-strip","path-merge-slashes","path-strip-dot","path-strip-dotdot","percent-decode-unreserved","percent-to-uppercase","query-sort-by-name"]
 	// +kubebuilder:validation:Enum="fragment-encode";"fragment-strip";"path-merge-slashes";"path-strip-dot";"path-strip-dotdot";"percent-decode-unreserved";"percent-to-uppercase";"query-sort-by-name";

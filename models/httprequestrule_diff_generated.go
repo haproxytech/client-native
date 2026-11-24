@@ -131,6 +131,9 @@ func (rec HTTPRequestRule) Diff(obj HTTPRequestRule, opts ...eqdiff.GoMethodGenO
 	if rec.NiceValue != obj.NiceValue {
 		diff["NiceValue"] = []interface{}{rec.NiceValue, obj.NiceValue}
 	}
+	if rec.NoEarlyHints != obj.NoEarlyHints {
+		diff["NoEarlyHints"] = []interface{}{rec.NoEarlyHints, obj.NoEarlyHints}
+	}
 	if rec.Normalizer != obj.Normalizer {
 		diff["Normalizer"] = []interface{}{rec.Normalizer, obj.Normalizer}
 	}

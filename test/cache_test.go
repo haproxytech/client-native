@@ -99,6 +99,10 @@ func TestGetCache(t *testing.T) {
 func TestCreateEditDeleteCache(t *testing.T) {
 	// test create
 	f := &models.Cache{
+		EarlyHints: &models.CacheEarlyHints{
+			Mode:  new("on"),
+			Ratio: misc.Int64P(25),
+		},
 		MaxAge:              60,
 		MaxObjectSize:       2,
 		MaxSecondaryEntries: 5,

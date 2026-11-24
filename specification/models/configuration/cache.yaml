@@ -9,6 +9,20 @@ cache:
     name:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
+    early_hints:
+      type: object
+      required:
+        - mode
+      properties:
+        mode:
+          type: string
+          enum: [on, off, only]
+        ratio:
+          type: integer
+          minimum: 1
+          maximum: 99
+          x-nullable: true
+      x-nullable: true
     total_max_size:
       type: integer
       maximum: 4095

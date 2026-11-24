@@ -27,35 +27,49 @@ import (
 )
 
 type CacheUse struct {
-	Name     string
-	Cond     string
-	CondTest string
-	Comment  string
+	Name         string
+	NoEarlyHints bool
+	Cond         string
+	CondTest     string
+	Comment      string
 }
 
 func (f *CacheUse) Parse(parts []string, parserType types.ParserType, comment string) error {
 	if comment != "" {
 		f.Comment = comment
 	}
-	if len(parts) >= 3 {
-		command, condition := common.SplitRequest(parts[2:])
-		if len(command) < 1 {
+
+	if len(parts) < 3 {
+		return stderrors.New("not enough params")
+	}
+
+	command, condition := common.SplitRequest(parts[2:])
+	if len(command) < 1 || len(command) > 2 {
+		return errors.ErrInvalidData
+	}
+
+	f.Name = command[0]
+	if len(command) == 2 {
+		if command[1] != "no-early-hints" {
 			return errors.ErrInvalidData
 		}
-		f.Name = command[0]
-		if len(condition) > 1 {
-			f.Cond = condition[0]
-			f.CondTest = strings.Join(condition[1:], " ")
-		}
-		return nil
+		f.NoEarlyHints = true
 	}
-	return stderrors.New("not enough params")
+
+	if len(condition) > 1 {
+		f.Cond = condition[0]
+		f.CondTest = strings.Join(condition[1:], " ")
+	}
+	return nil
 }
 
 func (f *CacheUse) String() string {
 	var result strings.Builder
 	result.WriteString("cache-use ")
 	result.WriteString(f.Name)
+	if f.NoEarlyHints {
+		result.WriteString(" no-early-hints")
+	}
 	if f.Cond != "" {
 		result.WriteString(" ")
 		result.WriteString(f.Cond)

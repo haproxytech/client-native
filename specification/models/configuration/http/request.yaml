@@ -393,6 +393,12 @@ http_request_rule:
         type:
           value: cache-use
           required: true
+    no_early_hints:
+      type: boolean
+      x-display-name: No Early Hints
+      x-dependency:
+        type:
+          value: cache-use
     hint_name:
       type: string
       x-display-name: Hint Name

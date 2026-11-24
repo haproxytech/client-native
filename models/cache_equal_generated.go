@@ -22,10 +22,18 @@ import (
 )
 
 func (rec Cache) Equal(obj Cache, opts ...eqdiff.GoMethodGenOptions) bool {
-	return rec.MaxAge == obj.MaxAge &&
+	return EqualPointerCacheEarlyHints(rec.EarlyHints, obj.EarlyHints, opts...) &&
+		rec.MaxAge == obj.MaxAge &&
 		rec.MaxObjectSize == obj.MaxObjectSize &&
 		rec.MaxSecondaryEntries == obj.MaxSecondaryEntries &&
 		EqualPointerString(rec.Name, obj.Name, opts...) &&
 		EqualPointerBool(rec.ProcessVary, obj.ProcessVary, opts...) &&
 		rec.TotalMaxSize == obj.TotalMaxSize
+}
+
+func EqualPointerCacheEarlyHints(x, y *CacheEarlyHints, opts ...eqdiff.GoMethodGenOptions) bool {
+	if x == nil || y == nil {
+		return x == y
+	}
+	return (*x).Equal(*y, opts...)
 }

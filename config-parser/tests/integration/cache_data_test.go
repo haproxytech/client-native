@@ -17,6 +17,30 @@ limitations under the License.
 
 package integration_test
 
+const cache_earlyhintson = `
+cache test
+  early-hints on
+`
+const cache_earlyhintsonratio25 = `
+cache test
+  early-hints on ratio 25
+`
+const cache_earlyhintsoff = `
+cache test
+  early-hints off
+`
+const cache_earlyhintsoffratio25 = `
+cache test
+  early-hints off ratio 25
+`
+const cache_earlyhintsonly = `
+cache test
+  early-hints only
+`
+const cache_earlyhintsonlyratio25 = `
+cache test
+  early-hints only ratio 25
+`
 const cache_processvaryon = `
 cache test
   process-vary on

@@ -658,6 +658,25 @@ type DefaultServer struct {
 	Comment string
 }
 
+//sections:cache
+//name:early-hints
+//no:parse
+//test:ok:early-hints on
+//test:ok:early-hints on ratio 25
+//test:ok:early-hints off
+//test:ok:early-hints off ratio 25
+//test:ok:early-hints only
+//test:ok:early-hints only ratio 25
+//test:fail:early-hints
+//test:fail:early-hints maybe
+//test:fail:early-hints on ratio
+//test:fail:early-hints on ratio 100
+type EarlyHints struct {
+	Mode    string
+	Ratio   *int64
+	Comment string
+}
+
 //sections:defaults,backend,frontend
 //name:email-alert
 //is:multiple

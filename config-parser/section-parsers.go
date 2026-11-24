@@ -989,6 +989,7 @@ func (p *configParser) getMailersParser() *Parsers {
 func (p *configParser) getCacheParser() *Parsers {
 	parser := map[string]ParserInterface{}
 	sequence := []Section{}
+	addParser(parser, &sequence, &parsers.EarlyHints{})
 	addParser(parser, &sequence, &simple.Number{Name: "total-max-size"})
 	addParser(parser, &sequence, &simple.Number{Name: "max-object-size"})
 	addParser(parser, &sequence, &simple.Number{Name: "max-age"})

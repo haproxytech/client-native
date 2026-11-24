@@ -1357,6 +1357,14 @@ const defaults_httprequestcacheusecachenameifFA = `
 defaults test
   http-request cache-use cache-name if FALSE
 `
+const defaults_httprequestcacheusecachenamenoea = `
+defaults test
+  http-request cache-use cache-name no-early-hints
+`
+const defaults_httprequestcacheusecachenamenoea_ = `
+defaults test
+  http-request cache-use cache-name no-early-hints if FALSE
+`
 const defaults_httprequestdelaclmaplstsrc = `
 defaults test
   http-request del-acl(map.lst) [src]

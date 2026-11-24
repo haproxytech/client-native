@@ -5454,6 +5454,12 @@ definitions:
             value: set-nice
         x-display-name: Nice Value
         x-nullable: false
+      no_early_hints:
+        type: boolean
+        x-dependency:
+          type:
+            value: cache-use
+        x-display-name: No Early Hints
       normalizer:
         enum:
           - fragment-encode
@@ -11448,6 +11454,23 @@ definitions:
   cache:
     description: HAPRoxy Cache section
     properties:
+      early_hints:
+        properties:
+          mode:
+            enum:
+              - "on"
+              - "off"
+              - only
+            type: string
+          ratio:
+            maximum: 99
+            minimum: 1
+            type: integer
+            x-nullable: true
+        required:
+          - mode
+        type: object
+        x-nullable: true
       max_age:
         type: integer
         x-default-unit: s

@@ -382,6 +382,8 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_httprequestauth", backend_httprequestauth},
 		{"backend_httprequestcacheusecachename", backend_httprequestcacheusecachename},
 		{"backend_httprequestcacheusecachenameifFA", backend_httprequestcacheusecachenameifFA},
+		{"backend_httprequestcacheusecachenamenoea", backend_httprequestcacheusecachenamenoea},
+		{"backend_httprequestcacheusecachenamenoea_", backend_httprequestcacheusecachenamenoea_},
 		{"backend_httprequestdelaclmaplstsrc", backend_httprequestdelaclmaplstsrc},
 		{"backend_httprequestdelheaderXvalue", backend_httprequestdelheaderXvalue},
 		{"backend_httprequestdelheaderXvalueifTRUE", backend_httprequestdelheaderXvalueifTRUE},

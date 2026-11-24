@@ -23,6 +23,12 @@ import (
 
 func (rec Cache) Diff(obj Cache, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
 	diff := make(map[string][]interface{})
+	for diffKey, diffValue := range DiffPointerCacheEarlyHints(rec.EarlyHints, obj.EarlyHints, opts...) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff["EarlyHints"+diffKey] = diffValue
+	}
 	if rec.MaxAge != obj.MaxAge {
 		diff["MaxAge"] = []interface{}{rec.MaxAge, obj.MaxAge}
 	}
@@ -47,5 +53,30 @@ func (rec Cache) Diff(obj Cache, opts ...eqdiff.GoMethodGenOptions) map[string][
 	if rec.TotalMaxSize != obj.TotalMaxSize {
 		diff["TotalMaxSize"] = []interface{}{rec.TotalMaxSize, obj.TotalMaxSize}
 	}
+	return diff
+}
+
+func DiffPointerCacheEarlyHints(x, y *CacheEarlyHints, opts ...eqdiff.GoMethodGenOptions) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if x == nil && y == nil {
+		return diff
+	}
+
+	switch {
+	case x == nil:
+		diff[""] = []interface{}{x, *y}
+		return diff
+	case y == nil:
+		diff[""] = []interface{}{*x, y}
+		return diff
+	}
+
+	for diffKey, diffValue := range (*x).Diff(*y) {
+		if diffKey != "" && diffKey[0] != '.' && diffKey[0] != '[' {
+			diffKey = "." + diffKey
+		}
+		diff[diffKey] = diffValue
+	}
+
 	return diff
 }

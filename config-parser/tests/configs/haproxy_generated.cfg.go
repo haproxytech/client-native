@@ -500,6 +500,8 @@ backend test
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
+  http-request cache-use cache-name no-early-hints
+  http-request cache-use cache-name no-early-hints if FALSE
   http-request del-acl(map.lst) [src]
   http-request allow
   http-request auth
@@ -1186,6 +1188,7 @@ backend test
   stats http-request allow
 
 cache test
+  early-hints on
   process-vary on
 
 crt-store test
@@ -1437,6 +1440,8 @@ defaults test
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
+  http-request cache-use cache-name no-early-hints
+  http-request cache-use cache-name no-early-hints if FALSE
   http-request del-acl(map.lst) [src]
   http-request allow
   http-request auth
@@ -2334,6 +2339,8 @@ frontend test
   http-request add-header X-value value
   http-request cache-use cache-name
   http-request cache-use cache-name if FALSE
+  http-request cache-use cache-name no-early-hints
+  http-request cache-use cache-name no-early-hints if FALSE
   http-request del-acl(map.lst) [src]
   http-request allow
   http-request auth
@@ -3968,6 +3975,8 @@ var configTests = []configTest{{`  set-param name fmt if acl
 `, 3},
 	{`  default-server ktls off
 `, 3},
+	{`  early-hints on
+`, 1},
 	{`  email-alert from admin@example.com
 `, 3},
 	{`  email-alert to a@z,x@y
@@ -4621,6 +4630,10 @@ var configTests = []configTest{{`  set-param name fmt if acl
 	{`  http-request cache-use cache-name
 `, 3},
 	{`  http-request cache-use cache-name if FALSE
+`, 3},
+	{`  http-request cache-use cache-name no-early-hints
+`, 3},
+	{`  http-request cache-use cache-name no-early-hints if FALSE
 `, 3},
 	{`  http-request del-acl(map.lst) [src]
 `, 3},

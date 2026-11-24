@@ -499,7 +499,7 @@ frontend test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request del-map(map.lst) %[src] if FALSE
   http-request del-acl(map.lst) %[src] if FALSE
-  http-request cache-use cache-name if FALSE
+  http-request cache-use cache-name no-early-hints if FALSE
   http-request disable-l7-retry if FALSE
   http-request early-hint hint-name %[src] if FALSE
   http-request replace-uri ^http://(.*) https://1 if FALSE
@@ -962,6 +962,7 @@ resolvers test
   hold valid 5s
 
 cache test
+  early-hints on ratio 25
   total-max-size 1024
   max-object-size 8
   max-age 60
